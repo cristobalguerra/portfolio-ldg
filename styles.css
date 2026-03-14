@@ -326,6 +326,808 @@ img {
 }
 
 /* ============================================
+   PEF TALKS BUTTON (Nav)
+   ============================================ */
+.nav__pef-btn {
+  font-family: var(--font-mono);
+  font-size: 0.65rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  padding: 8px 20px;
+  background: var(--white);
+  color: var(--black);
+  border: none;
+  transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+  z-index: 200;
+  position: relative;
+  overflow: hidden;
+}
+
+.nav__pef-btn::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: var(--accent);
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+  z-index: -1;
+}
+
+.nav__pef-btn:hover {
+  color: var(--black);
+  transform: scale(1.05);
+}
+
+.nav__pef-btn:hover::before {
+  transform: scaleX(1);
+}
+
+/* ============================================
+   PEF GATE (Email Verification Overlay)
+   ============================================ */
+.pef-gate {
+  position: fixed;
+  inset: 0;
+  z-index: 2000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.4s;
+}
+
+.pef-gate.open {
+  pointer-events: auto;
+  opacity: 1;
+}
+
+.pef-gate__backdrop {
+  position: absolute;
+  inset: 0;
+  background: rgba(15, 15, 15, 0.85);
+  backdrop-filter: blur(12px);
+}
+
+.pef-gate__panel {
+  position: relative;
+  background: var(--bg-light);
+  border: 1px solid rgba(212, 255, 0, 0.15);
+  padding: var(--space-xl) var(--space-lg);
+  max-width: 520px;
+  width: 90%;
+  transform: translateY(40px) scale(0.95);
+  transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.pef-gate.open .pef-gate__panel {
+  transform: translateY(0) scale(1);
+}
+
+.pef-gate__close {
+  position: absolute;
+  top: var(--space-sm);
+  right: var(--space-sm);
+  width: 44px;
+  height: 44px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.6rem;
+  color: var(--gray);
+  transition: color 0.3s, transform 0.3s;
+}
+
+.pef-gate__close:hover {
+  color: var(--accent);
+  transform: rotate(90deg);
+}
+
+.pef-gate__content {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-sm);
+}
+
+.pef-gate__title {
+  font-family: var(--font-display);
+  font-size: clamp(3rem, 8vw, 5rem);
+  line-height: 0.95;
+  color: var(--white);
+}
+
+.pef-gate__desc {
+  font-family: var(--font-body);
+  font-size: 0.95rem;
+  line-height: 1.6;
+  color: var(--gray);
+  max-width: 400px;
+}
+
+.pef-gate__form {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-sm);
+  margin-top: var(--space-sm);
+}
+
+.pef-gate__input-wrap {
+  position: relative;
+}
+
+.pef-gate__input {
+  width: 100%;
+  font-family: var(--font-mono);
+  font-size: 0.85rem;
+  letter-spacing: 0.04em;
+  padding: 14px 0;
+  background: transparent;
+  border: none;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.15);
+  color: var(--white);
+  outline: none;
+  transition: border-color 0.3s;
+}
+
+.pef-gate__input:focus {
+  border-bottom-color: var(--accent);
+}
+
+.pef-gate__input::placeholder {
+  color: var(--gray);
+  opacity: 0.5;
+}
+
+.pef-gate__input-line {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 0;
+  height: 2px;
+  background: var(--accent);
+  transition: width 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.pef-gate__input:focus ~ .pef-gate__input-line {
+  width: 100%;
+}
+
+.pef-gate__error {
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  color: var(--orange);
+  min-height: 1.2em;
+  letter-spacing: 0.05em;
+}
+
+.pef-gate__submit {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-sm);
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  padding: 16px 32px;
+  background: var(--white);
+  color: var(--black);
+  border: 2px solid var(--white);
+  transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+  position: relative;
+  overflow: hidden;
+  align-self: flex-start;
+}
+
+.pef-gate__submit::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: var(--accent);
+  transform: translateX(-100%);
+  transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+  z-index: -1;
+}
+
+.pef-gate__submit:hover {
+  border-color: var(--accent);
+}
+
+.pef-gate__submit:hover::after {
+  transform: translateX(0);
+}
+
+.pef-gate__submit-arrow {
+  transition: transform 0.3s;
+}
+
+.pef-gate__submit:hover .pef-gate__submit-arrow {
+  transform: translateX(4px);
+}
+
+.pef-gate__hint {
+  color: var(--gray) !important;
+  opacity: 0.5;
+  margin-top: var(--space-xs);
+}
+
+/* ============================================
+   PEF TALKS SECTION (Full Overlay)
+   ============================================ */
+.pef-talks {
+  position: fixed;
+  inset: 0;
+  z-index: 1500;
+  display: flex;
+  align-items: stretch;
+  justify-content: center;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.4s;
+}
+
+.pef-talks.open {
+  pointer-events: auto;
+  opacity: 1;
+}
+
+.pef-talks__backdrop {
+  position: absolute;
+  inset: 0;
+  background: rgba(15, 15, 15, 0.9);
+  backdrop-filter: blur(16px);
+}
+
+.pef-talks__panel {
+  position: relative;
+  width: 100%;
+  max-width: 1100px;
+  background: var(--bg);
+  border-left: 1px solid rgba(212, 255, 0, 0.1);
+  border-right: 1px solid rgba(212, 255, 0, 0.1);
+  overflow-y: auto;
+  transform: translateY(100%);
+  transition: transform 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+  padding: var(--space-lg);
+}
+
+.pef-talks.open .pef-talks__panel {
+  transform: translateY(0);
+}
+
+.pef-talks__header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: var(--space-xl);
+  padding-bottom: var(--space-md);
+  border-bottom: 1px solid rgba(212, 255, 0, 0.15);
+}
+
+.pef-talks__title {
+  font-family: var(--font-display);
+  font-size: clamp(3rem, 8vw, 6rem);
+  line-height: 0.95;
+  color: var(--white);
+  margin-top: var(--space-xs);
+}
+
+.pef-talks__close {
+  width: 56px;
+  height: 56px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 2rem;
+  color: var(--white);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  transition: all 0.3s;
+  flex-shrink: 0;
+}
+
+.pef-talks__close:hover {
+  background: var(--accent);
+  color: var(--black);
+  border-color: var(--accent);
+  transform: rotate(90deg);
+}
+
+.pef-talks__welcome {
+  margin-bottom: var(--space-lg);
+}
+
+.pef-talks__welcome-text {
+  font-family: var(--font-body);
+  font-size: 1.05rem;
+  line-height: 1.7;
+  color: var(--gray);
+  max-width: 600px;
+}
+
+.pef-talks__grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: var(--space-md);
+}
+
+.pef-talks__card {
+  background: var(--bg-light);
+  padding: var(--space-md);
+  position: relative;
+  overflow: hidden;
+  transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1), border-color 0.3s;
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-xs);
+}
+
+.pef-talks__card:hover {
+  transform: translateY(-6px);
+  border-color: rgba(212, 255, 0, 0.25);
+}
+
+.pef-talks__card-accent {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 3px;
+  background: linear-gradient(90deg, var(--accent), var(--violet));
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.pef-talks__card:hover .pef-talks__card-accent {
+  transform: scaleX(1);
+}
+
+.pef-talks__card-title {
+  font-family: var(--font-display);
+  font-size: 1.5rem;
+  color: var(--white);
+  line-height: 1.05;
+  transition: color 0.3s;
+}
+
+.pef-talks__card:hover .pef-talks__card-title {
+  color: var(--accent);
+}
+
+.pef-talks__card-desc {
+  font-family: var(--font-body);
+  font-size: 0.85rem;
+  line-height: 1.6;
+  color: var(--gray);
+}
+
+.pef-talks__card-date {
+  color: var(--violet-light) !important;
+  margin-top: auto;
+  padding-top: var(--space-xs);
+}
+
+.pef-talks__card-members {
+  font-family: var(--font-body);
+  font-size: 0.8rem;
+  color: var(--gray);
+  opacity: 0.7;
+}
+
+.pef-talks__card-problem {
+  font-family: var(--font-body);
+  font-size: 0.8rem;
+  color: var(--gray);
+  line-height: 1.5;
+  opacity: 0.6;
+  font-style: italic;
+}
+
+.pef-talks__card-feedback-btn {
+  font-family: var(--font-mono);
+  font-size: 0.65rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  padding: 10px 20px;
+  background: transparent;
+  color: var(--accent);
+  border: 1px solid rgba(212, 255, 0, 0.3);
+  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+  margin-top: auto;
+  align-self: flex-start;
+}
+
+.pef-talks__card-feedback-btn:hover {
+  background: var(--accent);
+  color: var(--black);
+  border-color: var(--accent);
+}
+
+/* ---- PEF Header Actions ---- */
+.pef-talks__header-actions {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--space-sm);
+  flex-shrink: 0;
+}
+
+.pef-talks__add-btn {
+  font-family: var(--font-mono);
+  font-size: 0.65rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  padding: 10px 24px;
+  background: var(--white);
+  color: var(--black);
+  border: none;
+  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+  position: relative;
+  overflow: hidden;
+  white-space: nowrap;
+}
+
+.pef-talks__add-btn::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: var(--accent);
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+  z-index: -1;
+}
+
+.pef-talks__add-btn:hover {
+  transform: scale(1.05);
+}
+
+.pef-talks__add-btn:hover::before {
+  transform: scaleX(1);
+}
+
+/* ---- PEF Empty State ---- */
+.pef-talks__empty {
+  text-align: center;
+  padding: var(--space-xl) var(--space-md);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-sm);
+  align-items: center;
+}
+
+.pef-talks__empty p {
+  font-family: var(--font-body);
+  font-size: 0.95rem;
+  color: var(--gray);
+}
+
+.pef-talks__empty.hidden {
+  display: none;
+}
+
+/* ============================================
+   PEF ADMIN GATE
+   ============================================ */
+.pef-admin-gate {
+  position: fixed;
+  inset: 0;
+  z-index: 2500;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.4s;
+}
+
+.pef-admin-gate.open {
+  pointer-events: auto;
+  opacity: 1;
+}
+
+.pef-admin-gate__backdrop {
+  position: absolute;
+  inset: 0;
+  background: rgba(15, 15, 15, 0.85);
+  backdrop-filter: blur(12px);
+}
+
+.pef-admin-gate__panel {
+  position: relative;
+  background: var(--bg-light);
+  border: 1px solid rgba(212, 255, 0, 0.15);
+  padding: var(--space-xl) var(--space-lg);
+  max-width: 480px;
+  width: 90%;
+  transform: translateY(40px) scale(0.95);
+  transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.pef-admin-gate.open .pef-admin-gate__panel {
+  transform: translateY(0) scale(1);
+}
+
+/* ============================================
+   PEF REGISTRATION FORM
+   ============================================ */
+.pef-register {
+  position: fixed;
+  inset: 0;
+  z-index: 2500;
+  display: flex;
+  align-items: stretch;
+  justify-content: center;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.4s;
+}
+
+.pef-register.open {
+  pointer-events: auto;
+  opacity: 1;
+}
+
+.pef-register__backdrop {
+  position: absolute;
+  inset: 0;
+  background: rgba(15, 15, 15, 0.9);
+  backdrop-filter: blur(16px);
+}
+
+.pef-register__panel {
+  position: relative;
+  width: 100%;
+  max-width: 700px;
+  background: var(--bg);
+  border-left: 1px solid rgba(212, 255, 0, 0.1);
+  border-right: 1px solid rgba(212, 255, 0, 0.1);
+  overflow-y: auto;
+  transform: translateY(100%);
+  transition: transform 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+  padding: var(--space-lg);
+}
+
+.pef-register.open .pef-register__panel {
+  transform: translateY(0);
+}
+
+.pef-register__header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: var(--space-lg);
+  padding-bottom: var(--space-md);
+  border-bottom: 1px solid rgba(212, 255, 0, 0.15);
+}
+
+.pef-register__form {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-md);
+}
+
+.pef-register__field {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-xs);
+}
+
+.pef-register__field .mono-sm {
+  color: var(--gray) !important;
+}
+
+.pef-register__input {
+  width: 100%;
+  font-family: var(--font-mono);
+  font-size: 0.85rem;
+  letter-spacing: 0.02em;
+  padding: 14px 0;
+  background: transparent;
+  border: none;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.15);
+  color: var(--white);
+  outline: none;
+  transition: border-color 0.3s;
+}
+
+.pef-register__input:focus {
+  border-bottom-color: var(--accent);
+}
+
+.pef-register__input::placeholder {
+  color: var(--gray);
+  opacity: 0.4;
+}
+
+.pef-register__textarea {
+  width: 100%;
+  font-family: var(--font-body);
+  font-size: 0.9rem;
+  line-height: 1.6;
+  padding: 14px 0;
+  background: transparent;
+  border: none;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.15);
+  color: var(--white);
+  outline: none;
+  resize: vertical;
+  min-height: 80px;
+  transition: border-color 0.3s;
+}
+
+.pef-register__textarea:focus {
+  border-bottom-color: var(--accent);
+}
+
+.pef-register__textarea::placeholder {
+  color: var(--gray);
+  opacity: 0.4;
+}
+
+/* ============================================
+   PEF FEEDBACK FORM
+   ============================================ */
+.pef-feedback {
+  position: fixed;
+  inset: 0;
+  z-index: 2500;
+  display: flex;
+  align-items: stretch;
+  justify-content: center;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.4s;
+}
+
+.pef-feedback.open {
+  pointer-events: auto;
+  opacity: 1;
+}
+
+.pef-feedback__backdrop {
+  position: absolute;
+  inset: 0;
+  background: rgba(15, 15, 15, 0.9);
+  backdrop-filter: blur(16px);
+}
+
+.pef-feedback__panel {
+  position: relative;
+  width: 100%;
+  max-width: 650px;
+  background: var(--bg);
+  border-left: 1px solid rgba(212, 255, 0, 0.1);
+  border-right: 1px solid rgba(212, 255, 0, 0.1);
+  overflow-y: auto;
+  transform: translateY(100%);
+  transition: transform 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+  padding: var(--space-lg);
+}
+
+.pef-feedback.open .pef-feedback__panel {
+  transform: translateY(0);
+}
+
+.pef-feedback__header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: var(--space-lg);
+  padding-bottom: var(--space-md);
+  border-bottom: 1px solid rgba(212, 255, 0, 0.15);
+}
+
+.pef-feedback__radio-group {
+  display: flex;
+  gap: var(--space-md);
+  flex-wrap: wrap;
+  margin-top: var(--space-xs);
+}
+
+.pef-feedback__radio {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-family: var(--font-body);
+  font-size: 0.9rem;
+  color: var(--white);
+  cursor: pointer;
+  transition: color 0.3s;
+}
+
+.pef-feedback__radio:hover {
+  color: var(--accent);
+}
+
+.pef-feedback__radio input[type="radio"] {
+  display: none;
+}
+
+.pef-feedback__radio-custom {
+  width: 18px;
+  height: 18px;
+  border: 2px solid rgba(255, 255, 255, 0.3);
+  border-radius: 50%;
+  position: relative;
+  transition: border-color 0.3s;
+  flex-shrink: 0;
+}
+
+.pef-feedback__radio input[type="radio"]:checked ~ .pef-feedback__radio-custom {
+  border-color: var(--accent);
+}
+
+.pef-feedback__radio input[type="radio"]:checked ~ .pef-feedback__radio-custom::after {
+  content: '';
+  position: absolute;
+  inset: 3px;
+  background: var(--accent);
+  border-radius: 50%;
+}
+
+/* ---- PEF Success Toast ---- */
+.pef-toast {
+  position: fixed;
+  bottom: var(--space-md);
+  left: 50%;
+  transform: translateX(-50%) translateY(100px);
+  background: var(--accent);
+  color: var(--black);
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  letter-spacing: 0.08em;
+  padding: 16px 32px;
+  z-index: 9999;
+  transition: transform 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+  pointer-events: none;
+  white-space: nowrap;
+}
+
+.pef-toast.show {
+  transform: translateX(-50%) translateY(0);
+}
+
+@media (max-width: 600px) {
+  .nav__pef-btn {
+    font-size: 0.55rem;
+    padding: 6px 12px;
+  }
+
+  .pef-gate__panel {
+    padding: var(--space-lg) var(--space-md);
+  }
+
+  .pef-talks__panel {
+    padding: var(--space-md);
+  }
+
+  .pef-talks__grid {
+    grid-template-columns: 1fr;
+  }
+
+  .pef-talks__header {
+    flex-direction: column;
+    gap: var(--space-sm);
+  }
+
+  .pef-talks__header-actions {
+    width: 100%;
+    justify-content: space-between;
+  }
+
+  .pef-register__panel,
+  .pef-feedback__panel {
+    padding: var(--space-md);
+  }
+
+  .pef-feedback__radio-group {
+    flex-direction: column;
+    gap: var(--space-sm);
+  }
+}
+
+/* ============================================
    FULLSCREEN MENU
    ============================================ */
 .menu {

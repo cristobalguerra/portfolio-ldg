@@ -490,6 +490,330 @@ function initFontCycling() {
   }, 500);
 }
 
+// ============================================
+// PEF TALKS — Full System
+// ============================================
+function initPefTalks() {
+  // ---- DOM Elements ----
+  const pefBtn = document.getElementById('pefBtn');
+  const menuPefLink = document.getElementById('menuPefLink');
+  // Email gate
+  const pefGate = document.getElementById('pefGate');
+  const pefGateBackdrop = document.getElementById('pefGateBackdrop');
+  const pefGateClose = document.getElementById('pefGateClose');
+  const pefGateForm = document.getElementById('pefGateForm');
+  const pefEmail = document.getElementById('pefEmail');
+  const pefError = document.getElementById('pefError');
+  // PEF Talks main
+  const pefTalks = document.getElementById('pefTalks');
+  const pefTalksBackdrop = document.getElementById('pefTalksBackdrop');
+  const pefTalksClose = document.getElementById('pefTalksClose');
+  const pefProjectsGrid = document.getElementById('pefProjectsGrid');
+  const pefEmpty = document.getElementById('pefEmpty');
+  const pefAddBtn = document.getElementById('pefAddBtn');
+  // Admin gate
+  const pefAdminGate = document.getElementById('pefAdminGate');
+  const pefAdminGateBackdrop = document.getElementById('pefAdminGateBackdrop');
+  const pefAdminGateClose = document.getElementById('pefAdminGateClose');
+  const pefAdminForm = document.getElementById('pefAdminForm');
+  const pefAdminPass = document.getElementById('pefAdminPass');
+  const pefAdminError = document.getElementById('pefAdminError');
+  // Register form
+  const pefRegister = document.getElementById('pefRegister');
+  const pefRegisterBackdrop = document.getElementById('pefRegisterBackdrop');
+  const pefRegisterClose = document.getElementById('pefRegisterClose');
+  const pefRegisterForm = document.getElementById('pefRegisterForm');
+  const pefRegisterError = document.getElementById('pefRegisterError');
+  // Feedback form
+  const pefFeedback = document.getElementById('pefFeedback');
+  const pefFeedbackBackdrop = document.getElementById('pefFeedbackBackdrop');
+  const pefFeedbackClose = document.getElementById('pefFeedbackClose');
+  const pefFeedbackForm = document.getElementById('pefFeedbackForm');
+  const pefFeedbackTitle = document.getElementById('pefFeedbackTitle');
+  const pefFbProjectId = document.getElementById('pefFbProjectId');
+  // Toast
+  const pefToast = document.getElementById('pefToast');
+
+  const ADMIN_PASSWORD = 'pefpr26';
+  let pefAuthenticated = sessionStorage.getItem('pefAuth') === 'true';
+
+  // ---- LocalStorage helpers ----
+  function getPefProjects() {
+    try {
+      return JSON.parse(localStorage.getItem('pefProjects') || '[]');
+    } catch { return []; }
+  }
+
+  function savePefProjects(projects) {
+    localStorage.setItem('pefProjects', JSON.stringify(projects));
+  }
+
+  // ---- Toast notification ----
+  function showToast(message) {
+    pefToast.textContent = message;
+    pefToast.classList.add('show');
+    setTimeout(() => pefToast.classList.remove('show'), 3000);
+  }
+
+  // ---- Validate UDEM email ----
+  function validateUdemEmail(email) {
+    const trimmed = email.trim().toLowerCase();
+    return trimmed.endsWith('@udem.edu') || trimmed.endsWith('@udem.edu.mx');
+  }
+
+  // ---- Render PEF Projects ----
+  function renderPefProjects() {
+    const projects = getPefProjects();
+    pefProjectsGrid.innerHTML = '';
+
+    if (projects.length === 0) {
+      pefEmpty.classList.remove('hidden');
+      return;
+    }
+
+    pefEmpty.classList.add('hidden');
+
+    projects.forEach((proj, i) => {
+      const card = document.createElement('div');
+      card.className = 'pef-talks__card';
+      card.innerHTML = `
+        <div class="pef-talks__card-accent"></div>
+        <span class="mono-sm">PEF ${String(i + 1).padStart(2, '0')}</span>
+        <h3 class="pef-talks__card-title">${escapeHtml(proj.name)}</h3>
+        <span class="pef-talks__card-members">${escapeHtml(proj.members)}</span>
+        <p class="pef-talks__card-desc">${escapeHtml(proj.summary)}</p>
+        <p class="pef-talks__card-problem"><strong>Problematica:</strong> ${escapeHtml(proj.problem)}</p>
+        <button class="pef-talks__card-feedback-btn" data-project-id="${proj.id}">DAR FEEDBACK &rarr;</button>
+      `;
+      pefProjectsGrid.appendChild(card);
+    });
+
+    // Bind feedback buttons
+    pefProjectsGrid.querySelectorAll('.pef-talks__card-feedback-btn').forEach(btn => {
+      btn.addEventListener('click', (e) => {
+        const projectId = e.target.dataset.projectId;
+        openFeedbackForm(projectId);
+      });
+    });
+
+    bindCursorHover();
+  }
+
+  function escapeHtml(text) {
+    const div = document.createElement('div');
+    div.textContent = text;
+    return div.innerHTML;
+  }
+
+  // ---- Open/Close functions ----
+  function openPefGate() {
+    if (pefAuthenticated) {
+      openPefTalks();
+      return;
+    }
+    pefGate.classList.add('open');
+    document.body.classList.add('modal-open');
+    pefEmail.focus();
+  }
+
+  function closePefGate() {
+    pefGate.classList.remove('open');
+    document.body.classList.remove('modal-open');
+    pefError.textContent = '';
+    pefEmail.value = '';
+  }
+
+  function openPefTalks() {
+    closePefGate();
+    renderPefProjects();
+    pefTalks.classList.add('open');
+    document.body.classList.add('modal-open');
+  }
+
+  function closePefTalks() {
+    pefTalks.classList.remove('open');
+    document.body.classList.remove('modal-open');
+  }
+
+  function openAdminGate() {
+    pefAdminGate.classList.add('open');
+    pefAdminPass.focus();
+  }
+
+  function closeAdminGate() {
+    pefAdminGate.classList.remove('open');
+    pefAdminError.textContent = '';
+    pefAdminPass.value = '';
+  }
+
+  function openRegisterForm() {
+    closeAdminGate();
+    pefRegister.classList.add('open');
+  }
+
+  function closeRegisterForm() {
+    pefRegister.classList.remove('open');
+    pefRegisterForm.reset();
+    pefRegisterError.textContent = '';
+  }
+
+  function openFeedbackForm(projectId) {
+    const projects = getPefProjects();
+    const project = projects.find(p => p.id === projectId);
+    if (!project) return;
+
+    pefFeedbackTitle.textContent = project.name;
+    pefFbProjectId.value = projectId;
+    pefFeedbackForm.reset();
+    pefFeedback.classList.add('open');
+  }
+
+  function closeFeedbackForm() {
+    pefFeedback.classList.remove('open');
+    pefFeedbackForm.reset();
+  }
+
+  // ---- Event Listeners ----
+
+  // Nav button & menu link
+  pefBtn.addEventListener('click', openPefGate);
+  menuPefLink.addEventListener('click', (e) => {
+    e.preventDefault();
+    navBurger.classList.remove('active');
+    menu.classList.remove('open');
+    document.body.classList.remove('menu-open');
+    setTimeout(openPefGate, 300);
+  });
+
+  // Email gate
+  pefGateClose.addEventListener('click', closePefGate);
+  pefGateBackdrop.addEventListener('click', closePefGate);
+
+  pefGateForm.addEventListener('submit', (e) => {
+    e.preventDefault();
+    const email = pefEmail.value;
+    if (!validateUdemEmail(email)) {
+      pefError.textContent = '⚠ Solo se permiten correos @udem.edu o @udem.edu.mx';
+      pefEmail.style.borderBottomColor = 'var(--orange)';
+      setTimeout(() => { pefEmail.style.borderBottomColor = ''; }, 2000);
+      return;
+    }
+    pefAuthenticated = true;
+    sessionStorage.setItem('pefAuth', 'true');
+    openPefTalks();
+  });
+
+  // PEF Talks panel
+  pefTalksClose.addEventListener('click', closePefTalks);
+  pefTalksBackdrop.addEventListener('click', closePefTalks);
+
+  // Add PEF button -> admin password
+  pefAddBtn.addEventListener('click', openAdminGate);
+
+  // Admin gate
+  pefAdminGateClose.addEventListener('click', closeAdminGate);
+  pefAdminGateBackdrop.addEventListener('click', closeAdminGate);
+
+  pefAdminForm.addEventListener('submit', (e) => {
+    e.preventDefault();
+    if (pefAdminPass.value !== ADMIN_PASSWORD) {
+      pefAdminError.textContent = '⚠ Contrasena incorrecta';
+      pefAdminPass.style.borderBottomColor = 'var(--orange)';
+      setTimeout(() => { pefAdminPass.style.borderBottomColor = ''; }, 2000);
+      return;
+    }
+    openRegisterForm();
+  });
+
+  // Register form
+  pefRegisterClose.addEventListener('click', closeRegisterForm);
+  pefRegisterBackdrop.addEventListener('click', closeRegisterForm);
+
+  pefRegisterForm.addEventListener('submit', (e) => {
+    e.preventDefault();
+    const name = document.getElementById('pefProjName').value.trim();
+    const members = document.getElementById('pefProjMembers').value.trim();
+    const summary = document.getElementById('pefProjSummary').value.trim();
+    const problem = document.getElementById('pefProjProblem').value.trim();
+    const email = document.getElementById('pefProjEmail').value.trim();
+
+    if (!validateUdemEmail(email)) {
+      pefRegisterError.textContent = '⚠ El correo debe ser @udem.edu o @udem.edu.mx';
+      return;
+    }
+
+    if (!name || !members || !summary || !problem) {
+      pefRegisterError.textContent = '⚠ Todos los campos son obligatorios';
+      return;
+    }
+
+    const projects = getPefProjects();
+    const newProject = {
+      id: 'pef_' + Date.now(),
+      name,
+      members,
+      summary,
+      problem,
+      email,
+      createdAt: new Date().toISOString()
+    };
+    projects.push(newProject);
+    savePefProjects(projects);
+
+    closeRegisterForm();
+    renderPefProjects();
+    showToast('✓ PROYECTO PEF REGISTRADO EXITOSAMENTE');
+  });
+
+  // Feedback form
+  pefFeedbackClose.addEventListener('click', closeFeedbackForm);
+  pefFeedbackBackdrop.addEventListener('click', closeFeedbackForm);
+
+  pefFeedbackForm.addEventListener('submit', (e) => {
+    e.preventDefault();
+    const profName = document.getElementById('pefFbProfName').value.trim();
+    const fbText = document.getElementById('pefFbText').value.trim();
+    const interest = document.querySelector('input[name="pefInterest"]:checked');
+    const projectId = pefFbProjectId.value;
+
+    if (!profName || !fbText || !interest) return;
+
+    const projects = getPefProjects();
+    const project = projects.find(p => p.id === projectId);
+    if (!project) return;
+
+    // Build mailto link with feedback
+    const interestLabel = interest.value === 'si' ? 'Si, me interesa asesorar'
+      : interest.value === 'sinodal' ? 'Como sinodal'
+      : 'No';
+
+    const subject = encodeURIComponent(`Feedback PEF: ${project.name}`);
+    const body = encodeURIComponent(
+      `Profesor: ${profName}\n\n` +
+      `Feedback:\n${fbText}\n\n` +
+      `¿Interesado en asesorar?: ${interestLabel}\n\n` +
+      `---\nProyecto: ${project.name}\nIntegrantes: ${project.members}`
+    );
+
+    // Open mailto
+    window.open(`mailto:${project.email}?subject=${subject}&body=${body}`, '_blank');
+
+    closeFeedbackForm();
+    showToast('✓ FEEDBACK ENVIADO — SE ABRIO TU CLIENTE DE CORREO');
+  });
+
+  // ESC key
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape') {
+      if (pefFeedback.classList.contains('open')) closeFeedbackForm();
+      else if (pefRegister.classList.contains('open')) closeRegisterForm();
+      else if (pefAdminGate.classList.contains('open')) closeAdminGate();
+      else if (pefGate.classList.contains('open')) closePefGate();
+      else if (pefTalks.classList.contains('open')) closePefTalks();
+    }
+  });
+}
+
 // ---- NAV SCROLL STYLE ----
 let lastScroll = 0;
 window.addEventListener('scroll', () => {
@@ -513,4 +837,5 @@ document.addEventListener('DOMContentLoaded', () => {
   initMagnetic();
   bindCursorHover();
   initFontCycling();
+  initPefTalks();
 });

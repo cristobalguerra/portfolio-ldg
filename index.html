@@ -31,10 +31,179 @@
       <span></span><span></span><span></span><span></span>
     </button>
     <a href="#hero" class="nav__logo">PORTFOLIO<br>LDG</a>
+    <button class="nav__pef-btn" id="pefBtn">PEF TALKS</button>
     <div class="nav__side-label">
       <span>REPOSITORIO DE TESIS</span>
     </div>
   </nav>
+
+  <!-- PEF TALKS ACCESS GATE -->
+  <div class="pef-gate" id="pefGate">
+    <div class="pef-gate__backdrop" id="pefGateBackdrop"></div>
+    <div class="pef-gate__panel">
+      <button class="pef-gate__close" id="pefGateClose">&times;</button>
+      <div class="pef-gate__content">
+        <span class="mono-sm">ACCESO RESTRINGIDO</span>
+        <h2 class="pef-gate__title">PEF TALKS</h2>
+        <p class="pef-gate__desc">Este espacio es exclusivo para la comunidad UDEM. Ingresa tu correo institucional para acceder.</p>
+        <form class="pef-gate__form" id="pefGateForm">
+          <div class="pef-gate__input-wrap">
+            <input type="email" class="pef-gate__input" id="pefEmail" placeholder="tu.nombre@udem.edu.mx" required autocomplete="email">
+            <div class="pef-gate__input-line"></div>
+          </div>
+          <span class="pef-gate__error" id="pefError"></span>
+          <button type="submit" class="pef-gate__submit">
+            <span>VERIFICAR ACCESO</span>
+            <span class="pef-gate__submit-arrow">&rarr;</span>
+          </button>
+        </form>
+        <span class="mono-sm pef-gate__hint">Solo correos @udem.edu y @udem.edu.mx</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- PEF TALKS SECTION (hidden until authenticated) -->
+  <div class="pef-talks" id="pefTalks">
+    <div class="pef-talks__backdrop" id="pefTalksBackdrop"></div>
+    <div class="pef-talks__panel">
+      <div class="pef-talks__header">
+        <div>
+          <span class="mono-sm">ESPACIO EXCLUSIVO UDEM</span>
+          <h2 class="pef-talks__title">PEF TALKS</h2>
+        </div>
+        <div class="pef-talks__header-actions">
+          <button class="pef-talks__add-btn" id="pefAddBtn">+ DAR DE ALTA PEF</button>
+          <button class="pef-talks__close" id="pefTalksClose">&times;</button>
+        </div>
+      </div>
+      <div class="pef-talks__body" id="pefTalksBody">
+        <div class="pef-talks__welcome">
+          <p class="pef-talks__welcome-text">Bienvenido al espacio exclusivo de PEF Talks. Aqui encontraras los proyectos PEF dados de alta. Puedes dar feedback a cada proyecto o registrar uno nuevo.</p>
+        </div>
+        <div class="pef-talks__grid" id="pefProjectsGrid">
+          <!-- PEF projects injected by JS -->
+        </div>
+        <div class="pef-talks__empty" id="pefEmpty">
+          <span class="mono-sm">NO HAY PROYECTOS PEF REGISTRADOS AUN</span>
+          <p>Se el primero en dar de alta un proyecto PEF.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- PEF ADMIN PASSWORD GATE -->
+  <div class="pef-admin-gate" id="pefAdminGate">
+    <div class="pef-admin-gate__backdrop" id="pefAdminGateBackdrop"></div>
+    <div class="pef-admin-gate__panel">
+      <button class="pef-gate__close" id="pefAdminGateClose">&times;</button>
+      <div class="pef-gate__content">
+        <span class="mono-sm">ACCESO ADMINISTRADOR</span>
+        <h2 class="pef-gate__title" style="font-size: clamp(2rem, 5vw, 3.5rem);">REGISTRAR PEF</h2>
+        <p class="pef-gate__desc">Ingresa la contrasena de administrador para dar de alta un nuevo proyecto PEF.</p>
+        <form class="pef-gate__form" id="pefAdminForm">
+          <div class="pef-gate__input-wrap">
+            <input type="password" class="pef-gate__input" id="pefAdminPass" placeholder="Contrasena" required>
+            <div class="pef-gate__input-line"></div>
+          </div>
+          <span class="pef-gate__error" id="pefAdminError"></span>
+          <button type="submit" class="pef-gate__submit">
+            <span>CONTINUAR</span>
+            <span class="pef-gate__submit-arrow">&rarr;</span>
+          </button>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <!-- PEF REGISTRATION FORM -->
+  <div class="pef-register" id="pefRegister">
+    <div class="pef-register__backdrop" id="pefRegisterBackdrop"></div>
+    <div class="pef-register__panel">
+      <div class="pef-register__header">
+        <div>
+          <span class="mono-sm">NUEVO PROYECTO</span>
+          <h2 class="pef-talks__title" style="font-size: clamp(2rem, 5vw, 4rem);">ALTA DE PEF</h2>
+        </div>
+        <button class="pef-talks__close" id="pefRegisterClose">&times;</button>
+      </div>
+      <form class="pef-register__form" id="pefRegisterForm">
+        <div class="pef-register__field">
+          <label class="mono-sm" for="pefProjName">NOMBRE DEL PROYECTO</label>
+          <input type="text" class="pef-register__input" id="pefProjName" placeholder="Ej: Rediseno de identidad para..." required>
+        </div>
+        <div class="pef-register__field">
+          <label class="mono-sm" for="pefProjMembers">NOMBRE DE LOS INTEGRANTES</label>
+          <input type="text" class="pef-register__input" id="pefProjMembers" placeholder="Ej: Ana Lopez, Carlos Ruiz, Maria Garcia" required>
+        </div>
+        <div class="pef-register__field">
+          <label class="mono-sm" for="pefProjSummary">RESUMEN DEL PROYECTO</label>
+          <textarea class="pef-register__textarea" id="pefProjSummary" placeholder="Describe brevemente de que trata tu proyecto PEF..." required rows="3"></textarea>
+        </div>
+        <div class="pef-register__field">
+          <label class="mono-sm" for="pefProjProblem">PROBLEMATICA</label>
+          <textarea class="pef-register__textarea" id="pefProjProblem" placeholder="Cual es la problematica que aborda tu proyecto..." required rows="3"></textarea>
+        </div>
+        <div class="pef-register__field">
+          <label class="mono-sm" for="pefProjEmail">CORREO INSTITUCIONAL PARA FEEDBACK</label>
+          <input type="email" class="pef-register__input" id="pefProjEmail" placeholder="tu.nombre@udem.edu.mx" required>
+        </div>
+        <span class="pef-gate__error" id="pefRegisterError"></span>
+        <button type="submit" class="pef-gate__submit" style="margin-top: var(--space-sm);">
+          <span>REGISTRAR PROYECTO</span>
+          <span class="pef-gate__submit-arrow">&rarr;</span>
+        </button>
+      </form>
+    </div>
+  </div>
+
+  <!-- PEF FEEDBACK FORM -->
+  <div class="pef-feedback" id="pefFeedback">
+    <div class="pef-feedback__backdrop" id="pefFeedbackBackdrop"></div>
+    <div class="pef-feedback__panel">
+      <div class="pef-feedback__header">
+        <div>
+          <span class="mono-sm">FEEDBACK PARA</span>
+          <h2 class="pef-talks__title" style="font-size: clamp(1.5rem, 4vw, 3rem);" id="pefFeedbackTitle"></h2>
+        </div>
+        <button class="pef-talks__close" id="pefFeedbackClose">&times;</button>
+      </div>
+      <form class="pef-register__form" id="pefFeedbackForm">
+        <div class="pef-register__field">
+          <label class="mono-sm" for="pefFbProfName">NOMBRE DEL PROFESOR</label>
+          <input type="text" class="pef-register__input" id="pefFbProfName" placeholder="Nombre completo" required>
+        </div>
+        <div class="pef-register__field">
+          <label class="mono-sm" for="pefFbText">FEEDBACK</label>
+          <textarea class="pef-register__textarea" id="pefFbText" placeholder="Escribe tu retroalimentacion sobre el proyecto..." required rows="5"></textarea>
+        </div>
+        <div class="pef-register__field">
+          <label class="mono-sm">¿ESTAS INTERESADO EN ASESORAR ESTE PROYECTO DE PEF?</label>
+          <div class="pef-feedback__radio-group">
+            <label class="pef-feedback__radio">
+              <input type="radio" name="pefInterest" value="si" required>
+              <span class="pef-feedback__radio-custom"></span>
+              <span>Si</span>
+            </label>
+            <label class="pef-feedback__radio">
+              <input type="radio" name="pefInterest" value="no">
+              <span class="pef-feedback__radio-custom"></span>
+              <span>No</span>
+            </label>
+            <label class="pef-feedback__radio">
+              <input type="radio" name="pefInterest" value="sinodal">
+              <span class="pef-feedback__radio-custom"></span>
+              <span>Como sinodal</span>
+            </label>
+          </div>
+        </div>
+        <input type="hidden" id="pefFbProjectId" value="">
+        <button type="submit" class="pef-gate__submit" style="margin-top: var(--space-sm);">
+          <span>ENVIAR FEEDBACK</span>
+          <span class="pef-gate__submit-arrow">&rarr;</span>
+        </button>
+      </form>
+    </div>
+  </div>
 
   <!-- FULLSCREEN MENU -->
   <div class="menu" id="menu">
@@ -44,7 +213,8 @@
         <a href="#about" class="menu__link" data-index="02">ACERCA</a>
         <a href="#gallery" class="menu__link" data-index="03">PROYECTOS</a>
         <a href="#awards" class="menu__link" data-index="04">AWARDS</a>
-        <a href="#footer" class="menu__link" data-index="05">CONTACTO</a>
+        <a href="#" class="menu__link" data-index="05" id="menuPefLink">PEF TALKS</a>
+        <a href="#footer" class="menu__link" data-index="06">CONTACTO</a>
       </div>
       <div class="menu__info">
         <p class="mono-sm">LICENCIATURA EN DISENO GRAFICO</p>
@@ -305,6 +475,9 @@
       <span>LDG</span>
     </div>
   </footer>
+
+  <!-- TOAST NOTIFICATION -->
+  <div class="pef-toast" id="pefToast"></div>
 
   <script src="script.js"></script>
 </body>
