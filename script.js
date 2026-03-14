@@ -7,7 +7,7 @@
 const theses = [
   {
     id: 1,
-    title: "Identidad Visual para Cerveceria Artesanal",
+    title: "Identidad Visual para Cervecería Artesanal",
     student: "Valeria Montoya",
     tutor: "Mtro. Ricardo Fuentes",
     year: 2026,
@@ -22,12 +22,12 @@ const theses = [
       "linear-gradient(180deg, #8B6DB5, #D4FF00)",
       "linear-gradient(135deg, #FF5030, #D4FF00)"
     ],
-    abstract: "Este proyecto desarrolla un sistema de identidad visual integral para una cerveceria artesanal ubicada en Oaxaca. La propuesta abarca desde la arquitectura de marca hasta el diseno de etiquetas, buscando comunicar la esencia del proceso artesanal y la riqueza cultural de la region. Se exploran conceptos de autenticidad, tradicion e innovacion a traves de un lenguaje grafico contemporaneo."
+    abstract: "Este proyecto desarrolla un sistema de identidad visual integral para una cervecería artesanal ubicada en Oaxaca. La propuesta abarca desde la arquitectura de marca hasta el diseño de etiquetas, buscando comunicar la esencia del proceso artesanal y la riqueza cultural de la región. Se exploran conceptos de autenticidad, tradición e innovación a través de un lenguaje gráfico contemporáneo."
   },
   {
     id: 2,
     title: "Sistema de Marca para Festival de Cine Independiente",
-    student: "Andres Quiroga",
+    student: "Andrés Quiroga",
     tutor: "Mtra. Laura Espinoza",
     year: 2025,
     category: "identidad",
@@ -41,12 +41,12 @@ const theses = [
       "linear-gradient(180deg, #2a2a2a, #4a4a4a)",
       "linear-gradient(135deg, #1a1a1a, #3a3a3a)"
     ],
-    abstract: "Propuesta de sistema de identidad flexible para un festival de cine independiente que se reinventa cada ano. El proyecto investiga como crear coherencia visual dentro de un marco que permite la evolucion y adaptacion. Se disena un toolkit de marca que incluye logotipo generativo, paleta cromatica dinamica, tipografia editorial y aplicaciones en medios impresos y digitales."
+    abstract: "Propuesta de sistema de identidad flexible para un festival de cine independiente que se reinventa cada año. El proyecto investiga cómo crear coherencia visual dentro de un marco que permite la evolución y adaptación. Se diseña un toolkit de marca que incluye logotipo generativo, paleta cromática dinámica, tipografía editorial y aplicaciones en medios impresos y digitales."
   },
   {
     id: 3,
-    title: "Diseno Editorial: Revista de Arquitectura Contemporanea",
-    student: "Sofia Delgado",
+    title: "Diseño Editorial: Revista de Arquitectura Contemporánea",
+    student: "Sofía Delgado",
     tutor: "Mtro. Carlos Vega",
     year: 2025,
     category: "editorial",
@@ -60,13 +60,13 @@ const theses = [
       "linear-gradient(180deg, #8B6DB5, #D4B8E8)",
       "linear-gradient(135deg, #A88CCE, #6B4F96)"
     ],
-    abstract: "Investigacion y desarrollo de un proyecto editorial que reimagina la publicacion de arquitectura contemporanea. Se propone un formato hibrido impreso-digital que integra fotografia, infografia y narrativa visual para comunicar proyectos arquitectonicos de manera inmersiva. El diseno busca romper con las convenciones del genero editorial arquitectonico."
+    abstract: "Investigación y desarrollo de un proyecto editorial que reimagina la publicación de arquitectura contemporánea. Se propone un formato híbrido impreso-digital que integra fotografía, infografía y narrativa visual para comunicar proyectos arquitectónicos de manera inmersiva. El diseño busca romper con las convenciones del género editorial arquitectónico."
   },
   {
     id: 4,
-    title: "Packaging Sustentable para Productos Organicos",
+    title: "Packaging Sustentable para Productos Orgánicos",
     student: "Diego Navarro",
-    tutor: "Mtra. Ana Belen Torres",
+    tutor: "Mtra. Ana Belén Torres",
     year: 2024,
     category: "packaging",
     categoryLabel: "PACKAGING",
@@ -79,13 +79,13 @@ const theses = [
       "linear-gradient(180deg, #FF5030, #FFB09A)",
       "linear-gradient(135deg, #FF7A60, #CC3D24)"
     ],
-    abstract: "Este proyecto aborda el diseno de packaging sustentable para una linea de productos organicos. Se investigan materiales biodegradables y tecnicas de impresion ecologica para desarrollar un sistema de empaque que minimice el impacto ambiental sin sacrificar la calidad estetica. La propuesta incluye diseno estructural, grafico y estrategia de comunicacion visual en punto de venta."
+    abstract: "Este proyecto aborda el diseño de packaging sustentable para una línea de productos orgánicos. Se investigan materiales biodegradables y técnicas de impresión ecológica para desarrollar un sistema de empaque que minimice el impacto ambiental sin sacrificar la calidad estética. La propuesta incluye diseño estructural, gráfico y estrategia de comunicación visual en punto de venta."
   },
   {
     id: 5,
-    title: "Motion Graphics para Campana de Concientizacion Social",
+    title: "Motion Graphics para Campaña de Concientización Social",
     student: "Mariana Reyes",
-    tutor: "Mtro. Eduardo Sanchez",
+    tutor: "Mtro. Eduardo Sánchez",
     year: 2024,
     category: "motion",
     categoryLabel: "MOTION",
@@ -98,12 +98,12 @@ const theses = [
       "linear-gradient(180deg, #8E44AD, #D7BDE2)",
       "linear-gradient(135deg, #BB6BD9, #5B2C6F)"
     ],
-    abstract: "Desarrollo de una serie de piezas de motion graphics para una campana de concientizacion sobre salud mental en jovenes. El proyecto explora el poder del movimiento y la narrativa visual animada para transmitir mensajes complejos de manera accesible y emocionalmente resonante. Se producen cinco piezas animadas para redes sociales y una pieza principal de 90 segundos."
+    abstract: "Desarrollo de una serie de piezas de motion graphics para una campaña de concientización sobre salud mental en jóvenes. El proyecto explora el poder del movimiento y la narrativa visual animada para transmitir mensajes complejos de manera accesible y emocionalmente resonante. Se producen cinco piezas animadas para redes sociales y una pieza principal de 90 segundos."
   },
   {
     id: 6,
     title: "Interfaz Digital para Museo de Arte Moderno",
-    student: "Roberto Jimenez",
+    student: "Roberto Jiménez",
     tutor: "Mtra. Patricia Lozano",
     year: 2023,
     category: "uiux",
@@ -117,7 +117,7 @@ const theses = [
       "linear-gradient(180deg, #D4FF00, #8B6DB5)",
       "linear-gradient(135deg, #2D2D2D, #FF5030)"
     ],
-    abstract: "Diseno de experiencia de usuario e interfaz digital para el sitio web y aplicacion movil de un museo de arte moderno. El proyecto investiga como la tecnologia puede enriquecer la experiencia museografica, proponiendo herramientas interactivas de exploracion de colecciones, recorridos virtuales personalizados y funcionalidades de accesibilidad universal."
+    abstract: "Diseño de experiencia de usuario e interfaz digital para el sitio web y aplicación móvil de un museo de arte moderno. El proyecto investiga cómo la tecnología puede enriquecer la experiencia museográfica, proponiendo herramientas interactivas de exploración de colecciones, recorridos virtuales personalizados y funcionalidades de accesibilidad universal."
   },
   {
     id: 7,
@@ -136,11 +136,11 @@ const theses = [
       "linear-gradient(180deg, #D4FF00, #FF5030)",
       "linear-gradient(135deg, #FF5030, #8B6DB5)"
     ],
-    abstract: "Creacion de un sistema de branding integral para un estudio de yoga y bienestar. La investigacion parte de la filosofia del yoga y su estetica para desarrollar una identidad que comunique serenidad, equilibrio y conexion. El proyecto abarca logotipo, papeleria, senaletica interior, presencia digital y merchandising, todo bajo un concepto unificado de diseno consciente."
+    abstract: "Creación de un sistema de branding integral para un estudio de yoga y bienestar. La investigación parte de la filosofía del yoga y su estética para desarrollar una identidad que comunique serenidad, equilibrio y conexión. El proyecto abarca logotipo, papelería, señalética interior, presencia digital y merchandising, todo bajo un concepto unificado de diseño consciente."
   },
   {
     id: 8,
-    title: "Rediseno de Identidad para Mercado Publico Tradicional",
+    title: "Rediseño de Identidad para Mercado Público Tradicional",
     student: "Fernando Castillo",
     tutor: "Mtra. Laura Espinoza",
     year: 2022,
@@ -155,7 +155,7 @@ const theses = [
       "linear-gradient(180deg, #8B6DB5, #D4FF00)",
       "linear-gradient(135deg, #FF5030, #6B4F96)"
     ],
-    abstract: "Proyecto de rediseno de identidad visual para un mercado publico tradicional en la Ciudad de Mexico. La propuesta busca revitalizar la imagen del espacio comercial respetando su esencia cultural y patrimonial. Se desarrolla un sistema de wayfinding, identidad grafica, comunicacion visual y presencia digital que posicione al mercado como destino gastronomico y cultural contemporaneo."
+    abstract: "Proyecto de rediseño de identidad visual para un mercado público tradicional en la Ciudad de México. La propuesta busca revitalizar la imagen del espacio comercial respetando su esencia cultural y patrimonial. Se desarrolla un sistema de wayfinding, identidad gráfica, comunicación visual y presencia digital que posicione al mercado como destino gastronómico y cultural contemporáneo."
   }
 ];
 
@@ -457,11 +457,34 @@ const cycleVariants = [
 ];
 let lastVariantIndex = -1;
 
+// Language cycle: every 2 font changes, switch language
+const languageCycle = [
+  'PORTFOLIO',    // español/inglés
+  'ポートフォリオ',  // japonés
+  'PORTFOLIO',    // normal
+  'PORTEFEUILLE', // francés
+  'PORTFOLIO',    // normal
+  'PORTAFOGLIO',  // italiano
+  'PORTFOLIO',    // normal
+  '作品集',        // chino
+  'PORTFOLIO',    // normal
+  'PORTFÓLIO',   // portugués
+];
+let cycleTickCount = 0;
+let currentLangIndex = 0;
+
 function initFontCycling() {
   const el = document.getElementById('heroPortfolio');
   if (!el) return;
 
   setInterval(() => {
+    cycleTickCount++;
+
+    // Every 2 ticks, advance to next language
+    if (cycleTickCount % 2 === 0) {
+      currentLangIndex = (currentLangIndex + 1) % languageCycle.length;
+    }
+
     let idx;
     do {
       idx = Math.floor(Math.random() * cycleVariants.length);
@@ -472,6 +495,7 @@ function initFontCycling() {
     el.style.opacity = '0';
     el.style.transform = 'translateY(10px)';
     setTimeout(() => {
+      el.textContent = languageCycle[currentLangIndex];
       el.style.fontWeight = v.weight;
       el.style.fontStyle = v.style;
       el.style.fontStretch = v.stretch;
@@ -573,7 +597,7 @@ function initPefTalks() {
         <h3 class="pef-talks__card-title">${escapeHtml(proj.name)}</h3>
         <span class="pef-talks__card-members">${escapeHtml(proj.members)}</span>
         <p class="pef-talks__card-desc">${escapeHtml(proj.summary)}</p>
-        <p class="pef-talks__card-problem"><strong>Problematica:</strong> ${escapeHtml(proj.problem)}</p>
+        <p class="pef-talks__card-problem"><strong>Problemática:</strong> ${escapeHtml(proj.problem)}</p>
         <button class="pef-talks__card-feedback-btn" data-project-id="${proj.id}">DAR FEEDBACK &rarr;</button>
       `;
       pefProjectsGrid.appendChild(card);
