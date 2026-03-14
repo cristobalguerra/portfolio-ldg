@@ -208,19 +208,10 @@ function bindCursorHover() {
 }
 
 // ============================================
-// LOADING SCREEN
+// HERO ANIMATIONS (on load)
 // ============================================
-const loader = document.getElementById('loader');
-
 window.addEventListener('load', () => {
-  setTimeout(() => {
-    loader.classList.add('done');
-    // Trigger hero animations after loader
-    document.querySelectorAll('.hero__line').forEach(el => el.classList.add('animated'));
-    setTimeout(() => {
-      loader.style.display = 'none';
-    }, 1200);
-  }, 2200);
+  document.querySelectorAll('.hero__line').forEach(el => el.classList.add('animated'));
 });
 
 // ---- NAVIGATION ----
