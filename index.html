@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>PORTFOLIO LDG — Repositorio de Tesis</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;1,9..40,300;1,9..40,400&family=JetBrains+Mono:wght@300;400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+  <!-- NAVIGATION -->
+  <nav class="nav" id="nav">
+    <button class="nav__burger" id="navBurger" aria-label="Menu">
+      <span></span><span></span><span></span><span></span>
+    </button>
+    <a href="#hero" class="nav__logo">PORTFOLIO<br>LDG</a>
+    <div class="nav__side-label">
+      <span>REPOSITORIO DE TESIS</span>
+    </div>
+  </nav>
+
+  <!-- FULLSCREEN MENU -->
+  <div class="menu" id="menu">
+    <div class="menu__inner">
+      <div class="menu__links">
+        <a href="#hero" class="menu__link" data-index="01">INICIO</a>
+        <a href="#about" class="menu__link" data-index="02">ACERCA</a>
+        <a href="#gallery" class="menu__link" data-index="03">PROYECTOS</a>
+        <a href="#footer" class="menu__link" data-index="04">CONTACTO</a>
+      </div>
+      <div class="menu__info">
+        <p class="mono-sm">LICENCIATURA EN DISENO GRAFICO</p>
+        <p class="mono-sm">REPOSITORIO ACADEMICO DE TESIS</p>
+        <p class="mono-sm">&copy; 2026</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- HERO SECTION -->
+  <section class="hero" id="hero">
+    <div class="hero__content">
+      <div class="hero__title-wrap">
+        <h1 class="hero__title">
+          <span class="hero__line" data-delay="0">PORTFOLIO</span>
+          <span class="hero__line hero__line--outline" data-delay="1">LDG</span>
+        </h1>
+      </div>
+      <div class="hero__subtitle">
+        <span class="hero__dash">&mdash;</span>
+        <span>REPOSITORIO DE TESIS<br>DE DISENO GRAFICO</span>
+      </div>
+    </div>
+    <div class="hero__bottom">
+      <span class="mono-sm">EXPLORA EL TRABAJO</span>
+      <span class="mono-sm hero__scroll">SCROLL &darr;</span>
+      <span class="mono-sm">&copy;2026</span>
+    </div>
+    <div class="hero__marquee">
+      <div class="hero__marquee-track">
+        <span>BRANDING &bull; EDITORIAL &bull; PACKAGING &bull; MOTION &bull; UI/UX &bull; IDENTIDAD &bull; BRANDING &bull; EDITORIAL &bull; PACKAGING &bull; MOTION &bull; UI/UX &bull; IDENTIDAD &bull; BRANDING &bull; EDITORIAL &bull; PACKAGING &bull; MOTION &bull; UI/UX &bull; IDENTIDAD &bull;</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- ABOUT SECTION -->
+  <section class="about" id="about">
+    <div class="about__grid">
+      <div class="about__left">
+        <span class="mono-sm about__label">( 01 )</span>
+        <h2 class="about__heading">
+          DONDE EL<br>
+          DISENO SE<br>
+          CONVIERTE<br>
+          EN TESIS
+        </h2>
+      </div>
+      <div class="about__right">
+        <div class="about__text">
+          <p>Este repositorio reune los proyectos de tesis mas destacados de la Licenciatura en Diseno Grafico. Cada proyecto representa meses de investigacion, conceptualizacion y ejecucion creativa.</p>
+          <p>Desde sistemas de identidad visual hasta proyectos editoriales, estos trabajos reflejan la vision y el talento de una nueva generacion de disenadores.</p>
+        </div>
+        <div class="about__stats">
+          <div class="about__stat">
+            <span class="about__stat-number">127</span>
+            <span class="mono-sm">TESIS PUBLICADAS</span>
+          </div>
+          <div class="about__stat">
+            <span class="about__stat-number">6</span>
+            <span class="mono-sm">GENERACIONES</span>
+          </div>
+          <div class="about__stat">
+            <span class="about__stat-number">12</span>
+            <span class="mono-sm">TUTORES ACTIVOS</span>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="about__image-strip">
+      <div class="about__image-strip-inner">
+        <div class="about__strip-item" style="--grad: linear-gradient(135deg, #FF2200, #FF6B35)"></div>
+        <div class="about__strip-item" style="--grad: linear-gradient(135deg, #1a1a1a, #333)"></div>
+        <div class="about__strip-item" style="--grad: linear-gradient(135deg, #FF2200, #cc1100)"></div>
+        <div class="about__strip-item" style="--grad: linear-gradient(135deg, #2a2a2a, #555)"></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- GALLERY SECTION -->
+  <section class="gallery" id="gallery">
+    <div class="gallery__header">
+      <div class="gallery__header-top">
+        <span class="mono-sm">( 02 )</span>
+        <h2 class="gallery__title">PROYECTOS<br>DE TESIS</h2>
+      </div>
+      <div class="gallery__filters" id="filters">
+        <div class="gallery__filter-group">
+          <span class="mono-sm gallery__filter-label">CATEGORIA</span>
+          <div class="gallery__filter-buttons" id="categoryFilters">
+            <button class="filter-btn active" data-filter="all">TODOS</button>
+            <button class="filter-btn" data-filter="branding">BRANDING</button>
+            <button class="filter-btn" data-filter="editorial">EDITORIAL</button>
+            <button class="filter-btn" data-filter="packaging">PACKAGING</button>
+            <button class="filter-btn" data-filter="motion">MOTION</button>
+            <button class="filter-btn" data-filter="uiux">UI/UX</button>
+            <button class="filter-btn" data-filter="identidad">IDENTIDAD</button>
+          </div>
+        </div>
+        <div class="gallery__filter-group">
+          <span class="mono-sm gallery__filter-label">ANO</span>
+          <div class="gallery__filter-buttons" id="yearFilters">
+            <button class="filter-btn active" data-year="all">TODOS</button>
+            <button class="filter-btn" data-year="2026">2026</button>
+            <button class="filter-btn" data-year="2025">2025</button>
+            <button class="filter-btn" data-year="2024">2024</button>
+            <button class="filter-btn" data-year="2023">2023</button>
+            <button class="filter-btn" data-year="2022">2022</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="gallery__grid" id="galleryGrid">
+      <!-- Cards injected by JS -->
+    </div>
+
+    <div class="gallery__count">
+      <span class="mono-sm" id="projectCount">8 PROYECTOS</span>
+    </div>
+  </section>
+
+  <!-- THESIS DETAIL MODAL -->
+  <div class="modal" id="modal">
+    <div class="modal__backdrop" id="modalBackdrop"></div>
+    <div class="modal__content" id="modalContent">
+      <button class="modal__close" id="modalClose">
+        <span>&times;</span>
+      </button>
+      <div class="modal__inner">
+        <div class="modal__cover" id="modalCover"></div>
+        <div class="modal__info">
+          <span class="mono-sm modal__category" id="modalCategory"></span>
+          <h2 class="modal__title" id="modalTitle"></h2>
+          <div class="modal__meta">
+            <div class="modal__meta-item">
+              <span class="mono-sm">ESTUDIANTE</span>
+              <span class="modal__meta-value" id="modalStudent"></span>
+            </div>
+            <div class="modal__meta-item">
+              <span class="mono-sm">TUTOR</span>
+              <span class="modal__meta-value" id="modalTutor"></span>
+            </div>
+            <div class="modal__meta-item">
+              <span class="mono-sm">ANO</span>
+              <span class="modal__meta-value" id="modalYear"></span>
+            </div>
+          </div>
+          <div class="modal__abstract" id="modalAbstract"></div>
+          <div class="modal__gallery" id="modalGallery"></div>
+          <button class="modal__download" id="modalDownload">
+            <span>DESCARGAR PDF</span>
+            <span class="modal__download-arrow">&darr;</span>
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- FOOTER -->
+  <footer class="footer" id="footer">
+    <div class="footer__top">
+      <div class="footer__brand">
+        <h2 class="footer__logo">PORTFOLIO<br>LDG</h2>
+        <p class="mono-sm">REPOSITORIO ACADEMICO<br>DE TESIS DE DISENO GRAFICO</p>
+      </div>
+      <div class="footer__links">
+        <div class="footer__col">
+          <span class="mono-sm footer__col-title">NAVEGACION</span>
+          <a href="#hero">Inicio</a>
+          <a href="#about">Acerca</a>
+          <a href="#gallery">Proyectos</a>
+        </div>
+        <div class="footer__col">
+          <span class="mono-sm footer__col-title">CONTACTO</span>
+          <a href="mailto:tesis@universidad.edu">tesis@universidad.edu</a>
+          <a href="#">+52 (55) 1234 5678</a>
+        </div>
+        <div class="footer__col">
+          <span class="mono-sm footer__col-title">REDES</span>
+          <a href="#">Instagram</a>
+          <a href="#">Behance</a>
+          <a href="#">LinkedIn</a>
+        </div>
+      </div>
+    </div>
+    <div class="footer__bottom">
+      <span class="mono-sm">&copy; 2026 PORTFOLIO LDG</span>
+      <span class="mono-sm">LICENCIATURA EN DISENO GRAFICO</span>
+      <span class="mono-sm">TODOS LOS DERECHOS RESERVADOS</span>
+    </div>
+    <div class="footer__big-text">
+      <span>LDG</span>
+    </div>
+  </footer>
+
+  <script src="script.js"></script>
+</body>
+</html>
