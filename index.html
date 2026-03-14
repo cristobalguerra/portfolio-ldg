@@ -6,10 +6,24 @@
   <title>PORTFOLIO LDG — Repositorio de Tesis</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;1,9..40,300;1,9..40,400&family=JetBrains+Mono:wght@300;400;500&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;1,9..40,300;1,9..40,400&family=JetBrains+Mono:wght@300;400;500&family=Playfair+Display:wght@700;900&family=Space+Grotesk:wght@700&family=Syne:wght@700;800&family=Clash+Display:wght@600;700&family=Outfit:wght@700;800&family=Unbounded:wght@700&family=Righteous&family=Protest+Guerrilla&family=Bungee&family=Rubik+Mono+One&family=Anton&family=Archivo+Black&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="styles.css">
 </head>
 <body>
+
+  <!-- LOADING SCREEN -->
+  <div class="loader" id="loader">
+    <span class="loader__text">LDG</span>
+    <div class="loader__bar">
+      <div class="loader__bar-fill"></div>
+    </div>
+  </div>
+
+  <!-- CUSTOM CURSOR -->
+  <div class="cursor" id="cursor">
+    <div class="cursor__dot"></div>
+    <div class="cursor__circle"></div>
+  </div>
 
   <!-- NAVIGATION -->
   <nav class="nav" id="nav">
@@ -29,7 +43,8 @@
         <a href="#hero" class="menu__link" data-index="01">INICIO</a>
         <a href="#about" class="menu__link" data-index="02">ACERCA</a>
         <a href="#gallery" class="menu__link" data-index="03">PROYECTOS</a>
-        <a href="#footer" class="menu__link" data-index="04">CONTACTO</a>
+        <a href="#awards" class="menu__link" data-index="04">AWARDS</a>
+        <a href="#footer" class="menu__link" data-index="05">CONTACTO</a>
       </div>
       <div class="menu__info">
         <p class="mono-sm">LICENCIATURA EN DISENO GRAFICO</p>
@@ -44,7 +59,7 @@
     <div class="hero__content">
       <div class="hero__title-wrap">
         <h1 class="hero__title">
-          <span class="hero__line" data-delay="0">PORTFOLIO</span>
+          <span class="hero__line hero__line--cycling" data-delay="0" id="heroPortfolio">PORTFOLIO</span>
           <span class="hero__line hero__line--outline" data-delay="1">LDG</span>
         </h1>
       </div>
@@ -100,10 +115,10 @@
     </div>
     <div class="about__image-strip">
       <div class="about__image-strip-inner">
-        <div class="about__strip-item" style="--grad: linear-gradient(135deg, #FF2200, #FF6B35)"></div>
-        <div class="about__strip-item" style="--grad: linear-gradient(135deg, #1a1a1a, #333)"></div>
-        <div class="about__strip-item" style="--grad: linear-gradient(135deg, #FF2200, #cc1100)"></div>
-        <div class="about__strip-item" style="--grad: linear-gradient(135deg, #2a2a2a, #555)"></div>
+        <div class="about__strip-item" style="--grad: linear-gradient(135deg, #D4FF00, #8B6DB5)"></div>
+        <div class="about__strip-item" style="--grad: linear-gradient(135deg, #FF5030, #2D2D2D)"></div>
+        <div class="about__strip-item" style="--grad: linear-gradient(135deg, #8B6DB5, #D4FF00)"></div>
+        <div class="about__strip-item" style="--grad: linear-gradient(135deg, #2D2D2D, #FF5030)"></div>
       </div>
     </div>
   </section>
@@ -187,6 +202,72 @@
       </div>
     </div>
   </div>
+
+  <!-- AWARDS SECTION -->
+  <section class="awards" id="awards">
+    <div class="awards__header">
+      <span class="mono-sm">( 03 )</span>
+      <h2 class="awards__title">RECONOCI&shy;<br>MIENTOS</h2>
+    </div>
+    <div class="awards__list">
+      <div class="awards__item">
+        <span class="awards__year">2026</span>
+        <div class="awards__info">
+          <span class="awards__name">Valeria Montoya</span>
+          <span class="awards__project">Identidad Visual para Cerveceria Artesanal</span>
+        </div>
+        <span class="awards__badge">MENCI&Oacute;N HONOR&Iacute;FICA</span>
+      </div>
+      <div class="awards__item">
+        <span class="awards__year">2025</span>
+        <div class="awards__info">
+          <span class="awards__name">Sofia Delgado</span>
+          <span class="awards__project">Revista de Arquitectura Contemporanea</span>
+        </div>
+        <span class="awards__badge">MEJOR TESIS</span>
+      </div>
+      <div class="awards__item">
+        <span class="awards__year">2025</span>
+        <div class="awards__info">
+          <span class="awards__name">Andres Quiroga</span>
+          <span class="awards__project">Sistema de Marca para Festival de Cine</span>
+        </div>
+        <span class="awards__badge">BIENAL DISE&Ntilde;O</span>
+      </div>
+      <div class="awards__item">
+        <span class="awards__year">2024</span>
+        <div class="awards__info">
+          <span class="awards__name">Mariana Reyes</span>
+          <span class="awards__project">Motion Graphics — Concientizacion Social</span>
+        </div>
+        <span class="awards__badge">MEJOR MOTION</span>
+      </div>
+      <div class="awards__item">
+        <span class="awards__year">2024</span>
+        <div class="awards__info">
+          <span class="awards__name">Diego Navarro</span>
+          <span class="awards__project">Packaging Sustentable para Productos Organicos</span>
+        </div>
+        <span class="awards__badge">PREMIO SUSTENTABILIDAD</span>
+      </div>
+      <div class="awards__item">
+        <span class="awards__year">2023</span>
+        <div class="awards__info">
+          <span class="awards__name">Roberto Jimenez</span>
+          <span class="awards__project">Interfaz Digital para Museo de Arte Moderno</span>
+        </div>
+        <span class="awards__badge">MEJOR UI/UX</span>
+      </div>
+      <div class="awards__item">
+        <span class="awards__year">2023</span>
+        <div class="awards__info">
+          <span class="awards__name">Camila Ortega</span>
+          <span class="awards__project">Branding para Estudio de Yoga y Bienestar</span>
+        </div>
+        <span class="awards__badge">MENCI&Oacute;N HONOR&Iacute;FICA</span>
+      </div>
+    </div>
+  </section>
 
   <!-- FOOTER -->
   <footer class="footer" id="footer">

@@ -1,5 +1,6 @@
 /* ============================================
    PORTFOLIO LDG — Script
+   Valiente-inspired interactions
    ============================================ */
 
 // ---- THESIS DATA ----
@@ -12,14 +13,14 @@ const theses = [
     year: 2026,
     category: "branding",
     categoryLabel: "BRANDING",
-    gradient: "linear-gradient(135deg, #FF2200 0%, #FF6B35 50%, #FFB347 100%)",
+    gradient: "linear-gradient(135deg, #D4FF00 0%, #8B6DB5 50%, #FF5030 100%)",
     galleryGradients: [
-      "linear-gradient(135deg, #FF2200, #cc4400)",
-      "linear-gradient(135deg, #FF6B35, #FF2200)",
-      "linear-gradient(135deg, #FFB347, #FF6B35)",
-      "linear-gradient(45deg, #cc1100, #FF2200)",
-      "linear-gradient(180deg, #FF2200, #FFB347)",
-      "linear-gradient(135deg, #FF6B35, #cc4400)"
+      "linear-gradient(135deg, #D4FF00, #B8E000)",
+      "linear-gradient(135deg, #8B6DB5, #D4FF00)",
+      "linear-gradient(135deg, #FF5030, #8B6DB5)",
+      "linear-gradient(45deg, #D4FF00, #FF5030)",
+      "linear-gradient(180deg, #8B6DB5, #D4FF00)",
+      "linear-gradient(135deg, #FF5030, #D4FF00)"
     ],
     abstract: "Este proyecto desarrolla un sistema de identidad visual integral para una cerveceria artesanal ubicada en Oaxaca. La propuesta abarca desde la arquitectura de marca hasta el diseno de etiquetas, buscando comunicar la esencia del proceso artesanal y la riqueza cultural de la region. Se exploran conceptos de autenticidad, tradicion e innovacion a traves de un lenguaje grafico contemporaneo."
   },
@@ -50,14 +51,14 @@ const theses = [
     year: 2025,
     category: "editorial",
     categoryLabel: "EDITORIAL",
-    gradient: "linear-gradient(135deg, #2C3E50 0%, #3498DB 50%, #85C1E9 100%)",
+    gradient: "linear-gradient(135deg, #8B6DB5 0%, #A88CCE 50%, #D4B8E8 100%)",
     galleryGradients: [
-      "linear-gradient(135deg, #2C3E50, #4A6FA5)",
-      "linear-gradient(135deg, #3498DB, #2C3E50)",
-      "linear-gradient(135deg, #85C1E9, #3498DB)",
-      "linear-gradient(45deg, #1a2530, #3498DB)",
-      "linear-gradient(180deg, #2C3E50, #85C1E9)",
-      "linear-gradient(135deg, #3498DB, #1a2530)"
+      "linear-gradient(135deg, #8B6DB5, #6B4F96)",
+      "linear-gradient(135deg, #A88CCE, #8B6DB5)",
+      "linear-gradient(135deg, #D4B8E8, #A88CCE)",
+      "linear-gradient(45deg, #6B4F96, #8B6DB5)",
+      "linear-gradient(180deg, #8B6DB5, #D4B8E8)",
+      "linear-gradient(135deg, #A88CCE, #6B4F96)"
     ],
     abstract: "Investigacion y desarrollo de un proyecto editorial que reimagina la publicacion de arquitectura contemporanea. Se propone un formato hibrido impreso-digital que integra fotografia, infografia y narrativa visual para comunicar proyectos arquitectonicos de manera inmersiva. El diseno busca romper con las convenciones del genero editorial arquitectonico."
   },
@@ -69,14 +70,14 @@ const theses = [
     year: 2024,
     category: "packaging",
     categoryLabel: "PACKAGING",
-    gradient: "linear-gradient(135deg, #27AE60 0%, #2ECC71 50%, #82E0AA 100%)",
+    gradient: "linear-gradient(135deg, #FF5030 0%, #FF7A60 50%, #FFB09A 100%)",
     galleryGradients: [
-      "linear-gradient(135deg, #27AE60, #1E8449)",
-      "linear-gradient(135deg, #2ECC71, #27AE60)",
-      "linear-gradient(135deg, #82E0AA, #2ECC71)",
-      "linear-gradient(45deg, #196F3D, #27AE60)",
-      "linear-gradient(180deg, #27AE60, #82E0AA)",
-      "linear-gradient(135deg, #2ECC71, #196F3D)"
+      "linear-gradient(135deg, #FF5030, #CC3D24)",
+      "linear-gradient(135deg, #FF7A60, #FF5030)",
+      "linear-gradient(135deg, #FFB09A, #FF7A60)",
+      "linear-gradient(45deg, #CC3D24, #FF5030)",
+      "linear-gradient(180deg, #FF5030, #FFB09A)",
+      "linear-gradient(135deg, #FF7A60, #CC3D24)"
     ],
     abstract: "Este proyecto aborda el diseno de packaging sustentable para una linea de productos organicos. Se investigan materiales biodegradables y tecnicas de impresion ecologica para desarrollar un sistema de empaque que minimice el impacto ambiental sin sacrificar la calidad estetica. La propuesta incluye diseno estructural, grafico y estrategia de comunicacion visual en punto de venta."
   },
@@ -107,14 +108,14 @@ const theses = [
     year: 2023,
     category: "uiux",
     categoryLabel: "UI/UX",
-    gradient: "linear-gradient(135deg, #E74C3C 0%, #F39C12 50%, #F7DC6F 100%)",
+    gradient: "linear-gradient(135deg, #D4FF00 0%, #2D2D2D 50%, #8B6DB5 100%)",
     galleryGradients: [
-      "linear-gradient(135deg, #E74C3C, #C0392B)",
-      "linear-gradient(135deg, #F39C12, #E74C3C)",
-      "linear-gradient(135deg, #F7DC6F, #F39C12)",
-      "linear-gradient(45deg, #922B21, #E74C3C)",
-      "linear-gradient(180deg, #E74C3C, #F7DC6F)",
-      "linear-gradient(135deg, #F39C12, #922B21)"
+      "linear-gradient(135deg, #D4FF00, #2D2D2D)",
+      "linear-gradient(135deg, #2D2D2D, #8B6DB5)",
+      "linear-gradient(135deg, #8B6DB5, #D4FF00)",
+      "linear-gradient(45deg, #2D2D2D, #D4FF00)",
+      "linear-gradient(180deg, #D4FF00, #8B6DB5)",
+      "linear-gradient(135deg, #2D2D2D, #FF5030)"
     ],
     abstract: "Diseno de experiencia de usuario e interfaz digital para el sitio web y aplicacion movil de un museo de arte moderno. El proyecto investiga como la tecnologia puede enriquecer la experiencia museografica, proponiendo herramientas interactivas de exploracion de colecciones, recorridos virtuales personalizados y funcionalidades de accesibilidad universal."
   },
@@ -126,14 +127,14 @@ const theses = [
     year: 2023,
     category: "branding",
     categoryLabel: "BRANDING",
-    gradient: "linear-gradient(135deg, #D4A574 0%, #C8956C 50%, #E8C9A0 100%)",
+    gradient: "linear-gradient(135deg, #FF5030 0%, #D4FF00 50%, #2D2D2D 100%)",
     galleryGradients: [
-      "linear-gradient(135deg, #D4A574, #A67C52)",
-      "linear-gradient(135deg, #C8956C, #D4A574)",
-      "linear-gradient(135deg, #E8C9A0, #C8956C)",
-      "linear-gradient(45deg, #8B6914, #D4A574)",
-      "linear-gradient(180deg, #D4A574, #E8C9A0)",
-      "linear-gradient(135deg, #C8956C, #8B6914)"
+      "linear-gradient(135deg, #FF5030, #D4FF00)",
+      "linear-gradient(135deg, #D4FF00, #2D2D2D)",
+      "linear-gradient(135deg, #2D2D2D, #FF5030)",
+      "linear-gradient(45deg, #FF5030, #2D2D2D)",
+      "linear-gradient(180deg, #D4FF00, #FF5030)",
+      "linear-gradient(135deg, #FF5030, #8B6DB5)"
     ],
     abstract: "Creacion de un sistema de branding integral para un estudio de yoga y bienestar. La investigacion parte de la filosofia del yoga y su estetica para desarrollar una identidad que comunique serenidad, equilibrio y conexion. El proyecto abarca logotipo, papeleria, senaletica interior, presencia digital y merchandising, todo bajo un concepto unificado de diseno consciente."
   },
@@ -145,14 +146,14 @@ const theses = [
     year: 2022,
     category: "identidad",
     categoryLabel: "IDENTIDAD",
-    gradient: "linear-gradient(135deg, #FF6348 0%, #FF4757 50%, #FF7979 100%)",
+    gradient: "linear-gradient(135deg, #8B6DB5 0%, #FF5030 50%, #D4FF00 100%)",
     galleryGradients: [
-      "linear-gradient(135deg, #FF6348, #CC4F3A)",
-      "linear-gradient(135deg, #FF4757, #FF6348)",
-      "linear-gradient(135deg, #FF7979, #FF4757)",
-      "linear-gradient(45deg, #B33939, #FF6348)",
-      "linear-gradient(180deg, #FF6348, #FF7979)",
-      "linear-gradient(135deg, #FF4757, #B33939)"
+      "linear-gradient(135deg, #8B6DB5, #FF5030)",
+      "linear-gradient(135deg, #FF5030, #D4FF00)",
+      "linear-gradient(135deg, #D4FF00, #8B6DB5)",
+      "linear-gradient(45deg, #6B4F96, #FF5030)",
+      "linear-gradient(180deg, #8B6DB5, #D4FF00)",
+      "linear-gradient(135deg, #FF5030, #6B4F96)"
     ],
     abstract: "Proyecto de rediseno de identidad visual para un mercado publico tradicional en la Ciudad de Mexico. La propuesta busca revitalizar la imagen del espacio comercial respetando su esencia cultural y patrimonial. Se desarrolla un sistema de wayfinding, identidad grafica, comunicacion visual y presencia digital que posicione al mercado como destino gastronomico y cultural contemporaneo."
   }
@@ -173,6 +174,54 @@ const projectCount = document.getElementById('projectCount');
 const modal = document.getElementById('modal');
 const modalBackdrop = document.getElementById('modalBackdrop');
 const modalClose = document.getElementById('modalClose');
+
+// ============================================
+// CUSTOM CURSOR (Valiente-style)
+// ============================================
+const cursor = document.getElementById('cursor');
+const cursorDot = cursor.querySelector('.cursor__dot');
+const cursorCircle = cursor.querySelector('.cursor__circle');
+let cursorX = 0, cursorY = 0;
+let circleX = 0, circleY = 0;
+
+document.addEventListener('mousemove', (e) => {
+  cursorX = e.clientX;
+  cursorY = e.clientY;
+  cursorDot.style.transform = `translate(${cursorX}px, ${cursorY}px)`;
+});
+
+function animateCursor() {
+  circleX += (cursorX - circleX) * 0.15;
+  circleY += (cursorY - circleY) * 0.15;
+  cursorCircle.style.transform = `translate(${circleX}px, ${circleY}px)`;
+  requestAnimationFrame(animateCursor);
+}
+animateCursor();
+
+// Hover detection for cursor scale
+const hoverTargets = () => document.querySelectorAll('a, button, .thesis-card, .filter-btn, .about__strip-item');
+function bindCursorHover() {
+  hoverTargets().forEach(el => {
+    el.addEventListener('mouseenter', () => cursor.classList.add('hovering'));
+    el.addEventListener('mouseleave', () => cursor.classList.remove('hovering'));
+  });
+}
+
+// ============================================
+// LOADING SCREEN
+// ============================================
+const loader = document.getElementById('loader');
+
+window.addEventListener('load', () => {
+  setTimeout(() => {
+    loader.classList.add('done');
+    // Trigger hero animations after loader
+    document.querySelectorAll('.hero__line').forEach(el => el.classList.add('animated'));
+    setTimeout(() => {
+      loader.style.display = 'none';
+    }, 1200);
+  }, 2200);
+});
 
 // ---- NAVIGATION ----
 navBurger.addEventListener('click', () => {
@@ -227,11 +276,26 @@ function renderGallery(animate = true) {
       </div>
     `;
 
+    // Tilt effect on mouse move (Valiente-style)
+    const image = card.querySelector('.thesis-card__image');
+    card.addEventListener('mousemove', (e) => {
+      const rect = image.getBoundingClientRect();
+      const x = (e.clientX - rect.left) / rect.width - 0.5;
+      const y = (e.clientY - rect.top) / rect.height - 0.5;
+      image.style.transform = `perspective(600px) rotateY(${x * 8}deg) rotateX(${-y * 8}deg)`;
+    });
+    card.addEventListener('mouseleave', () => {
+      image.style.transform = 'perspective(600px) rotateY(0deg) rotateX(0deg)';
+      image.style.transition = 'transform 0.5s cubic-bezier(0.16, 1, 0.3, 1)';
+      setTimeout(() => { image.style.transition = ''; }, 500);
+    });
+
     card.addEventListener('click', () => openModal(thesis));
     galleryGrid.appendChild(card);
   });
 
   projectCount.textContent = `${filtered.length} PROYECTO${filtered.length !== 1 ? 'S' : ''}`;
+  bindCursorHover();
 }
 
 // ---- FILTERS ----
@@ -294,11 +358,29 @@ document.addEventListener('keydown', (e) => {
   }
 });
 
-// ---- SCROLL REVEAL ----
+// ============================================
+// SCROLL REVEAL (enhanced stagger)
+// ============================================
 function initScrollReveal() {
-  const reveals = document.querySelectorAll('.about__heading, .about__text, .about__stats, .about__strip-item, .gallery__title');
+  const reveals = document.querySelectorAll('.about__heading, .about__text, .about__stats');
   reveals.forEach(el => el.classList.add('reveal'));
 
+  const revealLefts = document.querySelectorAll('.about__label, .gallery__title, .awards__title');
+  revealLefts.forEach(el => el.classList.add('reveal-left'));
+
+  // Awards items stagger
+  document.querySelectorAll('.awards__item').forEach((el, i) => {
+    el.classList.add('reveal');
+    el.style.transitionDelay = `${i * 0.08}s`;
+  });
+
+  const revealScales = document.querySelectorAll('.about__strip-item');
+  revealScales.forEach((el, i) => {
+    el.classList.add('reveal-scale');
+    el.style.transitionDelay = `${i * 0.12}s`;
+  });
+
+  const allReveals = document.querySelectorAll('.reveal, .reveal-left, .reveal-scale');
   const observer = new IntersectionObserver((entries) => {
     entries.forEach(entry => {
       if (entry.isIntersecting) {
@@ -307,7 +389,105 @@ function initScrollReveal() {
     });
   }, { threshold: 0.15, rootMargin: '0px 0px -50px 0px' });
 
-  reveals.forEach(el => observer.observe(el));
+  allReveals.forEach(el => observer.observe(el));
+}
+
+// ============================================
+// PARALLAX on scroll
+// ============================================
+function initParallax() {
+  const heroTitle = document.querySelector('.hero__title');
+  const footerBig = document.querySelector('.footer__big-text');
+  const marquee = document.querySelector('.hero__marquee');
+
+  window.addEventListener('scroll', () => {
+    const scrollY = window.scrollY;
+
+    // Hero parallax
+    if (heroTitle && scrollY < window.innerHeight) {
+      heroTitle.style.transform = `translateY(${scrollY * 0.3}px)`;
+    }
+
+    // Marquee speed boost on scroll
+    if (marquee && scrollY < window.innerHeight) {
+      marquee.style.transform = `translateX(${-scrollY * 0.1}px)`;
+    }
+
+    // Footer big text parallax
+    if (footerBig) {
+      const footerRect = footerBig.closest('.footer').getBoundingClientRect();
+      if (footerRect.top < window.innerHeight) {
+        const progress = (window.innerHeight - footerRect.top) / (window.innerHeight + footerRect.height);
+        footerBig.style.transform = `translateX(${progress * 50}px)`;
+      }
+    }
+  });
+}
+
+// ============================================
+// MAGNETIC BUTTONS (Valiente-style)
+// ============================================
+function initMagnetic() {
+  const magneticEls = document.querySelectorAll('.nav__burger, .nav__logo, .modal__close');
+  magneticEls.forEach(el => {
+    el.addEventListener('mousemove', (e) => {
+      const rect = el.getBoundingClientRect();
+      const x = e.clientX - rect.left - rect.width / 2;
+      const y = e.clientY - rect.top - rect.height / 2;
+      el.style.transform = `translate(${x * 0.3}px, ${y * 0.3}px)`;
+    });
+    el.addEventListener('mouseleave', () => {
+      el.style.transform = '';
+      el.style.transition = 'transform 0.4s cubic-bezier(0.16, 1, 0.3, 1)';
+      setTimeout(() => { el.style.transition = ''; }, 400);
+    });
+  });
+}
+
+// ============================================
+// FONT CYCLING on "PORTFOLIO" (random every 2s)
+// ============================================
+const cycleVariants = [
+  { weight: '100', style: 'normal', stretch: 'normal' },
+  { weight: '100', style: 'italic', stretch: 'normal' },
+  { weight: '200', style: 'normal', stretch: 'normal' },
+  { weight: '300', style: 'normal', stretch: 'normal' },
+  { weight: '300', style: 'italic', stretch: 'normal' },
+  { weight: '400', style: 'normal', stretch: 'normal' },
+  { weight: '400', style: 'italic', stretch: 'normal' },
+  { weight: '500', style: 'normal', stretch: 'normal' },
+  { weight: '700', style: 'normal', stretch: 'normal' },
+  { weight: '700', style: 'italic', stretch: 'normal' },
+  { weight: '800', style: 'normal', stretch: 'normal' },
+  { weight: '900', style: 'normal', stretch: 'normal' },
+  { weight: '100', style: 'normal', stretch: 'condensed' },
+  { weight: '700', style: 'normal', stretch: 'condensed' },
+  { weight: '900', style: 'normal', stretch: 'condensed' },
+];
+let lastVariantIndex = -1;
+
+function initFontCycling() {
+  const el = document.getElementById('heroPortfolio');
+  if (!el) return;
+
+  setInterval(() => {
+    let idx;
+    do {
+      idx = Math.floor(Math.random() * cycleVariants.length);
+    } while (idx === lastVariantIndex);
+    lastVariantIndex = idx;
+
+    const v = cycleVariants[idx];
+    el.style.opacity = '0';
+    el.style.transform = 'translateY(10px)';
+    setTimeout(() => {
+      el.style.fontWeight = v.weight;
+      el.style.fontStyle = v.style;
+      el.style.fontStretch = v.stretch;
+      el.style.opacity = '1';
+      el.style.transform = 'translateY(0)';
+    }, 150);
+  }, 500);
 }
 
 // ---- NAV SCROLL STYLE ----
@@ -329,4 +509,8 @@ window.addEventListener('scroll', () => {
 document.addEventListener('DOMContentLoaded', () => {
   renderGallery();
   initScrollReveal();
+  initParallax();
+  initMagnetic();
+  bindCursorHover();
+  initFontCycling();
 });
