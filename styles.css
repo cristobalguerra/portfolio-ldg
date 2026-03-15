@@ -2382,6 +2382,10 @@ img {
     border-radius: 4px;
   }
 
+  .hero__video-caption {
+    display: none;
+  }
+
   .hero__subtitle {
     font-size: 0.6rem;
     margin-top: var(--space-xs);
@@ -2392,6 +2396,7 @@ img {
     gap: var(--space-xs);
     align-items: flex-start;
     padding-top: var(--space-xs);
+    margin-bottom: var(--space-lg);
   }
 
   .hero__marquee-track span {
