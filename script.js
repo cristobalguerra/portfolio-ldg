@@ -15,7 +15,7 @@ const theses = [
     category: "editorial",
     categoryLabel: "EDITORIAL",
     thumbnail: "proyectos/thumbnails/ellaz.jpg",
-    pdfUrl: "proyectos/otono-2025/Book académico.pdf",
+    pdfUrl: "https://drive.google.com/uc?export=download&id=1KmmkDmmBlF4XjhRszk3_9JMo0ax7J_m5",
     abstract: "Este proyecto analiza cómo los estándares de belleza han sido impuestos a las mujeres, afectando su bienestar físico y emocional. Se explora cómo los elementos gráficos y la construcción visual de los medios de comunicación han normalizado la idea de que la belleza debe alcanzarse a costo del sufrimiento. La metodología combina análisis de contenido en publicidad y redes sociales, entrevistas y revisión de estudios previos sobre el impacto de estas exigencias en la autoestima y salud mental de la mujer."
   },
   {
@@ -28,7 +28,7 @@ const theses = [
     category: "branding",
     categoryLabel: "BRANDING",
     thumbnail: "proyectos/thumbnails/atraccin-creativa4.jpg",
-    pdfUrl: "proyectos/otono-2025/GATE_BOOK.pdf",
+    pdfUrl: "https://drive.google.com/uc?export=download&id=1MW86Alp7qqyM9sH8pbFrQQqwXECWALZJ",
     abstract: "Este proyecto busca incentivar la comunicación dirigida a estudiantes de preparatoria UDEM interesados en Diseño Gráfico. A través de una investigación sobre percepción, estigmas y el síndrome del impostor, se desarrolla una estrategia de comunicación visual que conecta con los intereses y motivaciones de los estudiantes potenciales."
   },
   {
@@ -41,7 +41,7 @@ const theses = [
     category: "editorial",
     categoryLabel: "EDITORIAL",
     thumbnail: "proyectos/thumbnails/mediante.jpg",
-    pdfUrl: "proyectos/otono-2025/Copia de MEDIANTE BOOK FINAL  (1).pdf",
+    pdfUrl: "https://drive.google.com/uc?export=download&id=1xCpUfI6rhKQCDLPpivkyV9yUoSW65HJK",
     abstract: "Este proyecto aborda las habilidades de gestión necesarias para los diseñadores gráficos en su práctica profesional. A través de la plataforma MEDIANTE, se investigan y proponen metodologías y herramientas que fortalezcan las capacidades administrativas y de gestión de proyectos en el ámbito del diseño gráfico."
   },
   {
@@ -54,7 +54,7 @@ const theses = [
     category: "uiux",
     categoryLabel: "UI/UX",
     thumbnail: "proyectos/thumbnails/tefaltabarrio_9.jpg",
-    pdfUrl: "proyectos/otono-2025/Dossier PEF Te Falta Barrio.pdf",
+    pdfUrl: "https://drive.google.com/uc?export=download&id=15Gt7Tu7FJsKemb_UIkl531jRGdYf2Wtj",
     abstract: "Este proyecto desarrolla e implementa una estrategia de comunicación que mejora la experiencia de los usuarios al brindar información clara, accesible y atractiva sobre el Barrio Antiguo de Monterrey. A través de la metodología Human Centered Design se crearon herramientas digitales y físicas como una página web y un tótem con mapas seccionados por categorías."
   },
   {
@@ -67,7 +67,7 @@ const theses = [
     category: "uiux",
     categoryLabel: "UI/UX",
     thumbnail: "proyectos/thumbnails/kinua11.jpg",
-    pdfUrl: "proyectos/otono-2025/LOOK BOOK.pdf",
+    pdfUrl: "https://drive.google.com/uc?export=download&id=19SDuVjGiiMPDJeyGLldaJbPK289xDmZc",
     abstract: "Kinua es una herramienta digital que promueve la conciencia psicoemocional en el servicio de nutrición. El proyecto aborda la falta de integración entre los aspectos fisiológicos y emocionales del paciente, desarrollando una app móvil para pacientes y una plataforma web para nutriólogos que facilitan la comunicación, el seguimiento y la comprensión del proceso nutricional."
   },
   {
@@ -80,7 +80,7 @@ const theses = [
     category: "branding",
     categoryLabel: "BRANDING",
     thumbnail: "proyectos/thumbnails/bendito_mockup-mb-t_shirt-01.jpg",
-    pdfUrl: "proyectos/otono-2025/Memoria académica.pdf",
+    pdfUrl: "https://drive.google.com/uc?export=download&id=15Ma9XCXcXQa6n5J_A06ZdXgC7rMCwJ87",
     abstract: "Este proyecto desarrolla un sistema integrado de diseño gráfico para mejorar la experiencia de los visitantes internacionales de Monterrey durante el Mundial 2026. La propuesta visual abarca identidad corporativa, señalética, experiencia del usuario y comunicación de la ciudad, buscando mejorar la movilidad y el sentido de pertenencia de los turistas."
   },
   {
@@ -93,7 +93,7 @@ const theses = [
     category: "branding",
     categoryLabel: "BRANDING",
     thumbnail: "proyectos/thumbnails/tulan.jpg",
-    pdfUrl: "proyectos/otono-2025/Historias Detras de la Mesa.pdf",
+    pdfUrl: "https://drive.google.com/uc?export=download&id=1T3vXuNdJ8AYi9Ysiw9xsyLyNZ4PDTkJN",
     abstract: "Este proyecto aborda la falta de visibilidad y estrategias de comunicación que enfrentan los pequeños negocios culinarios en San Pedro Garza García. A través de la agencia creativa Sobremesa y el proyecto social Sobrefondas, se diseñan propuestas de identidad visual, storytelling y contenido audiovisual para fortalecer la marca de emprendimientos locales."
   },
   {
@@ -106,7 +106,7 @@ const theses = [
     category: "motion",
     categoryLabel: "MOTION",
     thumbnail: "proyectos/thumbnails/alteria.jpg",
-    pdfUrl: "proyectos/otono-2025/Interacción Multisensorial.pdf",
+    pdfUrl: "https://drive.google.com/uc?export=download&id=1johQRByvDnWGBPfdEfmRLwxwcRbBJJB_",
     abstract: "Alteria es un modelo de diseño multisensorial que articula sinestesia digital, correspondencias perceptuales, inmersión emocional y flujo corporal para expandir la experiencia del usuario en entornos interactivos. Los resultados muestran que el 87% de los participantes reportó altos niveles de inmersión y el 90% manifestó un incremento significativo en la curiosidad."
   },
   {
@@ -119,7 +119,7 @@ const theses = [
     category: "branding",
     categoryLabel: "BRANDING",
     thumbnail: "proyectos/thumbnails/creando-espacios.jpg",
-    pdfUrl: "proyectos/otono-2025/Interiores .pdf",
+    pdfUrl: "https://drive.google.com/uc?export=download&id=16spSSW2oPhv3niiQ2x7z7O7eQLhM9Ou-",
     abstract: "Este proyecto desarrolla una propuesta de emprendimiento orientada al diseño y conceptualización de un espacio creativo en Monterrey, acompañado de una identidad visual sólida, estrategia de comunicación y plataformas digitales que facilitan la colaboración interdisciplinaria entre creativos emergentes."
   },
   {
@@ -132,7 +132,7 @@ const theses = [
     category: "editorial",
     categoryLabel: "EDITORIAL",
     thumbnail: "proyectos/thumbnails/antera.jpg",
-    pdfUrl: "proyectos/otono-2025/MEMORIA- ANTERA.pdf",
+    pdfUrl: "https://drive.google.com/uc?export=download&id=1zcUhV8oRgx-hXFxn_5odwqjmnbtoGbI6",
     abstract: "El lenguaje de las flores o floriografía ha sido una herramienta de comunicación simbólica presente desde hace siglos. Este proyecto busca recuperar el lenguaje de las flores, visibilizando su presencia e importancia dentro de la cultura mexicana y en la comunicación visual, a través de una antología visual de la floriografía."
   },
   {
@@ -145,7 +145,7 @@ const theses = [
     category: "uiux",
     categoryLabel: "UI/UX",
     thumbnail: "proyectos/thumbnails/nodus.jpg",
-    pdfUrl: "proyectos/otono-2025/Memoria Académica_CancerInfantil.pdf",
+    pdfUrl: "https://drive.google.com/uc?export=download&id=1UB1hNzdQIxnHd40hS3yJwaxU4ygY2YAW",
     abstract: "Nodus es un sistema integral de acompañamiento diseñado para mejorar la experiencia de cuidado de niños con cáncer y sus familias. A través de un pastillero inteligente, una aplicación móvil y un brazalete lúdico, el proyecto busca reducir la ansiedad, los errores en la medicación y el aislamiento emocional."
   },
   {
@@ -158,7 +158,7 @@ const theses = [
     category: "uiux",
     categoryLabel: "UI/UX",
     thumbnail: "proyectos/thumbnails/rave.jpg",
-    pdfUrl: "proyectos/otono-2025/Memoria académica (1).pdf",
+    pdfUrl: "https://drive.google.com/uc?export=download&id=1_lAHQLSpzIJX7_ZGdjXJ1Z49i25inir3",
     abstract: "Este proyecto presenta el rediseño integral de la página web de Rave Pilates y el desarrollo de una aplicación móvil que integra de manera innovadora pilates y nutrición personalizada. La app unifica reserva de clases, compra de paquetes y seguimiento de entrenamiento, junto con una guía nutricional inteligente potenciada por IA."
   },
   {
@@ -171,7 +171,7 @@ const theses = [
     category: "branding",
     categoryLabel: "BRANDING",
     thumbnail: "proyectos/thumbnails/turnout.jpg",
-    pdfUrl: "proyectos/otono-2025/Memoria_PEF_Turnout RGB Digital.pdf",
+    pdfUrl: "https://drive.google.com/uc?export=download&id=14QYLdsddVEncTWAyg9F3cbhXwySmcmRj",
     abstract: "Turnout es una plataforma diseñada para la Generación Z que busca fomentar la conexión, el bienestar y el autoconocimiento. El proyecto desarrolla una identidad de marca, estrategia de comunicación y herramientas digitales orientadas a crear experiencias significativas de reconexión personal y social."
   },
   {
@@ -184,7 +184,7 @@ const theses = [
     category: "uiux",
     categoryLabel: "UI/UX",
     thumbnail: "proyectos/thumbnails/diseo-de-sistemas-de-comunicacion.jpg",
-    pdfUrl: "proyectos/otono-2025/Thesis booklet_final.pdf",
+    pdfUrl: "https://drive.google.com/uc?export=download&id=1OGM6BzjpnoK-3lSCyK5LMU0fNlUwFDn9",
     abstract: "This project demonstrates that it is possible to design communication systems capable of adapting to multiple users and contexts, overcoming informational barriers, and strengthening response capacity in the early and most critical moments of an emergency."
   },
   {
@@ -197,7 +197,7 @@ const theses = [
     category: "editorial",
     categoryLabel: "EDITORIAL",
     thumbnail: "proyectos/thumbnails/verdad-en-juego.jpg",
-    pdfUrl: "proyectos/otono-2025/Verdad en juego - Memoria.pdf",
+    pdfUrl: "https://drive.google.com/uc?export=download&id=1oWVlmCvdJfZfInP-uSjiEii7gZDflc99",
     abstract: "Este proyecto propone una estrategia visual y lúdica para sensibilizar a los jóvenes de la Generación Z sobre el impacto de las cámaras de eco y los algoritmos en la percepción de la información. Se diseñó 'Twist & Tell', un juego de mesa que simula un feed de redes sociales y reta al jugador a distinguir entre información verídica y distorsionada."
   },
   {
@@ -210,7 +210,7 @@ const theses = [
     category: "packaging",
     categoryLabel: "PACKAGING",
     thumbnail: "proyectos/thumbnails/biodiseo.jpg",
-    pdfUrl: "proyectos/otono-2025/Biodiseño Gráfico - Sofia Porto 584609.pdf",
+    pdfUrl: "https://drive.google.com/uc?export=download&id=1mV0ueQ1NaF3pHgTcbUT_reDx1tpwzYo0",
     abstract: "Este proyecto explora el potencial del biodiseño como una rama emergente para el desarrollo de materialidades y procesos dentro del diseño gráfico, enfocándose en la domesticación de raíces como técnica de co-creación con organismos vivos. El proyecto demuestra que el diseño gráfico puede expandirse hacia prácticas multiespecie y regenerativas."
   },
   {
@@ -223,7 +223,7 @@ const theses = [
     category: "packaging",
     categoryLabel: "PACKAGING",
     thumbnail: "proyectos/thumbnails/habits.jpg",
-    pdfUrl: "proyectos/otono-2025/Dossier_FINAL2411_Final.pdf",
+    pdfUrl: "https://drive.google.com/uc?export=download&id=1YqUcSRr6pX5j9f8vzDEzhqkTYEgevOoM",
     abstract: "Colección by Habits incentiva a los usuarios a diversificar la manera en que consumen proteína en polvo. La propuesta integra una página web, un recetario físico con 90 recetas y una estrategia de campaña basada en diseño centrado en el usuario y la teoría del hábito, reforzando los valores de bienestar, simplicidad y comunidad."
   }
 ];
