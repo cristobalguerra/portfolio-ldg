@@ -1062,33 +1062,26 @@ img {
 }
 
 /* ---- Admin Panel ---- */
-.nav__actions {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-}
-
-.nav__admin-btn {
+.footer__admin-btn {
+  position: absolute;
+  bottom: var(--space-sm);
+  right: var(--space-sm);
   background: transparent;
-  border: 1px solid rgba(212, 255, 0, 0.2);
-  color: var(--accent);
-  width: 32px;
-  height: 32px;
-  border-radius: 50%;
+  border: none;
+  color: var(--gray);
+  width: 28px;
+  height: 28px;
   font-size: 14px;
   cursor: pointer;
   display: flex;
   align-items: center;
   justify-content: center;
-  transition: all 0.3s;
-  opacity: 0.4;
+  transition: opacity 0.3s;
+  opacity: 0.15;
 }
 
-.nav__admin-btn:hover {
-  opacity: 1;
-  background: var(--accent);
-  color: var(--black);
-  border-color: var(--accent);
+.footer__admin-btn:hover {
+  opacity: 0.4;
 }
 
 .admin-panel {
@@ -1287,12 +1280,6 @@ select.pef-register__input option {
 }
 
 @media (max-width: 600px) {
-  .nav__admin-btn {
-    width: 28px;
-    height: 28px;
-    font-size: 12px;
-  }
-
   .admin-panel__container {
     padding: var(--space-md) var(--space-sm);
   }
