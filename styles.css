@@ -1370,19 +1370,15 @@ img {
 }
 
 .hero__video-caption {
-  position: absolute;
-  bottom: 12px;
-  right: 12px;
   font-family: var(--font-mono);
-  font-size: clamp(0.5rem, 0.8vw, 0.7rem);
-  color: rgba(255, 255, 255, 0.6);
+  font-size: clamp(0.55rem, 0.8vw, 0.7rem);
+  color: rgba(255, 255, 255, 0.4);
   letter-spacing: 0.08em;
   white-space: nowrap;
-  z-index: 2;
-  background: rgba(0, 0, 0, 0.4);
-  padding: 4px 8px;
-  border-radius: 3px;
-  backdrop-filter: blur(4px);
+  align-self: flex-end;
+  margin-top: 0.5em;
+  animation: fadeIn 1.2s 1s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  opacity: 0;
 }
 
 .hero__subtitle {
