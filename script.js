@@ -7,155 +7,224 @@
 const theses = [
   {
     id: 1,
-    title: "Identidad Visual para Cervecería Artesanal",
-    student: "Valeria Montoya",
-    tutor: "Mtro. Ricardo Fuentes",
-    year: 2026,
-    category: "branding",
-    categoryLabel: "BRANDING",
-    gradient: "linear-gradient(135deg, #D4FF00 0%, #8B6DB5 50%, #FF5030 100%)",
-    galleryGradients: [
-      "linear-gradient(135deg, #D4FF00, #B8E000)",
-      "linear-gradient(135deg, #8B6DB5, #D4FF00)",
-      "linear-gradient(135deg, #FF5030, #8B6DB5)",
-      "linear-gradient(45deg, #D4FF00, #FF5030)",
-      "linear-gradient(180deg, #8B6DB5, #D4FF00)",
-      "linear-gradient(135deg, #FF5030, #D4FF00)"
-    ],
-    abstract: "Este proyecto desarrolla un sistema de identidad visual integral para una cervecería artesanal ubicada en Oaxaca. La propuesta abarca desde la arquitectura de marca hasta el diseño de etiquetas, buscando comunicar la esencia del proceso artesanal y la riqueza cultural de la región. Se exploran conceptos de autenticidad, tradición e innovación a través de un lenguaje gráfico contemporáneo."
+    title: "Deconstrucción de la Percepción y los Estándares de la Belleza Femenina",
+    student: "Emilia Bermúdez, Angelina Avalos, Sofía Peralta",
+    tutor: "Jessica Elizabeth Ochoa Zamarripa",
+    year: 2025,
+    semester: "Otoño 2025",
+    category: "editorial",
+    categoryLabel: "EDITORIAL",
+    thumbnail: "proyectos/thumbnails/ellaz.jpg",
+    pdfUrl: "proyectos/otono-2025/Book académico.pdf",
+    abstract: "Este proyecto analiza cómo los estándares de belleza han sido impuestos a las mujeres, afectando su bienestar físico y emocional. Se explora cómo los elementos gráficos y la construcción visual de los medios de comunicación han normalizado la idea de que la belleza debe alcanzarse a costo del sufrimiento. La metodología combina análisis de contenido en publicidad y redes sociales, entrevistas y revisión de estudios previos sobre el impacto de estas exigencias en la autoestima y salud mental de la mujer."
   },
   {
     id: 2,
-    title: "Sistema de Marca para Festival de Cine Independiente",
-    student: "Andrés Quiroga",
-    tutor: "Mtra. Laura Espinoza",
+    title: "Del Interés a la Decisión: Comunicación para Estudiantes Interesados en Diseño Gráfico",
+    student: "Valeria de la Garza, Carolina Lebrija, Milagros Martínez",
+    tutor: "Diana Woolrich",
     year: 2025,
-    category: "identidad",
-    categoryLabel: "IDENTIDAD",
-    gradient: "linear-gradient(135deg, #1a1a1a 0%, #333333 50%, #555555 100%)",
-    galleryGradients: [
-      "linear-gradient(135deg, #1a1a1a, #444)",
-      "linear-gradient(135deg, #333, #666)",
-      "linear-gradient(135deg, #222, #555)",
-      "linear-gradient(45deg, #111, #333)",
-      "linear-gradient(180deg, #2a2a2a, #4a4a4a)",
-      "linear-gradient(135deg, #1a1a1a, #3a3a3a)"
-    ],
-    abstract: "Propuesta de sistema de identidad flexible para un festival de cine independiente que se reinventa cada año. El proyecto investiga cómo crear coherencia visual dentro de un marco que permite la evolución y adaptación. Se diseña un toolkit de marca que incluye logotipo generativo, paleta cromática dinámica, tipografía editorial y aplicaciones en medios impresos y digitales."
+    semester: "Otoño 2025",
+    category: "branding",
+    categoryLabel: "BRANDING",
+    thumbnail: "proyectos/thumbnails/atraccin-creativa4.jpg",
+    pdfUrl: "proyectos/otono-2025/GATE_BOOK.pdf",
+    abstract: "Este proyecto busca incentivar la comunicación dirigida a estudiantes de preparatoria UDEM interesados en Diseño Gráfico. A través de una investigación sobre percepción, estigmas y el síndrome del impostor, se desarrolla una estrategia de comunicación visual que conecta con los intereses y motivaciones de los estudiantes potenciales."
   },
   {
     id: 3,
-    title: "Diseño Editorial: Revista de Arquitectura Contemporánea",
-    student: "Sofía Delgado",
-    tutor: "Mtro. Carlos Vega",
+    title: "Las Habilidades de Gestión en los Diseñadores Gráficos",
+    student: "Eva Schroeder, Bárbara Ghio, Yolanda Mazur, Andrea Criollos",
+    tutor: "Daniel Almaguer",
     year: 2025,
+    semester: "Otoño 2025",
     category: "editorial",
     categoryLabel: "EDITORIAL",
-    gradient: "linear-gradient(135deg, #8B6DB5 0%, #A88CCE 50%, #D4B8E8 100%)",
-    galleryGradients: [
-      "linear-gradient(135deg, #8B6DB5, #6B4F96)",
-      "linear-gradient(135deg, #A88CCE, #8B6DB5)",
-      "linear-gradient(135deg, #D4B8E8, #A88CCE)",
-      "linear-gradient(45deg, #6B4F96, #8B6DB5)",
-      "linear-gradient(180deg, #8B6DB5, #D4B8E8)",
-      "linear-gradient(135deg, #A88CCE, #6B4F96)"
-    ],
-    abstract: "Investigación y desarrollo de un proyecto editorial que reimagina la publicación de arquitectura contemporánea. Se propone un formato híbrido impreso-digital que integra fotografía, infografía y narrativa visual para comunicar proyectos arquitectónicos de manera inmersiva. El diseño busca romper con las convenciones del género editorial arquitectónico."
+    thumbnail: "proyectos/thumbnails/mediante.jpg",
+    pdfUrl: "proyectos/otono-2025/Copia de MEDIANTE BOOK FINAL  (1).pdf",
+    abstract: "Este proyecto aborda las habilidades de gestión necesarias para los diseñadores gráficos en su práctica profesional. A través de la plataforma MEDIANTE, se investigan y proponen metodologías y herramientas que fortalezcan las capacidades administrativas y de gestión de proyectos en el ámbito del diseño gráfico."
   },
   {
     id: 4,
-    title: "Packaging Sustentable para Productos Orgánicos",
-    student: "Diego Navarro",
-    tutor: "Mtra. Ana Belén Torres",
-    year: 2024,
-    category: "packaging",
-    categoryLabel: "PACKAGING",
-    gradient: "linear-gradient(135deg, #FF5030 0%, #FF7A60 50%, #FFB09A 100%)",
-    galleryGradients: [
-      "linear-gradient(135deg, #FF5030, #CC3D24)",
-      "linear-gradient(135deg, #FF7A60, #FF5030)",
-      "linear-gradient(135deg, #FFB09A, #FF7A60)",
-      "linear-gradient(45deg, #CC3D24, #FF5030)",
-      "linear-gradient(180deg, #FF5030, #FFB09A)",
-      "linear-gradient(135deg, #FF7A60, #CC3D24)"
-    ],
-    abstract: "Este proyecto aborda el diseño de packaging sustentable para una línea de productos orgánicos. Se investigan materiales biodegradables y técnicas de impresión ecológica para desarrollar un sistema de empaque que minimice el impacto ambiental sin sacrificar la calidad estética. La propuesta incluye diseño estructural, gráfico y estrategia de comunicación visual en punto de venta."
+    title: "Te Falta Barrio: Estrategias de Información para el Barrio Antiguo de Monterrey",
+    student: "Ana Lucía Maraboto, Frida de la Garza",
+    tutor: "Julian Iñiguez Flores",
+    year: 2025,
+    semester: "Otoño 2025",
+    category: "uiux",
+    categoryLabel: "UI/UX",
+    thumbnail: "proyectos/thumbnails/tefaltabarrio_9.jpg",
+    pdfUrl: "proyectos/otono-2025/Dossier PEF Te Falta Barrio.pdf",
+    abstract: "Este proyecto desarrolla e implementa una estrategia de comunicación que mejora la experiencia de los usuarios al brindar información clara, accesible y atractiva sobre el Barrio Antiguo de Monterrey. A través de la metodología Human Centered Design se crearon herramientas digitales y físicas como una página web y un tótem con mapas seccionados por categorías."
   },
   {
     id: 5,
-    title: "Motion Graphics para Campaña de Concientización Social",
-    student: "Mariana Reyes",
-    tutor: "Mtro. Eduardo Sánchez",
-    year: 2024,
-    category: "motion",
-    categoryLabel: "MOTION",
-    gradient: "linear-gradient(135deg, #8E44AD 0%, #BB6BD9 50%, #D7BDE2 100%)",
-    galleryGradients: [
-      "linear-gradient(135deg, #8E44AD, #6C3483)",
-      "linear-gradient(135deg, #BB6BD9, #8E44AD)",
-      "linear-gradient(135deg, #D7BDE2, #BB6BD9)",
-      "linear-gradient(45deg, #5B2C6F, #8E44AD)",
-      "linear-gradient(180deg, #8E44AD, #D7BDE2)",
-      "linear-gradient(135deg, #BB6BD9, #5B2C6F)"
-    ],
-    abstract: "Desarrollo de una serie de piezas de motion graphics para una campaña de concientización sobre salud mental en jóvenes. El proyecto explora el poder del movimiento y la narrativa visual animada para transmitir mensajes complejos de manera accesible y emocionalmente resonante. Se producen cinco piezas animadas para redes sociales y una pieza principal de 90 segundos."
+    title: "Kinua: Conciencia Psicoemocional en el Servicio de Nutrición",
+    student: "Bárbara Rodríguez, Karen Peña, Ian Hernández",
+    tutor: "Rolando Angulo Gálvez",
+    year: 2025,
+    semester: "Otoño 2025",
+    category: "uiux",
+    categoryLabel: "UI/UX",
+    thumbnail: "proyectos/thumbnails/kinua11.jpg",
+    pdfUrl: "proyectos/otono-2025/LOOK BOOK.pdf",
+    abstract: "Kinua es una herramienta digital que promueve la conciencia psicoemocional en el servicio de nutrición. El proyecto aborda la falta de integración entre los aspectos fisiológicos y emocionales del paciente, desarrollando una app móvil para pacientes y una plataforma web para nutriólogos que facilitan la comunicación, el seguimiento y la comprensión del proceso nutricional."
   },
   {
     id: 6,
-    title: "Interfaz Digital para Museo de Arte Moderno",
-    student: "Roberto Jiménez",
-    tutor: "Mtra. Patricia Lozano",
-    year: 2023,
-    category: "uiux",
-    categoryLabel: "UI/UX",
-    gradient: "linear-gradient(135deg, #D4FF00 0%, #2D2D2D 50%, #8B6DB5 100%)",
-    galleryGradients: [
-      "linear-gradient(135deg, #D4FF00, #2D2D2D)",
-      "linear-gradient(135deg, #2D2D2D, #8B6DB5)",
-      "linear-gradient(135deg, #8B6DB5, #D4FF00)",
-      "linear-gradient(45deg, #2D2D2D, #D4FF00)",
-      "linear-gradient(180deg, #D4FF00, #8B6DB5)",
-      "linear-gradient(135deg, #2D2D2D, #FF5030)"
-    ],
-    abstract: "Diseño de experiencia de usuario e interfaz digital para el sitio web y aplicación móvil de un museo de arte moderno. El proyecto investiga cómo la tecnología puede enriquecer la experiencia museográfica, proponiendo herramientas interactivas de exploración de colecciones, recorridos virtuales personalizados y funcionalidades de accesibilidad universal."
+    title: "Experiencia Mundialista 2026: Sistema Gráfico para Monterrey",
+    student: "María Fernanda Adame Moreno",
+    tutor: "Daniel Almaguer",
+    year: 2025,
+    semester: "Otoño 2025",
+    category: "branding",
+    categoryLabel: "BRANDING",
+    thumbnail: "proyectos/thumbnails/bendito_mockup-mb-t_shirt-01.jpg",
+    pdfUrl: "proyectos/otono-2025/Memoria académica.pdf",
+    abstract: "Este proyecto desarrolla un sistema integrado de diseño gráfico para mejorar la experiencia de los visitantes internacionales de Monterrey durante el Mundial 2026. La propuesta visual abarca identidad corporativa, señalética, experiencia del usuario y comunicación de la ciudad, buscando mejorar la movilidad y el sentido de pertenencia de los turistas."
   },
   {
     id: 7,
-    title: "Branding Integral para Estudio de Yoga y Bienestar",
-    student: "Camila Ortega",
-    tutor: "Mtro. Ricardo Fuentes",
-    year: 2023,
+    title: "Historias Detrás de la Mesa",
+    student: "Ximena Díaz, Raquel Jaime, Roberta Maldonado, Rebeca Wolberg",
+    tutor: "Fernando Rafael Mateos",
+    year: 2025,
+    semester: "Otoño 2025",
     category: "branding",
     categoryLabel: "BRANDING",
-    gradient: "linear-gradient(135deg, #FF5030 0%, #D4FF00 50%, #2D2D2D 100%)",
-    galleryGradients: [
-      "linear-gradient(135deg, #FF5030, #D4FF00)",
-      "linear-gradient(135deg, #D4FF00, #2D2D2D)",
-      "linear-gradient(135deg, #2D2D2D, #FF5030)",
-      "linear-gradient(45deg, #FF5030, #2D2D2D)",
-      "linear-gradient(180deg, #D4FF00, #FF5030)",
-      "linear-gradient(135deg, #FF5030, #8B6DB5)"
-    ],
-    abstract: "Creación de un sistema de branding integral para un estudio de yoga y bienestar. La investigación parte de la filosofía del yoga y su estética para desarrollar una identidad que comunique serenidad, equilibrio y conexión. El proyecto abarca logotipo, papelería, señalética interior, presencia digital y merchandising, todo bajo un concepto unificado de diseño consciente."
+    thumbnail: "proyectos/thumbnails/tulan.jpg",
+    pdfUrl: "proyectos/otono-2025/Historias Detras de la Mesa.pdf",
+    abstract: "Este proyecto aborda la falta de visibilidad y estrategias de comunicación que enfrentan los pequeños negocios culinarios en San Pedro Garza García. A través de la agencia creativa Sobremesa y el proyecto social Sobrefondas, se diseñan propuestas de identidad visual, storytelling y contenido audiovisual para fortalecer la marca de emprendimientos locales."
   },
   {
     id: 8,
-    title: "Rediseño de Identidad para Mercado Público Tradicional",
-    student: "Fernando Castillo",
-    tutor: "Mtra. Laura Espinoza",
-    year: 2022,
-    category: "identidad",
-    categoryLabel: "IDENTIDAD",
-    gradient: "linear-gradient(135deg, #8B6DB5 0%, #FF5030 50%, #D4FF00 100%)",
-    galleryGradients: [
-      "linear-gradient(135deg, #8B6DB5, #FF5030)",
-      "linear-gradient(135deg, #FF5030, #D4FF00)",
-      "linear-gradient(135deg, #D4FF00, #8B6DB5)",
-      "linear-gradient(45deg, #6B4F96, #FF5030)",
-      "linear-gradient(180deg, #8B6DB5, #D4FF00)",
-      "linear-gradient(135deg, #FF5030, #6B4F96)"
-    ],
-    abstract: "Proyecto de rediseño de identidad visual para un mercado público tradicional en la Ciudad de México. La propuesta busca revitalizar la imagen del espacio comercial respetando su esencia cultural y patrimonial. Se desarrolla un sistema de wayfinding, identidad gráfica, comunicación visual y presencia digital que posicione al mercado como destino gastronómico y cultural contemporáneo."
+    title: "Alteria: Interacción Multisensorial, Tecnología y Sinestesia en el Diseño",
+    student: "Mariángela Garza, Patricio Treviño, Marian Treviño",
+    tutor: "Dr. Cristobal Guerra Tamez",
+    year: 2025,
+    semester: "Otoño 2025",
+    category: "motion",
+    categoryLabel: "MOTION",
+    thumbnail: "proyectos/thumbnails/alteria.jpg",
+    pdfUrl: "proyectos/otono-2025/Interacción Multisensorial.pdf",
+    abstract: "Alteria es un modelo de diseño multisensorial que articula sinestesia digital, correspondencias perceptuales, inmersión emocional y flujo corporal para expandir la experiencia del usuario en entornos interactivos. Los resultados muestran que el 87% de los participantes reportó altos niveles de inmersión y el 90% manifestó un incremento significativo en la curiosidad."
+  },
+  {
+    id: 9,
+    title: "Creando Espacios para Crear",
+    student: "Fernanda Pequeño, Lorena Garza, Nahely Leal, Alda Camacho",
+    tutor: "Fabio Spagnoli Herrera",
+    year: 2025,
+    semester: "Otoño 2025",
+    category: "branding",
+    categoryLabel: "BRANDING",
+    thumbnail: "proyectos/thumbnails/creando-espacios.jpg",
+    pdfUrl: "proyectos/otono-2025/Interiores .pdf",
+    abstract: "Este proyecto desarrolla una propuesta de emprendimiento orientada al diseño y conceptualización de un espacio creativo en Monterrey, acompañado de una identidad visual sólida, estrategia de comunicación y plataformas digitales que facilitan la colaboración interdisciplinaria entre creativos emergentes."
+  },
+  {
+    id: 10,
+    title: "Antera: El Lenguaje de las Flores como Herramienta de Comunicación",
+    student: "Natalia Alcalá, Danna Chávez, Victoria Lizárraga, Sarai Marines",
+    tutor: "Mariel García Hernández",
+    year: 2025,
+    semester: "Otoño 2025",
+    category: "editorial",
+    categoryLabel: "EDITORIAL",
+    thumbnail: "proyectos/thumbnails/antera.jpg",
+    pdfUrl: "proyectos/otono-2025/MEMORIA- ANTERA.pdf",
+    abstract: "El lenguaje de las flores o floriografía ha sido una herramienta de comunicación simbólica presente desde hace siglos. Este proyecto busca recuperar el lenguaje de las flores, visibilizando su presencia e importancia dentro de la cultura mexicana y en la comunicación visual, a través de una antología visual de la floriografía."
+  },
+  {
+    id: 11,
+    title: "Nodus: Ecosistema de Cuidado en Oncología Infantil",
+    student: "Valeria Gómez, Jaqueline Casas, Sabrina Villaseñor",
+    tutor: "Marco Vinicio Garrido Félix",
+    year: 2025,
+    semester: "Otoño 2025",
+    category: "uiux",
+    categoryLabel: "UI/UX",
+    thumbnail: "proyectos/thumbnails/nodus.jpg",
+    pdfUrl: "proyectos/otono-2025/Memoria Académica_CancerInfantil.pdf",
+    abstract: "Nodus es un sistema integral de acompañamiento diseñado para mejorar la experiencia de cuidado de niños con cáncer y sus familias. A través de un pastillero inteligente, una aplicación móvil y un brazalete lúdico, el proyecto busca reducir la ansiedad, los errores en la medicación y el aislamiento emocional."
+  },
+  {
+    id: 12,
+    title: "Rave Pilates: Implementación de Diseño de Servicio",
+    student: "Ana Gabriela Garza, Mariana Gómez, Mariana Guerra",
+    tutor: "Carlos Delgado De Roble",
+    year: 2025,
+    semester: "Otoño 2025",
+    category: "uiux",
+    categoryLabel: "UI/UX",
+    thumbnail: "proyectos/thumbnails/rave.jpg",
+    pdfUrl: "proyectos/otono-2025/Memoria académica (1).pdf",
+    abstract: "Este proyecto presenta el rediseño integral de la página web de Rave Pilates y el desarrollo de una aplicación móvil que integra de manera innovadora pilates y nutrición personalizada. La app unifica reserva de clases, compra de paquetes y seguimiento de entrenamiento, junto con una guía nutricional inteligente potenciada por IA."
+  },
+  {
+    id: 13,
+    title: "Turnout: Conectando a la Generación Z",
+    student: "Alejandra Urteaga, Maadai Salazar",
+    tutor: "Natalia Ceballos Gutiérrez",
+    year: 2025,
+    semester: "Otoño 2025",
+    category: "branding",
+    categoryLabel: "BRANDING",
+    thumbnail: "proyectos/thumbnails/turnout.jpg",
+    pdfUrl: "proyectos/otono-2025/Memoria_PEF_Turnout RGB Digital.pdf",
+    abstract: "Turnout es una plataforma diseñada para la Generación Z que busca fomentar la conexión, el bienestar y el autoconocimiento. El proyecto desarrolla una identidad de marca, estrategia de comunicación y herramientas digitales orientadas a crear experiencias significativas de reconexión personal y social."
+  },
+  {
+    id: 14,
+    title: "Diseño de Sistemas de Comunicación para Preparación y Respuesta ante Desastres",
+    student: "Miranda Hernández, Luis Alberto Peña, Miguel Ángel Maldonado",
+    tutor: "Hisa María Martínez Nimi",
+    year: 2025,
+    semester: "Otoño 2025",
+    category: "uiux",
+    categoryLabel: "UI/UX",
+    thumbnail: "proyectos/thumbnails/diseo-de-sistemas-de-comunicacion.jpg",
+    pdfUrl: "proyectos/otono-2025/Thesis booklet_final.pdf",
+    abstract: "This project demonstrates that it is possible to design communication systems capable of adapting to multiple users and contexts, overcoming informational barriers, and strengthening response capacity in the early and most critical moments of an emergency."
+  },
+  {
+    id: 15,
+    title: "Verdad en Juego: Diseño Gráfico Aplicado al Fenómeno de las Cámaras de Eco",
+    student: "Fernanda Díaz, Miranda Siller, Eugenio Nocedal, Karina Del Prado",
+    tutor: "Jorge Cantú Sánchez",
+    year: 2025,
+    semester: "Otoño 2025",
+    category: "editorial",
+    categoryLabel: "EDITORIAL",
+    thumbnail: "proyectos/thumbnails/verdad-en-juego.jpg",
+    pdfUrl: "proyectos/otono-2025/Verdad en juego - Memoria.pdf",
+    abstract: "Este proyecto propone una estrategia visual y lúdica para sensibilizar a los jóvenes de la Generación Z sobre el impacto de las cámaras de eco y los algoritmos en la percepción de la información. Se diseñó 'Twist & Tell', un juego de mesa que simula un feed de redes sociales y reta al jugador a distinguir entre información verídica y distorsionada."
+  },
+  {
+    id: 16,
+    title: "Biodiseño Gráfico: Co-creación con la Naturaleza para una Gráfica Regenerativa",
+    student: "Sofía Porto Iannuzzi",
+    tutor: "Iliana María Moreno Guzmán",
+    year: 2025,
+    semester: "Otoño 2025",
+    category: "packaging",
+    categoryLabel: "PACKAGING",
+    thumbnail: "proyectos/thumbnails/biodiseo.jpg",
+    pdfUrl: "proyectos/otono-2025/Biodiseño Gráfico - Sofia Porto 584609.pdf",
+    abstract: "Este proyecto explora el potencial del biodiseño como una rama emergente para el desarrollo de materialidades y procesos dentro del diseño gráfico, enfocándose en la domesticación de raíces como técnica de co-creación con organismos vivos. El proyecto demuestra que el diseño gráfico puede expandirse hacia prácticas multiespecie y regenerativas."
+  },
+  {
+    id: 17,
+    title: "Colección by Habits",
+    student: "Ana Cecilia Moreno, Ana Paula Guerra, Mariana Zambrano",
+    tutor: "Sergio Trujillo Pérez",
+    year: 2025,
+    semester: "Otoño 2025",
+    category: "packaging",
+    categoryLabel: "PACKAGING",
+    thumbnail: "proyectos/thumbnails/habits.jpg",
+    pdfUrl: "proyectos/otono-2025/Dossier_FINAL2411_Final.pdf",
+    abstract: "Colección by Habits incentiva a los usuarios a diversificar la manera en que consumen proteína en polvo. La propuesta integra una página web, un recetario físico con 90 recetas y una estrategia de campaña basada en diseño centrado en el usuario y la teoría del hábito, reforzando los valores de bienestar, simplicidad y comunidad."
   }
 ];
 
@@ -252,7 +321,7 @@ function renderGallery(animate = true) {
 
     card.innerHTML = `
       <div class="thesis-card__image">
-        <div class="thesis-card__gradient" style="background: ${thesis.gradient}"></div>
+        <img src="${thesis.thumbnail}" alt="${thesis.title}" class="thesis-card__thumbnail" loading="lazy">
         <div class="thesis-card__overlay">
           <span>VER PROYECTO &rarr;</span>
         </div>
@@ -308,7 +377,7 @@ yearFilters.addEventListener('click', (e) => {
 
 // ---- MODAL ----
 function openModal(thesis) {
-  document.getElementById('modalCover').style.background = thesis.gradient;
+  document.getElementById('modalCover').innerHTML = `<img src="${thesis.thumbnail}" alt="${thesis.title}" style="width:100%;height:100%;object-fit:cover;">`;
   document.getElementById('modalCategory').textContent = thesis.categoryLabel;
   document.getElementById('modalTitle').textContent = thesis.title;
   document.getElementById('modalStudent').textContent = thesis.student;
@@ -316,15 +385,20 @@ function openModal(thesis) {
   document.getElementById('modalYear').textContent = thesis.year;
   document.getElementById('modalAbstract').textContent = thesis.abstract;
 
-  // Gallery images
+  // Clear gallery section
   const galleryEl = document.getElementById('modalGallery');
   galleryEl.innerHTML = '';
-  thesis.galleryGradients.forEach(grad => {
-    const div = document.createElement('div');
-    div.className = 'modal__gallery-item';
-    div.style.background = grad;
-    galleryEl.appendChild(div);
-  });
+
+  // PDF download functionality
+  const modalDownload = document.getElementById('modalDownload');
+  if (modalDownload) {
+    modalDownload.onclick = () => {
+      const link = document.createElement('a');
+      link.href = thesis.pdfUrl;
+      link.download = '';
+      link.click();
+    };
+  }
 
   modal.classList.add('open');
   document.body.classList.add('modal-open');
@@ -845,8 +919,20 @@ window.addEventListener('scroll', () => {
 });
 
 // ---- INIT ----
+// ---- THESIS REEL ----
+function initThesisReel() {
+  const reel = document.getElementById('thesisReel');
+  if (!reel) return;
+  const items = theses.map(t =>
+    `<div class="about__strip-item"><img src="${t.thumbnail}" alt="${t.title}" loading="lazy"></div>`
+  ).join('');
+  // Duplicate for seamless loop
+  reel.innerHTML = items + items;
+}
+
 document.addEventListener('DOMContentLoaded', () => {
   renderGallery();
+  initThesisReel();
   initScrollReveal();
   initParallax();
   initMagnetic();

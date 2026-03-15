@@ -1,0 +1,6 @@
+# macOS metadata
+._*
+.DS_Store
+
+# Large PDF thesis files (host externally)
+proyectos/otono-2025/

@@ -1471,26 +1471,63 @@ img {
 .about__image-strip {
   margin-top: var(--space-xl);
   overflow: hidden;
+  position: relative;
+}
+
+.about__image-strip::before,
+.about__image-strip::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: 80px;
+  z-index: 2;
+  pointer-events: none;
+}
+
+.about__image-strip::before {
+  left: 0;
+  background: linear-gradient(to right, var(--bg), transparent);
+}
+
+.about__image-strip::after {
+  right: 0;
+  background: linear-gradient(to left, var(--bg), transparent);
 }
 
 .about__image-strip-inner {
   display: flex;
   gap: var(--space-sm);
+  animation: reelScroll 30s linear infinite;
+  width: max-content;
+}
+
+.about__image-strip-inner:hover {
+  animation-play-state: paused;
+}
+
+@keyframes reelScroll {
+  0% { transform: translateX(0); }
+  100% { transform: translateX(-50%); }
 }
 
 .about__strip-item {
-  flex: 1;
+  flex-shrink: 0;
+  width: 220px;
   aspect-ratio: 3/4;
-  min-width: 200px;
-  background: var(--grad);
   border-radius: 2px;
-  transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1),
-              filter 0.6s;
+  overflow: hidden;
+  transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.about__strip-item img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
 }
 
 .about__strip-item:hover {
   transform: scale(1.05) rotate(-1deg);
-  filter: brightness(1.1);
 }
 
 /* ============================================
@@ -1619,7 +1656,15 @@ img {
   transition: transform 0.8s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
-.thesis-card:hover .thesis-card__gradient {
+.thesis-card__thumbnail {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.thesis-card:hover .thesis-card__gradient,
+.thesis-card:hover .thesis-card__thumbnail {
   transform: scale(1.12);
 }
 
@@ -2315,7 +2360,7 @@ img {
   }
 
   .about__strip-item {
-    min-width: 140px;
+    width: 150px;
   }
 
   /* ---- Gallery ---- */
