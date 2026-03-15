@@ -1735,29 +1735,58 @@ select.pef-register__input option {
   max-width: 520px;
 }
 
-.about__stats {
-  display: flex;
-  gap: var(--space-lg);
-  flex-wrap: wrap;
+.about__focus {
+  margin-top: var(--space-md);
 }
 
-.about__stat {
+.about__focus .mono-sm {
+  margin-bottom: var(--space-xs);
+  display: block;
+}
+
+.about__focus-slider {
+  height: 3.5rem;
+  overflow: hidden;
+  position: relative;
+}
+
+.about__focus-track {
   display: flex;
   flex-direction: column;
-  gap: var(--space-xs);
+  animation: focusSlide 10s cubic-bezier(0.65, 0, 0.35, 1) infinite;
 }
 
-.about__stat-number {
+.about__focus-word {
   font-family: var(--font-display);
-  font-size: clamp(3rem, 6vw, 5rem);
-  color: var(--accent);
-  line-height: 1;
-  transition: color 0.3s, transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+  font-size: clamp(1.8rem, 3vw, 2.8rem);
+  color: #fff;
+  line-height: 3.5rem;
+  height: 3.5rem;
+  flex-shrink: 0;
 }
 
-.about__stat:hover .about__stat-number {
-  color: var(--orange);
-  transform: scale(1.1);
+@keyframes focusSlide {
+  0%, 8% {
+    transform: translateY(0);
+  }
+  16%, 24% {
+    transform: translateY(-3.5rem);
+  }
+  32%, 40% {
+    transform: translateY(-7rem);
+  }
+  48%, 56% {
+    transform: translateY(-10.5rem);
+  }
+  64%, 72% {
+    transform: translateY(-14rem);
+  }
+  80%, 90% {
+    transform: translateY(-10.5rem);
+  }
+  95%, 100% {
+    transform: translateY(0);
+  }
 }
 
 .about__image-strip {
@@ -1918,7 +1947,7 @@ select.pef-register__input option {
 
 .gallery__grid {
   display: grid;
-  grid-template-columns: repeat(4, 1fr);
+  grid-template-columns: repeat(2, 1fr);
   gap: var(--space-md);
   transition: opacity 0.4s ease, transform 0.4s ease;
 }
@@ -2731,12 +2760,24 @@ select.pef-register__input option {
     font-size: 0.9rem;
   }
 
-  .about__stats {
-    gap: var(--space-md);
+  .about__focus-slider {
+    height: 2.5rem;
   }
 
-  .about__stat-number {
-    font-size: clamp(2.5rem, 10vw, 4rem);
+  .about__focus-word {
+    font-size: 1.2rem;
+    line-height: 2.5rem;
+    height: 2.5rem;
+  }
+
+  @keyframes focusSlide {
+    0%, 8% { transform: translateY(0); }
+    16%, 24% { transform: translateY(-2.5rem); }
+    32%, 40% { transform: translateY(-5rem); }
+    48%, 56% { transform: translateY(-7.5rem); }
+    64%, 72% { transform: translateY(-10rem); }
+    80%, 90% { transform: translateY(-7.5rem); }
+    95%, 100% { transform: translateY(0); }
   }
 
   .about__image-strip {

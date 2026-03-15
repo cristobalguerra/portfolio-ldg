@@ -232,7 +232,12 @@ const theses = [
 let activeCategory = 'all';
 let activeYear = 'all';
 let currentPage = 0;
-const ITEMS_PER_PAGE = 4;
+function getItemsPerPage() {
+  const w = window.innerWidth;
+  if (w >= 1400) return 8;  // 4 cols × 2 rows
+  if (w >= 1100) return 6;  // 3 cols × 2 rows
+  return 4;                 // 2 cols × 2 rows
+}
 
 // ---- DOM ELEMENTS ----
 const navBurger = document.getElementById('navBurger');
@@ -310,7 +315,7 @@ function getFilteredTheses() {
 }
 
 function getTotalPages(filtered) {
-  return Math.ceil(filtered.length / ITEMS_PER_PAGE);
+  return Math.ceil(filtered.length / getItemsPerPage());
 }
 
 function renderGallery(animate = true) {
@@ -320,8 +325,8 @@ function renderGallery(animate = true) {
   // Clamp current page
   if (currentPage >= totalPages) currentPage = Math.max(0, totalPages - 1);
 
-  const start = currentPage * ITEMS_PER_PAGE;
-  const pageItems = filtered.slice(start, start + ITEMS_PER_PAGE);
+  const start = currentPage * getItemsPerPage();
+  const pageItems = filtered.slice(start, start + getItemsPerPage());
 
   galleryGrid.innerHTML = '';
 
@@ -433,6 +438,15 @@ document.addEventListener('DOMContentLoaded', () => {
   const nextBtn = document.getElementById('galleryNext');
   if (prevBtn) prevBtn.addEventListener('click', () => slideGallery(-1));
   if (nextBtn) nextBtn.addEventListener('click', () => slideGallery(1));
+
+  // Re-render gallery on resize to adapt items per page
+  let resizeTimer;
+  window.addEventListener('resize', () => {
+    clearTimeout(resizeTimer);
+    resizeTimer = setTimeout(() => {
+      renderGallery(false);
+    }, 200);
+  });
 });
 
 // ---- MODAL ----
