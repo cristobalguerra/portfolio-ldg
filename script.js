@@ -1004,7 +1004,361 @@ function initThesisReel() {
   reel.innerHTML = items + items;
 }
 
+// ============================================
+// ADMIN SYSTEM — Projects & Awards Management
+// ============================================
+function initAdmin() {
+  const ADMIN_PASSWORD = 'pefpr26';
+
+  // ---- DOM ----
+  const adminBtn = document.getElementById('adminBtn');
+  const adminGate = document.getElementById('adminGate');
+  const adminGateBackdrop = document.getElementById('adminGateBackdrop');
+  const adminGateClose = document.getElementById('adminGateClose');
+  const adminGateForm = document.getElementById('adminGateForm');
+  const adminGatePass = document.getElementById('adminGatePass');
+  const adminGateError = document.getElementById('adminGateError');
+  const adminPanel = document.getElementById('adminPanel');
+  const adminPanelBackdrop = document.getElementById('adminPanelBackdrop');
+  const adminPanelClose = document.getElementById('adminPanelClose');
+  const adminProjectForm = document.getElementById('adminProjectForm');
+  const adminProjectFormBackdrop = document.getElementById('adminProjectFormBackdrop');
+  const adminProjectFormClose = document.getElementById('adminProjectFormClose');
+  const adminProjectFormEl = document.getElementById('adminProjectFormEl');
+  const adminAwardForm = document.getElementById('adminAwardForm');
+  const adminAwardFormBackdrop = document.getElementById('adminAwardFormBackdrop');
+  const adminAwardFormClose = document.getElementById('adminAwardFormClose');
+  const adminAwardFormEl = document.getElementById('adminAwardFormEl');
+
+  let adminAuthenticated = sessionStorage.getItem('adminAuth') === 'true';
+
+  // ---- LocalStorage helpers ----
+  function getDynamicProjects() {
+    try { return JSON.parse(localStorage.getItem('ldgProjects') || '[]'); }
+    catch { return []; }
+  }
+  function saveDynamicProjects(p) { localStorage.setItem('ldgProjects', JSON.stringify(p)); }
+
+  function getDynamicAwards() {
+    try { return JSON.parse(localStorage.getItem('ldgAwards') || '[]'); }
+    catch { return []; }
+  }
+  function saveDynamicAwards(a) { localStorage.setItem('ldgAwards', JSON.stringify(a)); }
+
+  // ---- Merge dynamic projects into theses array ----
+  function loadDynamicProjects() {
+    const dynamic = getDynamicProjects();
+    const categoryLabels = { branding: 'BRANDING', editorial: 'EDITORIAL', packaging: 'PACKAGING', motion: 'MOTION', uiux: 'UI/UX', identidad: 'IDENTIDAD' };
+    dynamic.forEach(dp => {
+      // Avoid duplicates
+      if (!theses.find(t => t.id === dp.id)) {
+        theses.push({
+          id: dp.id,
+          title: dp.title,
+          student: dp.student,
+          tutor: dp.tutor,
+          year: parseInt(dp.year),
+          semester: dp.semester,
+          category: dp.category,
+          categoryLabel: categoryLabels[dp.category] || dp.category.toUpperCase(),
+          thumbnail: dp.thumbnail,
+          pdfUrl: dp.pdfUrl,
+          abstract: dp.abstract
+        });
+      }
+    });
+  }
+
+  // ---- Render dynamic awards into the awards section ----
+  function renderDynamicAwards() {
+    const awards = getDynamicAwards();
+    const awardsList = document.querySelector('.awards__list');
+    if (!awardsList) return;
+
+    // Remove previously injected dynamic awards
+    awardsList.querySelectorAll('.awards__item--dynamic').forEach(el => el.remove());
+
+    awards.forEach(award => {
+      const item = document.createElement('div');
+      item.className = 'awards__item awards__item--featured awards__item--dynamic';
+      item.innerHTML = `
+        <div class="awards__item-image">
+          <img src="${escapeAttr(award.image)}" alt="${escapeAttr(award.name)}" loading="lazy">
+        </div>
+        <div class="awards__item-content">
+          <div class="awards__tags">
+            <span class="awards__tag">${escapeHtml(award.prize)}</span>
+            <span class="awards__tag awards__tag--accent">${escapeHtml(award.badge)}</span>
+          </div>
+          <h3 class="awards__name">${escapeHtml(award.name)}</h3>
+          <div class="awards__meta-grid">
+            <div class="awards__meta-item">
+              <span class="mono-sm">ALUMNAS</span>
+              <span>${escapeHtml(award.students)}</span>
+            </div>
+            <div class="awards__meta-item">
+              <span class="mono-sm">ASESOR</span>
+              <span>${escapeHtml(award.advisor)}</span>
+            </div>
+            <div class="awards__meta-item">
+              <span class="mono-sm">PROYECTO</span>
+              <span>${escapeHtml(award.description)}</span>
+            </div>
+          </div>
+        </div>
+      `;
+      awardsList.appendChild(item);
+    });
+  }
+
+  function escapeHtml(text) {
+    const div = document.createElement('div');
+    div.textContent = text;
+    return div.innerHTML;
+  }
+
+  function escapeAttr(text) {
+    return text.replace(/"/g, '&quot;').replace(/'/g, '&#39;');
+  }
+
+  // ---- Admin Panel List Renderers ----
+  function renderAdminProjectsList() {
+    const list = document.getElementById('adminProjectsList');
+    const dynamic = getDynamicProjects();
+
+    if (dynamic.length === 0) {
+      list.innerHTML = '<div class="admin-panel__empty">NO HAY PROYECTOS DINÁMICOS.<br>Los 17 proyectos base están en el código.</div>';
+      return;
+    }
+
+    list.innerHTML = dynamic.map(p => `
+      <div class="admin-panel__list-item">
+        <div class="admin-panel__list-item-info">
+          <span class="admin-panel__list-item-title">${escapeHtml(p.title)}</span>
+          <span class="admin-panel__list-item-meta">${escapeHtml(p.student)} · ${p.semester}</span>
+        </div>
+        <button class="admin-panel__list-item-delete" data-id="${p.id}" data-type="project">ELIMINAR</button>
+      </div>
+    `).join('');
+
+    list.querySelectorAll('.admin-panel__list-item-delete[data-type="project"]').forEach(btn => {
+      btn.addEventListener('click', () => {
+        if (!confirm('¿Eliminar este proyecto?')) return;
+        const id = btn.dataset.id;
+        const projects = getDynamicProjects().filter(p => p.id !== id);
+        saveDynamicProjects(projects);
+        // Remove from theses array
+        const idx = theses.findIndex(t => t.id === id);
+        if (idx !== -1) theses.splice(idx, 1);
+        renderAdminProjectsList();
+        renderGallery();
+        initThesisReel();
+        showToast('✓ PROYECTO ELIMINADO');
+      });
+    });
+  }
+
+  function renderAdminAwardsList() {
+    const list = document.getElementById('adminAwardsList');
+    const dynamic = getDynamicAwards();
+
+    if (dynamic.length === 0) {
+      list.innerHTML = '<div class="admin-panel__empty">NO HAY RECONOCIMIENTOS DINÁMICOS.<br>Roble & Maca está en el código base.</div>';
+      return;
+    }
+
+    list.innerHTML = dynamic.map(a => `
+      <div class="admin-panel__list-item">
+        <div class="admin-panel__list-item-info">
+          <span class="admin-panel__list-item-title">${escapeHtml(a.name)}</span>
+          <span class="admin-panel__list-item-meta">${escapeHtml(a.prize)} · ${escapeHtml(a.badge)}</span>
+        </div>
+        <button class="admin-panel__list-item-delete" data-id="${a.id}" data-type="award">ELIMINAR</button>
+      </div>
+    `).join('');
+
+    list.querySelectorAll('.admin-panel__list-item-delete[data-type="award"]').forEach(btn => {
+      btn.addEventListener('click', () => {
+        if (!confirm('¿Eliminar este reconocimiento?')) return;
+        const id = btn.dataset.id;
+        const awards = getDynamicAwards().filter(a => a.id !== id);
+        saveDynamicAwards(awards);
+        renderAdminAwardsList();
+        renderDynamicAwards();
+        showToast('✓ RECONOCIMIENTO ELIMINADO');
+      });
+    });
+  }
+
+  function showToast(msg) {
+    const toast = document.getElementById('pefToast');
+    toast.textContent = msg;
+    toast.classList.add('show');
+    setTimeout(() => toast.classList.remove('show'), 3000);
+  }
+
+  // ---- Open/Close ----
+  function openAdminGate() {
+    if (adminAuthenticated) { openAdminPanel(); return; }
+    adminGate.classList.add('open');
+    document.body.classList.add('modal-open');
+    adminGatePass.focus();
+  }
+
+  function closeAdminGate() {
+    adminGate.classList.remove('open');
+    document.body.classList.remove('modal-open');
+    adminGateError.textContent = '';
+    adminGatePass.value = '';
+  }
+
+  function openAdminPanel() {
+    closeAdminGate();
+    renderAdminProjectsList();
+    renderAdminAwardsList();
+    adminPanel.classList.add('open');
+    document.body.classList.add('modal-open');
+  }
+
+  function closeAdminPanel() {
+    adminPanel.classList.remove('open');
+    document.body.classList.remove('modal-open');
+  }
+
+  // ---- Events ----
+  adminBtn.addEventListener('click', openAdminGate);
+
+  adminGateClose.addEventListener('click', closeAdminGate);
+  adminGateBackdrop.addEventListener('click', closeAdminGate);
+
+  adminGateForm.addEventListener('submit', (e) => {
+    e.preventDefault();
+    if (adminGatePass.value !== ADMIN_PASSWORD) {
+      adminGateError.textContent = '⚠ Contraseña incorrecta';
+      return;
+    }
+    adminAuthenticated = true;
+    sessionStorage.setItem('adminAuth', 'true');
+    openAdminPanel();
+  });
+
+  adminPanelClose.addEventListener('click', closeAdminPanel);
+  adminPanelBackdrop.addEventListener('click', closeAdminPanel);
+
+  // Tabs
+  document.querySelectorAll('.admin-panel__tab').forEach(tab => {
+    tab.addEventListener('click', () => {
+      document.querySelectorAll('.admin-panel__tab').forEach(t => t.classList.remove('active'));
+      document.querySelectorAll('.admin-panel__tab-content').forEach(c => c.classList.remove('active'));
+      tab.classList.add('active');
+      document.getElementById(tab.dataset.tab === 'projects' ? 'adminTabProjects' : 'adminTabAwards').classList.add('active');
+    });
+  });
+
+  // Add Project
+  document.getElementById('adminAddProject').addEventListener('click', () => {
+    adminPanel.classList.remove('open');
+    adminProjectForm.classList.add('open');
+  });
+
+  function closeProjectForm() {
+    adminProjectForm.classList.remove('open');
+    adminProjectFormEl.reset();
+    openAdminPanel();
+  }
+  adminProjectFormClose.addEventListener('click', closeProjectForm);
+  adminProjectFormBackdrop.addEventListener('click', closeProjectForm);
+
+  adminProjectFormEl.addEventListener('submit', (e) => {
+    e.preventDefault();
+    const project = {
+      id: 'dyn_' + Date.now(),
+      title: document.getElementById('adminProjTitle').value.trim(),
+      student: document.getElementById('adminProjStudent').value.trim(),
+      tutor: document.getElementById('adminProjTutor').value.trim(),
+      semester: document.getElementById('adminProjSemester').value.trim(),
+      year: document.getElementById('adminProjYear').value.trim(),
+      category: document.getElementById('adminProjCategory').value,
+      thumbnail: document.getElementById('adminProjThumbnail').value.trim(),
+      pdfUrl: document.getElementById('adminProjPdf').value.trim(),
+      abstract: document.getElementById('adminProjAbstract').value.trim()
+    };
+
+    const projects = getDynamicProjects();
+    projects.push(project);
+    saveDynamicProjects(projects);
+
+    // Add to live theses array
+    const categoryLabels = { branding: 'BRANDING', editorial: 'EDITORIAL', packaging: 'PACKAGING', motion: 'MOTION', uiux: 'UI/UX', identidad: 'IDENTIDAD' };
+    theses.push({
+      ...project,
+      year: parseInt(project.year),
+      categoryLabel: categoryLabels[project.category] || project.category.toUpperCase()
+    });
+
+    adminProjectForm.classList.remove('open');
+    adminProjectFormEl.reset();
+    openAdminPanel();
+    renderGallery();
+    initThesisReel();
+    showToast('✓ PROYECTO REGISTRADO');
+  });
+
+  // Add Award
+  document.getElementById('adminAddAward').addEventListener('click', () => {
+    adminPanel.classList.remove('open');
+    adminAwardForm.classList.add('open');
+  });
+
+  function closeAwardForm() {
+    adminAwardForm.classList.remove('open');
+    adminAwardFormEl.reset();
+    openAdminPanel();
+  }
+  adminAwardFormClose.addEventListener('click', closeAwardForm);
+  adminAwardFormBackdrop.addEventListener('click', closeAwardForm);
+
+  adminAwardFormEl.addEventListener('submit', (e) => {
+    e.preventDefault();
+    const award = {
+      id: 'award_' + Date.now(),
+      name: document.getElementById('adminAwardName').value.trim(),
+      prize: document.getElementById('adminAwardPrize').value.trim(),
+      badge: document.getElementById('adminAwardBadge').value.trim(),
+      students: document.getElementById('adminAwardStudents').value.trim(),
+      advisor: document.getElementById('adminAwardAdvisor').value.trim(),
+      image: document.getElementById('adminAwardImage').value.trim(),
+      description: document.getElementById('adminAwardDesc').value.trim()
+    };
+
+    const awards = getDynamicAwards();
+    awards.push(award);
+    saveDynamicAwards(awards);
+
+    adminAwardForm.classList.remove('open');
+    adminAwardFormEl.reset();
+    openAdminPanel();
+    renderDynamicAwards();
+    showToast('✓ RECONOCIMIENTO REGISTRADO');
+  });
+
+  // ESC
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape') {
+      if (adminProjectForm.classList.contains('open')) { closeProjectForm(); }
+      else if (adminAwardForm.classList.contains('open')) { closeAwardForm(); }
+      else if (adminPanel.classList.contains('open')) closeAdminPanel();
+      else if (adminGate.classList.contains('open')) closeAdminGate();
+    }
+  });
+
+  // ---- Load on init ----
+  loadDynamicProjects();
+  renderDynamicAwards();
+}
+
 document.addEventListener('DOMContentLoaded', () => {
+  initAdmin(); // Load dynamic data first
   renderGallery();
   initThesisReel();
   initScrollReveal();

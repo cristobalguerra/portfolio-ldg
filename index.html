@@ -23,7 +23,10 @@
       <span></span><span></span><span></span><span></span>
     </button>
     <a href="#hero" class="nav__logo">PORTFOLIO / LDG</a>
-    <button class="nav__pef-btn" id="pefBtn">PEF TALKS</button>
+    <div class="nav__actions">
+      <button class="nav__admin-btn" id="adminBtn" title="Admin">&#9881;</button>
+      <button class="nav__pef-btn" id="pefBtn">PEF TALKS</button>
+    </div>
     <div class="nav__side-label">
       <span>REPOSITORIO DE TESIS</span>
     </div>
@@ -448,6 +451,182 @@
       <span>LDG</span>
     </div>
   </footer>
+
+  <!-- ADMIN PANEL -->
+  <div class="admin-panel" id="adminPanel">
+    <div class="admin-panel__backdrop" id="adminPanelBackdrop"></div>
+    <div class="admin-panel__container">
+      <div class="admin-panel__header">
+        <div>
+          <span class="mono-sm">ADMINISTRADOR</span>
+          <h2 class="pef-talks__title" style="font-size: clamp(2rem, 5vw, 3.5rem);">GESTIONAR CONTENIDO</h2>
+        </div>
+        <button class="pef-talks__close" id="adminPanelClose">&times;</button>
+      </div>
+
+      <!-- Tab navigation -->
+      <div class="admin-panel__tabs">
+        <button class="admin-panel__tab active" data-tab="projects">PROYECTOS</button>
+        <button class="admin-panel__tab" data-tab="awards">RECONOCIMIENTOS</button>
+      </div>
+
+      <!-- Projects Tab -->
+      <div class="admin-panel__tab-content active" id="adminTabProjects">
+        <div class="admin-panel__list" id="adminProjectsList"></div>
+        <button class="pef-gate__submit" id="adminAddProject" style="margin-top: var(--space-sm);">
+          <span>+ AGREGAR PROYECTO</span>
+          <span class="pef-gate__submit-arrow">&rarr;</span>
+        </button>
+      </div>
+
+      <!-- Awards Tab -->
+      <div class="admin-panel__tab-content" id="adminTabAwards">
+        <div class="admin-panel__list" id="adminAwardsList"></div>
+        <button class="pef-gate__submit" id="adminAddAward" style="margin-top: var(--space-sm);">
+          <span>+ AGREGAR RECONOCIMIENTO</span>
+          <span class="pef-gate__submit-arrow">&rarr;</span>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ADMIN: Add Project Form -->
+  <div class="admin-form" id="adminProjectForm">
+    <div class="admin-form__backdrop" id="adminProjectFormBackdrop"></div>
+    <div class="pef-register__panel">
+      <div class="pef-register__header">
+        <div>
+          <span class="mono-sm">NUEVO</span>
+          <h2 class="pef-talks__title" style="font-size: clamp(2rem, 5vw, 3.5rem);">PROYECTO DE TESIS</h2>
+        </div>
+        <button class="pef-talks__close" id="adminProjectFormClose">&times;</button>
+      </div>
+      <form class="pef-register__form" id="adminProjectFormEl">
+        <div class="pef-register__field">
+          <label class="mono-sm" for="adminProjTitle">T&Iacute;TULO DEL PROYECTO</label>
+          <input type="text" class="pef-register__input" id="adminProjTitle" placeholder="Ej: Biodise&ntilde;o Gr&aacute;fico" required>
+        </div>
+        <div class="pef-register__field">
+          <label class="mono-sm" for="adminProjStudent">ESTUDIANTE(S)</label>
+          <input type="text" class="pef-register__input" id="adminProjStudent" placeholder="Ej: Ana L&oacute;pez, Carlos Ruiz" required>
+        </div>
+        <div class="pef-register__field">
+          <label class="mono-sm" for="adminProjTutor">TUTOR</label>
+          <input type="text" class="pef-register__input" id="adminProjTutor" placeholder="Nombre del tutor" required>
+        </div>
+        <div class="pef-register__field">
+          <label class="mono-sm" for="adminProjSemester">SEMESTRE</label>
+          <input type="text" class="pef-register__input" id="adminProjSemester" placeholder="Ej: Oto&ntilde;o 2025" required>
+        </div>
+        <div class="pef-register__field">
+          <label class="mono-sm" for="adminProjYear">A&Ntilde;O</label>
+          <input type="number" class="pef-register__input" id="adminProjYear" placeholder="2025" required>
+        </div>
+        <div class="pef-register__field">
+          <label class="mono-sm" for="adminProjCategory">CATEGOR&Iacute;A</label>
+          <select class="pef-register__input" id="adminProjCategory" required>
+            <option value="">Seleccionar...</option>
+            <option value="branding">BRANDING</option>
+            <option value="editorial">EDITORIAL</option>
+            <option value="packaging">PACKAGING</option>
+            <option value="motion">MOTION</option>
+            <option value="uiux">UI/UX</option>
+            <option value="identidad">IDENTIDAD</option>
+          </select>
+        </div>
+        <div class="pef-register__field">
+          <label class="mono-sm" for="adminProjThumbnail">URL DE THUMBNAIL (imagen)</label>
+          <input type="url" class="pef-register__input" id="adminProjThumbnail" placeholder="https://..." required>
+        </div>
+        <div class="pef-register__field">
+          <label class="mono-sm" for="adminProjPdf">URL DEL PDF (Google Drive)</label>
+          <input type="url" class="pef-register__input" id="adminProjPdf" placeholder="https://drive.google.com/..." required>
+        </div>
+        <div class="pef-register__field">
+          <label class="mono-sm" for="adminProjAbstract">ABSTRACT / RESUMEN</label>
+          <textarea class="pef-register__textarea" id="adminProjAbstract" placeholder="Describe el proyecto..." required rows="4"></textarea>
+        </div>
+        <span class="pef-gate__error" id="adminProjectError"></span>
+        <button type="submit" class="pef-gate__submit" style="margin-top: var(--space-sm);">
+          <span>REGISTRAR PROYECTO</span>
+          <span class="pef-gate__submit-arrow">&rarr;</span>
+        </button>
+      </form>
+    </div>
+  </div>
+
+  <!-- ADMIN: Add Award Form -->
+  <div class="admin-form" id="adminAwardForm">
+    <div class="admin-form__backdrop" id="adminAwardFormBackdrop"></div>
+    <div class="pef-register__panel">
+      <div class="pef-register__header">
+        <div>
+          <span class="mono-sm">NUEVO</span>
+          <h2 class="pef-talks__title" style="font-size: clamp(2rem, 5vw, 3.5rem);">RECONOCIMIENTO</h2>
+        </div>
+        <button class="pef-talks__close" id="adminAwardFormClose">&times;</button>
+      </div>
+      <form class="pef-register__form" id="adminAwardFormEl">
+        <div class="pef-register__field">
+          <label class="mono-sm" for="adminAwardName">NOMBRE DEL PROYECTO</label>
+          <input type="text" class="pef-register__input" id="adminAwardName" placeholder="Ej: Roble & Maca" required>
+        </div>
+        <div class="pef-register__field">
+          <label class="mono-sm" for="adminAwardPrize">PREMIO</label>
+          <input type="text" class="pef-register__input" id="adminAwardPrize" placeholder="Ej: A' Design Award & Competition" required>
+        </div>
+        <div class="pef-register__field">
+          <label class="mono-sm" for="adminAwardBadge">CATEGOR&Iacute;A DEL PREMIO</label>
+          <input type="text" class="pef-register__input" id="adminAwardBadge" placeholder="Ej: Bronce, Oro, Menci&oacute;n Honor&iacute;fica" required>
+        </div>
+        <div class="pef-register__field">
+          <label class="mono-sm" for="adminAwardStudents">ALUMNO(S)</label>
+          <input type="text" class="pef-register__input" id="adminAwardStudents" placeholder="Nombres completos" required>
+        </div>
+        <div class="pef-register__field">
+          <label class="mono-sm" for="adminAwardAdvisor">ASESOR</label>
+          <input type="text" class="pef-register__input" id="adminAwardAdvisor" placeholder="Nombre del asesor" required>
+        </div>
+        <div class="pef-register__field">
+          <label class="mono-sm" for="adminAwardImage">URL DE IMAGEN</label>
+          <input type="url" class="pef-register__input" id="adminAwardImage" placeholder="https://..." required>
+        </div>
+        <div class="pef-register__field">
+          <label class="mono-sm" for="adminAwardDesc">DESCRIPCI&Oacute;N</label>
+          <textarea class="pef-register__textarea" id="adminAwardDesc" placeholder="Describe el reconocimiento..." required rows="3"></textarea>
+        </div>
+        <span class="pef-gate__error" id="adminAwardError"></span>
+        <button type="submit" class="pef-gate__submit" style="margin-top: var(--space-sm);">
+          <span>REGISTRAR RECONOCIMIENTO</span>
+          <span class="pef-gate__submit-arrow">&rarr;</span>
+        </button>
+      </form>
+    </div>
+  </div>
+
+  <!-- ADMIN PASSWORD GATE -->
+  <div class="pef-admin-gate" id="adminGate">
+    <div class="pef-admin-gate__backdrop" id="adminGateBackdrop"></div>
+    <div class="pef-admin-gate__panel">
+      <button class="pef-gate__close" id="adminGateClose">&times;</button>
+      <div class="pef-gate__content">
+        <span class="mono-sm">ACCESO ADMINISTRADOR</span>
+        <h2 class="pef-gate__title" style="font-size: clamp(2rem, 5vw, 3.5rem);">ADMIN</h2>
+        <p class="pef-gate__desc">Ingresa la contrase&ntilde;a de administrador para gestionar proyectos y reconocimientos.</p>
+        <form class="pef-gate__form" id="adminGateForm">
+          <div class="pef-gate__input-wrap">
+            <input type="password" class="pef-gate__input" id="adminGatePass" placeholder="Contrase&ntilde;a" required>
+            <div class="pef-gate__input-line"></div>
+          </div>
+          <span class="pef-gate__error" id="adminGateError"></span>
+          <button type="submit" class="pef-gate__submit">
+            <span>CONTINUAR</span>
+            <span class="pef-gate__submit-arrow">&rarr;</span>
+          </button>
+        </form>
+      </div>
+    </div>
+  </div>
 
   <!-- TOAST NOTIFICATION -->
   <div class="pef-toast" id="pefToast"></div>
