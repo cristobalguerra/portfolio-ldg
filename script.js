@@ -231,6 +231,8 @@ const theses = [
 // ---- STATE ----
 let activeCategory = 'all';
 let activeYear = 'all';
+let currentPage = 0;
+const ITEMS_PER_PAGE = 4;
 
 // ---- DOM ELEMENTS ----
 const navBurger = document.getElementById('navBurger');
@@ -299,16 +301,31 @@ menuLinks.forEach(link => {
 });
 
 // ---- RENDER GALLERY ----
-function renderGallery(animate = true) {
-  const filtered = theses.filter(t => {
+function getFilteredTheses() {
+  return theses.filter(t => {
     const catMatch = activeCategory === 'all' || t.category === activeCategory;
     const yearMatch = activeYear === 'all' || t.year === parseInt(activeYear);
     return catMatch && yearMatch;
   });
+}
+
+function getTotalPages(filtered) {
+  return Math.ceil(filtered.length / ITEMS_PER_PAGE);
+}
+
+function renderGallery(animate = true) {
+  const filtered = getFilteredTheses();
+  const totalPages = getTotalPages(filtered);
+
+  // Clamp current page
+  if (currentPage >= totalPages) currentPage = Math.max(0, totalPages - 1);
+
+  const start = currentPage * ITEMS_PER_PAGE;
+  const pageItems = filtered.slice(start, start + ITEMS_PER_PAGE);
 
   galleryGrid.innerHTML = '';
 
-  filtered.forEach((thesis, i) => {
+  pageItems.forEach((thesis, i) => {
     const card = document.createElement('div');
     card.className = 'thesis-card';
     if (animate) {
@@ -354,8 +371,41 @@ function renderGallery(animate = true) {
     galleryGrid.appendChild(card);
   });
 
+  // Update counters and arrows
   projectCount.textContent = `${filtered.length} PROYECTO${filtered.length !== 1 ? 'S' : ''}`;
+  const pageIndicator = document.getElementById('pageIndicator');
+  if (pageIndicator) pageIndicator.textContent = `${currentPage + 1} / ${totalPages}`;
+
+  const prevBtn = document.getElementById('galleryPrev');
+  const nextBtn = document.getElementById('galleryNext');
+  if (prevBtn) prevBtn.disabled = currentPage === 0;
+  if (nextBtn) nextBtn.disabled = currentPage >= totalPages - 1;
+
   bindCursorHover();
+}
+
+function slideGallery(direction) {
+  const filtered = getFilteredTheses();
+  const totalPages = getTotalPages(filtered);
+  const newPage = currentPage + direction;
+
+  if (newPage < 0 || newPage >= totalPages) return;
+
+  // Slide out
+  galleryGrid.classList.add('sliding-out');
+
+  setTimeout(() => {
+    currentPage = newPage;
+    renderGallery(false);
+    galleryGrid.classList.remove('sliding-out');
+    galleryGrid.classList.add('sliding-in');
+
+    requestAnimationFrame(() => {
+      requestAnimationFrame(() => {
+        galleryGrid.classList.remove('sliding-in');
+      });
+    });
+  }, 300);
 }
 
 // ---- FILTERS ----
@@ -364,6 +414,7 @@ categoryFilters.addEventListener('click', (e) => {
   categoryFilters.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
   e.target.classList.add('active');
   activeCategory = e.target.dataset.filter;
+  currentPage = 0;
   renderGallery();
 });
 
@@ -372,7 +423,16 @@ yearFilters.addEventListener('click', (e) => {
   yearFilters.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
   e.target.classList.add('active');
   activeYear = e.target.dataset.year;
+  currentPage = 0;
   renderGallery();
+});
+
+// ---- GALLERY ARROWS ----
+document.addEventListener('DOMContentLoaded', () => {
+  const prevBtn = document.getElementById('galleryPrev');
+  const nextBtn = document.getElementById('galleryNext');
+  if (prevBtn) prevBtn.addEventListener('click', () => slideGallery(-1));
+  if (nextBtn) nextBtn.addEventListener('click', () => slideGallery(1));
 });
 
 // ---- MODAL ----
@@ -914,8 +974,15 @@ window.addEventListener('scroll', () => {
 
       if (scrollY > 100) {
         nav.classList.add('nav--scrolled');
+        // Hide on fast scroll down, show on scroll up
+        if (scrollY > lastScroll && scrollY > 300) {
+          nav.classList.add('nav--hidden');
+        } else {
+          nav.classList.remove('nav--hidden');
+        }
       } else {
         nav.classList.remove('nav--scrolled');
+        nav.classList.remove('nav--hidden');
       }
 
       lastScroll = scrollY;

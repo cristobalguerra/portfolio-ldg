@@ -190,12 +190,19 @@ img {
   align-items: center;
   padding: var(--space-sm) var(--space-md);
   mix-blend-mode: exclusion;
-  transition: mix-blend-mode 0.3s ease;
+  transition: mix-blend-mode 0.3s ease, transform 0.3s ease, background 0.3s ease;
   will-change: transform;
 }
 
 .nav--scrolled {
   mix-blend-mode: normal;
+  background: rgba(26, 26, 26, 0.95);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+}
+
+.nav--hidden {
+  transform: translateY(-100%);
 }
 
 .nav::before {
@@ -1676,16 +1683,77 @@ img {
 }
 
 /* ---- Gallery Grid ---- */
-.gallery__grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-  gap: var(--space-md);
+.gallery__slider {
+  position: relative;
+  overflow: hidden;
 }
 
-.gallery__count {
+.gallery__grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: var(--space-md);
+  transition: opacity 0.4s ease, transform 0.4s ease;
+}
+
+.gallery__grid.sliding-out {
+  opacity: 0;
+  transform: translateX(-30px);
+}
+
+.gallery__grid.sliding-in {
+  opacity: 0;
+  transform: translateX(30px);
+}
+
+.gallery__nav {
   margin-top: var(--space-lg);
   padding-top: var(--space-sm);
   border-top: 1px solid rgba(212, 255, 0, 0.15);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.gallery__count {
+  display: flex;
+  gap: var(--space-md);
+  align-items: center;
+}
+
+.gallery__arrows {
+  display: flex;
+  gap: var(--space-sm);
+}
+
+.gallery__arrow {
+  width: 48px;
+  height: 48px;
+  border: 1px solid rgba(212, 255, 0, 0.3);
+  border-radius: 50%;
+  background: transparent;
+  color: var(--accent);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.3s ease;
+}
+
+.gallery__arrow:hover {
+  background: var(--accent);
+  color: var(--bg);
+  border-color: var(--accent);
+}
+
+.gallery__arrow:disabled {
+  opacity: 0.2;
+  cursor: not-allowed;
+}
+
+.gallery__arrow:disabled:hover {
+  background: transparent;
+  color: var(--accent);
+  border-color: rgba(212, 255, 0, 0.3);
 }
 
 /* ---- Thesis Card ---- */
@@ -2442,8 +2510,17 @@ img {
   }
 
   .gallery__grid {
-    grid-template-columns: 1fr;
-    gap: var(--space-md);
+    grid-template-columns: repeat(2, 1fr);
+    gap: var(--space-sm);
+  }
+
+  .gallery__nav {
+    margin-top: var(--space-md);
+  }
+
+  .gallery__arrow {
+    width: 40px;
+    height: 40px;
   }
 
   .gallery__filter-buttons {
