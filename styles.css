@@ -189,6 +189,13 @@ img {
   justify-content: space-between;
   align-items: center;
   padding: var(--space-sm) var(--space-md);
+  mix-blend-mode: exclusion;
+  transition: mix-blend-mode 0.3s ease;
+  will-change: transform;
+}
+
+.nav--scrolled {
+  mix-blend-mode: normal;
 }
 
 .nav::before {

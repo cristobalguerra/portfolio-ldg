@@ -461,7 +461,7 @@ function initScrollReveal() {
 // PARALLAX on scroll
 // ============================================
 function initParallax() {
-  const heroTitle = document.querySelector('.hero__title');
+  const heroWrap = document.querySelector('.hero__title-wrap');
   const footerBig = document.querySelector('.footer__big-text');
   const marquee = document.querySelector('.hero__marquee');
 
@@ -469,8 +469,8 @@ function initParallax() {
     const scrollY = window.scrollY;
 
     // Hero parallax
-    if (heroTitle && scrollY < window.innerHeight) {
-      heroTitle.style.transform = `translateY(${scrollY * 0.3}px)`;
+    if (heroWrap && scrollY < window.innerHeight) {
+      heroWrap.style.transform = `translateY(${scrollY * 0.15}px)`;
     }
 
     // Marquee speed boost on scroll
@@ -905,17 +905,24 @@ function initPefTalks() {
 
 // ---- NAV SCROLL STYLE ----
 let lastScroll = 0;
+let ticking = false;
 window.addEventListener('scroll', () => {
-  const nav = document.getElementById('nav');
-  const scrollY = window.scrollY;
+  if (!ticking) {
+    requestAnimationFrame(() => {
+      const nav = document.getElementById('nav');
+      const scrollY = window.scrollY;
 
-  if (scrollY > 100) {
-    nav.style.mixBlendMode = 'normal';
-  } else {
-    nav.style.mixBlendMode = 'exclusion';
+      if (scrollY > 100) {
+        nav.classList.add('nav--scrolled');
+      } else {
+        nav.classList.remove('nav--scrolled');
+      }
+
+      lastScroll = scrollY;
+      ticking = false;
+    });
+    ticking = true;
   }
-
-  lastScroll = scrollY;
 });
 
 // ---- INIT ----
