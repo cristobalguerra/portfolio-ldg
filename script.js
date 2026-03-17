@@ -937,6 +937,77 @@ function initPefTalks() {
     showToast('✓ PROYECTO PEF REGISTRADO EXITOSAMENTE');
   });
 
+  // ---- Feedback Table ----
+  const pefTableBtn = document.getElementById('pefTableBtn');
+  const pefTable = document.getElementById('pefTable');
+  const pefTableBackdrop = document.getElementById('pefTableBackdrop');
+  const pefTableClose = document.getElementById('pefTableClose');
+  const pefTableBody = document.getElementById('pefTableBody');
+
+  let feedbackCache = [];
+
+  db.ref('pefFeedback').on('value', (snapshot) => {
+    feedbackCache = snapshot.val() || [];
+  });
+
+  function openTable() {
+    renderTable();
+    pefTable.classList.add('open');
+  }
+
+  function closeTable() {
+    pefTable.classList.remove('open');
+  }
+
+  function renderTable() {
+    const projects = getPefProjects();
+    const feedback = feedbackCache;
+
+    if (feedback.length === 0 || projects.length === 0) {
+      pefTableBody.innerHTML = '<div class="pef-table__empty">NO HAY FEEDBACK REGISTRADO AÚN</div>';
+      return;
+    }
+
+    // Group feedback by professor
+    const profMap = {};
+    feedback.forEach(fb => {
+      if (!profMap[fb.profName]) profMap[fb.profName] = {};
+      profMap[fb.profName][fb.projectId] = fb.interest;
+    });
+
+    let html = '<table class="pef-table__grid"><thead><tr>';
+    html += '<th>PROFESOR</th>';
+    projects.forEach(p => {
+      html += `<th>${escapeHtml(p.name)}</th>`;
+    });
+    html += '</tr></thead><tbody>';
+
+    Object.keys(profMap).forEach(prof => {
+      html += '<tr>';
+      html += `<td>${escapeHtml(prof)}</td>`;
+      projects.forEach(p => {
+        const val = profMap[prof][p.id];
+        if (val === 'si') {
+          html += '<td class="pef-table__cell--si">✓ SÍ</td>';
+        } else if (val === 'sinodal') {
+          html += '<td class="pef-table__cell--sinodal">◆ SINODAL</td>';
+        } else if (val === 'no') {
+          html += '<td class="pef-table__cell--no">✗ NO</td>';
+        } else {
+          html += '<td>—</td>';
+        }
+      });
+      html += '</tr>';
+    });
+
+    html += '</tbody></table>';
+    pefTableBody.innerHTML = html;
+  }
+
+  pefTableBtn.addEventListener('click', openTable);
+  pefTableClose.addEventListener('click', closeTable);
+  pefTableBackdrop.addEventListener('click', closeTable);
+
   // Feedback form
   pefFeedbackClose.addEventListener('click', closeFeedbackForm);
   pefFeedbackBackdrop.addEventListener('click', closeFeedbackForm);
@@ -953,6 +1024,18 @@ function initPefTalks() {
     const projects = getPefProjects();
     const project = projects.find(p => p.id === projectId);
     if (!project) return;
+
+    // Save feedback to Firebase
+    const newFeedback = {
+      id: 'fb_' + Date.now(),
+      projectId,
+      profName,
+      feedback: fbText,
+      interest: interest.value,
+      createdAt: new Date().toISOString()
+    };
+    const allFeedback = [...feedbackCache, newFeedback];
+    db.ref('pefFeedback').set(allFeedback);
 
     // Build mailto link with feedback
     const interestLabel = interest.value === 'si' ? 'Si, me interesa asesorar'
@@ -971,13 +1054,14 @@ function initPefTalks() {
     window.open(`mailto:${project.email}?subject=${subject}&body=${body}`, '_blank');
 
     closeFeedbackForm();
-    showToast('✓ FEEDBACK ENVIADO — SE ABRIO TU CLIENTE DE CORREO');
+    showToast('✓ FEEDBACK REGISTRADO Y ENVIADO POR CORREO');
   });
 
   // ESC key
   document.addEventListener('keydown', (e) => {
     if (e.key === 'Escape') {
-      if (pefFeedback.classList.contains('open')) closeFeedbackForm();
+      if (pefTable.classList.contains('open')) closeTable();
+      else if (pefFeedback.classList.contains('open')) closeFeedbackForm();
       else if (pefRegister.classList.contains('open')) closeRegisterForm();
       else if (pefAdminGate.classList.contains('open')) closeAdminGate();
       else if (pefGate.classList.contains('open')) closePefGate();

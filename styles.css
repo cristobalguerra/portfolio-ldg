@@ -807,6 +807,160 @@ img {
   transform: scaleX(1);
 }
 
+.pef-talks__table-btn {
+  font-family: var(--font-mono);
+  font-size: 0.65rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  padding: 10px 24px;
+  background: transparent;
+  color: var(--accent);
+  border: 1px solid var(--accent);
+  transition: all 0.3s ease;
+  cursor: pointer;
+}
+
+.pef-talks__table-btn:hover {
+  background: var(--accent);
+  color: var(--black);
+}
+
+/* ---- PEF Feedback Table ---- */
+.pef-table {
+  position: fixed;
+  inset: 0;
+  z-index: 2200;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.4s ease;
+}
+
+.pef-table.open {
+  opacity: 1;
+  pointer-events: all;
+}
+
+.pef-table__backdrop {
+  position: absolute;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.85);
+  backdrop-filter: blur(8px);
+}
+
+.pef-table__panel {
+  position: relative;
+  width: 90vw;
+  max-width: 1200px;
+  max-height: 85vh;
+  background: var(--dark);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  display: flex;
+  flex-direction: column;
+  transform: translateY(30px);
+  transition: transform 0.4s ease;
+}
+
+.pef-table.open .pef-table__panel {
+  transform: translateY(0);
+}
+
+.pef-table__header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: var(--space-md);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.pef-table__title {
+  font-family: var(--font-display);
+  font-size: clamp(1.5rem, 3vw, 2.5rem);
+  color: var(--accent);
+  margin-top: 0.25rem;
+}
+
+.pef-table__body {
+  padding: var(--space-md);
+  overflow: auto;
+}
+
+.pef-table__grid {
+  width: 100%;
+  border-collapse: collapse;
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  letter-spacing: 0.05em;
+}
+
+.pef-table__grid th {
+  background: rgba(212, 255, 0, 0.08);
+  color: var(--accent);
+  padding: 12px 16px;
+  text-align: left;
+  text-transform: uppercase;
+  white-space: nowrap;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  position: sticky;
+  top: 0;
+}
+
+.pef-table__grid th:first-child {
+  position: sticky;
+  left: 0;
+  z-index: 2;
+  background: var(--dark);
+}
+
+.pef-table__grid td {
+  padding: 10px 16px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+  color: var(--gray);
+  white-space: nowrap;
+}
+
+.pef-table__grid td:first-child {
+  position: sticky;
+  left: 0;
+  background: var(--dark);
+  color: var(--white);
+  font-weight: 500;
+}
+
+.pef-table__grid tr:hover td {
+  background: rgba(255, 255, 255, 0.03);
+}
+
+.pef-table__grid tr:hover td:first-child {
+  background: rgba(212, 255, 0, 0.05);
+}
+
+.pef-table__cell--si {
+  color: var(--accent) !important;
+  font-weight: 700;
+}
+
+.pef-table__cell--sinodal {
+  color: var(--orange) !important;
+  font-weight: 700;
+}
+
+.pef-table__cell--no {
+  color: rgba(255, 255, 255, 0.2) !important;
+}
+
+.pef-table__empty {
+  text-align: center;
+  padding: var(--space-xl);
+  color: var(--gray);
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+}
+
 /* ---- PEF Empty State ---- */
 .pef-talks__empty {
   text-align: center;
