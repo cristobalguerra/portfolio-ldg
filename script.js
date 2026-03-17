@@ -4,7 +4,7 @@
    ============================================ */
 
 // ---- THESIS DATA ----
-const theses = [
+let theses = [
   {
     id: 1,
     title: "Deconstrucción de la Percepción y los Estándares de la Belleza Femenina",
@@ -700,16 +700,25 @@ function initPefTalks() {
   const ADMIN_PASSWORD = 'pefpr26';
   let pefAuthenticated = sessionStorage.getItem('pefAuth') === 'true';
 
-  // ---- LocalStorage helpers ----
+  // ---- Firebase helpers ----
+  let pefProjectsCache = [];
+
   function getPefProjects() {
-    try {
-      return JSON.parse(localStorage.getItem('pefProjects') || '[]');
-    } catch { return []; }
+    return pefProjectsCache;
   }
 
   function savePefProjects(projects) {
-    localStorage.setItem('pefProjects', JSON.stringify(projects));
+    pefProjectsCache = projects;
+    db.ref('pefProjects').set(projects);
   }
+
+  // Listen for real-time updates
+  db.ref('pefProjects').on('value', (snapshot) => {
+    pefProjectsCache = snapshot.val() || [];
+    if (pefTalks.classList.contains('open')) {
+      renderPefProjects();
+    }
+  });
 
   // ---- Toast notification ----
   function showToast(message) {
@@ -1046,18 +1055,36 @@ function initAdmin() {
 
   let adminAuthenticated = sessionStorage.getItem('adminAuth') === 'true';
 
-  // ---- LocalStorage helpers ----
-  function getDynamicProjects() {
-    try { return JSON.parse(localStorage.getItem('ldgProjects') || '[]'); }
-    catch { return []; }
-  }
-  function saveDynamicProjects(p) { localStorage.setItem('ldgProjects', JSON.stringify(p)); }
+  // ---- Firebase helpers ----
+  let dynamicProjectsCache = [];
+  let dynamicAwardsCache = [];
 
-  function getDynamicAwards() {
-    try { return JSON.parse(localStorage.getItem('ldgAwards') || '[]'); }
-    catch { return []; }
+  function getDynamicProjects() { return dynamicProjectsCache; }
+  function saveDynamicProjects(p) {
+    dynamicProjectsCache = p;
+    db.ref('ldgProjects').set(p);
   }
-  function saveDynamicAwards(a) { localStorage.setItem('ldgAwards', JSON.stringify(a)); }
+
+  function getDynamicAwards() { return dynamicAwardsCache; }
+  function saveDynamicAwards(a) {
+    dynamicAwardsCache = a;
+    db.ref('ldgAwards').set(a);
+  }
+
+  // Listen for real-time updates
+  db.ref('ldgProjects').on('value', (snapshot) => {
+    dynamicProjectsCache = snapshot.val() || [];
+    // Reload dynamic projects into theses array
+    theses = theses.filter(t => !t.id || !t.id.startsWith('dyn_'));
+    loadDynamicProjects();
+    renderGallery(false);
+    initThesisReel();
+  });
+
+  db.ref('ldgAwards').on('value', (snapshot) => {
+    dynamicAwardsCache = snapshot.val() || [];
+    renderDynamicAwards();
+  });
 
   // ---- Merge dynamic projects into theses array ----
   function loadDynamicProjects() {
@@ -1367,8 +1394,7 @@ function initAdmin() {
   });
 
   // ---- Load on init ----
-  loadDynamicProjects();
-  renderDynamicAwards();
+  // Firebase listeners handle loading automatically
 }
 
 document.addEventListener('DOMContentLoaded', () => {
