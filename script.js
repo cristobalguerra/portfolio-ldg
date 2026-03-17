@@ -1004,7 +1004,12 @@ function initPefTalks() {
     pefTableBody.innerHTML = html;
   }
 
-  pefTableBtn.addEventListener('click', openTable);
+  pefTableBtn.addEventListener('click', () => {
+    const pass = prompt('Contraseña para ver la tabla:');
+    if (pass === ADMIN_PASSWORD) {
+      openTable();
+    }
+  });
   pefTableClose.addEventListener('click', closeTable);
   pefTableBackdrop.addEventListener('click', closeTable);
 
