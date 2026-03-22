@@ -1699,6 +1699,46 @@ select.pef-register__input option {
   overflow: hidden;
 }
 
+/* Flip Words phrase */
+.hero__flip-phrase {
+  display: flex;
+  align-items: baseline;
+  gap: 0.4em;
+  font-family: var(--font-mono);
+  font-size: clamp(0.75rem, 1.3vw, 1rem);
+  letter-spacing: 0.08em;
+  color: rgba(255, 255, 255, 0.5);
+  margin-bottom: var(--space-sm);
+  animation: fadeIn 1s 0.3s ease forwards;
+  opacity: 0;
+}
+
+.hero__flip-word {
+  color: var(--accent);
+  font-weight: 500;
+  display: inline-block;
+  position: relative;
+  min-width: 8em;
+}
+
+.hero__flip-word.flip-out {
+  animation: flipOut 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+.hero__flip-word.flip-in {
+  animation: flipIn 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+@keyframes flipOut {
+  0% { opacity: 1; transform: translateY(0); filter: blur(0); }
+  100% { opacity: 0; transform: translateY(-20px) scale(1.1); filter: blur(6px); }
+}
+
+@keyframes flipIn {
+  0% { opacity: 0; transform: translateY(10px); filter: blur(6px); }
+  100% { opacity: 1; transform: translateY(0); filter: blur(0); }
+}
+
 .hero__content {
   flex: 1;
   display: flex;
@@ -1804,6 +1844,7 @@ select.pef-register__input option {
   animation: fadeIn 1.2s 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards;
   opacity: 0;
 }
+
 
 .hero__video {
   position: absolute;

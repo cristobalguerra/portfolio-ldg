@@ -290,6 +290,94 @@ window.addEventListener('load', () => {
   document.querySelectorAll('.hero__line').forEach(el => el.classList.add('animated'));
 });
 
+// ============================================
+// FLIP WORDS
+// ============================================
+(function initFlipWords() {
+  const words = ['marcas', 'productos digitales', 'experiencias'];
+  const el = document.getElementById('flipWord');
+  if (!el) return;
+  let index = 0;
+
+  setInterval(() => {
+    el.classList.add('flip-out');
+    setTimeout(() => {
+      index = (index + 1) % words.length;
+      el.textContent = words[index];
+      el.classList.remove('flip-out');
+      el.classList.add('flip-in');
+      setTimeout(() => el.classList.remove('flip-in'), 400);
+    }, 400);
+  }, 3000);
+})();
+
+// ============================================
+// TEXT CURSOR PROXIMITY
+// ============================================
+(function initCursorProximity() {
+  const RADIUS = 120;
+  const mousePos = { x: -9999, y: -9999 };
+  const targets = [];
+
+  // Split text into individual letter spans (only for simple text nodes, no <br>)
+  function splitLetters(el) {
+    // Skip elements with child elements like <br>
+    if (el.querySelector('br')) return;
+    const text = el.textContent;
+    el.innerHTML = '';
+    el.setAttribute('data-proximity', 'true');
+    text.split('').forEach(char => {
+      const span = document.createElement('span');
+      span.textContent = char === ' ' ? '\u00A0' : char;
+      span.style.display = 'inline-block';
+      span.style.transition = 'none';
+      span.style.willChange = 'transform, color';
+      el.appendChild(span);
+      targets.push(span);
+    });
+  }
+
+  // Apply only to LDG
+  document.querySelectorAll('.hero__line--outline').forEach(splitLetters);
+
+  // Track mouse
+  document.addEventListener('mousemove', e => {
+    mousePos.x = e.clientX;
+    mousePos.y = e.clientY;
+  });
+
+  // Animation loop
+  function animate() {
+    targets.forEach(span => {
+      const rect = span.getBoundingClientRect();
+      const cx = rect.left + rect.width / 2;
+      const cy = rect.top + rect.height / 2;
+      const dx = mousePos.x - cx;
+      const dy = mousePos.y - cy;
+      const dist = Math.sqrt(dx * dx + dy * dy);
+
+      // Gaussian falloff
+      const proximity = dist < RADIUS ? Math.exp(-Math.pow(dist / (RADIUS / 2), 2) / 2) : 0;
+
+      const scale = 1 + proximity * 0.3;
+      span.style.transform = 'scale(' + scale + ')';
+
+      // Color shift: from current to accent
+      if (proximity > 0.01) {
+        const r = Math.round(255 - proximity * 43);
+        const g = Math.round(255 - proximity * 0);
+        const b = Math.round(255 - proximity * 255);
+        span.style.color = 'rgb(' + r + ',' + g + ',' + b + ')';
+      } else {
+        span.style.color = '';
+      }
+    });
+    requestAnimationFrame(animate);
+  }
+
+  if (targets.length > 0) requestAnimationFrame(animate);
+})();
+
 // ---- NAVIGATION ----
 navBurger.addEventListener('click', () => {
   navBurger.classList.toggle('active');
