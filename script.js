@@ -788,6 +788,7 @@ function initPefTalks() {
   const ADMIN_PASSWORD = 'pefpr26';
   let pefAuthenticated = sessionStorage.getItem('pefAuth') === 'true';
   let editingProjectId = null;
+  let deletingProjectId = null;
 
   // ---- Firebase helpers ----
   let pefProjectsCache = [];
@@ -841,6 +842,7 @@ function initPefTalks() {
         <div class="pef-talks__card-accent"></div>
         <span class="mono-sm">PEF ${String(i + 1).padStart(2, '0')}</span>
         <button class="pef-talks__card-edit-btn" data-project-id="${proj.id}" title="Editar">&#9998;</button>
+        <button class="pef-talks__card-delete-btn" data-project-id="${proj.id}" title="Borrar">&times;</button>
         <h3 class="pef-talks__card-title">${escapeHtml(proj.name)}</h3>
         <span class="pef-talks__card-members">${escapeHtml(proj.members)}</span>
         <p class="pef-talks__card-desc">${escapeHtml(proj.summary)}</p>
@@ -864,6 +866,22 @@ function initPefTalks() {
         e.stopPropagation();
         const projectId = e.currentTarget.dataset.projectId;
         editingProjectId = projectId;
+        deletingProjectId = null;
+        openAdminGate();
+      });
+    });
+
+    // Bind delete buttons (admin gate first + confirm)
+    pefProjectsGrid.querySelectorAll('.pef-talks__card-delete-btn').forEach(btn => {
+      btn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        const projectId = e.currentTarget.dataset.projectId;
+        const projects = getPefProjects();
+        const proj = projects.find(p => p.id === projectId);
+        if (!proj) return;
+        if (!confirm(`¿Borrar "${proj.name}"? Esta acción no se puede deshacer.`)) return;
+        deletingProjectId = projectId;
+        editingProjectId = null;
         openAdminGate();
       });
     });
@@ -1026,6 +1044,18 @@ function initPefTalks() {
       setTimeout(() => { pefAdminPass.style.borderBottomColor = ''; }, 2000);
       return;
     }
+
+    // Delete flow: password confirmed → delete directly
+    if (deletingProjectId) {
+      const projects = getPefProjects().filter(p => p.id !== deletingProjectId);
+      savePefProjects(projects);
+      deletingProjectId = null;
+      closeAdminGate();
+      renderPefProjects();
+      showToast('✓ PROYECTO BORRADO');
+      return;
+    }
+
     openRegisterForm();
   });
 
