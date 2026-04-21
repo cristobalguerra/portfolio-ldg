@@ -913,21 +913,21 @@ function initPefTalks() {
     return String(text || '').replace(/&/g, '&amp;').replace(/"/g, '&quot;').replace(/'/g, '&#39;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
   }
 
-  // ---- PDF Viewer ----
+  // ---- Poster Image Viewer ----
   const pdfViewer = document.getElementById('pdfViewer');
   const pdfViewerBackdrop = document.getElementById('pdfViewerBackdrop');
   const pdfViewerClose = document.getElementById('pdfViewerClose');
-  const pdfViewerIframe = document.getElementById('pdfViewerIframe');
+  const pdfViewerImg = document.getElementById('pdfViewerImg');
 
   function openPdfViewer(url) {
-    if (!url || !pdfViewer) return;
-    // Convert Google Drive share links to embeddable preview
-    let embedUrl = url;
-    const driveMatch = url.match(/\/file\/d\/([^\/]+)/);
+    if (!url || !pdfViewer || !pdfViewerImg) return;
+    // Convert Google Drive share links to direct image URLs
+    let imgUrl = url;
+    const driveMatch = url.match(/\/file\/d\/([^\/]+)/) || url.match(/[?&]id=([^&]+)/);
     if (driveMatch) {
-      embedUrl = `https://drive.google.com/file/d/${driveMatch[1]}/preview`;
+      imgUrl = `https://drive.google.com/uc?export=view&id=${driveMatch[1]}`;
     }
-    pdfViewerIframe.src = embedUrl;
+    pdfViewerImg.src = imgUrl;
     pdfViewer.classList.add('open');
     document.body.classList.add('modal-open');
   }
@@ -935,7 +935,7 @@ function initPefTalks() {
   function closePdfViewer() {
     if (!pdfViewer) return;
     pdfViewer.classList.remove('open');
-    pdfViewerIframe.src = '';
+    if (pdfViewerImg) pdfViewerImg.src = '';
     document.body.classList.remove('modal-open');
   }
 
