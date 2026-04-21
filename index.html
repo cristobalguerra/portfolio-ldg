@@ -173,6 +173,10 @@
           <label class="mono-sm" for="pefProjEmail">CORREO INSTITUCIONAL PARA FEEDBACK</label>
           <input type="email" class="pef-register__input" id="pefProjEmail" placeholder="tu.nombre@udem.edu.mx" required>
         </div>
+        <div class="pef-register__field">
+          <label class="mono-sm" for="pefProjPdf">URL DEL POSTER (PDF, opcional)</label>
+          <input type="url" class="pef-register__input" id="pefProjPdf" placeholder="https://drive.google.com/... o enlace directo al PDF">
+        </div>
         <span class="pef-gate__error" id="pefRegisterError"></span>
         <button type="submit" class="pef-gate__submit" style="margin-top: var(--space-sm);">
           <span>REGISTRAR PROYECTO</span>
@@ -662,6 +666,15 @@
           </button>
         </form>
       </div>
+    </div>
+  </div>
+
+  <!-- PDF POSTER VIEWER -->
+  <div class="pdf-viewer" id="pdfViewer">
+    <div class="pdf-viewer__backdrop" id="pdfViewerBackdrop"></div>
+    <div class="pdf-viewer__panel">
+      <button class="pdf-viewer__close" id="pdfViewerClose" title="Cerrar">&times;</button>
+      <iframe class="pdf-viewer__iframe" id="pdfViewerIframe" src="" title="Poster PDF"></iframe>
     </div>
   </div>
 

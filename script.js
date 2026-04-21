@@ -838,6 +838,9 @@ function initPefTalks() {
     projects.forEach((proj, i) => {
       const card = document.createElement('div');
       card.className = 'pef-talks__card';
+      const posterBtn = proj.pdfUrl
+        ? `<button class="pef-talks__card-poster-btn" data-pdf-url="${escapeAttr(proj.pdfUrl)}">VER POSTER</button>`
+        : '';
       card.innerHTML = `
         <div class="pef-talks__card-accent"></div>
         <span class="mono-sm">PEF ${String(i + 1).padStart(2, '0')}</span>
@@ -847,9 +850,20 @@ function initPefTalks() {
         <span class="pef-talks__card-members">${escapeHtml(proj.members)}</span>
         <p class="pef-talks__card-desc">${escapeHtml(proj.summary)}</p>
         <p class="pef-talks__card-problem"><strong>Problemática:</strong> ${escapeHtml(proj.problem)}</p>
-        <button class="pef-talks__card-feedback-btn" data-project-id="${proj.id}">DAR FEEDBACK &rarr;</button>
+        <div class="pef-talks__card-actions">
+          ${posterBtn}
+          <button class="pef-talks__card-feedback-btn" data-project-id="${proj.id}">DAR FEEDBACK &rarr;</button>
+        </div>
       `;
       pefProjectsGrid.appendChild(card);
+    });
+
+    // Bind poster buttons
+    pefProjectsGrid.querySelectorAll('.pef-talks__card-poster-btn').forEach(btn => {
+      btn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        openPdfViewer(e.currentTarget.dataset.pdfUrl);
+      });
     });
 
     // Bind feedback buttons
@@ -894,6 +908,39 @@ function initPefTalks() {
     div.textContent = text;
     return div.innerHTML;
   }
+
+  function escapeAttr(text) {
+    return String(text || '').replace(/&/g, '&amp;').replace(/"/g, '&quot;').replace(/'/g, '&#39;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+  }
+
+  // ---- PDF Viewer ----
+  const pdfViewer = document.getElementById('pdfViewer');
+  const pdfViewerBackdrop = document.getElementById('pdfViewerBackdrop');
+  const pdfViewerClose = document.getElementById('pdfViewerClose');
+  const pdfViewerIframe = document.getElementById('pdfViewerIframe');
+
+  function openPdfViewer(url) {
+    if (!url || !pdfViewer) return;
+    // Convert Google Drive share links to embeddable preview
+    let embedUrl = url;
+    const driveMatch = url.match(/\/file\/d\/([^\/]+)/);
+    if (driveMatch) {
+      embedUrl = `https://drive.google.com/file/d/${driveMatch[1]}/preview`;
+    }
+    pdfViewerIframe.src = embedUrl;
+    pdfViewer.classList.add('open');
+    document.body.classList.add('modal-open');
+  }
+
+  function closePdfViewer() {
+    if (!pdfViewer) return;
+    pdfViewer.classList.remove('open');
+    pdfViewerIframe.src = '';
+    document.body.classList.remove('modal-open');
+  }
+
+  if (pdfViewerClose) pdfViewerClose.addEventListener('click', closePdfViewer);
+  if (pdfViewerBackdrop) pdfViewerBackdrop.addEventListener('click', closePdfViewer);
 
   // ---- Open/Close functions ----
   function openPefGate() {
@@ -953,6 +1000,8 @@ function initPefTalks() {
         document.getElementById('pefProjSummary').value = proj.summary || '';
         document.getElementById('pefProjProblem').value = proj.problem || '';
         document.getElementById('pefProjEmail').value = proj.email || '';
+        const pdfInput = document.getElementById('pefProjPdf');
+        if (pdfInput) pdfInput.value = proj.pdfUrl || '';
       }
       if (titleEl) titleEl.textContent = 'EDITAR PROYECTO PEF';
       if (submitBtn) {
@@ -1070,6 +1119,7 @@ function initPefTalks() {
     const summary = document.getElementById('pefProjSummary').value.trim();
     const problem = document.getElementById('pefProjProblem').value.trim();
     const email = document.getElementById('pefProjEmail').value.trim();
+    const pdfUrl = (document.getElementById('pefProjPdf')?.value || '').trim();
 
     if (!validateUdemEmail(email)) {
       pefRegisterError.textContent = '⚠ El correo debe ser @udem.edu o @udem.edu.mx';
@@ -1089,7 +1139,7 @@ function initPefTalks() {
       if (idx !== -1) {
         projects[idx] = {
           ...projects[idx],
-          name, members, summary, problem, email
+          name, members, summary, problem, email, pdfUrl
         };
         savePefProjects(projects);
         closeRegisterForm();
@@ -1107,6 +1157,7 @@ function initPefTalks() {
       summary,
       problem,
       email,
+      pdfUrl,
       createdAt: new Date().toISOString()
     };
     projects.push(newProject);
@@ -1245,7 +1296,8 @@ function initPefTalks() {
   // ESC key
   document.addEventListener('keydown', (e) => {
     if (e.key === 'Escape') {
-      if (pefTable.classList.contains('open')) closeTable();
+      if (pdfViewer && pdfViewer.classList.contains('open')) closePdfViewer();
+      else if (pefTable.classList.contains('open')) closeTable();
       else if (pefFeedback.classList.contains('open')) closeFeedbackForm();
       else if (pefRegister.classList.contains('open')) closeRegisterForm();
       else if (pefAdminGate.classList.contains('open')) closeAdminGate();
