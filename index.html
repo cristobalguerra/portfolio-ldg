@@ -174,8 +174,14 @@
           <input type="email" class="pef-register__input" id="pefProjEmail" placeholder="tu.nombre@udem.edu.mx" required>
         </div>
         <div class="pef-register__field">
-          <label class="mono-sm" for="pefProjPdf">URL DE LA IMAGEN DEL POSTER (opcional)</label>
-          <input type="url" class="pef-register__input" id="pefProjPdf" placeholder="https://... enlace directo a la imagen (JPG, PNG)">
+          <label class="mono-sm" for="pefProjPoster">POSTER DEL PROYECTO (opcional)</label>
+          <div class="pef-register__file-wrap">
+            <input type="file" id="pefProjPoster" accept="image/*" class="pef-register__file-input">
+            <label for="pefProjPoster" class="pef-register__file-label" id="pefProjPosterLabel">Seleccionar imagen…</label>
+            <button type="button" class="pef-register__file-clear" id="pefProjPosterClear" style="display:none;">Quitar</button>
+          </div>
+          <div class="pef-register__file-preview" id="pefProjPosterPreview"></div>
+          <input type="hidden" id="pefProjPdf">
         </div>
         <span class="pef-gate__error" id="pefRegisterError"></span>
         <button type="submit" class="pef-gate__submit" style="margin-top: var(--space-sm);">

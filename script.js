@@ -913,6 +913,72 @@ function initPefTalks() {
     return String(text || '').replace(/&/g, '&amp;').replace(/"/g, '&quot;').replace(/'/g, '&#39;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
   }
 
+  // ---- Poster Image Upload (compress to base64) ----
+  const pefPosterInput = document.getElementById('pefProjPoster');
+  const pefPosterLabel = document.getElementById('pefProjPosterLabel');
+  const pefPosterClear = document.getElementById('pefProjPosterClear');
+  const pefPosterPreview = document.getElementById('pefProjPosterPreview');
+  const pefPosterHidden = document.getElementById('pefProjPdf');
+
+  function setPosterPreview(dataUrl) {
+    if (!pefPosterPreview) return;
+    if (dataUrl) {
+      pefPosterPreview.innerHTML = `<img src="${dataUrl}" alt="Preview">`;
+      if (pefPosterClear) pefPosterClear.style.display = '';
+    } else {
+      pefPosterPreview.innerHTML = '';
+      if (pefPosterClear) pefPosterClear.style.display = 'none';
+    }
+  }
+
+  async function compressImage(file, maxWidth = 1600, quality = 0.82) {
+    return new Promise((resolve, reject) => {
+      const img = new Image();
+      img.onload = () => {
+        const scale = Math.min(1, maxWidth / img.width);
+        const w = Math.round(img.width * scale);
+        const h = Math.round(img.height * scale);
+        const canvas = document.createElement('canvas');
+        canvas.width = w;
+        canvas.height = h;
+        const ctx = canvas.getContext('2d');
+        ctx.drawImage(img, 0, 0, w, h);
+        resolve(canvas.toDataURL('image/jpeg', quality));
+      };
+      img.onerror = reject;
+      const reader = new FileReader();
+      reader.onload = (e) => { img.src = e.target.result; };
+      reader.onerror = reject;
+      reader.readAsDataURL(file);
+    });
+  }
+
+  if (pefPosterInput) {
+    pefPosterInput.addEventListener('change', async (e) => {
+      const file = e.target.files[0];
+      if (!file) return;
+      if (pefPosterLabel) pefPosterLabel.textContent = 'Procesando…';
+      try {
+        const dataUrl = await compressImage(file);
+        if (pefPosterHidden) pefPosterHidden.value = dataUrl;
+        setPosterPreview(dataUrl);
+        if (pefPosterLabel) pefPosterLabel.textContent = file.name;
+      } catch (err) {
+        if (pefPosterLabel) pefPosterLabel.textContent = 'Error al procesar. Intenta otra imagen.';
+        console.error(err);
+      }
+    });
+  }
+
+  if (pefPosterClear) {
+    pefPosterClear.addEventListener('click', () => {
+      if (pefPosterInput) pefPosterInput.value = '';
+      if (pefPosterHidden) pefPosterHidden.value = '';
+      if (pefPosterLabel) pefPosterLabel.textContent = 'Seleccionar imagen…';
+      setPosterPreview('');
+    });
+  }
+
   // ---- Poster Image Viewer ----
   const pdfViewer = document.getElementById('pdfViewer');
   const pdfViewerBackdrop = document.getElementById('pdfViewerBackdrop');
@@ -921,11 +987,13 @@ function initPefTalks() {
 
   function openPdfViewer(url) {
     if (!url || !pdfViewer || !pdfViewerImg) return;
-    // Convert Google Drive share links to direct image URLs
+    // If base64 data URL, use as-is. If Google Drive URL, convert. Else use as-is.
     let imgUrl = url;
-    const driveMatch = url.match(/\/file\/d\/([^\/]+)/) || url.match(/[?&]id=([^&]+)/);
-    if (driveMatch) {
-      imgUrl = `https://drive.google.com/uc?export=view&id=${driveMatch[1]}`;
+    if (!url.startsWith('data:')) {
+      const driveMatch = url.match(/\/file\/d\/([^\/]+)/) || url.match(/[?&]id=([^&]+)/);
+      if (driveMatch) {
+        imgUrl = `https://drive.google.com/uc?export=view&id=${driveMatch[1]}`;
+      }
     }
     pdfViewerImg.src = imgUrl;
     pdfViewer.classList.add('open');
@@ -1000,8 +1068,14 @@ function initPefTalks() {
         document.getElementById('pefProjSummary').value = proj.summary || '';
         document.getElementById('pefProjProblem').value = proj.problem || '';
         document.getElementById('pefProjEmail').value = proj.email || '';
-        const pdfInput = document.getElementById('pefProjPdf');
-        if (pdfInput) pdfInput.value = proj.pdfUrl || '';
+        if (pefPosterHidden) pefPosterHidden.value = proj.pdfUrl || '';
+        if (proj.pdfUrl) {
+          setPosterPreview(proj.pdfUrl);
+          if (pefPosterLabel) pefPosterLabel.textContent = 'Imagen actual — reemplazar';
+        } else {
+          setPosterPreview('');
+          if (pefPosterLabel) pefPosterLabel.textContent = 'Seleccionar imagen…';
+        }
       }
       if (titleEl) titleEl.textContent = 'EDITAR PROYECTO PEF';
       if (submitBtn) {
@@ -1010,6 +1084,9 @@ function initPefTalks() {
       }
     } else {
       pefRegisterForm.reset();
+      if (pefPosterHidden) pefPosterHidden.value = '';
+      setPosterPreview('');
+      if (pefPosterLabel) pefPosterLabel.textContent = 'Seleccionar imagen…';
       if (titleEl) titleEl.textContent = 'DAR DE ALTA PROYECTO PEF';
       if (submitBtn) {
         const span = submitBtn.querySelector('span:first-child');
@@ -1021,6 +1098,9 @@ function initPefTalks() {
   function closeRegisterForm() {
     pefRegister.classList.remove('open');
     pefRegisterForm.reset();
+    if (pefPosterHidden) pefPosterHidden.value = '';
+    setPosterPreview('');
+    if (pefPosterLabel) pefPosterLabel.textContent = 'Seleccionar imagen…';
     pefRegisterError.textContent = '';
     editingProjectId = null;
   }
