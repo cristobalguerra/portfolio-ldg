@@ -787,6 +787,7 @@ function initPefTalks() {
 
   const ADMIN_PASSWORD = 'pefpr26';
   let pefAuthenticated = sessionStorage.getItem('pefAuth') === 'true';
+  let editingProjectId = null;
 
   // ---- Firebase helpers ----
   let pefProjectsCache = [];
@@ -839,6 +840,7 @@ function initPefTalks() {
       card.innerHTML = `
         <div class="pef-talks__card-accent"></div>
         <span class="mono-sm">PEF ${String(i + 1).padStart(2, '0')}</span>
+        <button class="pef-talks__card-edit-btn" data-project-id="${proj.id}" title="Editar">&#9998;</button>
         <h3 class="pef-talks__card-title">${escapeHtml(proj.name)}</h3>
         <span class="pef-talks__card-members">${escapeHtml(proj.members)}</span>
         <p class="pef-talks__card-desc">${escapeHtml(proj.summary)}</p>
@@ -853,6 +855,16 @@ function initPefTalks() {
       btn.addEventListener('click', (e) => {
         const projectId = e.target.dataset.projectId;
         openFeedbackForm(projectId);
+      });
+    });
+
+    // Bind edit buttons (admin gate first)
+    pefProjectsGrid.querySelectorAll('.pef-talks__card-edit-btn').forEach(btn => {
+      btn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        const projectId = e.currentTarget.dataset.projectId;
+        editingProjectId = projectId;
+        openAdminGate();
       });
     });
 
@@ -909,12 +921,41 @@ function initPefTalks() {
   function openRegisterForm() {
     closeAdminGate();
     pefRegister.classList.add('open');
+
+    // Update form title + button based on mode
+    const titleEl = pefRegister.querySelector('.pef-register__title') || pefRegister.querySelector('h2');
+    const submitBtn = pefRegister.querySelector('button[type="submit"]');
+
+    if (editingProjectId) {
+      const projects = getPefProjects();
+      const proj = projects.find(p => p.id === editingProjectId);
+      if (proj) {
+        document.getElementById('pefProjName').value = proj.name || '';
+        document.getElementById('pefProjMembers').value = proj.members || '';
+        document.getElementById('pefProjSummary').value = proj.summary || '';
+        document.getElementById('pefProjProblem').value = proj.problem || '';
+        document.getElementById('pefProjEmail').value = proj.email || '';
+      }
+      if (titleEl) titleEl.textContent = 'EDITAR PROYECTO PEF';
+      if (submitBtn) {
+        const span = submitBtn.querySelector('span:first-child');
+        if (span) span.textContent = 'GUARDAR CAMBIOS';
+      }
+    } else {
+      pefRegisterForm.reset();
+      if (titleEl) titleEl.textContent = 'DAR DE ALTA PROYECTO PEF';
+      if (submitBtn) {
+        const span = submitBtn.querySelector('span:first-child');
+        if (span) span.textContent = 'REGISTRAR PROYECTO';
+      }
+    }
   }
 
   function closeRegisterForm() {
     pefRegister.classList.remove('open');
     pefRegisterForm.reset();
     pefRegisterError.textContent = '';
+    editingProjectId = null;
   }
 
   function openFeedbackForm(projectId) {
@@ -968,7 +1009,10 @@ function initPefTalks() {
   pefTalksBackdrop.addEventListener('click', closePefTalks);
 
   // Add PEF button -> admin password
-  pefAddBtn.addEventListener('click', openAdminGate);
+  pefAddBtn.addEventListener('click', () => {
+    editingProjectId = null;
+    openAdminGate();
+  });
 
   // Admin gate
   pefAdminGateClose.addEventListener('click', closeAdminGate);
@@ -1008,6 +1052,24 @@ function initPefTalks() {
     }
 
     const projects = getPefProjects();
+
+    if (editingProjectId) {
+      // Edit mode: update existing project
+      const idx = projects.findIndex(p => p.id === editingProjectId);
+      if (idx !== -1) {
+        projects[idx] = {
+          ...projects[idx],
+          name, members, summary, problem, email
+        };
+        savePefProjects(projects);
+        closeRegisterForm();
+        renderPefProjects();
+        showToast('✓ PROYECTO ACTUALIZADO');
+        return;
+      }
+    }
+
+    // Create mode
     const newProject = {
       id: 'pef_' + Date.now(),
       name,
