@@ -160,6 +160,7 @@ img {
   top: -4px;
   left: -4px;
   transition: transform 0.1s;
+  will-change: transform;
 }
 
 .cursor__circle {
@@ -176,6 +177,7 @@ img {
               top 0.3s cubic-bezier(0.16, 1, 0.3, 1),
               left 0.3s cubic-bezier(0.16, 1, 0.3, 1),
               opacity 0.3s;
+  will-change: transform, width, height;
 }
 
 .cursor.hovering .cursor__circle {

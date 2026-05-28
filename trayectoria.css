@@ -1,0 +1,1112 @@
+/* ============================================
+   TRAYECTORIA — GSAP-STYLE EDITORIAL
+   ============================================ */
+
+:root {
+  --ts-bg: #050505;
+  --ts-bg-elev: #0e0e0e;
+  --ts-fg: #f5f3ea;
+  --ts-dim: rgba(245, 243, 234, 0.6);
+  --ts-faint: rgba(245, 243, 234, 0.32);
+  --ts-line: rgba(245, 243, 234, 0.08);
+  --ts-accent: #caff00;
+  --ts-ink: #050505;
+  --ts-accent-soft: rgba(202, 255, 0, 0.14);
+  --ts-ease: cubic-bezier(0.32, 0.72, 0, 1);
+}
+
+.trayectoria-page {
+  background: var(--ts-bg);
+  color: var(--ts-fg);
+  min-height: 100dvh;
+  overflow-x: hidden;
+  /* Scoped type system (sophisticated brutalist-editorial):
+     display = Anton (heavy condensed grotesque, Druk-like),
+     body = Atkinson Hyperlegible, serif accent = Spectral (upright) */
+  --font-display: 'Anton', 'Bebas Neue', sans-serif;
+  --font-body: 'Atkinson Hyperlegible', system-ui, -apple-system, sans-serif;
+  --font-serif: 'Spectral', Georgia, 'Times New Roman', serif;
+  font-family: var(--font-body);
+  font-feature-settings: 'ss01' on, 'kern' on;
+  font-kerning: normal;
+  font-optical-sizing: auto;
+  /* Light-on-dark compensation: tiny letter-spacing nudge */
+  letter-spacing: 0.005em;
+}
+
+/* Body paragraphs: tighter measure, looser leading for light text on dark */
+.trayectoria-page p {
+  line-height: 1.6;
+  text-wrap: pretty;
+}
+
+/* Headlines: balanced wrap for cleaner ragged edges */
+.trayectoria-page h1,
+.trayectoria-page h2,
+.trayectoria-page h3,
+.ts-hero__title,
+.ts-statement__title,
+.ts-tracks-intro__title,
+.ts-track-detail__name,
+.ts-cta__title,
+.trayectoria-cta__title {
+  text-wrap: balance;
+}
+
+/* Neutralize main site's body gradient ambient */
+.trayectoria-page::before,
+.trayectoria-page::after { display: none !important; }
+
+/* Disable shared custom cursor on this page (per design-taste-frontend rule:
+   "NO Custom Mouse Cursors"). Restore native pointer for accessibility. */
+.trayectoria-page .cursor { display: none !important; }
+.trayectoria-page,
+.trayectoria-page * { cursor: auto; }
+.trayectoria-page a,
+.trayectoria-page button,
+.trayectoria-page [role="button"] { cursor: pointer; }
+
+/* Animation utilities */
+.line-mask { display: block; overflow: hidden; line-height: 0.95; }
+.line-inner { display: block; will-change: transform; }
+.word-mask {
+  display: inline-block;
+  overflow: hidden;
+  line-height: 1.15;
+  vertical-align: bottom;
+  padding-right: 0.18em;
+}
+.word-inner {
+  display: inline-block;
+  will-change: transform, opacity;
+}
+
+.ts-accent { color: var(--ts-accent); }
+
+/* Emphasis = HIGHLIGHTER MARK with refined UPRIGHT serif (Spectral roman).
+   Black text on neon block; the serif adds an editorial accent against the
+   heavy condensed grotesque without the informality of italics. */
+.trayectoria-page em,
+.trayectoria-page .ts-mark {
+  font-family: var(--font-serif);
+  font-style: normal;
+  font-weight: 600;
+  font-size: 0.82em;
+  line-height: 1;
+  color: var(--ts-ink);
+  background: var(--ts-accent);
+  padding: 0.08em 0.24em 0.12em;
+  letter-spacing: -0.005em;
+  vertical-align: baseline;
+  -webkit-box-decoration-break: clone;
+  box-decoration-break: clone;
+}
+
+/* Inside short body text (paragraphs), em should align with text rhythm,
+   not feel like a display highlight. Slightly smaller padding and inherits
+   font weight closer to body. */
+.trayectoria-page p em {
+  font-size: 1em;
+  padding: 0.05em 0.3em 0.08em;
+  font-weight: 600;
+}
+
+/* Eyebrow tag — highlighter block, mono caps, ink on neon */
+.ts-eyebrow {
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  font-weight: 500;
+  letter-spacing: 0.16em;
+  color: var(--ts-ink);
+  background: var(--ts-accent);
+  text-transform: uppercase;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.35em 0.6em 0.3em;
+  width: fit-content;
+}
+/* Dot retained for the few eyebrows that need a leading marker, but rendered
+   as ink-on-block punctuation rather than a pulsing accent */
+.ts-eyebrow .dot {
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: var(--ts-ink);
+  display: inline-block;
+}
+
+/* NAV */
+.trayectoria-page .nav {
+  background: rgba(14, 16, 15, 0.85);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  border-bottom: 1px solid var(--ts-line);
+  mix-blend-mode: normal;
+}
+.trayectoria-page .nav__logo { color: var(--ts-fg); }
+.trayectoria-page .nav__side-label { color: var(--ts-faint); }
+
+.nav__back-btn {
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  letter-spacing: 0.14em;
+  color: var(--ts-accent);
+  background: transparent;
+  border: 1px solid var(--ts-accent);
+  padding: 0.55rem 1rem;
+  border-radius: 999px;
+  text-decoration: none;
+  transition: background-color 0.25s var(--ts-ease), color 0.25s var(--ts-ease), transform 0.15s var(--ts-ease);
+}
+.nav__back-btn:hover {
+  background: var(--ts-accent);
+  color: #000;
+}
+.nav__back-btn:active {
+  transform: scale(0.97);
+}
+
+/* ============================================
+   HERO
+   ============================================ */
+.ts-hero {
+  padding: calc(100px + 2rem) clamp(1.25rem, 4vw, 3rem) 4rem;
+  min-height: 100dvh;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  gap: 3rem;
+  max-width: 1800px;
+  margin: 0 auto;
+  position: relative;
+}
+
+.ts-hero__top {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  color: var(--ts-faint);
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  letter-spacing: 0.18em;
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+
+.ts-hero__title {
+  font-family: var(--font-display);
+  font-size: clamp(2.6rem, 10.5vw, 12rem);
+  line-height: 0.94;
+  letter-spacing: -0.01em;
+  margin: 0;
+  text-transform: uppercase;
+  font-weight: 400;
+  color: var(--ts-fg);
+}
+
+/* Hero em inherits the highlight-block treatment; serif accent at a slightly
+   smaller size so the Spectral block nests cleanly inside the Anton line. */
+.ts-hero__title em {
+  font-size: 0.72em;
+}
+
+.ts-hero__lead {
+  font-family: var(--font-body);
+  font-size: clamp(1.15rem, 1.6vw, 1.5rem);
+  line-height: 1.45;
+  font-weight: 400;
+  letter-spacing: 0;
+  max-width: 52ch;
+  color: var(--ts-fg);
+  margin: 0;
+  text-transform: none;
+}
+
+.ts-hero__bottom {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 1.5rem;
+  flex-wrap: wrap;
+}
+
+.ts-hero__scroll {
+  color: var(--ts-faint);
+}
+
+/* Buttons */
+.ts-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 1rem 1.6rem;
+  border: 0;
+  border-radius: 999px;
+  font-family: var(--font-mono);
+  font-size: 0.78rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: transform 0.2s var(--ts-ease), box-shadow 0.3s var(--ts-ease), background-color 0.25s var(--ts-ease), color 0.25s var(--ts-ease);
+  text-decoration: none;
+  will-change: transform;
+}
+.ts-btn--primary {
+  background: var(--ts-accent);
+  color: #0a0a0a;
+}
+.ts-btn--primary:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 18px 40px rgba(136, 206, 2, 0.25);
+}
+.ts-btn:active {
+  transform: scale(0.97);
+}
+
+/* ============================================
+   STATEMENT BIG TYPE
+   ============================================ */
+.ts-statement {
+  padding: clamp(4rem, 12vh, 10rem) clamp(1.25rem, 4vw, 3rem);
+  max-width: 1800px;
+  margin: 0 auto;
+  border-top: 1px solid var(--ts-line);
+}
+
+.ts-statement__inner {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+  max-width: 1400px;
+}
+
+.ts-statement__num {
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  letter-spacing: 0.18em;
+  color: var(--ts-dim);
+  text-transform: uppercase;
+}
+
+.ts-statement__title {
+  font-family: var(--font-display);
+  font-size: clamp(2.3rem, 7vw, 7rem);
+  line-height: 1;
+  letter-spacing: -0.01em;
+  margin: 0;
+  text-transform: uppercase;
+  color: var(--ts-fg);
+  font-weight: 400;
+}
+
+.ts-statement__sub {
+  font-size: clamp(1rem, 1.3vw, 1.3rem);
+  line-height: 1.5;
+  color: var(--ts-dim);
+  max-width: 700px;
+  margin: 0;
+}
+
+/* ============================================
+   TRACKS INTRO
+   ============================================ */
+.ts-tracks-intro {
+  padding: clamp(4rem, 10vh, 8rem) clamp(1.25rem, 4vw, 3rem) 3rem;
+  max-width: 1800px;
+  margin: 0 auto;
+  border-top: 1px solid var(--ts-line);
+}
+
+.ts-tracks-intro__top {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  color: var(--ts-faint);
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  letter-spacing: 0.18em;
+  margin-bottom: 2rem;
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+
+.ts-tracks-intro__title {
+  font-family: var(--font-display);
+  font-size: clamp(2.3rem, 7.5vw, 7.5rem);
+  line-height: 0.96;
+  letter-spacing: -0.01em;
+  margin: 0 0 3rem;
+  text-transform: uppercase;
+  color: var(--ts-fg);
+  font-weight: 400;
+}
+
+.ts-tracks-intro__title em {
+  font-weight: 400;
+}
+
+.ts-tracks-intro__list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  border-top: 1px solid var(--ts-line);
+  padding-top: 1.5rem;
+}
+
+/* Track items — accordion list. Each item: header (link/button) + detail (collapsible). */
+.ts-track-item {
+  border-bottom: 1px solid var(--ts-line);
+}
+.ts-track-item:first-child {
+  border-top: 1px solid var(--ts-line);
+}
+
+/* Track links — highlighter block on the label, arrow/plus indicator at line end.
+   Label highlighted by default (matches the brutalist-editorial reference);
+   sub line in muted off-white sans below for context. Button to toggle accordion. */
+.ts-track-link {
+  color: var(--ts-fg);
+  background: transparent;
+  border: 0;
+  text-decoration: none;
+  padding: 1.1rem 0;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1.5rem;
+  width: 100%;
+  text-align: left;
+  cursor: pointer;
+  font-family: inherit;
+  font-size: inherit;
+}
+.ts-track-link__main {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 0.55rem;
+}
+.ts-track-link__label {
+  font-family: var(--font-display);
+  font-size: clamp(1.2rem, 2vw, 1.8rem);
+  letter-spacing: -0.01em;
+  background: var(--ts-accent);
+  color: var(--ts-ink);
+  padding: 0.18em 0.5em 0.22em;
+  transition: padding 0.25s var(--ts-ease);
+}
+.ts-track-link__sub {
+  font-family: var(--font-body);
+  font-size: 0.85rem;
+  font-weight: 400;
+  line-height: 1.4;
+  color: var(--ts-dim);
+  letter-spacing: 0;
+  padding-left: 0.5em;
+}
+.ts-track-link__arrow {
+  color: var(--ts-fg);
+  font-family: var(--font-mono);
+  font-size: 1.6rem;
+  line-height: 1;
+  transition: transform 0.35s var(--ts-ease), color 0.25s var(--ts-ease);
+  flex-shrink: 0;
+  display: inline-block;
+}
+.ts-track-link:hover .ts-track-link__label {
+  padding-right: 0.85em;
+}
+.ts-track-link:hover .ts-track-link__sub {
+  color: var(--ts-fg);
+}
+.ts-track-link:hover .ts-track-link__arrow {
+  color: var(--ts-accent);
+}
+
+/* Open state: rotate the + into × */
+.ts-track-item[data-state="open"] .ts-track-link__arrow {
+  transform: rotate(45deg);
+  color: var(--ts-accent);
+}
+
+/* DETAIL — collapsible panel using grid-template-rows trick */
+.ts-track-detail {
+  display: grid;
+  grid-template-rows: 0fr;
+  transition: grid-template-rows 0.45s var(--ts-ease);
+}
+.ts-track-item[data-state="open"] .ts-track-detail {
+  grid-template-rows: 1fr;
+}
+.ts-track-detail__inner {
+  overflow: hidden;
+  min-height: 0;
+}
+
+.ts-track-item[data-state="open"] > .ts-track-detail > .ts-track-detail__inner {
+  padding: 1rem 0 2.5rem;
+}
+
+/* Detail layout — two-column when content is full, single column on small/pending */
+.ts-track-item:not(.ts-track-item--pending) .ts-track-detail__inner {
+  display: grid;
+  grid-template-columns: minmax(260px, 320px) 1fr;
+  gap: clamp(1.5rem, 4vw, 3rem);
+  align-items: start;
+}
+@media (max-width: 800px) {
+  .ts-track-item:not(.ts-track-item--pending) .ts-track-detail__inner {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* Sidebar */
+.ts-track-detail__sidebar {
+  display: flex;
+  flex-direction: column;
+  gap: 0.85rem;
+}
+.ts-track-detail__chip {
+  font-family: var(--font-mono);
+  font-size: 0.68rem;
+  font-weight: 500;
+  letter-spacing: 0.16em;
+  padding: 0.35rem 0.7rem 0.3rem;
+  background: var(--ts-accent);
+  color: var(--ts-ink);
+  align-self: flex-start;
+}
+.ts-track-detail__name {
+  font-family: var(--font-display);
+  font-size: clamp(1.6rem, 2.5vw, 2.2rem);
+  line-height: 1;
+  letter-spacing: -0.02em;
+  margin: 0.25rem 0 0;
+  color: var(--ts-fg);
+}
+.ts-track-detail__role {
+  font-family: var(--font-body);
+  font-size: 0.95rem;
+  line-height: 1.45;
+  color: var(--ts-dim);
+  margin: 0;
+  max-width: 32ch;
+}
+.ts-track-detail__links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem 1.25rem;
+  margin: 0.25rem 0 0.5rem;
+}
+.ts-track-detail__link {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--ts-accent);
+  text-decoration: none;
+  border-bottom: 1px solid rgba(202, 255, 0, 0.3);
+  padding-bottom: 0.2rem;
+  width: fit-content;
+  transition: color 0.2s var(--ts-ease), border-color 0.2s var(--ts-ease), transform 0.15s var(--ts-ease);
+}
+.ts-track-detail__link:hover {
+  color: var(--ts-fg);
+  border-color: var(--ts-fg);
+}
+.ts-track-detail__link:active { transform: scale(0.97); }
+
+.ts-track-detail__photo {
+  background: linear-gradient(180deg, #1a1c1a, #0e100f);
+  border-radius: 6px;
+  overflow: hidden;
+  aspect-ratio: 1 / 1;
+  margin-top: 0.5rem;
+}
+.ts-track-detail__photo img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
+  display: block;
+}
+
+/* Content side */
+.ts-track-detail__content {
+  display: flex;
+  flex-direction: column;
+  gap: 1.75rem;
+}
+.ts-track-detail__block {
+  display: flex;
+  flex-direction: column;
+  gap: 0.85rem;
+}
+.ts-track-detail__block p {
+  font-size: 1rem;
+  line-height: 1.6;
+  color: var(--ts-fg);
+  max-width: 60ch;
+  margin: 0;
+}
+.ts-track-detail__stats {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 2rem;
+  padding: 1.25rem 0;
+  border-top: 1px solid var(--ts-line);
+  border-bottom: 1px solid var(--ts-line);
+  max-width: 420px;
+}
+.ts-track-detail__stat {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+}
+.ts-track-detail__stat .mono-sm {
+  font-size: 0.65rem;
+  letter-spacing: 0.15em;
+  color: var(--ts-faint);
+}
+.ts-track-detail__stat-value {
+  font-family: var(--font-body);
+  font-size: 1.25rem;
+  font-weight: 700;
+  line-height: 1.2;
+  letter-spacing: -0.005em;
+  color: var(--ts-fg);
+  font-variant-numeric: tabular-nums;
+}
+
+/* Skills list — 2-column grid of items with arrow markers */
+.ts-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.5rem 1rem;
+}
+.ts-list li {
+  font-family: var(--font-body);
+  font-size: 0.95rem;
+  line-height: 1.4;
+  color: var(--ts-fg);
+  padding: 0.65rem 0.85rem;
+  background: rgba(245, 243, 234, 0.04);
+  border: 1px solid var(--ts-line);
+  border-radius: 4px;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+.ts-list li::before {
+  content: '→';
+  color: var(--ts-accent);
+  font-family: var(--font-mono);
+  font-weight: 500;
+  flex-shrink: 0;
+}
+
+/* Pending state inside accordion */
+.ts-track-item--pending .ts-track-detail__pending {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  max-width: 56ch;
+  padding: 0.5rem 0;
+}
+.ts-track-detail__pending p {
+  font-size: 1rem;
+  line-height: 1.55;
+  color: var(--ts-dim);
+  margin: 0;
+}
+.ts-track-detail__pending-meta {
+  font-family: var(--font-mono);
+  font-size: 0.75rem !important;
+  letter-spacing: 0.08em;
+  color: var(--ts-faint) !important;
+  margin-top: 0.5rem !important;
+}
+.ts-track-detail__pending-meta a {
+  color: var(--ts-accent);
+  text-decoration: none;
+  border-bottom: 1px solid rgba(202, 255, 0, 0.3);
+  padding-bottom: 0.1em;
+  transition: border-color 0.2s var(--ts-ease), color 0.2s var(--ts-ease);
+}
+.ts-track-detail__pending-meta a:hover {
+  color: var(--ts-fg);
+  border-color: var(--ts-fg);
+}
+
+/* ============================================
+   CLOSING STATEMENT
+   ============================================ */
+.ts-closing {
+  padding: clamp(4rem, 12vh, 9rem) clamp(1.25rem, 6vw, 5rem) clamp(3rem, 8vh, 6rem);
+  max-width: 1400px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  border-top: 1px solid var(--ts-line);
+}
+.ts-closing__statement {
+  font-family: var(--font-body);
+  font-size: clamp(1.4rem, 2.3vw, 2.2rem);
+  line-height: 1.4;
+  font-weight: 500;
+  color: var(--ts-fg);
+  max-width: 32ch;
+  margin: 0;
+  text-wrap: balance;
+}
+
+/* ============================================
+   MARQUEE
+   ============================================ */
+.ts-marquee {
+  border-top: 1px solid var(--ts-line);
+  border-bottom: 1px solid var(--ts-line);
+  padding: 1.25rem 0;
+  overflow: hidden;
+  background: var(--ts-bg);
+}
+.ts-marquee__track {
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
+  white-space: nowrap;
+  font-family: var(--font-display);
+  font-size: clamp(1.4rem, 3vw, 2.5rem);
+  letter-spacing: -0.01em;
+  text-transform: uppercase;
+  color: var(--ts-fg);
+  will-change: transform;
+}
+.ts-marquee__star {
+  color: var(--ts-accent);
+  font-family: var(--font-mono);
+  font-size: 0.65em;
+  font-weight: 400;
+  opacity: 0.9;
+}
+
+/* ============================================
+   CTA / CLOSING
+   ============================================ */
+.ts-cta {
+  padding: clamp(5rem, 14vh, 12rem) clamp(1.25rem, 4vw, 3rem);
+  max-width: 1800px;
+  margin: 0 auto;
+  text-align: center;
+  border-top: 1px solid var(--ts-line);
+}
+
+.ts-cta__inner {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1.5rem;
+}
+
+.ts-cta__title {
+  font-family: var(--font-display);
+  font-size: clamp(2.3rem, 7vw, 6.5rem);
+  line-height: 0.98;
+  letter-spacing: -0.01em;
+  margin: 0;
+  text-transform: uppercase;
+  color: var(--ts-fg);
+}
+
+.ts-cta__desc {
+  font-size: clamp(1rem, 1.1vw, 1.15rem);
+  line-height: 1.5;
+  color: var(--ts-dim);
+  max-width: 600px;
+  margin: 0;
+}
+
+/* ============================================
+   CTA on INDEX PAGE
+   ============================================ */
+.trayectoria-cta {
+  padding: var(--space-2xl) var(--space-md);
+  max-width: 1400px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-sm);
+  text-align: center;
+  border-top: 1px solid rgba(255, 255, 255, 0.06);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+}
+.trayectoria-cta__label { font-family: var(--font-mono); font-size: 0.75rem; letter-spacing: 0.15em; color: var(--accent); }
+.trayectoria-cta__title { font-family: var(--font-display); font-size: clamp(2rem, 5vw, 4rem); line-height: 1; margin: 0; text-transform: uppercase; letter-spacing: -0.02em; color: #fff; max-width: 800px; }
+.trayectoria-cta__desc { font-size: clamp(1rem, 1.1vw, 1.1rem); line-height: 1.6; color: rgba(255, 255, 255, 0.65); max-width: 600px; margin: 0; }
+.trayectoria-cta__btn { margin-top: var(--space-sm); background: var(--accent); color: #000; font-family: var(--font-mono); font-size: 0.85rem; letter-spacing: 0.12em; text-transform: uppercase; padding: 1rem 2rem; border: 0; border-radius: 999px; cursor: pointer; text-decoration: none; display: inline-flex; align-items: center; gap: 0.75rem; transition: transform 0.2s cubic-bezier(0.32, 0.72, 0, 1), background-color 0.25s cubic-bezier(0.32, 0.72, 0, 1), box-shadow 0.3s cubic-bezier(0.32, 0.72, 0, 1); will-change: transform; }
+.trayectoria-cta__btn:hover { background: #fff; transform: translateY(-2px); box-shadow: 0 12px 30px rgba(212, 255, 0, 0.18); }
+.trayectoria-cta__btn:active { transform: scale(0.97); }
+.trayectoria-cta__btn-arrow { display: inline-block; transition: transform 0.25s cubic-bezier(0.32, 0.72, 0, 1); }
+.trayectoria-cta__btn:hover .trayectoria-cta__btn-arrow { transform: translateX(4px); }
+
+/* ============================================
+   RESPONSIVE
+   ============================================ */
+@media (max-width: 900px) {
+  .ts-hero { gap: 2rem; }
+  .ts-list { grid-template-columns: 1fr; }
+}
+
+/* ============================================
+   PDF GUIDE (A4 document, rendered offscreen for html2pdf export)
+   ============================================ */
+.guide-doc {
+  position: fixed;
+  left: -9999px;
+  top: 0;
+  width: 794px; /* A4 width at 96dpi */
+  background: #050505;
+}
+/* During export, put it in NORMAL document flow. html2canvas (the version
+   bundled with html2pdf) measures position:fixed/absolute elements as 0 height,
+   so static flow is required. It renders at the bottom of the body; the opaque
+   pdf-overlay (z-index 9999) covers the viewport so the user never sees it. */
+.guide-doc.is-exporting {
+  position: static;
+  left: auto;
+  pointer-events: none;
+}
+
+.guide-page {
+  width: 794px;
+  min-height: 1123px; /* A4 floor; grows for long content (contain-fit in PDF) */
+  box-sizing: border-box;
+  background: #050505;
+  color: #f5f3ea;
+  padding: 48px 54px;
+  display: flex;
+  flex-direction: column;
+  font-family: 'Atkinson Hyperlegible', system-ui, sans-serif;
+  position: relative;
+}
+
+/* Shared marker chips */
+.guide-eyebrow {
+  display: inline-block;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: #050505;
+  background: #caff00;
+  padding: 6px 10px 5px;
+  width: fit-content;
+}
+/* html2canvas does NOT support box-decoration-break, so a wrapping inline
+   highlight renders one giant rectangle across lines. inline-block +
+   white-space:nowrap keeps each mark on a single line; horizontal-only
+   padding avoids the vertical misalignment html2canvas gives padded inlines. */
+.guide-mark {
+  display: inline-block;
+  white-space: nowrap;
+  color: #050505;
+  background: #caff00;
+  font-family: 'Spectral', Georgia, serif;
+  font-style: normal;
+  font-weight: 600;
+  /* Generous vertical padding so accents (top) and descenders (bottom) stay
+     fully inside the block. html2canvas renders inline-block text low in its
+     box, so bottom padding is larger than top. */
+  padding: 0.14em 0.3em 0.26em;
+  line-height: 1;
+  vertical-align: baseline;
+}
+
+/* COVER PAGE */
+.guide-cover { justify-content: space-between; }
+.guide-cover__top {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px;
+  letter-spacing: 0.16em;
+  color: rgba(245, 243, 234, 0.6);
+  text-transform: uppercase;
+}
+.guide-cover__title {
+  font-family: 'Anton', 'Bebas Neue', sans-serif;
+  font-size: 84px;
+  line-height: 0.96;
+  letter-spacing: -0.005em;
+  text-transform: uppercase;
+  margin: 0;
+}
+.guide-cover__title .guide-mark {
+  font-size: 0.78em;
+  padding: 0.02em 0.18em 0.12em;
+  line-height: 1;
+}
+.guide-cover__lead {
+  font-size: 18px;
+  line-height: 1.5;
+  color: #f5f3ea;
+  max-width: 46ch;
+  margin: 24px 0 0;
+}
+.guide-cover__meta {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 12px;
+  letter-spacing: 0.08em;
+  color: rgba(245, 243, 234, 0.55);
+  text-transform: uppercase;
+}
+
+/* EGRESADO PAGE */
+.guide-profile__num {
+  font-family: 'Anton', 'Bebas Neue', sans-serif;
+  font-size: 60px;
+  line-height: 0.9;
+  color: #caff00;
+  letter-spacing: -0.03em;
+  margin: 0;
+}
+.guide-profile__path {
+  display: inline-block;
+  font-family: 'Anton', 'Bebas Neue', sans-serif;
+  font-size: 23px;
+  letter-spacing: 0.01em;
+  text-transform: uppercase;
+  color: #050505;
+  background: #caff00;
+  padding: 3px 11px 5px;
+  width: fit-content;
+  margin: 6px 0 20px;
+}
+.guide-profile__head {
+  display: flex;
+  gap: 24px;
+  align-items: flex-start;
+  margin-bottom: 18px;
+}
+/* Photo as a background-image div: html2canvas honors background-size:cover
+   (it does NOT honor <img> object-fit, which stretched the photo). */
+.guide-profile__photo {
+  width: 170px;
+  height: 200px;
+  flex-shrink: 0;
+  background-color: #1a1c1a;
+  background-size: cover;
+  background-position: center top;
+  background-repeat: no-repeat;
+}
+.guide-profile__id { flex: 1; }
+.guide-profile__name {
+  font-family: 'Anton', 'Bebas Neue', sans-serif;
+  font-size: 46px;
+  line-height: 0.95;
+  letter-spacing: -0.01em;
+  margin: 0 0 8px;
+  color: #f5f3ea;
+}
+.guide-profile__role {
+  font-size: 15px;
+  line-height: 1.45;
+  color: rgba(245, 243, 234, 0.65);
+  margin: 0;
+}
+.guide-block { margin-bottom: 15px; }
+.guide-block__label {
+  display: inline-block;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10px;
+  font-weight: 500;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: #050505;
+  background: #caff00;
+  padding: 4px 8px 3px;
+  margin-bottom: 9px;
+}
+.guide-block p {
+  font-size: 13.5px;
+  line-height: 1.5;
+  color: #f5f3ea;
+  margin: 0 0 7px;
+}
+.guide-stats {
+  display: flex;
+  gap: 48px;
+  padding: 12px 0;
+  border-top: 1px solid rgba(245, 243, 234, 0.12);
+  border-bottom: 1px solid rgba(245, 243, 234, 0.12);
+  margin-bottom: 15px;
+}
+.guide-stat__label {
+  display: block;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10px;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: rgba(245, 243, 234, 0.4);
+  margin-bottom: 6px;
+}
+.guide-stat__value {
+  font-size: 18px;
+  font-weight: 700;
+  color: #f5f3ea;
+}
+.guide-skills {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 6px 14px;
+}
+.guide-skills li {
+  font-size: 12.5px;
+  color: #f5f3ea;
+  padding: 6px 9px;
+  background: rgba(245, 243, 234, 0.04);
+  border: 1px solid rgba(245, 243, 234, 0.1);
+}
+.guide-skills li::before {
+  content: '→ ';
+  color: #caff00;
+  font-family: 'JetBrains Mono', monospace;
+}
+.guide-profile__footer {
+  margin-top: auto;
+  padding-top: 16px;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: rgba(245, 243, 234, 0.4);
+  display: flex;
+  justify-content: space-between;
+}
+
+/* CLOSING PAGE */
+.guide-closing { justify-content: center; gap: 28px; }
+.guide-closing__statement {
+  font-size: 30px;
+  line-height: 1.4;
+  font-weight: 500;
+  color: #f5f3ea;
+  max-width: 30ch;
+  margin: 0;
+}
+.guide-closing__cta {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 13px;
+  letter-spacing: 0.1em;
+  color: rgba(245, 243, 234, 0.6);
+  text-transform: uppercase;
+}
+.guide-closing__cta a { color: #caff00; text-decoration: none; }
+
+/* PDF generating overlay */
+.pdf-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  background: #050505;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.pdf-overlay[hidden] { display: none; }
+.pdf-overlay__box {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  font-family: var(--font-mono);
+  font-size: 0.85rem;
+  letter-spacing: 0.16em;
+  color: var(--ts-accent);
+}
+.pdf-overlay__spinner {
+  width: 22px;
+  height: 22px;
+  border: 2px solid rgba(202, 255, 0, 0.25);
+  border-top-color: var(--ts-accent);
+  border-radius: 50%;
+  animation: pdfspin 0.7s linear infinite;
+}
+@keyframes pdfspin { to { transform: rotate(360deg); } }
+
+/* ============================================
+   PRINT — force all accordions open and stack cleanly
+   ============================================ */
+@media print {
+  .trayectoria-page, body { background: #fff !important; color: #000 !important; }
+  .nav, .ts-marquee, .ts-btn, .ts-hero__bottom, .ts-cta, .footer { display: none !important; }
+
+  /* Force every track-item to render as open for a complete printed guide */
+  .ts-track-item .ts-track-detail {
+    grid-template-rows: 1fr !important;
+  }
+  .ts-track-item .ts-track-detail__inner {
+    overflow: visible !important;
+    padding: 1rem 0 2rem !important;
+  }
+  .ts-track-item {
+    page-break-inside: avoid;
+  }
+  .ts-track-link__arrow { display: none !important; }
+
+  /* Black ink for headlines */
+  .ts-hero__title,
+  .ts-statement__title,
+  .ts-tracks-intro__title,
+  .ts-cta__title,
+  .ts-track-detail__name {
+    color: #000 !important;
+  }
+  .ts-track-detail__stat-value { color: #000 !important; }
+  .ts-list li { background: #f4f4f4 !important; border: 1px solid #ddd !important; color: #000 !important; }
+
+  /* Yellow highlights stay yellow on print for brand consistency */
+  .trayectoria-page em,
+  .ts-eyebrow,
+  .ts-track-link__label,
+  .ts-track-detail__chip {
+    background: #caff00 !important;
+    color: #000 !important;
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
+}
+
+/* ============================================
+   REDUCED MOTION
+   ============================================ */
+@media (prefers-reduced-motion: reduce) {
+  .trayectoria-page *,
+  .trayectoria-page *::before,
+  .trayectoria-page *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.15s !important;
+    scroll-behavior: auto !important;
+  }
+  .trayectoria-page .ts-marquee__track { animation: none !important; }
+  .trayectoria-page .line-inner,
+  .trayectoria-page .word-inner { transform: none !important; opacity: 1 !important; }
+  .trayectoria-page .ts-eyebrow .dot { animation: none !important; }
+}

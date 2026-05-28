@@ -1,0 +1,539 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Trayectoria Profesional — Portfolio LDG</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Anton&family=Atkinson+Hyperlegible:wght@400;700&family=JetBrains+Mono:wght@300;400;500&family=Spectral:wght@400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+  <link rel="stylesheet" href="trayectoria.css?v=20260528b">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+</head>
+<body class="trayectoria-page">
+
+  <!-- CUSTOM CURSOR -->
+  <div class="cursor" id="cursor">
+    <div class="cursor__dot"></div>
+    <div class="cursor__circle"></div>
+  </div>
+
+  <!-- NAV -->
+  <nav class="nav" id="nav">
+    <a href="index.html" class="nav__logo">PORTFOLIO / LDG</a>
+    <a href="index.html" class="nav__back-btn">&larr; VOLVER</a>
+    <div class="nav__side-label">
+      <span>TRAYECTORIA PROFESIONAL</span>
+    </div>
+  </nav>
+
+  <!-- HERO -->
+  <section class="ts-hero">
+    <div class="ts-hero__top">
+      <span class="ts-eyebrow"><span class="dot"></span>GUÍA PARA PADRES / ALUMNOS / DIRECCIÓN</span>
+      <span class="mono-sm">[ 2026 — EDICIÓN 01 ]</span>
+    </div>
+
+    <h1 class="ts-hero__title">
+      <span class="ts-line"><span class="ts-line__inner">TRAYECTORIA</span></span>
+      <span class="ts-line"><span class="ts-line__inner">PROFESIONAL</span></span>
+      <span class="ts-line"><span class="ts-line__inner">DEL <em>LDG</em>.</span></span>
+    </h1>
+
+    <p class="ts-hero__lead">
+      <span class="word-mask"><span class="word-inner">Seis</span></span>
+      <span class="word-mask"><span class="word-inner">caminos</span></span>
+      <span class="word-mask"><span class="word-inner">reales</span></span>
+      <span class="word-mask"><span class="word-inner">que</span></span>
+      <span class="word-mask"><span class="word-inner">recorren</span></span>
+      <span class="word-mask"><span class="word-inner">nuestros</span></span>
+      <span class="word-mask"><span class="word-inner">egresados</span></span>
+      <span class="word-mask"><span class="word-inner">al</span></span>
+      <span class="word-mask"><span class="word-inner">terminar</span></span>
+      <span class="word-mask"><span class="word-inner">la</span></span>
+      <span class="word-mask"><span class="word-inner">licenciatura</span></span>
+      <span class="word-mask"><span class="word-inner">en</span></span>
+      <span class="word-mask"><span class="word-inner">diseño</span></span>
+      <span class="word-mask"><span class="word-inner">gráfico.</span></span>
+    </p>
+
+    <div class="ts-hero__bottom">
+      <button class="ts-btn ts-btn--primary" id="downloadPdfBtn">
+        <span>DESCARGAR / IMPRIMIR PDF</span>
+        <span>&darr;</span>
+      </button>
+      <span class="mono-sm ts-hero__scroll">SCROLL PARA EXPLORAR &darr;</span>
+    </div>
+  </section>
+
+  <!-- BIG STATEMENT -->
+  <section class="ts-statement">
+    <div class="ts-statement__inner">
+      <span class="ts-statement__num">01 — STATEMENT</span>
+      <h2 class="ts-statement__title">
+        <span class="word-mask"><span class="word-inner">El</span></span>
+        <span class="word-mask"><span class="word-inner">diseño</span></span>
+        <span class="word-mask"><span class="word-inner">gráfico</span></span>
+        <span class="word-mask"><span class="word-inner">hoy</span></span>
+        <span class="word-mask"><span class="word-inner">no</span></span>
+        <span class="word-mask"><span class="word-inner">es</span></span>
+        <span class="word-mask"><span class="word-inner">una</span></span>
+        <span class="word-mask"><span class="word-inner">sola</span></span>
+        <span class="word-mask"><span class="word-inner ts-accent">profesión.</span></span>
+      </h2>
+      <p class="ts-statement__sub">
+        Es una formación que abre puertas a la dirección creativa, al emprendimiento, a la consultoría independiente y a la innovación corporativa. Lo importante es elegir qué camino tomar.
+      </p>
+    </div>
+  </section>
+
+  <!-- TRACKS NAV (9 paths, accordion) -->
+  <section class="ts-tracks-intro" id="tracks">
+    <div class="ts-tracks-intro__top">
+      <span class="ts-eyebrow"><span class="dot"></span>SEIS CAMINOS</span>
+      <span class="mono-sm">[ 02 — TRACKS ]</span>
+    </div>
+    <h2 class="ts-tracks-intro__title">
+      <span class="line-mask"><span class="line-inner">¿HACIA DÓNDE</span></span>
+      <span class="line-mask"><span class="line-inner">VAN <em>NUESTROS</em></span></span>
+      <span class="line-mask"><span class="line-inner">EGRESADOS?</span></span>
+    </h2>
+    <div class="ts-tracks-intro__list" role="list"><article class="ts-track-item" data-path="freelance" data-state="closed">
+        <button type="button" class="ts-track-link" aria-expanded="false" aria-controls="detail-freelance">
+          <span class="ts-track-link__main">
+            <span class="ts-track-link__label">01 / Freelance con grandes marcas</span>
+            <span class="ts-track-link__sub">como Paulina González con House of Archives</span>
+          </span>
+          <span class="ts-track-link__arrow" aria-hidden="true">+</span>
+        </button>
+        <div class="ts-track-detail" id="detail-freelance" role="region" aria-label="Detalle Freelance con grandes marcas">
+          <div class="ts-track-detail__inner">
+            <div class="ts-track-detail__sidebar">
+              <span class="ts-track-detail__chip">FREELANCE</span>
+              <h3 class="ts-track-detail__name">Paulina González</h3>
+              <p class="ts-track-detail__role">Directora creativa &amp; fundadora de House of Archives.</p>
+              <div class="ts-track-detail__links">
+                <a class="ts-track-detail__link" href="https://www.linkedin.com/in/paulina-gonz%C3%A1lez-9448002b0/" target="_blank" rel="noopener noreferrer">
+                  <span class="mono-sm">LinkedIn</span>
+                  <span aria-hidden="true">↗</span>
+                </a>
+                <a class="ts-track-detail__link" href="https://instagram.com/houseof_archives" target="_blank" rel="noopener noreferrer">
+                  <span class="mono-sm">House of Archives</span>
+                  <span aria-hidden="true">↗</span>
+                </a>
+              </div>
+              <div class="ts-track-detail__photo">
+                <img src="proyectos/alumnos/paulina-gonzalez.jpg" alt="Retrato de Paulina González" loading="lazy">
+              </div>
+            </div>
+            <div class="ts-track-detail__content">
+              <div class="ts-track-detail__block">
+                <span class="ts-eyebrow">PERFIL</span>
+                <p>Egresada de Diseño Gráfico UDEM con tesis reconocida por el <em>A' Design Award &amp; Competition</em> en Italia. Desde Monterrey dirige <em>House of Archives</em>, su agencia, y desarrolla proyectos audiovisuales para distintas marcas. Su trabajo se centra en storytelling y en construir conceptos creativos que dan vida a las marcas a través de narrativas visuales sólidas y estratégicas. La creación de video la acompaña desde los 12 años y hoy define su práctica profesional.</p>
+              </div>
+              <div class="ts-track-detail__stats">
+                <div class="ts-track-detail__stat">
+                  <span class="mono-sm">AÑOS PARA LLEGAR</span>
+                  <span class="ts-track-detail__stat-value">1 año</span>
+                </div>
+                <div class="ts-track-detail__stat">
+                  <span class="mono-sm">MODALIDAD</span>
+                  <span class="ts-track-detail__stat-value">Freelance</span>
+                </div>
+              </div>
+              <div class="ts-track-detail__block">
+                <span class="ts-eyebrow">HABILIDADES CLAVE</span>
+                <ul class="ts-list">
+                  <li>Storytelling visual</li>
+                  <li>Dirección creativa</li>
+                  <li>Video y audiovisual</li>
+                  <li>Identidad y narrativa</li>
+                </ul>
+              </div>
+              <div class="ts-track-detail__block">
+                <span class="ts-eyebrow">CLIENTES Y COLABORACIONES</span>
+                <p>Zone, Xile Chile, Sico, Boru, Endless Luxe. Propuesta enfocada en identidad, narrativa y dirección creativa.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </article>
+
+      <!-- 03 — DIRECTOR DE ARTE Y DIRECCIÓN CREATIVA (Sebastián Padilla) --><article class="ts-track-item" data-path="motion" data-state="closed">
+        <button type="button" class="ts-track-link" aria-expanded="false" aria-controls="detail-motion">
+          <span class="ts-track-link__main">
+            <span class="ts-track-link__label">02 / Motion designer</span>
+            <span class="ts-track-link__sub">como Marbella, ilustradora y muralista que anima su obra</span>
+          </span>
+          <span class="ts-track-link__arrow" aria-hidden="true">+</span>
+        </button>
+        <div class="ts-track-detail" id="detail-motion" role="region" aria-label="Detalle Motion designer">
+          <div class="ts-track-detail__inner">
+            <div class="ts-track-detail__sidebar">
+              <span class="ts-track-detail__chip">MOTION</span>
+              <h3 class="ts-track-detail__name">Marbella</h3>
+              <p class="ts-track-detail__role">Diseñadora gráfica, ilustradora y muralista. Basada en Barcelona.</p>
+              <div class="ts-track-detail__photo">
+                <img src="proyectos/alumnos/marbella.jpg" alt="Retrato de Marbella" loading="lazy">
+              </div>
+            </div>
+            <div class="ts-track-detail__content">
+              <div class="ts-track-detail__block">
+                <span class="ts-eyebrow">PERFIL</span>
+                <p>Diseñadora gráfica, ilustradora y muralista egresada de la UDEM. Desde Barcelona desarrolla proyectos internacionales colaborando con marcas y agencias en Europa y Latinoamérica. Su trabajo, de <em>estética maximalista</em> y mirada femenina, se centra en la ilustración de mujeres y el muralismo, y lo lleva al movimiento: anima sus piezas para darles vida.</p>
+                <p>Recientemente su trayectoria fue destacada por la revista <em>Players of Life</em>, reconociendo su crecimiento y presencia dentro de la industria creativa.</p>
+              </div>
+              <div class="ts-track-detail__stats">
+                <div class="ts-track-detail__stat">
+                  <span class="mono-sm">AÑOS PARA LLEGAR</span>
+                  <span class="ts-track-detail__stat-value">3 años</span>
+                </div>
+                <div class="ts-track-detail__stat">
+                  <span class="mono-sm">BASE</span>
+                  <span class="ts-track-detail__stat-value">Barcelona</span>
+                </div>
+              </div>
+              <div class="ts-track-detail__block">
+                <span class="ts-eyebrow">HABILIDADES CLAVE</span>
+                <ul class="ts-list">
+                  <li>Ilustración</li>
+                  <li>Motion e animación</li>
+                  <li>Muralismo</li>
+                  <li>Dirección de arte</li>
+                </ul>
+              </div>
+              <div class="ts-track-detail__block">
+                <span class="ts-eyebrow">CLIENTES Y COLABORACIONES</span>
+                <p>Shake Shack, Tecate Pa'l Norte, Innvictus, Sally Beauty, Mercedes-Benz, Campari y Randy's Donuts, además de roles de dirección de arte.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </article>
+
+      <!-- 07 — IN-HOUSE (Frida Medrano) --><article class="ts-track-item" data-path="fundador" data-state="closed">
+        <button type="button" class="ts-track-link" aria-expanded="false" aria-controls="detail-fundador">
+          <span class="ts-track-link__main">
+            <span class="ts-track-link__label">03 / Fundador de estudio</span>
+            <span class="ts-track-link__sub">como Paola Rhon en Better Projects</span>
+          </span>
+          <span class="ts-track-link__arrow" aria-hidden="true">+</span>
+        </button>
+        <div class="ts-track-detail" id="detail-fundador" role="region" aria-label="Detalle Fundador de estudio">
+          <div class="ts-track-detail__inner">
+            <div class="ts-track-detail__sidebar">
+              <span class="ts-track-detail__chip">FUNDADOR</span>
+              <h3 class="ts-track-detail__name">Paola Rhon</h3>
+              <p class="ts-track-detail__role">Founder &amp; Creative Director en Better Projects.</p>
+              <div class="ts-track-detail__links">
+                <a class="ts-track-detail__link" href="https://www.linkedin.com/in/paolarhon/" target="_blank" rel="noopener noreferrer">
+                  <span class="mono-sm">LinkedIn</span>
+                  <span aria-hidden="true">↗</span>
+                </a>
+                <a class="ts-track-detail__link" href="https://bttrprojects.com/" target="_blank" rel="noopener noreferrer">
+                  <span class="mono-sm">Better Projects</span>
+                  <span aria-hidden="true">↗</span>
+                </a>
+              </div>
+              <div class="ts-track-detail__photo">
+                <img src="proyectos/alumnos/paola-rhon.jpg" alt="Retrato de Paola Rhon" loading="lazy">
+              </div>
+            </div>
+            <div class="ts-track-detail__content">
+              <div class="ts-track-detail__block">
+                <span class="ts-eyebrow">PERFIL</span>
+                <p>Fundadora de <em>Better Projects</em>, estudio creativo especializado en branding, experiencia y estrategia. Acompaña equipos a transformar sus marcas, hacer crecer su negocio y construir mejores productos. También dirige <em>BTTR School</em>, su plataforma de educación en diseño. Egresada UDEM con reconocimiento PEF Sobresaliente.</p>
+              </div>
+              <div class="ts-track-detail__stats">
+                <div class="ts-track-detail__stat">
+                  <span class="mono-sm">AÑOS PARA LLEGAR</span>
+                  <span class="ts-track-detail__stat-value">5 años</span>
+                </div>
+                <div class="ts-track-detail__stat">
+                  <span class="mono-sm">EQUIPO</span>
+                  <span class="ts-track-detail__stat-value">2-10</span>
+                </div>
+              </div>
+              <div class="ts-track-detail__block">
+                <span class="ts-eyebrow">HABILIDADES CLAVE</span>
+                <ul class="ts-list">
+                  <li>Branding e identidad</li>
+                  <li>Dirección creativa</li>
+                  <li>Estrategia de marca</li>
+                  <li>Liderazgo de equipo</li>
+                </ul>
+              </div>
+            </div>
+          </div>
+        </div>
+      </article>
+
+      <!-- 02 — FREELANCE (placeholder) --><article class="ts-track-item" data-path="in-house" data-state="closed">
+        <button type="button" class="ts-track-link" aria-expanded="false" aria-controls="detail-in-house">
+          <span class="ts-track-link__main">
+            <span class="ts-track-link__label">04 / Diseñador in-house</span>
+            <span class="ts-track-link__sub">como Frida Medrano, Art Director en Kettle para Apple</span>
+          </span>
+          <span class="ts-track-link__arrow" aria-hidden="true">+</span>
+        </button>
+        <div class="ts-track-detail" id="detail-in-house" role="region" aria-label="Detalle Diseñador in-house">
+          <div class="ts-track-detail__inner">
+            <div class="ts-track-detail__sidebar">
+              <span class="ts-track-detail__chip">IN-HOUSE</span>
+              <h3 class="ts-track-detail__name">Frida Medrano</h3>
+              <p class="ts-track-detail__role">Art Director en Kettle, trabajando onsite para Apple.</p>
+              <div class="ts-track-detail__photo">
+                <img src="proyectos/alumnos/frida-medrano.jpg" alt="Retrato de Frida Medrano" loading="lazy">
+              </div>
+            </div>
+            <div class="ts-track-detail__content">
+              <div class="ts-track-detail__block">
+                <span class="ts-eyebrow">PERFIL</span>
+                <p>Diseñadora mexicana egresada de Diseño Gráfico por la UDEM. Su práctica cruza tipografía, producto digital, interacción y dirección de arte. Actualmente trabaja como Art Director en <em>Kettle</em>, agencia digital con sede en San Francisco, colaborando onsite para <em>Apple</em>. Su perfil demuestra cómo el diseño gráfico puede evolucionar hacia roles internos dentro de equipos globales de tecnología, donde la identidad, la experiencia digital y los sistemas visuales se integran en productos de alto impacto.</p>
+                <p>Ha desarrollado proyectos de tipografía como <em>Kalnia</em> y <em>Jabin</em>, y su trabajo ha sido presentado en foros especializados como ATypI, TypeLab, TypeCon, IxDA, Letrástica y Design Matters. También fue reconocida con el <em>SOTA Catalyst Award</em> en 2018 por su exploración entre tipografía, tecnología y diseño.</p>
+              </div>
+              <div class="ts-track-detail__stats">
+                <div class="ts-track-detail__stat">
+                  <span class="mono-sm">AÑOS PARA LLEGAR</span>
+                  <span class="ts-track-detail__stat-value">7+ años</span>
+                </div>
+                <div class="ts-track-detail__stat">
+                  <span class="mono-sm">MODALIDAD</span>
+                  <span class="ts-track-detail__stat-value">In-house / tech</span>
+                </div>
+              </div>
+              <div class="ts-track-detail__block">
+                <span class="ts-eyebrow">HABILIDADES CLAVE</span>
+                <ul class="ts-list">
+                  <li>Dirección de arte</li>
+                  <li>Diseño de producto digital</li>
+                  <li>Tipografía y sistemas visuales</li>
+                  <li>Interacción y experiencia de usuario</li>
+                  <li>Diseño para tecnología</li>
+                  <li>Trabajo con equipos globales</li>
+                </ul>
+              </div>
+              <div class="ts-track-detail__block">
+                <span class="ts-eyebrow">CLIENTES Y COLABORACIONES</span>
+                <p>Kettle, Apple, Anagrama, proyectos tipográficos independientes y conferencias internacionales de diseño. Antes de Kettle trabajó en Anagrama como diseñadora de branding, desarrollando logotipos personalizados y explorando la relación entre tipografía, marca y tecnología.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </article><article class="ts-track-item" data-path="director-creativo" data-state="closed">
+        <button type="button" class="ts-track-link" aria-expanded="false" aria-controls="detail-director-creativo">
+          <span class="ts-track-link__main">
+            <span class="ts-track-link__label">05 / Director de arte y dirección creativa</span>
+            <span class="ts-track-link__sub">como Sebastián Padilla, cofundador de Anagrama</span>
+          </span>
+          <span class="ts-track-link__arrow" aria-hidden="true">+</span>
+        </button>
+        <div class="ts-track-detail" id="detail-director-creativo" role="region" aria-label="Detalle Director de arte y dirección creativa">
+          <div class="ts-track-detail__inner">
+            <div class="ts-track-detail__sidebar">
+              <span class="ts-track-detail__chip">DIR. ARTE / CREATIVA</span>
+              <h3 class="ts-track-detail__name">Sebastián Padilla</h3>
+              <p class="ts-track-detail__role">Director creativo, cofundador de Anagrama y realizador cinematográfico.</p>
+              <div class="ts-track-detail__links">
+                <a class="ts-track-detail__link" href="https://anagrama.com/" target="_blank" rel="noopener noreferrer">
+                  <span class="mono-sm">Anagrama</span>
+                  <span aria-hidden="true">↗</span>
+                </a>
+              </div>
+              <div class="ts-track-detail__photo">
+                <img src="proyectos/alumnos/sebastian-padilla.jpg" alt="Retrato de Sebastián Padilla" loading="lazy">
+              </div>
+            </div>
+            <div class="ts-track-detail__content">
+              <div class="ts-track-detail__block">
+                <span class="ts-eyebrow">PERFIL</span>
+                <p>Egresado de Diseño Gráfico por la Universidad de Monterrey. Cofundador y director creativo de <em>Anagrama</em>, estudio mexicano reconocido internacionalmente por su trabajo en branding, arquitectura, identidad, espacios comerciales e interacción digital. Su práctica conecta dirección de arte, estrategia visual, narrativa de marca y cultura contemporánea.</p>
+                <p>Además de su trayectoria en diseño, ha desarrollado proyectos cinematográficos como <em>Después del Incendio</em> y <em>Muerte al Verano</em>, ampliando su perfil hacia la dirección, la música y la realización audiovisual. Su caso muestra cómo el diseño puede evolucionar hacia la construcción de mundos visuales, conceptos culturales y lenguajes narrativos complejos.</p>
+              </div>
+              <div class="ts-track-detail__stats">
+                <div class="ts-track-detail__stat">
+                  <span class="mono-sm">AÑOS PARA LLEGAR</span>
+                  <span class="ts-track-detail__stat-value">10+ años</span>
+                </div>
+                <div class="ts-track-detail__stat">
+                  <span class="mono-sm">MODALIDAD</span>
+                  <span class="ts-track-detail__stat-value">Fundador / realizador</span>
+                </div>
+              </div>
+              <div class="ts-track-detail__block">
+                <span class="ts-eyebrow">HABILIDADES CLAVE</span>
+                <ul class="ts-list">
+                  <li>Dirección de arte</li>
+                  <li>Branding e identidad</li>
+                  <li>Narrativa visual</li>
+                  <li>Dirección creativa</li>
+                  <li>Conceptualización cultural</li>
+                  <li>Gestión de equipos creativos</li>
+                </ul>
+              </div>
+              <div class="ts-track-detail__block">
+                <span class="ts-eyebrow">CLIENTES Y COLABORACIONES</span>
+                <p>Anagrama ha desarrollado proyectos en branding, arquitectura, interacción digital y posicionamiento de marca para clientes nacionales e internacionales. El estudio se presenta como una firma internacional especializada en desarrollo de marca, espacios comerciales y sistemas visuales.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </article>
+
+      <!-- 04 — ESTRATEGA DE MARCA (Vicky González) --><article class="ts-track-item" data-path="estratega" data-state="closed">
+        <button type="button" class="ts-track-link" aria-expanded="false" aria-controls="detail-estratega">
+          <span class="ts-track-link__main">
+            <span class="ts-track-link__label">06 / Estratega de marca</span>
+            <span class="ts-track-link__sub">como Vicky González con WORKROOM</span>
+          </span>
+          <span class="ts-track-link__arrow" aria-hidden="true">+</span>
+        </button>
+        <div class="ts-track-detail" id="detail-estratega" role="region" aria-label="Detalle Estratega de marca">
+          <div class="ts-track-detail__inner">
+            <div class="ts-track-detail__sidebar">
+              <span class="ts-track-detail__chip">ESTRATEGA</span>
+              <h3 class="ts-track-detail__name">Vicky González</h3>
+              <p class="ts-track-detail__role">Founder &amp; Creative Director de WORKROOM.</p>
+              <div class="ts-track-detail__photo">
+                <img src="proyectos/alumnos/vicky-gonzalez.jpg" alt="Retrato de Vicky González" loading="lazy">
+              </div>
+            </div>
+            <div class="ts-track-detail__content">
+              <div class="ts-track-detail__block">
+                <span class="ts-eyebrow">PERFIL</span>
+                <p>Egresada de Diseño Gráfico por la UDEM, ha construido una trayectoria enfocada en estrategia, identidad y dirección creativa para marcas. Es fundadora y directora creativa de <em>WORKROOM</em>, estudio especializado en branding y estrategia de marca con sede en Monterrey.</p>
+                <p>Su trabajo se centra en ayudar a empresas a definir su posicionamiento, construir narrativas claras y desarrollar sistemas visuales capaces de conectar con audiencias reales. A diferencia de un perfil puramente operativo, su rol implica entender el negocio, traducir objetivos comerciales en decisiones de marca y dirigir equipos creativos para construir propuestas coherentes, memorables y diferenciadas.</p>
+                <p>Antes de fundar WORKROOM, desarrolló experiencia como consultora independiente y como fundadora de proyectos creativos, consolidando un perfil que combina visión estratégica, sensibilidad visual y gestión de clientes.</p>
+              </div>
+              <div class="ts-track-detail__stats">
+                <div class="ts-track-detail__stat">
+                  <span class="mono-sm">AÑOS PARA LLEGAR</span>
+                  <span class="ts-track-detail__stat-value">10+ años</span>
+                </div>
+                <div class="ts-track-detail__stat">
+                  <span class="mono-sm">MODALIDAD</span>
+                  <span class="ts-track-detail__stat-value">Fundadora / estratega</span>
+                </div>
+              </div>
+              <div class="ts-track-detail__block">
+                <span class="ts-eyebrow">HABILIDADES CLAVE</span>
+                <ul class="ts-list">
+                  <li>Estrategia de marca</li>
+                  <li>Dirección creativa</li>
+                  <li>Branding e identidad</li>
+                  <li>Posicionamiento</li>
+                  <li>Gestión de clientes</li>
+                  <li>Liderazgo de equipos creativos</li>
+                </ul>
+              </div>
+              <div class="ts-track-detail__block">
+                <span class="ts-eyebrow">CLIENTES Y COLABORACIONES</span>
+                <p>WORKROOM desarrolla proyectos de branding, diseño gráfico y estrategia de marca para empresas y organizaciones que buscan definir con mayor claridad su identidad, comunicación y presencia en el mercado.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </article>
+
+      <!-- 05 — MOTION DESIGNER (Marbella) -->
+    </div>
+  </section>
+
+  <!-- CLOSING STATEMENT -->
+  <section class="ts-closing">
+    <span class="ts-eyebrow">UNA CARRERA, SEIS DESTINOS</span>
+    <p class="ts-closing__statement">
+      LDG no forma <em>un solo perfil profesional</em>: forma diseñadores capaces de moverse entre la creación visual, la <em>estrategia</em>, la <em>dirección</em> y la gestión de proyectos para distintos contextos de la industria creativa.
+    </p>
+  </section>
+
+  <!-- MARQUEE EDITORIAL — 6 trayectorias -->
+  <div class="ts-marquee" aria-hidden="true">
+    <div class="ts-marquee__track">
+      <span>FUNDADOR DE ESTUDIO</span><span class="ts-marquee__star">/</span>
+      <span>FREELANCE</span><span class="ts-marquee__star">/</span>
+      <span>DIRECCIÓN DE ARTE Y CREATIVA</span><span class="ts-marquee__star">/</span>
+      <span>ESTRATEGA DE MARCA</span><span class="ts-marquee__star">/</span>
+      <span>MOTION DESIGNER</span><span class="ts-marquee__star">/</span>
+      <span>IN-HOUSE</span><span class="ts-marquee__star">/</span>
+      <!-- duplicate for seamless loop -->
+      <span>FUNDADOR DE ESTUDIO</span><span class="ts-marquee__star">/</span>
+      <span>FREELANCE</span><span class="ts-marquee__star">/</span>
+      <span>DIRECCIÓN DE ARTE Y CREATIVA</span><span class="ts-marquee__star">/</span>
+      <span>ESTRATEGA DE MARCA</span><span class="ts-marquee__star">/</span>
+      <span>MOTION DESIGNER</span><span class="ts-marquee__star">/</span>
+      <span>IN-HOUSE</span><span class="ts-marquee__star">/</span>
+    </div>
+  </div>
+
+  <!-- CTA / CLOSING -->
+  <section class="ts-cta">
+    <div class="ts-cta__inner">
+      <span class="ts-eyebrow"><span class="dot"></span>GUÍA COMPLETA</span>
+      <h2 class="ts-cta__title">
+        <span class="line-mask"><span class="line-inner">LLÉVATE ESTA</span></span>
+        <span class="line-mask"><span class="line-inner">INFORMACIÓN</span></span>
+        <span class="line-mask"><span class="line-inner">CONTIGO.</span></span>
+      </h2>
+      <p class="ts-cta__desc">Descarga la guía completa en PDF para imprimir o compartir con padres y futuros alumnos.</p>
+      <button class="ts-btn ts-btn--primary" id="downloadPdfBtn2">
+        <span>DESCARGAR / IMPRIMIR PDF</span>
+        <span>&darr;</span>
+      </button>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer class="footer">
+    <div class="footer__top">
+      <div class="footer__brand">
+        <h2 class="footer__logo">PORTFOLIO<br>LDG</h2>
+        <p class="mono-sm">REPOSITORIO ACADÉMICO<br>DE TESIS DE DISEÑO GRÁFICO</p>
+      </div>
+      <div class="footer__links">
+        <div class="footer__col">
+          <span class="mono-sm footer__col-title">NAVEGACIÓN</span>
+          <a href="index.html">Inicio</a>
+          <a href="index.html#about">Acerca</a>
+          <a href="index.html#gallery">Proyectos</a>
+        </div>
+        <div class="footer__col">
+          <span class="mono-sm footer__col-title">CONTACTO</span>
+          <a href="mailto:ldg.crgs@udem.edu">ldg.crgs@udem.edu</a>
+        </div>
+        <div class="footer__col">
+          <span class="mono-sm footer__col-title">ENLACES</span>
+          <a href="https://www.instagram.com/ldg_udem" target="_blank" rel="noopener">Instagram</a>
+          <a href="https://crgs.udem.edu.mx/arte-arquitectura-y-diseno/academia/profesional/licenciatura-en-diseno-grafico" target="_blank" rel="noopener">Sitio Web</a>
+        </div>
+      </div>
+    </div>
+    <div class="footer__bottom">
+      <div class="footer__bottom-left">
+        <span class="mono-sm">&copy; 2026 PORTFOLIO LDG</span>
+        <span class="mono-sm">LICENCIATURA EN DISEÑO GRÁFICO</span>
+      </div>
+      <div class="footer__bottom-right">
+        <img src="logos-institucionales.svg" alt="UDEM" class="footer__institutional-logos">
+      </div>
+    </div>
+  </footer>
+
+  <!-- PDF GUIDE — built dynamically by JS, rendered offscreen, exported to A4 PDF -->
+  <div id="guideDoc" class="guide-doc" aria-hidden="true"></div>
+
+  <!-- PDF generating overlay -->
+  <div id="pdfOverlay" class="pdf-overlay" hidden>
+    <div class="pdf-overlay__box">
+      <span class="pdf-overlay__spinner" aria-hidden="true"></span>
+      <span class="pdf-overlay__text">GENERANDO GUÍA PDF…</span>
+    </div>
+  </div>
+
+  <script src="trayectoria.js?v=20260528b"></script>
+</body>
+</html>
