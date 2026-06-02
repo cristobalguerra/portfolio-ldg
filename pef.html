@@ -660,7 +660,7 @@
     </div>
 
     <div class="cta-row rv d2">
-      <a class="btn" href="mailto:ldg.crgs@udem.edu?subject=Postulación%20PEF%20Sobresaliente">Postular proyecto a PEF Sobresaliente <span aria-hidden="true">→</span></a>
+      <a class="btn" id="postularBtn" href="mailto:ldg.crgs@udem.edu">Postular proyecto a PEF Sobresaliente <span aria-hidden="true">→</span></a>
       <p class="cta-note">Solo asesores. Solicitud dirigida a la Dirección del Programa.</p>
     </div>
   </div>
@@ -774,6 +774,43 @@
       });
     });
     refresh();
+  }
+
+  // PEF Sobresaliente — pre-fill the postulation email (subject + body template)
+  var pb=document.getElementById('postularBtn');
+  if(pb){
+    var subject='Postulación PEF Sobresaliente · [nombre del proyecto]';
+    var body=[
+      'Dirección del Programa de Licenciatura en Diseño Gráfico:',
+      '',
+      'Postulo el siguiente Proyecto de Evaluación Final para la distinción PEF Sobresaliente.',
+      '',
+      'PROYECTO',
+      'Nombre del proyecto:',
+      'Nombre comercial:',
+      'Periodo: Otoño 2026',
+      'Modalidad o enfoque:',
+      '',
+      'EQUIPO',
+      'Integrantes:',
+      'Asesor(a) que postula:',
+      'Sinodales:',
+      '',
+      'POR QUÉ DESTACA',
+      '(Describe cómo el proyecto cumple los criterios: calidad conceptual, rigor de',
+      'proceso, pertinencia, desarrollo visual, resolución profesional, coherencia,',
+      'impacto y desempeño del equipo.)',
+      '',
+      '',
+      'EVIDENCIA (enlaces)',
+      'Documento final (PDF):',
+      'Presentación:',
+      'Evidencia visual y de proceso:',
+      'Impacto o validación:',
+      '',
+      'Quedo atento(a) a sus comentarios.'
+    ].join('\n');
+    pb.setAttribute('href','mailto:ldg.crgs@udem.edu?subject='+encodeURIComponent(subject)+'&body='+encodeURIComponent(body));
   }
 })();
 </script>
