@@ -1,0 +1,692 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>PEF · Proyecto de Evaluación Final — Otoño 2026 · LDG UDEM</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Anton&family=Atkinson+Hyperlegible:wght@400;700&family=JetBrains+Mono:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --paper:#F1ECDF;        /* warm bone */
+    --paper-2:#E6E0CF;
+    --ink:#161310;          /* warm near-black */
+    --ink-soft:#5A554A;
+    --yellow:#FFE000;       /* UDEM electric yellow */
+    --yellow-deep:#E9CE00;
+    --red:#D2401E;          /* alert vermilion — sparse use only */
+    --line:rgba(22,19,16,.14);
+    /* Shared portfolio type system (matches trayectoria.html) */
+    --disp:"Anton", "Arial Narrow", sans-serif;
+    --sans:"Atkinson Hyperlegible", system-ui, -apple-system, sans-serif;
+    --mono:"JetBrains Mono", "SFMono-Regular", ui-monospace, monospace;
+
+    /* modular type scale (≈1.45 ratio) */
+    --t-hero:clamp(3.2rem, 9vw, 8rem);
+    --t-h2:clamp(2rem, 4.6vw, 3.4rem);
+    --t-h3:clamp(1.15rem, 1.5vw, 1.35rem);
+    --t-lede:clamp(1.05rem, 1.5vw, 1.32rem);
+    --t-body:clamp(.98rem, 1.05vw, 1.06rem);
+    --t-mono:.74rem;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html{scroll-behavior:smooth}
+  body{
+    background:var(--paper);
+    color:var(--ink);
+    font-family:var(--sans);
+    font-size:var(--t-body);
+    line-height:1.62;
+    letter-spacing:.002em;
+    -webkit-font-smoothing:antialiased;
+    overflow-x:hidden;
+  }
+  html.cursorize, html.cursorize *{cursor:none}
+  /* faint engineering grid + grain */
+  body::before{
+    content:"";position:fixed;inset:0;z-index:0;pointer-events:none;
+    background-image:
+      linear-gradient(var(--line) 1px,transparent 1px),
+      linear-gradient(90deg,var(--line) 1px,transparent 1px);
+    background-size:64px 64px;
+    opacity:.35;
+    -webkit-mask-image:radial-gradient(ellipse at 50% 0,#000,transparent 78%);
+            mask-image:radial-gradient(ellipse at 50% 0,#000,transparent 78%);
+  }
+  body::after{
+    content:"";position:fixed;inset:0;z-index:9990;pointer-events:none;opacity:.05;
+    background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='3'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+    mix-blend-mode:multiply;
+  }
+  ::selection{background:var(--yellow);color:var(--ink)}
+  a{color:inherit}
+  .wrap{max-width:1180px;margin:0 auto;padding:0 clamp(20px,5vw,72px);position:relative;z-index:1}
+
+  /* ---- custom cursor ---- */
+  .cursor{position:fixed;top:0;left:0;width:13px;height:13px;border-radius:50%;
+    background:var(--ink);z-index:10000;pointer-events:none;mix-blend-mode:difference;
+    transform:translate(-50%,-50%);transition:width .18s,height .18s,background .18s}
+  .cursor.big{width:54px;height:54px;background:var(--yellow)}
+  @media (pointer:coarse){.cursor{display:none}body{cursor:auto}}
+
+  /* ---- scroll progress ---- */
+  .progress{position:fixed;top:0;left:0;height:5px;width:0;background:var(--yellow);
+    z-index:9999;box-shadow:0 0 0 1px var(--ink) inset}
+
+  /* ---- top bar (unified with portfolio nav) ---- */
+  header.bar{position:fixed;top:0;left:0;right:0;z-index:9000;
+    display:flex;align-items:center;justify-content:space-between;gap:24px;
+    padding:22px clamp(20px,5vw,72px);
+    transition:background .3s,border-color .3s,padding .3s;border-bottom:1px solid transparent}
+  header.bar.solid{background:rgba(241,236,223,.92);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);
+    border-color:var(--line);padding-top:16px;padding-bottom:16px}
+  .brand{display:flex;align-items:center;gap:13px;text-decoration:none}
+  .brand__wm{font-family:var(--disp);font-weight:400;font-size:1.45rem;letter-spacing:.01em;
+    text-transform:uppercase;color:var(--ink);line-height:1}
+  .brand__chip{font-family:var(--mono);font-size:.66rem;font-weight:500;letter-spacing:.14em;
+    background:var(--yellow);color:var(--ink);padding:5px 9px 4px;text-transform:uppercase;line-height:1}
+  nav.top{display:flex;gap:30px;font-family:var(--mono);font-size:.82rem;letter-spacing:.08em;text-transform:uppercase}
+  nav.top a{text-decoration:none;opacity:.6;transition:opacity .2s;color:var(--ink)}
+  nav.top a:hover{opacity:1}
+  .back-btn{font-family:var(--mono);font-size:.78rem;letter-spacing:.1em;text-transform:uppercase;
+    text-decoration:none;color:var(--ink);border:1.5px solid var(--ink);padding:10px 18px;line-height:1;
+    transition:background .2s,color .2s;white-space:nowrap}
+  .back-btn:hover{background:var(--ink);color:var(--paper)}
+  @media(max-width:1040px){nav.top{display:none}}
+
+  /* ---- hero ---- */
+  .hero{position:relative;padding:168px 0 40px;z-index:1}
+  .eyebrow{font-family:var(--mono);font-size:.74rem;letter-spacing:.22em;text-transform:uppercase;
+    color:var(--ink-soft);display:flex;gap:12px;align-items:center;flex-wrap:wrap}
+  .eyebrow::before{content:"";width:42px;height:2px;background:var(--ink)}
+  h1.title{font-family:var(--disp);font-weight:400;line-height:1.14;letter-spacing:-.01em;
+    font-size:var(--t-hero);margin:.16em 0 .1em;text-transform:uppercase}
+  /* yellow highlight = band anchored to the BOTTOM of the line, sized to the
+     cap height. Covers the glyphs, never the empty leading above (so it can't
+     overlap the line above). */
+  h1.title .y{
+    background-image:linear-gradient(var(--yellow),var(--yellow));
+    background-repeat:no-repeat;
+    background-position:left bottom;
+    background-size:100% .82em;
+    padding:0 .1em .04em;
+    -webkit-box-decoration-break:clone;box-decoration-break:clone}
+  .hero-meta{display:flex;flex-wrap:wrap;gap:28px;align-items:flex-end;
+    border-top:2px solid var(--ink);margin-top:18px;padding-top:18px}
+  .hero-meta .lede{font-family:var(--sans);font-weight:500;font-size:var(--t-lede);max-width:48ch;line-height:1.5}
+  .hero-meta .tag{font-family:var(--disp);font-weight:400;font-size:clamp(2rem,4vw,3.2rem);
+    line-height:1;letter-spacing:-.01em;white-space:nowrap;text-transform:uppercase}
+  .hero-meta .tag small{display:block;font-family:var(--mono);font-size:.7rem;font-weight:400;
+    letter-spacing:.14em;margin-top:8px;color:var(--ink-soft);text-transform:uppercase}
+
+  /* deliverables strip — static index, no animation */
+  .strip{margin-top:46px;border-top:2px solid var(--ink);border-bottom:2px solid var(--ink);
+    display:grid;grid-template-columns:repeat(6,1fr)}
+  .strip .it{padding:16px 18px;border-right:1px solid var(--line);display:flex;flex-direction:column;gap:6px}
+  .strip .it:last-child{border-right:0}
+  .strip .it b{font-family:var(--mono);font-size:.66rem;font-weight:500;letter-spacing:.16em;color:var(--ink-soft)}
+  .strip .it span{font-family:var(--sans);font-weight:700;font-size:.94rem;letter-spacing:0;line-height:1.25}
+  @media(max-width:860px){.strip{grid-template-columns:repeat(2,1fr)}
+    .strip .it{border-right:1px solid var(--line);border-bottom:1px solid var(--line)}
+    .strip .it:nth-child(2n){border-right:0}}
+
+  /* ---- sections ---- */
+  section{position:relative;padding:96px 0 30px;z-index:1}
+  .sec-head{display:flex;align-items:baseline;gap:20px;margin-bottom:42px;flex-wrap:wrap}
+  .sec-no{font-family:var(--mono);font-size:.74rem;letter-spacing:.18em;color:var(--ink-soft);font-weight:500;
+    background:var(--yellow);color:var(--ink);padding:5px 9px 4px;align-self:center}
+  h2{font-family:var(--disp);font-weight:400;letter-spacing:-.01em;line-height:1;
+    font-size:var(--t-h2);text-transform:uppercase}
+  .sec-sub{font-family:var(--mono);font-size:.78rem;letter-spacing:.02em;color:var(--ink-soft);
+    max-width:62ch;margin-top:-26px;margin-bottom:40px;line-height:1.55}
+  .ghost{position:absolute;right:-2vw;top:30px;font-family:var(--disp);font-weight:400;
+    font-size:clamp(8rem,24vw,20rem);color:var(--ink);opacity:.04;line-height:.7;z-index:-1;pointer-events:none;letter-spacing:-.02em}
+
+  /* ---- timeline ---- */
+  .timeline{display:grid;grid-template-columns:repeat(5,1fr);gap:0;position:relative;border-top:2px solid var(--ink)}
+  .stage{padding:24px 22px 30px;border-right:1px solid var(--line);position:relative;background:transparent;transition:background .3s}
+  .stage:last-child{border-right:0}
+  .stage:hover{background:var(--paper-2)}
+  .stage .node{width:16px;height:16px;background:var(--paper);border:3px solid var(--ink);border-radius:50%;
+    position:absolute;top:-9px;left:22px;transition:background .25s,transform .25s}
+  .stage:hover .node{background:var(--yellow);transform:scale(1.25)}
+  .stage .n{font-family:var(--mono);font-size:.72rem;letter-spacing:.2em;color:var(--ink-soft)}
+  .stage h3{font-family:var(--sans);font-weight:700;font-size:1.18rem;text-transform:uppercase;letter-spacing:0;margin:14px 0 8px;line-height:1.05}
+  .stage .date{font-family:var(--mono);font-size:.74rem;color:var(--ink-soft);font-weight:500;margin-bottom:12px;line-height:1.45}
+  .stage p{font-size:.92rem;line-height:1.45;color:var(--ink-soft)}
+  @media(max-width:860px){.timeline{grid-template-columns:1fr;border-top:0}
+    .stage{border-right:0;border-top:2px solid var(--ink)}.stage .node{left:0;top:-9px}}
+
+  /* ---- deliverables grid ---- */
+  .deliv{display:grid;grid-template-columns:repeat(2,1fr);gap:0;border:2px solid var(--ink)}
+  .deliv .d{padding:30px 28px;border-right:2px solid var(--ink);border-bottom:2px solid var(--ink);
+    position:relative;overflow:hidden;transition:color .3s}
+  .deliv .d:nth-child(2n){border-right:0}
+  .deliv .d:nth-last-child(-n+2){border-bottom:0}
+  .deliv .d .num{font-family:var(--disp);font-weight:800;font-size:2.4rem;line-height:1;letter-spacing:-.04em}
+  .deliv .d h3{font-family:var(--sans);font-weight:700;text-transform:uppercase;font-size:1.22rem;
+    letter-spacing:0;margin:8px 0 8px;line-height:1.1}
+  .deliv .d p{font-size:.96rem;color:var(--ink-soft);max-width:40ch}
+  .deliv .d .spec{font-family:var(--mono);font-size:.72rem;letter-spacing:.05em;margin-top:14px;
+    color:var(--ink);background:var(--paper-2);display:inline-block;padding:5px 10px}
+  .deliv .d .fill{position:absolute;inset:0;background:var(--yellow);transform:translateY(101%);
+    transition:transform .4s cubic-bezier(.2,.8,.2,1);z-index:-1}
+  .deliv .d:hover .fill{transform:translateY(0)}
+  .deliv .d:hover .spec{background:var(--ink);color:var(--yellow)}
+  @media(max-width:680px){.deliv{grid-template-columns:1fr}
+    .deliv .d{border-right:0!important;border-bottom:2px solid var(--ink)!important}
+    .deliv .d:last-child{border-bottom:0!important}}
+
+  /* ---- rubric ---- */
+  .rubric{border-top:2px solid var(--ink)}
+  .row{display:grid;grid-template-columns:minmax(0,1.1fr) 3fr auto;gap:18px;align-items:center;
+    padding:16px 0;border-bottom:1px solid var(--line);transition:padding .25s}
+  .row .crit{font-family:var(--sans);font-weight:700;font-size:1.05rem;text-transform:uppercase;letter-spacing:0;line-height:1.15}
+  .bar{height:12px;background:var(--paper-2);position:relative;overflow:hidden}
+  .bar i{position:absolute;left:0;top:0;bottom:0;width:0;background:var(--ink);transition:width 1.1s cubic-bezier(.2,.8,.2,1)}
+  .row .pct{font-family:var(--disp);font-weight:400;font-size:1.6rem;letter-spacing:-.02em;min-width:64px;text-align:right}
+  .row .guide{grid-column:1/-1;font-size:.86rem;color:var(--ink-soft);margin-top:4px;line-height:1.45;max-width:70ch}
+  .row:hover{background:var(--paper-2)}
+  @media(max-width:680px){.row{grid-template-columns:1fr auto}.row .bar{grid-column:1/-1;order:3}}
+
+  .panel{display:grid;grid-template-columns:1fr 1fr;gap:0;border:2px solid var(--ink);margin-top:40px}
+  .panel>div{padding:26px 28px}
+  .panel>div:first-child{border-right:2px solid var(--ink);background:var(--ink);color:var(--paper)}
+  .panel .evals{display:flex;gap:26px;margin-top:18px}
+  .panel .evals b{font-family:var(--disp);font-weight:800;font-size:2.2rem;display:block;letter-spacing:-.03em}
+  .panel .evals span{font-family:var(--mono);font-size:.68rem;letter-spacing:.14em;text-transform:uppercase;opacity:.7}
+  .panel .yellowdot{color:var(--yellow)}
+  @media(max-width:680px){.panel{grid-template-columns:1fr}.panel>div:first-child{border-right:0;border-bottom:2px solid var(--ink)}}
+
+  /* ---- grade bars ---- */
+  .stack{margin-top:8px}
+  .stack .lab{font-family:var(--mono);font-size:.72rem;letter-spacing:.14em;text-transform:uppercase;color:var(--ink-soft);margin:26px 0 10px}
+  /* proportional meter: color only, no text inside; breakdown lives in legend */
+  .meter{display:flex;height:16px;border:2px solid var(--ink)}
+  .meter .seg{display:block;border-right:2px solid var(--ink)}
+  .meter .seg:last-child{border-right:0}
+  .legend{list-style:none;display:flex;flex-wrap:wrap;gap:12px 32px;margin:14px 0 8px}
+  .legend li{display:flex;align-items:baseline;gap:10px;font-family:var(--sans);font-size:.96rem}
+  .legend .dot{width:13px;height:13px;flex-shrink:0;align-self:center;border:1px solid var(--ink)}
+  .legend b{font-weight:700}
+  .legend .sub{font-family:var(--mono);font-size:.72rem;letter-spacing:.04em;color:var(--ink-soft)}
+  .seg-y{background:var(--yellow)}
+  .seg-ink{background:var(--ink)}
+  .seg-3{background:#B8B09A}
+  .seg-pa{background:var(--paper-2)}.seg-pb{background:#D6CFBC}.seg-pc{background:var(--yellow)}
+
+  /* ---- columns (roles) ---- */
+  .cols{display:grid;grid-template-columns:repeat(3,1fr);gap:0;border:2px solid var(--ink)}
+  .cols .c{padding:26px 24px;border-right:2px solid var(--ink)}
+  .cols .c:last-child{border-right:0}
+  .cols .c h3{font-family:var(--sans);font-weight:700;text-transform:uppercase;font-size:1.2rem;
+    letter-spacing:0;margin-bottom:16px;padding-bottom:10px;border-bottom:3px solid var(--yellow);display:inline-block}
+  .cols .c ul{list-style:none}
+  .cols .c li{font-size:.94rem;color:var(--ink-soft);padding:7px 0 7px 18px;position:relative;line-height:1.4}
+  .cols .c li::before{content:"";position:absolute;left:0;top:14px;width:7px;height:7px;background:var(--ink)}
+  @media(max-width:760px){.cols{grid-template-columns:1fr}.cols .c{border-right:0;border-bottom:2px solid var(--ink)}.cols .c:last-child{border-bottom:0}}
+
+  /* ---- two-col content ---- */
+  .duo{display:grid;grid-template-columns:1.15fr .85fr;gap:48px;align-items:start}
+  @media(max-width:860px){.duo{grid-template-columns:1fr;gap:30px}}
+  ol.memoria{list-style:none;counter-reset:m;column-count:1}
+  ol.memoria li{counter-increment:m;padding:10px 0 10px 44px;position:relative;border-bottom:1px solid var(--line);font-size:.98rem}
+  ol.memoria li::before{content:counter(m,decimal-leading-zero);position:absolute;left:0;top:11px;
+    font-family:var(--mono);font-size:.74rem;color:var(--ink-soft);font-weight:500}
+
+  /* ---- checklist ---- */
+  .check{border:2px solid var(--ink)}
+  .check-progress{display:flex;align-items:center;gap:16px;padding:16px 22px;border-bottom:2px solid var(--ink);
+    background:var(--ink);color:var(--paper)}
+  .check-progress .pcount{font-family:var(--disp);font-weight:400;font-size:1.6rem;line-height:1;letter-spacing:-.01em;color:var(--yellow)}
+  .check-progress .ptrack{flex:1;height:8px;background:rgba(242,238,227,.18);overflow:hidden}
+  .check-progress .pfill{height:100%;width:0;background:var(--yellow);transition:width .35s cubic-bezier(.2,.8,.2,1)}
+  .check-progress .plabel{font-family:var(--mono);font-size:.68rem;letter-spacing:.14em;text-transform:uppercase;opacity:.7}
+  .check-group{border-top:1px solid var(--line)}
+  .check-group:first-of-type{border-top:0}
+  .check-gtitle{font-family:var(--mono);font-size:.68rem;letter-spacing:.16em;text-transform:uppercase;
+    color:var(--ink-soft);padding:18px 22px 4px}
+  .check-item{display:flex;align-items:flex-start;gap:14px;padding:12px 22px;cursor:pointer;
+    transition:background .2s;border-top:1px solid var(--line)}
+  .check-gtitle + .check-item{border-top:0}
+  .check-item:hover{background:var(--paper-2)}
+  .check-item input{position:absolute;opacity:0;width:0;height:0}
+  .check-box{flex-shrink:0;width:22px;height:22px;border:2px solid var(--ink);margin-top:2px;
+    display:grid;place-items:center;transition:background .15s}
+  .check-box::after{content:"";width:6px;height:11px;border:solid var(--ink);border-width:0 2.5px 2.5px 0;
+    transform:rotate(45deg) translateY(-1px);opacity:0;transition:opacity .15s}
+  .check-item input:checked ~ .check-box{background:var(--yellow)}
+  .check-item input:checked ~ .check-box::after{opacity:1}
+  .check-text b{font-family:var(--sans);font-weight:700;font-size:1rem;line-height:1.3;display:block;transition:color .2s}
+  .check-text .spec{font-family:var(--mono);font-size:.7rem;letter-spacing:.04em;color:var(--ink-soft);margin-top:3px;display:block}
+  .check-item input:checked ~ .check-text b{color:var(--ink-soft);text-decoration:line-through}
+
+  /* ---- callouts ---- */
+  .notes{display:grid;gap:16px}
+  .note{border:1px solid var(--line);background:var(--paper-2);padding:18px 22px}
+  .note.amber{border-color:var(--yellow-deep);box-shadow:inset 0 3px 0 var(--yellow)}
+  .note h4{font-family:var(--mono);font-size:.74rem;letter-spacing:.16em;text-transform:uppercase;margin-bottom:6px}
+  .note p{font-size:.96rem;color:var(--ink-soft)}
+
+  /* ---- titulación ---- */
+  .titul{border:2px solid var(--ink)}
+  .titul .t{display:flex;justify-content:space-between;gap:20px;padding:15px 22px;border-bottom:1px solid var(--line);align-items:center}
+  .titul .t:last-child{border-bottom:0}
+  .titul .t span{font-size:.98rem}
+  .titul .t b{font-family:var(--mono);font-weight:500;font-size:.82rem;letter-spacing:.06em;color:var(--ink);white-space:nowrap}
+  /* critical notice — ink panel with yellow accent, not red */
+  .alert{margin-top:30px;background:var(--ink);color:var(--paper);padding:30px 32px;position:relative;overflow:hidden;
+    border-top:4px solid var(--yellow)}
+  .alert h4{font-family:var(--sans);font-weight:700;text-transform:uppercase;font-size:1.35rem;letter-spacing:0;
+    margin-bottom:10px;color:var(--yellow)}
+  .alert p{font-size:1rem;max-width:64ch;color:rgba(242,238,227,.85);line-height:1.6}
+  .alert b{color:var(--paper)}
+
+  /* ---- footer (shared structure with portfolio, PEF palette) ---- */
+  footer{background:var(--ink);color:var(--paper);margin-top:90px;
+    padding:72px clamp(20px,5vw,72px) 32px;position:relative;z-index:1;
+    border-top:2px solid var(--yellow)}
+  .foot-top{display:grid;grid-template-columns:1.3fr 1fr 1fr 1fr;gap:40px;margin-bottom:56px}
+  .foot-brand .foot-logo{font-family:var(--disp);font-weight:400;font-size:clamp(2.6rem,5vw,4rem);
+    line-height:.92;color:var(--yellow);text-transform:uppercase;letter-spacing:-.01em;margin-bottom:14px}
+  .foot-brand .foot-tag{font-family:var(--mono);font-size:.72rem;letter-spacing:.1em;
+    line-height:1.7;color:rgba(242,238,227,.55);text-transform:uppercase}
+  .foot-col{display:flex;flex-direction:column;gap:7px}
+  .foot-col h5{font-family:var(--mono);font-size:.7rem;letter-spacing:.16em;text-transform:uppercase;
+    color:var(--yellow);margin-bottom:8px}
+  .foot-col a,.foot-col span.line{font-family:var(--sans);font-size:.92rem;
+    color:rgba(242,238,227,.8);text-decoration:none;line-height:1.5;transition:color .25s,padding-left .25s}
+  .foot-col a:hover{color:var(--yellow);padding-left:7px}
+  .foot-bottom{display:flex;justify-content:space-between;align-items:center;gap:24px;
+    padding-top:26px;border-top:1px solid rgba(242,238,227,.14);flex-wrap:wrap}
+  .foot-bottom-left{display:flex;flex-direction:column;gap:5px;font-family:var(--mono);
+    font-size:.68rem;letter-spacing:.1em;text-transform:uppercase;color:rgba(242,238,227,.55)}
+  .foot-logos{width:340px;max-width:60vw;height:auto;opacity:.55}
+  @media(max-width:860px){.foot-top{grid-template-columns:1fr 1fr}.foot-brand{grid-column:1/-1}}
+  @media(max-width:560px){.foot-top{grid-template-columns:1fr}}
+
+  /* ---- reveal ---- */
+  .rv{opacity:0;transform:translateY(26px);transition:opacity .8s cubic-bezier(.2,.8,.2,1),transform .8s cubic-bezier(.2,.8,.2,1)}
+  .rv.in{opacity:1;transform:none}
+  .rv.d1{transition-delay:.08s}.rv.d2{transition-delay:.16s}.rv.d3{transition-delay:.24s}.rv.d4{transition-delay:.32s}
+  @media(prefers-reduced-motion:reduce){
+    *{animation:none!important;transition:none!important}
+    .rv{opacity:1;transform:none}.bar i{transition:none}
+  }
+</style>
+</head>
+<body>
+<div class="cursor" id="cur"></div>
+<div class="progress" id="prog"></div>
+
+<header class="bar" id="bar">
+  <a class="brand" href="index.html">
+    <span class="brand__wm">Portfolio / LDG</span>
+    <span class="brand__chip">PEF · OT26</span>
+  </a>
+  <nav class="top">
+    <a href="#proceso">Proceso</a>
+    <a href="#entregables">Entregables</a>
+    <a href="#rubrica">Rúbrica</a>
+    <a href="#calificacion">Calificación</a>
+    <a href="#fechas">Titulación</a>
+    <a href="#checklist">Checklist</a>
+  </nav>
+  <a class="back-btn" href="index.html">← Volver</a>
+</header>
+
+<!-- HERO -->
+<div class="hero">
+  <div class="wrap">
+    <div class="eyebrow rv">UDEM · Escuela de Arte y Diseño · Centro Roberto Garza Sada</div>
+    <h1 class="title rv d1">Proyecto<br>de <span class="y">Evaluación</span><br>Final</h1>
+    <div class="hero-meta">
+      <p class="lede rv d2">Todo lo que tu equipo necesita para desarrollar, defender y entregar el PEF: el proceso, los entregables, la rúbrica y las fechas, en un solo lugar.</p>
+      <div class="tag rv d3">Otoño&nbsp;2026<small>Licenciatura en Diseño Gráfico</small></div>
+    </div>
+  </div>
+  <div class="strip rv d4">
+    <div class="it"><b>01</b><span>Documentos oficiales</span></div>
+    <div class="it"><b>02</b><span>Ficha técnica ES + EN</span></div>
+    <div class="it"><b>03</b><span>Memoria académica</span></div>
+    <div class="it"><b>04</b><span>Fotos · mín. 10</span></div>
+    <div class="it"><b>05</b><span>Videos · mín. 2</span></div>
+    <div class="it"><b>06</b><span>Pósters · 74×120</span></div>
+  </div>
+</div>
+
+<!-- 01 PROCESO -->
+<section id="proceso">
+  <span class="ghost">01</span>
+  <div class="wrap">
+    <div class="sec-head rv"><span class="sec-no">01 / EL PROCESO</span><h2>Mapa del semestre</h2></div>
+    <p class="sec-sub rv">Cinco etapas. Las fechas son del calendario Otoño 2026 (sujeto a cambios). El detalle vive en el Dossier.</p>
+    <div class="timeline rv d1">
+      <div class="stage"><span class="node"></span><div class="n">ETAPA 01</div><h3>Arranque</h3><div class="date">Inicio · 03 ago</div><p>Define la primera sesión con tu asesor para revisar avances de PEF 1.</p></div>
+      <div class="stage"><span class="node"></span><div class="n">ETAPA 02</div><h3>Primer Parcial</h3><div class="date">04–19 sep · entrega ≤ 22 sep</div><p>Envía el avance de la Memoria (≥ 3 días hábiles antes). Presenta el avance del P1. Vale 20%.</p></div>
+      <div class="stage"><span class="node"></span><div class="n">ETAPA 03</div><h3>Segundo Parcial</h3><div class="date">12–24 oct · entrega ≤ 27 oct</div><p>Envía el avance de la Memoria (≥ 3 días hábiles antes). Presenta el avance del P2. Vale 30%.</p></div>
+      <div class="stage"><span class="node"></span><div class="n">ETAPA 04</div><h3>Disertación</h3><div class="date">Eval. 17–23 nov · diserta. 23 nov–05 dic · últ. clase 20 nov</div><p>Memoria final consolidada. Presentación final (50 pts). Ticket to Fly montado.</p></div>
+      <div class="stage"><span class="node"></span><div class="n">ETAPA 05</div><h3>Carpeta final</h3><div class="date">Cierre del proyecto</div><p>Sube a Drive los 6 entregables de la carpeta. Apóyate en el Checklist.</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- 02 ENTREGABLES -->
+<section id="entregables">
+  <span class="ghost">02</span>
+  <div class="wrap">
+    <div class="sec-head rv"><span class="sec-no">02 / LA CARPETA</span><h2>Seis entregables</h2></div>
+    <p class="sec-sub rv">Cada archivo sube en su subcarpeta numerada de Drive, con el formato indicado.</p>
+    <div class="deliv rv d1">
+      <div class="d"><div class="fill"></div><div class="num">01</div><h3>Documentos oficiales</h3><p>Portada, carta de cesión de derechos y declaración académica.</p><div class="spec">PDF</div></div>
+      <div class="d"><div class="fill"></div><div class="num">02</div><h3>Ficha técnica</h3><p>En español y en inglés. Resumen ejecutivo: problema, objetivo y solución (máx. 1050 caracteres).</p><div class="spec">PDF · ES + EN</div></div>
+      <div class="d"><div class="fill"></div><div class="num">03</div><h3>Memoria académica</h3><p>Documento editorial con el rigor de una tesis. Formato libre acordado con el asesor.</p><div class="spec">PDF · + ejemplar impreso</div></div>
+      <div class="d"><div class="fill"></div><div class="num">04</div><h3>Fotografías</h3><p>7–8 generales y de detalle, 1 de autor(es) y 1 libre. Horizontales y verticales.</p><div class="spec">mín. 10 · JPG/PNG · 3000px · 300dpi</div></div>
+      <div class="d"><div class="fill"></div><div class="num">05</div><h3>Videos</h3><p>1 comercial (30–45 s) + 1 libre (hasta 90 s con proceso). Audio libre o con licencia.</p><div class="spec">mín. 2 · MP4 · 1080p · H.264</div></div>
+      <div class="d"><div class="fill"></div><div class="num">06</div><h3>Pósters</h3><p>Uno académico (proceso) y uno comercial (difusión). Listos para impresión.</p><div class="spec">2 · PDF · 74×120 cm · 300dpi</div></div>
+    </div>
+  </div>
+</section>
+
+<!-- 03 RÚBRICA -->
+<section id="rubrica">
+  <span class="ghost">03</span>
+  <div class="wrap">
+    <div class="sec-head rv"><span class="sec-no">03 / EVALUACIÓN</span><h2>Rúbrica · 100 pts</h2></div>
+    <p class="sec-sub rv">Siete criterios, cada uno con su guía de evaluación.</p>
+    <div class="rubric rv d1">
+      <div class="row" data-w="10"><div class="crit">Concepto y objetivos</div><div class="bar"><i></i></div><div class="pct">10%</div><div class="guide">Propósito claro y pertinente; objetivos medibles.</div></div>
+      <div class="row" data-w="10"><div class="crit">Investigación y análisis</div><div class="bar"><i></i></div><div class="pct">10%</div><div class="guide">Marco y evidencia relevantes; métodos adecuados; hallazgos que orientan decisiones.</div></div>
+      <div class="row" data-w="15"><div class="crit">Creatividad e innovación</div><div class="bar"><i></i></div><div class="pct">15%</div><div class="guide">Originalidad y valor diferencial; uso pertinente de técnicas y materiales.</div></div>
+      <div class="row" data-w="15"><div class="crit">Ejecución técnica</div><div class="bar"><i></i></div><div class="pct">15%</div><div class="guide">Calidad de manufactura/implementación; detalle y resolución formal.</div></div>
+      <div class="row" data-w="15"><div class="crit">Comunicación</div><div class="bar"><i></i></div><div class="pct">15%</div><div class="guide">Storytelling, claridad del discurso y calidad visual (slides / memoria).</div></div>
+      <div class="row" data-w="15"><div class="crit">Impacto y viabilidad</div><div class="bar"><i></i></div><div class="pct">15%</div><div class="guide">Valor social/cultural/económico; ajuste a público/cliente; resultados.</div></div>
+      <div class="row" data-w="20"><div class="crit">Libre (asesor)</div><div class="bar"><i></i></div><div class="pct">20%</div><div class="guide">Lo define el asesor de acuerdo con el enfoque del proyecto.</div></div>
+    </div>
+    <div class="panel rv d2">
+      <div>
+        <h4 style="font-family:var(--mono);font-size:.74rem;letter-spacing:.16em;text-transform:uppercase;color:var(--yellow)">Ponderación de evaluadores</h4>
+        <div class="evals">
+          <div><b>50<span class="yellowdot">%</span></b><span>Asesor</span></div>
+          <div><b>25<span class="yellowdot">%</span></b><span>Sinodal 1</span></div>
+          <div><b>25<span class="yellowdot">%</span></b><span>Sinodal 2</span></div>
+        </div>
+      </div>
+      <div>
+        <h4 style="font-family:var(--mono);font-size:.74rem;letter-spacing:.16em;text-transform:uppercase;color:var(--red)">Regla de la Memoria de avance</h4>
+        <p style="margin-top:12px;color:var(--ink-soft);font-size:.98rem">En cada parcial, la Memoria consolidada debe enviarse al asesor y a los sinodales con al menos <b style="color:var(--ink)">3 días hábiles</b> de anticipación a la presentación. Tras el <b style="color:var(--ink)">freeze</b> de P1, los cambios de alcance pueden impactar en el rubro Libre.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 04 CALIFICACIÓN -->
+<section id="calificacion">
+  <span class="ghost">04</span>
+  <div class="wrap">
+    <div class="sec-head rv"><span class="sec-no">04 / NOTA FINAL</span><h2>Cómo suma 100%</h2></div>
+    <div class="stack rv d1">
+      <div class="lab">Calificación final del curso</div>
+      <div class="meter">
+        <span class="seg seg-y" style="flex:80"></span>
+        <span class="seg seg-ink" style="flex:10"></span>
+        <span class="seg seg-3" style="flex:10"></span>
+      </div>
+      <ul class="legend">
+        <li><span class="dot seg-y"></span><b>Proyecto PEF · 80%</b> <span class="sub">P1 16 · P2 24 · Final 40</span></li>
+        <li><span class="dot seg-ink"></span><b>CENEVAL + asesorías · 10%</b></li>
+        <li><span class="dot seg-3"></span><b>Ticket to Fly · 10%</b></li>
+      </ul>
+
+      <div class="lab">Dentro del Proyecto PEF</div>
+      <div class="meter">
+        <span class="seg seg-pa" style="flex:20"></span>
+        <span class="seg seg-pb" style="flex:30"></span>
+        <span class="seg seg-pc" style="flex:50"></span>
+      </div>
+      <ul class="legend">
+        <li><span class="dot seg-pa"></span><b>P1 · 20%</b> <span class="sub">Alineación</span></li>
+        <li><span class="dot seg-pb"></span><b>P2 · 30%</b> <span class="sub">Validación</span></li>
+        <li><span class="dot seg-pc"></span><b>Presentación final · 50%</b> <span class="sub">Disertación</span></li>
+      </ul>
+    </div>
+    <div class="notes rv d2" style="margin-top:34px">
+      <div class="note"><h4>CENEVAL + asesorías · 10%</h4><p>Considera la asistencia a las asesorías programadas y la presentación del examen CENEVAL. Fecha por definir (Coordinación).</p></div>
+      <div class="note amber"><h4>Ticket to Fly · 10%</h4><p>Exposición pública en el CRGS, posterior a la disertación. 2 pósters por proyecto sobre foam board, montados en las islas del 6.º piso. Fecha por definir.</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- 05 MEMORIA -->
+<section id="memoria">
+  <span class="ghost">05</span>
+  <div class="wrap">
+    <div class="sec-head rv"><span class="sec-no">05 / DOCUMENTO</span><h2>La memoria académica</h2></div>
+    <div class="duo">
+      <ol class="memoria rv d1">
+        <li>Portada oficial Universidad de Monterrey</li>
+        <li>Carta de conformidad / cesión de derechos</li>
+        <li>Declaración académica</li>
+        <li>Resumen (150–200 palabras) y palabras clave</li>
+        <li>Agradecimientos</li>
+        <li>Introducción y justificación</li>
+        <li>Objetivo general y específicos</li>
+        <li>Marco teórico y referencial</li>
+        <li>Metodología</li>
+        <li>Proceso de diseño</li>
+        <li>Resultados y propuesta final</li>
+        <li>Impacto y viabilidad</li>
+        <li>Conclusiones y recomendaciones</li>
+        <li>Bibliografía (APA)</li>
+        <li>Anexos</li>
+      </ol>
+      <div class="notes rv d2">
+        <div class="note"><h4>Entrega física obligatoria</h4><p>Además del PDF, se entrega un ejemplar impreso para resguardo del programa, con el mismo contenido y rigor que la versión digital.</p></div>
+        <div class="note"><h4>Diseño editorial</h4><p>Retícula y jerarquía tipográfica consistentes; imágenes en buena resolución con créditos; legibilidad y contraste; coherencia visual entre memoria y producto.</p></div>
+        <div class="note amber"><h4>Enfoques posibles</h4><p>Aplicación profesional · Innovación y emprendimiento · Investigación aplicada · Impacto social y cultural · Proyección académica.</p></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 06 ROLES -->
+<section id="roles">
+  <span class="ghost">06</span>
+  <div class="wrap">
+    <div class="sec-head rv"><span class="sec-no">06 / EQUIPO</span><h2>Quién hace qué</h2></div>
+    <div class="cols rv d1">
+      <div class="c"><h3>Asesor</h3><ul>
+        <li>Delimita el tema y valida objetivos y enfoque.</li>
+        <li>Agenda asesorías; retroalimenta memoria y diseño.</li>
+        <li>Verifica coherencia entre investigación, decisiones y resultados.</li>
+        <li>Prepara al equipo para la defensa.</li>
+      </ul></div>
+      <div class="c"><h3>Sinodales</h3><ul>
+        <li>Revisan la memoria y los resultados con antelación.</li>
+        <li>Aplican la rúbrica con objetividad y comentarios accionables.</li>
+        <li>Valoran la pertinencia según la modalidad.</li>
+      </ul></div>
+      <div class="c"><h3>Alumno(a)s</h3><ul>
+        <li>Mantienen bitácora: decisiones, referencias, pruebas, cambios.</li>
+        <li>Citan y respetan los derechos de autor.</li>
+        <li>Gestionan tiempos, evidencias y comunicación.</li>
+        <li>Entregan la memoria ≥ 3 días hábiles antes de cada parcial.</li>
+      </ul></div>
+    </div>
+  </div>
+</section>
+
+<!-- 07 TITULACIÓN -->
+<section id="fechas">
+  <span class="ghost">07</span>
+  <div class="wrap">
+    <div class="sec-head rv"><span class="sec-no">07 / TITULACIÓN</span><h2>Fechas que no se mueven</h2></div>
+    <p class="sec-sub rv">Nivel profesional — todas las licenciaturas excepto MCP y MCD.</p>
+    <div class="titul rv d1">
+      <div class="t"><span>Solicitud en línea de inicio del trámite de titulación</span><b>24 ago – 23 oct</b></div>
+      <div class="t"><span>Documentación para conclusión de estudios (CURP, fotos, pago)</span><b>24 ago – 23 oct</b></div>
+      <div class="t"><span>Solicitud de exámenes a capacidad</span><b>03 ago – 09 oct</b></div>
+      <div class="t"><span>Presentar exámenes a capacidad</span><b>04 ago – 09 oct</b></div>
+      <div class="t"><span>Entrega de carta de Servicio Social</span><b>20 nov</b></div>
+      <div class="t"><span>Fecha límite para entregar resultados TOEFL</span><b>20 nov</b></div>
+    </div>
+    <div class="alert rv d2">
+      <h4>Sin esto no hay titulación</h4>
+      <p>Para ser prospecto a graduar (PG) haz la solicitud en el portal de graduación. Verifica con tiempo que el <b>TOEFL</b> y la <b>carta de Servicio Social</b> estén liberados en el sistema: si quedan pendientes, no podrás titularte. Vuelve a confirmarlo antes de la disertación.</p>
+    </div>
+  </div>
+</section>
+
+<!-- 08 CHECKLIST -->
+<section id="checklist">
+  <span class="ghost">08</span>
+  <div class="wrap">
+    <div class="sec-head rv"><span class="sec-no">08 / CHECKLIST</span><h2>Antes de entregar</h2></div>
+    <p class="sec-sub rv">Marca cada punto conforme lo completes. Tu progreso se guarda en este navegador.</p>
+    <div class="check rv d1" id="checklist-box">
+      <div class="check-progress">
+        <span class="pcount" id="pcount">0/11</span>
+        <span class="ptrack"><span class="pfill" id="pfill"></span></span>
+        <span class="plabel">Completado</span>
+      </div>
+
+      <div class="check-group">
+        <div class="check-gtitle">La carpeta · 6 entregables en Drive</div>
+        <label class="check-item"><input type="checkbox" data-ck="c1"><span class="check-box"></span><span class="check-text"><b>Documentos oficiales</b><span class="spec">Portada · cesión de derechos · declaración · PDF</span></span></label>
+        <label class="check-item"><input type="checkbox" data-ck="c2"><span class="check-box"></span><span class="check-text"><b>Ficha técnica</b><span class="spec">Español + inglés · PDF</span></span></label>
+        <label class="check-item"><input type="checkbox" data-ck="c3"><span class="check-box"></span><span class="check-text"><b>Memoria académica</b><span class="spec">PDF + ejemplar impreso</span></span></label>
+        <label class="check-item"><input type="checkbox" data-ck="c4"><span class="check-box"></span><span class="check-text"><b>Fotografías</b><span class="spec">Mín. 10 · 3000px · 300dpi</span></span></label>
+        <label class="check-item"><input type="checkbox" data-ck="c5"><span class="check-box"></span><span class="check-text"><b>Videos</b><span class="spec">Mín. 2 · MP4 · 1080p</span></span></label>
+        <label class="check-item"><input type="checkbox" data-ck="c6"><span class="check-box"></span><span class="check-text"><b>Pósters</b><span class="spec">2 · PDF · 74×120 cm · 300dpi</span></span></label>
+      </div>
+
+      <div class="check-group">
+        <div class="check-gtitle">Disertación</div>
+        <label class="check-item"><input type="checkbox" data-ck="d1"><span class="check-box"></span><span class="check-text"><b>Memoria final enviada a asesor y sinodales</b><span class="spec">≥ 3 días hábiles antes</span></span></label>
+        <label class="check-item"><input type="checkbox" data-ck="d2"><span class="check-box"></span><span class="check-text"><b>Ticket to Fly montado en el CRGS</b><span class="spec">2 pósters · foam board · 6.º piso</span></span></label>
+      </div>
+
+      <div class="check-group">
+        <div class="check-gtitle">Titulación · sin esto no te titulas</div>
+        <label class="check-item"><input type="checkbox" data-ck="t1"><span class="check-box"></span><span class="check-text"><b>Solicitud de graduación (PG) en el portal</b></span></label>
+        <label class="check-item"><input type="checkbox" data-ck="t2"><span class="check-box"></span><span class="check-text"><b>TOEFL liberado en el sistema</b></span></label>
+        <label class="check-item"><input type="checkbox" data-ck="t3"><span class="check-box"></span><span class="check-text"><b>Carta de Servicio Social liberada</b></span></label>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="foot-top">
+    <div class="foot-brand">
+      <div class="foot-logo">Portfolio / LDG</div>
+      <p class="foot-tag">Repositorio académico<br>de tesis de diseño gráfico</p>
+    </div>
+    <div class="foot-col">
+      <h5>Navegación</h5>
+      <a href="index.html">Inicio</a>
+      <a href="trayectoria.html">Trayectoria</a>
+      <a href="pef.html">Guía PEF</a>
+      <a href="index.html#gallery">Proyectos</a>
+    </div>
+    <div class="foot-col">
+      <h5>PEF · OT26</h5>
+      <a href="tel:8182151020">CIAA · 81 8215 1020</a>
+      <a href="mailto:ciaa@udem.edu.mx">ciaa@udem.edu.mx</a>
+      <a href="mailto:elena.degasperin@udem.edu">Titulación</a>
+      <span class="line">Verifica TOEFL y Servicio Social.</span>
+    </div>
+    <div class="foot-col">
+      <h5>Programa</h5>
+      <a href="mailto:ldg.crgs@udem.edu">ldg.crgs@udem.edu</a>
+      <a href="https://www.instagram.com/ldg_udem" target="_blank" rel="noopener">Instagram</a>
+      <a href="https://crgs.udem.edu.mx/arte-arquitectura-y-diseno/academia/profesional/licenciatura-en-diseno-grafico" target="_blank" rel="noopener">Sitio web</a>
+    </div>
+  </div>
+  <div class="foot-bottom">
+    <div class="foot-bottom-left">
+      <span>&copy; 2026 Portfolio LDG</span>
+      <span>Proyecto de Evaluación Final · Diseño Gráfico · OT26</span>
+    </div>
+    <img src="logos-institucionales.svg" alt="UDEM" class="foot-logos">
+  </div>
+</footer>
+
+<script>
+(function(){
+  var reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  // custom cursor — disabled for institutional sobriety (kept code path inert)
+  var cur = document.getElementById('cur');
+  if (false){
+    document.documentElement.classList.add('cursorize');
+    var cx=0,cy=0,tx=0,ty=0;
+    document.addEventListener('mousemove',function(e){tx=e.clientX;ty=e.clientY;});
+    (function loop(){cx+=(tx-cx)*.22;cy+=(ty-cy)*.22;cur.style.transform='translate('+cx+'px,'+cy+'px) translate(-50%,-50%)';requestAnimationFrame(loop);})();
+    var hov='a, .d, .stage, .row, button, .mark';
+    document.querySelectorAll(hov).forEach(function(el){
+      el.addEventListener('mouseenter',function(){cur.classList.add('big');});
+      el.addEventListener('mouseleave',function(){cur.classList.remove('big');});
+    });
+  } else { cur.style.display='none'; }
+
+  // scroll progress + sticky bar
+  var prog=document.getElementById('prog'), bar=document.getElementById('bar');
+  function onScroll(){
+    var h=document.documentElement, sc=h.scrollTop||document.body.scrollTop;
+    var max=h.scrollHeight-h.clientHeight;
+    prog.style.width=(max>0?(sc/max*100):0)+'%';
+    if(sc>40)bar.classList.add('solid');else bar.classList.remove('solid');
+  }
+  document.addEventListener('scroll',onScroll,{passive:true}); onScroll();
+
+  // reveal on scroll
+  var io=new IntersectionObserver(function(es){
+    es.forEach(function(e){ if(e.isIntersecting){ e.target.classList.add('in'); io.unobserve(e.target);} });
+  },{threshold:.12, rootMargin:'0px 0px -8% 0px'});
+  document.querySelectorAll('.rv').forEach(function(el){ if(reduce){el.classList.add('in');} else io.observe(el); });
+
+  // animate rubric bars when visible
+  var rub=document.getElementById('rubrica');
+  var rio=new IntersectionObserver(function(es){
+    es.forEach(function(e){ if(e.isIntersecting){
+      document.querySelectorAll('#rubrica .row').forEach(function(r,i){
+        var w=r.getAttribute('data-w');
+        setTimeout(function(){ r.querySelector('.bar i').style.width=(w*4)+'%'; }, reduce?0:i*90);
+      });
+      rio.disconnect();
+    }});
+  },{threshold:.3});
+  if(rub) rio.observe(rub);
+
+  // checklist — progress + persistence (localStorage)
+  var ckBox=document.getElementById('checklist-box');
+  if(ckBox){
+    var boxes=ckBox.querySelectorAll('input[type="checkbox"][data-ck]');
+    var pcount=document.getElementById('pcount'), pfill=document.getElementById('pfill');
+    var KEY='pef-ot26-checklist';
+    var saved={};
+    try{ saved=JSON.parse(localStorage.getItem(KEY)||'{}'); }catch(e){ saved={}; }
+    function refresh(){
+      var done=0;
+      boxes.forEach(function(b){ if(b.checked) done++; });
+      var total=boxes.length;
+      if(pcount) pcount.textContent=done+'/'+total;
+      if(pfill) pfill.style.width=(total?Math.round(done/total*100):0)+'%';
+    }
+    boxes.forEach(function(b){
+      var id=b.getAttribute('data-ck');
+      b.checked=!!saved[id]; /* authoritative: overrides browser form restoration */
+      b.addEventListener('change',function(){
+        saved[id]=b.checked;
+        try{ localStorage.setItem(KEY,JSON.stringify(saved)); }catch(e){}
+        refresh();
+      });
+    });
+    refresh();
+  }
+})();
+</script>
+</body>
+</html>
