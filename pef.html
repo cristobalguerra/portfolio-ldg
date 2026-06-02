@@ -262,6 +262,32 @@
   .check-text .spec{font-family:var(--mono);font-size:.7rem;letter-spacing:.04em;color:var(--ink-soft);margin-top:3px;display:block}
   .check-item input:checked ~ .check-text b{color:var(--ink-soft);text-decoration:line-through}
 
+  /* ---- distinción (PEF Sobresaliente) ---- */
+  .prose{max-width:66ch}
+  .prose p{font-size:1.05rem;line-height:1.6;color:var(--ink-soft);margin-bottom:14px}
+  .prose p b{color:var(--ink);font-weight:700}
+  .subh{font-family:var(--sans);font-weight:700;text-transform:uppercase;font-size:1.05rem;letter-spacing:0;
+    display:inline-block;border-bottom:3px solid var(--yellow);padding-bottom:6px;margin:40px 0 16px}
+  .qlist{counter-reset:q;list-style:none;display:grid;grid-template-columns:1fr 1fr;gap:0 36px;
+    border-top:1px solid var(--line)}
+  .qlist li{counter-increment:q;display:flex;gap:13px;padding:13px 0;border-bottom:1px solid var(--line);
+    font-size:.97rem;line-height:1.4;color:var(--ink)}
+  .qlist li::before{content:counter(q,decimal-leading-zero);font-family:var(--mono);font-size:.72rem;
+    color:var(--ink-soft);font-weight:500;flex-shrink:0;padding-top:3px}
+  @media(max-width:680px){.qlist{grid-template-columns:1fr}}
+  .sessions{margin-top:34px;background:var(--ink);color:var(--paper);padding:34px 36px;border-top:4px solid var(--yellow)}
+  .sessions h3{font-family:var(--sans);font-weight:700;text-transform:uppercase;font-size:1.35rem;color:var(--yellow);margin-bottom:14px;letter-spacing:0}
+  .sessions p{font-size:1rem;line-height:1.6;color:rgba(242,238,227,.85);max-width:68ch;margin-bottom:10px}
+  .sessions p:last-child{margin-bottom:0}
+  .cta-row{margin-top:36px;display:flex;align-items:center;gap:24px;flex-wrap:wrap}
+  .btn{font-family:var(--sans);font-weight:700;font-size:1rem;text-transform:uppercase;letter-spacing:.01em;
+    background:var(--yellow);color:var(--ink);border:2px solid var(--ink);padding:16px 26px;text-decoration:none;
+    display:inline-flex;align-items:center;gap:12px;box-shadow:5px 5px 0 var(--ink);
+    transition:transform .15s cubic-bezier(.2,.8,.2,1),box-shadow .15s cubic-bezier(.2,.8,.2,1)}
+  .btn:hover{transform:translate(-2px,-2px);box-shadow:7px 7px 0 var(--ink)}
+  .btn:active{transform:translate(2px,2px);box-shadow:1px 1px 0 var(--ink)}
+  .cta-note{font-family:var(--mono);font-size:.74rem;letter-spacing:.05em;color:var(--ink-soft);max-width:32ch;line-height:1.55}
+
   /* ---- callouts ---- */
   .notes{display:grid;gap:16px}
   .note{border:1px solid var(--line);background:var(--paper-2);padding:18px 22px}
@@ -332,6 +358,7 @@
     <a href="#calificacion">Calificación</a>
     <a href="#fechas">Titulación</a>
     <a href="#checklist">Checklist</a>
+    <a href="#sobresaliente">Sobresaliente</a>
   </nav>
   <a class="back-btn" href="index.html">← Volver</a>
 </header>
@@ -573,6 +600,68 @@
         <label class="check-item"><input type="checkbox" data-ck="t2"><span class="check-box"></span><span class="check-text"><b>TOEFL liberado en el sistema</b></span></label>
         <label class="check-item"><input type="checkbox" data-ck="t3"><span class="check-box"></span><span class="check-text"><b>Carta de Servicio Social liberada</b></span></label>
       </div>
+    </div>
+  </div>
+</section>
+
+<!-- 09 PEF SOBRESALIENTE -->
+<section id="sobresaliente">
+  <span class="ghost">09</span>
+  <div class="wrap">
+    <div class="sec-head rv"><span class="sec-no">09 / DISTINCIÓN</span><h2>PEF Sobresaliente</h2></div>
+    <div class="prose rv d1">
+      <p>Distinción académica que el programa de Licenciatura en Diseño Gráfico otorga a los Proyectos de Evaluación Final que destacan por su calidad conceptual, rigor de proceso, pertinencia del tema, desarrollo visual y nivel de resolución profesional.</p>
+      <p>Reconoce proyectos que no solo cumplen los requisitos del PEF, sino que evidencian una <b>aportación significativa desde el diseño gráfico</b> y representan de manera destacada el nivel académico y profesional del programa.</p>
+    </div>
+
+    <span class="subh rv d2">Qué reconoce</span>
+    <p class="prose rv d2" style="margin-bottom:6px">Proyectos con una relación clara entre investigación, estrategia y resultado. Se valoran:</p>
+    <ol class="qlist rv d2">
+      <li>Calidad conceptual de la propuesta.</li>
+      <li>Rigor en investigación y desarrollo.</li>
+      <li>Pertinencia del tema, problema u oportunidad.</li>
+      <li>Desarrollo visual, comunicativo, estratégico o experiencial.</li>
+      <li>Resolución profesional en los entregables finales.</li>
+      <li>Coherencia entre problema, hallazgos, objetivos y solución.</li>
+      <li>Impacto potencial o comprobado en usuario, comunidad o contexto.</li>
+      <li>Desempeño del equipo durante el proceso.</li>
+    </ol>
+
+    <div class="duo rv d1" style="margin-top:8px">
+      <div>
+        <span class="subh">Quién puede postular</span>
+        <div class="prose">
+          <p>La postulación la realiza el <b>asesor del proyecto</b>, con una solicitud dirigida a la Dirección del Programa.</p>
+          <p>Es quien conoce el desarrollo completo: el proceso del equipo, la evolución de la propuesta y el nivel de autonomía, compromiso y respuesta a la retroalimentación de los estudiantes.</p>
+        </div>
+      </div>
+      <div>
+        <span class="subh">Requisitos</span>
+        <ol class="qlist" style="grid-template-columns:1fr">
+          <li>Presentado y aprobado como PEF.</li>
+          <li>Documento final, presentación y evidencia visual.</li>
+          <li>Entregables con resolución profesional.</li>
+          <li>Evidencia de proceso, validación, retroalimentación o impacto.</li>
+          <li>Documentado para difusión institucional.</li>
+        </ol>
+      </div>
+    </div>
+
+    <span class="subh rv d2">Proceso de revisión</span>
+    <div class="prose rv d2">
+      <p>Recibida la postulación, la Dirección verifica que cuente con la información y evidencia necesarias. Después puede evaluarse por un <b>comité académico de pares</b> (profesores del programa o especialistas afines), que revisa con base en los criterios y emite observaciones a la Dirección. La resolución final la comunica la Dirección al asesor y a los estudiantes.</p>
+      <p>La distinción no se otorga por calificación: puede darse a <b>uno, varios o ningún proyecto</b> por periodo. No es un concurso, sino un reconocimiento a los PEF que alcanzan un estándar sobresaliente.</p>
+    </div>
+
+    <div class="sessions rv d1">
+      <h3>Reconocimiento y PEF Sessions</h3>
+      <p>Los proyectos seleccionados reciben reconocimiento oficial y diploma del programa. Además, cada uno se considera para un <b style="color:var(--paper)">video documental</b> que registra el proceso, los hallazgos, la propuesta final y el valor del proyecto desde la voz de sus autores, asesor y comunidad.</p>
+      <p>Estos videos forman <b style="color:var(--paper)">PEF Sessions</b>, la serie documental del programa que visibiliza los Proyectos de Evaluación Final más destacados y el impacto del diseño gráfico en contextos académicos, sociales, culturales, institucionales y profesionales.</p>
+    </div>
+
+    <div class="cta-row rv d2">
+      <a class="btn" href="mailto:ldg.crgs@udem.edu?subject=Postulación%20PEF%20Sobresaliente">Postular proyecto a PEF Sobresaliente <span aria-hidden="true">→</span></a>
+      <p class="cta-note">Solo asesores. Solicitud dirigida a la Dirección del Programa.</p>
     </div>
   </div>
 </section>
