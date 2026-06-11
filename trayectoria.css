@@ -1,532 +1,831 @@
 /* ============================================
-   TRAYECTORIA — GSAP-STYLE EDITORIAL
+   TRAYECTORIA · MESA DE REVISIÓN
+   Sistema visual DESIGN.md (papel tecnico).
+   Autosuficiente: tokens definidos aqui mismo,
+   todo scopeado bajo .trayectoria-page.
+   Estados iniciales de motion gateados con .ts-js
+   (sin JS la pagina entrega todo en estado final).
    ============================================ */
 
-:root {
-  --ts-bg: #050505;
-  --ts-bg-elev: #0e0e0e;
-  --ts-fg: #f5f3ea;
-  --ts-dim: rgba(245, 243, 234, 0.6);
-  --ts-faint: rgba(245, 243, 234, 0.32);
-  --ts-line: rgba(245, 243, 234, 0.08);
-  --ts-accent: #caff00;
-  --ts-ink: #050505;
-  --ts-accent-soft: rgba(202, 255, 0, 0.14);
-  --ts-ease: cubic-bezier(0.32, 0.72, 0, 1);
-}
-
 .trayectoria-page {
-  background: var(--ts-bg);
-  color: var(--ts-fg);
+  /* Tokens del sistema (copia literal de DESIGN.md) */
+  --paper: #F1ECDF;
+  --paper-2: #E7E1D0;
+  --ink: #1B1612;
+  --ink-soft: #5C564A;
+  --yellow: #FFE000;
+  --verm: #B23818;
+  --line: rgba(27, 22, 18, .16);
+  --line-2: rgba(27, 22, 18, .34);
+
+  --disp: "Anton", "Arial Narrow", sans-serif;
+  --sans: "Atkinson Hyperlegible", system-ui, sans-serif;
+  --mono: "JetBrains Mono", ui-monospace, monospace;
+  --serif: "Spectral", Georgia, serif;
+
+  --t-hero: clamp(3.1rem, 10.5vw, 9.2rem);
+  --t-h2: clamp(1.9rem, 4.4vw, 3.3rem);
+  --t-num: clamp(2.6rem, 6vw, 4.6rem);
+  --t-mono: .72rem;
+
+  --ease: cubic-bezier(.22, 1, .36, 1);
+  --gut: clamp(18px, 4.5vw, 64px);
+
+  background: var(--paper);
+  color: var(--ink);
+  font-family: var(--sans);
+  font-size: clamp(.98rem, 1.05vw, 1.06rem);
+  line-height: 1.6;
   min-height: 100dvh;
   overflow-x: hidden;
-  /* Scoped type system (sophisticated brutalist-editorial):
-     display = Anton (heavy condensed grotesque, Druk-like),
-     body = Atkinson Hyperlegible, serif accent = Spectral (upright) */
-  --font-display: 'Anton', 'Bebas Neue', sans-serif;
-  --font-body: 'Atkinson Hyperlegible', system-ui, -apple-system, sans-serif;
-  --font-serif: 'Spectral', Georgia, 'Times New Roman', serif;
-  font-family: var(--font-body);
-  font-feature-settings: 'ss01' on, 'kern' on;
-  font-kerning: normal;
-  font-optical-sizing: auto;
-  /* Light-on-dark compensation: tiny letter-spacing nudge */
-  letter-spacing: 0.005em;
+  -webkit-font-smoothing: antialiased;
 }
 
-/* Body paragraphs: tighter measure, looser leading for light text on dark */
-.trayectoria-page p {
-  line-height: 1.6;
-  text-wrap: pretty;
+/* Reticula de lamina, fija y visible */
+.trayectoria-page::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  background-image:
+    linear-gradient(var(--line) 1px, transparent 1px),
+    linear-gradient(90deg, var(--line) 1px, transparent 1px);
+  background-size: 56px 56px;
+  opacity: .5;
 }
-
-/* Headlines: balanced wrap for cleaner ragged edges */
-.trayectoria-page h1,
-.trayectoria-page h2,
-.trayectoria-page h3,
-.ts-hero__title,
-.ts-statement__title,
-.ts-tracks-intro__title,
-.ts-track-detail__name,
-.ts-cta__title,
-.trayectoria-cta__title {
-  text-wrap: balance;
-}
-
-/* Neutralize main site's body gradient ambient */
-.trayectoria-page::before,
+/* Neutraliza cualquier ambient de styles.css */
 .trayectoria-page::after { display: none !important; }
 
-/* Disable shared custom cursor on this page (per design-taste-frontend rule:
-   "NO Custom Mouse Cursors"). Restore native pointer for accessibility. */
+.trayectoria-page ::selection { background: var(--yellow); color: var(--ink); }
+
+/* Cursor nativo (sin cursor custom; guarda contra styles.css) */
+.trayectoria-page, .trayectoria-page * { cursor: auto; }
+.trayectoria-page a, .trayectoria-page button { cursor: pointer; }
 .trayectoria-page .cursor { display: none !important; }
-.trayectoria-page,
-.trayectoria-page * { cursor: auto; }
-.trayectoria-page a,
-.trayectoria-page button,
-.trayectoria-page [role="button"] { cursor: pointer; }
 
-/* Animation utilities */
-.line-mask { display: block; overflow: hidden; line-height: 0.95; }
-.line-inner { display: block; will-change: transform; }
-.word-mask {
-  display: inline-block;
-  overflow: hidden;
-  line-height: 1.15;
-  vertical-align: bottom;
-  padding-right: 0.18em;
-}
-.word-inner {
-  display: inline-block;
-  will-change: transform, opacity;
+.trayectoria-page p { text-wrap: pretty; max-width: 75ch; }
+.trayectoria-page h1, .trayectoria-page h2, .trayectoria-page h3 { text-wrap: balance; }
+.trayectoria-page a { color: inherit; }
+
+/* Foco visible en todo interactivo */
+.trayectoria-page a:focus-visible,
+.trayectoria-page button:focus-visible {
+  outline: 2px solid var(--verm);
+  outline-offset: 3px;
 }
 
-.ts-accent { color: var(--ts-accent); }
+.ts-wrap {
+  max-width: 1240px;
+  margin: 0 auto;
+  padding: 0 var(--gut);
+  position: relative;
+  z-index: 1;
+}
 
-/* Emphasis = HIGHLIGHTER MARK with refined UPRIGHT serif (Spectral roman).
-   Black text on neon block; the serif adds an editorial accent against the
-   heavy condensed grotesque without the informality of italics. */
-.trayectoria-page em,
-.trayectoria-page .ts-mark {
-  font-family: var(--font-serif);
-  font-style: normal;
-  font-weight: 600;
-  font-size: 0.82em;
-  line-height: 1;
-  color: var(--ts-ink);
-  background: var(--ts-accent);
-  padding: 0.08em 0.24em 0.12em;
-  letter-spacing: -0.005em;
-  vertical-align: baseline;
+.trayectoria-page .mono-sm {
+  font-family: var(--mono);
+  font-size: var(--t-mono);
+  letter-spacing: .12em;
+  text-transform: uppercase;
+}
+
+/* Spectral italica dosificada; en prosa lleva banda amarilla de marcador */
+.trayectoria-page em {
+  font-family: var(--serif);
+  font-style: italic;
+  font-weight: 500;
+  background-image: linear-gradient(var(--yellow), var(--yellow));
+  background-repeat: no-repeat;
+  background-position: left bottom;
+  background-size: 100% .84em;
+  padding: 0 .08em .03em;
   -webkit-box-decoration-break: clone;
   box-decoration-break: clone;
 }
+/* Dentro del H1 la italica va sin banda (la banda vive en .ts-hl) */
+.trayectoria-page .ts-h1 em { background-image: none; padding: 0; }
 
-/* Inside short body text (paragraphs), em should align with text rhythm,
-   not feel like a display highlight. Slightly smaller padding and inherits
-   font weight closer to body. */
-.trayectoria-page p em {
-  font-size: 1em;
-  padding: 0.05em 0.3em 0.08em;
-  font-weight: 600;
+/* Banda marcadora animada (pinta al entrar) */
+.trayectoria-page .ts-hl {
+  background-image: linear-gradient(var(--yellow), var(--yellow));
+  background-repeat: no-repeat;
+  background-position: left bottom;
+  background-size: 100% .84em;
+  padding: 0 .08em .03em;
+  -webkit-box-decoration-break: clone;
+  box-decoration-break: clone;
 }
+.trayectoria-page .ts-hl em { background-image: none; padding: 0; }
+.trayectoria-page.ts-js .ts-hl {
+  background-size: 0% .84em;
+  transition: background-size .7s var(--ease) .65s;
+}
+.trayectoria-page .in .ts-hl,
+.trayectoria-page .ts-hl.in,
+.trayectoria-page [data-io].in .ts-hl { background-size: 100% .84em; }
 
-/* Eyebrow tag — highlighter block, mono caps, ink on neon */
-.ts-eyebrow {
-  font-family: var(--font-mono);
-  font-size: 0.7rem;
-  font-weight: 500;
-  letter-spacing: 0.16em;
-  color: var(--ts-ink);
-  background: var(--ts-accent);
-  text-transform: uppercase;
-  display: inline-flex;
+/* ============ topline ============ */
+.ts-topline {
+  position: sticky;
+  top: 0;
+  z-index: 50;
+  border-bottom: 2px solid var(--ink);
+  background: var(--paper);
+}
+.ts-topline__in {
+  display: flex;
+  justify-content: space-between;
   align-items: center;
-  gap: 0.5rem;
-  padding: 0.35em 0.6em 0.3em;
-  width: fit-content;
+  gap: 14px;
+  flex-wrap: wrap;
+  padding-top: 12px;
+  padding-bottom: 11px;
 }
-/* Dot retained for the few eyebrows that need a leading marker, but rendered
-   as ink-on-block punctuation rather than a pulsing accent */
-.ts-eyebrow .dot {
-  width: 5px;
-  height: 5px;
-  border-radius: 50%;
-  background: var(--ts-ink);
-  display: inline-block;
+.ts-topline__brand {
+  font-family: var(--disp);
+  font-weight: 400;
+  font-size: 1.05rem;
+  letter-spacing: .02em;
+  text-transform: uppercase;
 }
-
-/* NAV */
-.trayectoria-page .nav {
-  background: rgba(14, 16, 15, 0.85);
-  backdrop-filter: blur(14px);
-  -webkit-backdrop-filter: blur(14px);
-  border-bottom: 1px solid var(--ts-line);
-  mix-blend-mode: normal;
+.ts-topline__chip {
+  background: var(--yellow);
+  padding: 4px 8px 3px;
+  font-weight: 400;
 }
-.trayectoria-page .nav__logo { color: var(--ts-fg); }
-.trayectoria-page .nav__side-label { color: var(--ts-faint); }
-
-.nav__back-btn {
-  font-family: var(--font-mono);
-  font-size: 0.7rem;
-  letter-spacing: 0.14em;
-  color: var(--ts-accent);
-  background: transparent;
-  border: 1px solid var(--ts-accent);
-  padding: 0.55rem 1rem;
-  border-radius: 999px;
+.ts-topline__doc { color: var(--ink-soft); font-weight: 500; }
+.ts-topline__back {
+  font-family: var(--mono);
+  font-size: var(--t-mono);
+  font-weight: 700;
+  letter-spacing: .14em;
+  text-transform: uppercase;
   text-decoration: none;
-  transition: background-color 0.25s var(--ts-ease), color 0.25s var(--ts-ease), transform 0.15s var(--ts-ease);
+  border: 2px solid var(--ink);
+  background: var(--paper);
+  padding: 7px 13px 6px;
+  transition: background-color .2s var(--ease);
 }
-.nav__back-btn:hover {
-  background: var(--ts-accent);
-  color: #000;
-}
-.nav__back-btn:active {
-  transform: scale(0.97);
-}
+.ts-topline__back:hover { background: var(--yellow); }
+@media (max-width: 760px) { .ts-topline__doc { display: none; } }
 
-/* ============================================
-   HERO
-   ============================================ */
-.ts-hero {
-  padding: calc(100px + 2rem) clamp(1.25rem, 4vw, 3rem) 4rem;
-  min-height: 100dvh;
+/* ============ hoja 01: portada ============ */
+.ts-sheet {
+  position: relative;
+  z-index: 1;
+  min-height: calc(100svh - 52px);
   display: flex;
   flex-direction: column;
-  justify-content: space-between;
-  gap: 3rem;
-  max-width: 1800px;
+  padding: 0 var(--gut);
+}
+.ts-sheet__in {
+  max-width: 1240px;
   margin: 0 auto;
+  width: 100%;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  border-left: 2px solid var(--ink);
+  border-right: 2px solid var(--ink);
   position: relative;
 }
 
-.ts-hero__top {
+/* Barra de control de imprenta (sustituye a la regla de coordenadas):
+   chips de proceso CMYK + cruz de registro + leyenda mono.
+   Los tonos cian/magenta SOLO viven en este artefacto. */
+.ts-ctrlbar {
   display: flex;
-  justify-content: space-between;
   align-items: center;
-  color: var(--ts-faint);
-  font-family: var(--font-mono);
-  font-size: 0.72rem;
-  letter-spacing: 0.18em;
-  flex-wrap: wrap;
-  gap: 1rem;
+  gap: 14px;
+  min-width: 0;
+  padding: 8px 12px 7px;
+  border-bottom: 1px solid var(--line-2);
 }
-
-.ts-hero__title {
-  font-family: var(--font-display);
-  font-size: clamp(2.6rem, 10.5vw, 12rem);
-  line-height: 0.94;
-  letter-spacing: -0.01em;
-  margin: 0;
+.ts-ctrlbar__chips { display: flex; gap: 4px; flex-shrink: 0; }
+.ts-ctrlbar__chip { display: block; width: 11px; height: 11px; }
+.ts-ctrlbar__chip--c { background: #00AEEF; }
+.ts-ctrlbar__chip--m { background: #EC008C; }
+.ts-ctrlbar__chip--y { background: var(--yellow); }
+.ts-ctrlbar__chip--k { background: var(--ink); }
+.ts-ctrlbar__reg {
+  position: relative;
+  width: 12px;
+  height: 12px;
+  border: 1px solid var(--ink);
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+.ts-ctrlbar__reg::before,
+.ts-ctrlbar__reg::after {
+  content: "";
+  position: absolute;
+  background: var(--ink);
+}
+.ts-ctrlbar__reg::before { left: 50%; top: -3px; bottom: -3px; width: 1px; transform: translateX(-50%); }
+.ts-ctrlbar__reg::after { top: 50%; left: -3px; right: -3px; height: 1px; transform: translateY(-50%); }
+.ts-ctrlbar__lbl {
+  font-family: var(--mono);
+  font-size: var(--t-mono);
+  letter-spacing: .12em;
   text-transform: uppercase;
-  font-weight: 400;
-  color: var(--ts-fg);
+  color: var(--ink-soft);
+  margin-left: auto;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
-/* Hero em inherits the highlight-block treatment; serif accent at a slightly
-   smaller size so the Spectral block nests cleanly inside the Anton line. */
-.ts-hero__title em {
-  font-size: 0.72em;
+.ts-hero {
+  flex: 1;
+  display: grid;
+  grid-template-columns: repeat(12, 1fr);
+  align-content: center;
+  gap: 0 18px;
+  padding: clamp(34px, 5vh, 64px) clamp(14px, 2.5vw, 38px);
 }
 
-.ts-hero__lead {
-  font-family: var(--font-body);
-  font-size: clamp(1.15rem, 1.6vw, 1.5rem);
-  line-height: 1.45;
-  font-weight: 400;
-  letter-spacing: 0;
-  max-width: 52ch;
-  color: var(--ts-fg);
-  margin: 0;
-  text-transform: none;
+.ts-eyebrow {
+  font-family: var(--mono);
+  font-size: var(--t-mono);
+  letter-spacing: .2em;
+  text-transform: uppercase;
+  color: var(--ink-soft);
 }
-
-.ts-hero__bottom {
+.ts-eyebrow--mark {
   display: flex;
-  justify-content: space-between;
   align-items: center;
-  gap: 1.5rem;
+  gap: 12px;
+}
+.ts-eyebrow--mark::before {
+  content: "";
+  width: 11px;
+  height: 11px;
+  background: var(--verm);
+  flex-shrink: 0;
+}
+.ts-hero .ts-eyebrow--mark { grid-column: 1 / -1; margin-bottom: 18px; max-width: none; }
+
+.ts-h1 {
+  grid-column: 1 / -1;
+  font-family: var(--disp);
+  font-weight: 400;
+  text-transform: uppercase;
+  font-size: var(--t-hero);
+  line-height: 1.02;
+  letter-spacing: -.01em;
+  margin: 0;
+}
+.ts-h1 .ts-ln { display: block; overflow: hidden; }
+.ts-h1 .ts-ln i { display: block; font-style: normal; }
+.trayectoria-page.ts-js .ts-h1 .ts-ln i {
+  transform: translateY(110%);
+  transition: transform .85s var(--ease);
+}
+.trayectoria-page.ts-js .ts-h1 .ts-ln:nth-child(2) i { transition-delay: .1s; }
+.trayectoria-page.ts-js .ts-h1 .ts-ln:nth-child(3) i { transition-delay: .18s; }
+.trayectoria-page .ts-hero.in .ts-h1 .ts-ln i { transform: none; }
+.trayectoria-page .ts-hero.in .ts-hl { background-size: 100% .84em; }
+
+/* cota: linea vermilion + remates + etiqueta */
+.ts-cota { grid-column: 1 / 9; margin-top: 26px; position: relative; height: 34px; }
+.ts-cota__line {
+  position: absolute; left: 0; right: 0; top: 16px; height: 2px;
+  background: var(--verm);
+}
+.ts-cota__tick {
+  position: absolute; top: 6px; width: 2px; height: 22px;
+  background: var(--verm);
+}
+.ts-cota__tick--l { left: 0; }
+.ts-cota__tick--r { right: 0; }
+.ts-cota__lbl {
+  position: absolute; left: 50%; top: 0; transform: translateX(-50%);
+  background: var(--paper);
+  padding: 0 12px;
+  font-family: var(--mono);
+  font-size: var(--t-mono);
+  letter-spacing: .14em;
+  color: var(--verm);
+  font-weight: 500;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+.trayectoria-page.ts-js .ts-cota__line {
+  transform: scaleX(0); transform-origin: left;
+  transition: transform .9s var(--ease) .9s;
+}
+.trayectoria-page.ts-js .ts-cota__tick {
+  transform: scaleY(0); transform-origin: top;
+  transition: transform .3s var(--ease) 1.7s;
+}
+.trayectoria-page.ts-js .ts-cota__lbl {
+  opacity: 0;
+  transition: opacity .4s var(--ease) 1.8s;
+}
+.trayectoria-page .ts-cota.in .ts-cota__line { transform: scaleX(1); }
+.trayectoria-page .ts-cota.in .ts-cota__tick { transform: scaleY(1); }
+.trayectoria-page .ts-cota.in .ts-cota__lbl { opacity: 1; }
+
+.ts-lede {
+  grid-column: 7 / -1;
+  margin: 30px 0 0;
+  max-width: 46ch;
+  font-size: clamp(1.02rem, 1.4vw, 1.22rem);
+  line-height: 1.55;
+}
+.ts-lede b { font-weight: 700; }
+@media (max-width: 860px) {
+  .ts-cota { grid-column: 1 / -1; }
+  .ts-lede { grid-column: 1 / -1; }
+}
+
+.ts-hero__actions {
+  grid-column: 1 / -1;
+  margin-top: 34px;
+  display: flex;
+  align-items: center;
+  gap: 18px;
   flex-wrap: wrap;
 }
+.ts-hero__hint { color: var(--ink-soft); }
 
-.ts-hero__scroll {
-  color: var(--ts-faint);
-}
-
-/* Buttons */
+/* Botones: bloque amarillo con sombra dura (patron direccion-c) */
 .ts-btn {
+  font-family: var(--sans);
+  font-weight: 700;
+  font-size: .95rem;
+  text-transform: uppercase;
+  letter-spacing: .04em;
+  color: var(--ink);
+  border: 2px solid var(--ink);
+  padding: 15px 24px;
   display: inline-flex;
   align-items: center;
-  gap: 0.75rem;
-  padding: 1rem 1.6rem;
-  border: 0;
-  border-radius: 999px;
-  font-family: var(--font-mono);
-  font-size: 0.78rem;
-  letter-spacing: 0.14em;
-  text-transform: uppercase;
-  cursor: pointer;
-  transition: transform 0.2s var(--ts-ease), box-shadow 0.3s var(--ts-ease), background-color 0.25s var(--ts-ease), color 0.25s var(--ts-ease);
+  gap: 12px;
   text-decoration: none;
-  will-change: transform;
+  transition: transform .15s var(--ease), box-shadow .15s var(--ease), background-color .2s var(--ease);
 }
 .ts-btn--primary {
-  background: var(--ts-accent);
-  color: #0a0a0a;
+  background: var(--yellow);
+  box-shadow: 5px 5px 0 var(--ink);
 }
-.ts-btn--primary:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 18px 40px rgba(136, 206, 2, 0.25);
-}
-.ts-btn:active {
-  transform: scale(0.97);
-}
+.ts-btn--primary:hover { transform: translate(-2px, -2px); box-shadow: 7px 7px 0 var(--ink); }
+.ts-btn--primary:active { transform: translate(2px, 2px); box-shadow: 1px 1px 0 var(--ink); }
+.ts-btn--ghost { background: var(--paper); }
+.ts-btn--ghost:hover { background: var(--paper-2); }
+.ts-btn--ghost:active { transform: translate(1px, 1px); }
 
-/* ============================================
-   STATEMENT BIG TYPE
-   ============================================ */
-.ts-statement {
-  padding: clamp(4rem, 12vh, 10rem) clamp(1.25rem, 4vw, 3rem);
-  max-width: 1800px;
-  margin: 0 auto;
-  border-top: 1px solid var(--ts-line);
+/* cajetin tecnico */
+.ts-cajetin {
+  border-top: 2px solid var(--ink);
+  display: grid;
+  grid-template-columns: 2fr 1.8fr .9fr .9fr 1fr .7fr;
+  position: relative;
 }
-
-.ts-statement__inner {
-  display: flex;
-  flex-direction: column;
-  gap: 2rem;
-  max-width: 1400px;
+.ts-cajetin__cell {
+  padding: 12px 14px 13px;
+  border-left: 1px solid var(--line-2);
+  min-width: 0;
 }
-
-.ts-statement__num {
-  font-family: var(--font-mono);
-  font-size: 0.72rem;
-  letter-spacing: 0.18em;
-  color: var(--ts-dim);
+.ts-cajetin__cell:first-child { border-left: 0; }
+.ts-cajetin__k {
+  display: block;
+  font-family: var(--mono);
+  font-size: var(--t-mono);
+  letter-spacing: .14em;
   text-transform: uppercase;
+  color: var(--ink-soft);
+  margin-bottom: 4px;
 }
-
-.ts-statement__title {
-  font-family: var(--font-display);
-  font-size: clamp(2.3rem, 7vw, 7rem);
-  line-height: 1;
-  letter-spacing: -0.01em;
-  margin: 0;
-  text-transform: uppercase;
-  color: var(--ts-fg);
+.ts-cajetin__v {
+  display: block;
+  font-family: var(--sans);
+  font-weight: 700;
+  font-size: .92rem;
+  line-height: 1.3;
+}
+.ts-cajetin__v--big {
+  font-family: var(--disp);
   font-weight: 400;
+  font-size: 1.5rem;
+  letter-spacing: .01em;
+}
+@media (max-width: 860px) {
+  .ts-cajetin { grid-template-columns: 1fr 1fr; }
+  .ts-cajetin__cell { border-left: 0; border-top: 1px solid var(--line); }
+  .ts-cajetin__cell:nth-child(2n) { border-left: 1px solid var(--line-2); }
+  .ts-cajetin__cell:nth-child(-n+2) { border-top: 0; }
 }
 
-.ts-statement__sub {
-  font-size: clamp(1rem, 1.3vw, 1.3rem);
-  line-height: 1.5;
-  color: var(--ts-dim);
-  max-width: 700px;
-  margin: 0;
+/* sello de revision sobre el cajetin */
+.ts-rev-stamp {
+  position: absolute;
+  right: clamp(8px, 3vw, 34px);
+  top: -42px;
+  z-index: 3;
+  border: 3px solid var(--verm);
+  color: var(--verm);
+  padding: 9px 16px 8px;
+  font-family: var(--mono);
+  font-size: .8rem;
+  font-weight: 700;
+  letter-spacing: .18em;
+  text-transform: uppercase;
+  background: rgba(241, 236, 223, .85);
+  transform: rotate(-6deg);
 }
-
-/* ============================================
-   TRACKS INTRO
-   ============================================ */
-.ts-tracks-intro {
-  padding: clamp(4rem, 10vh, 8rem) clamp(1.25rem, 4vw, 3rem) 3rem;
-  max-width: 1800px;
-  margin: 0 auto;
-  border-top: 1px solid var(--ts-line);
+.trayectoria-page.ts-js .ts-stamp {
+  opacity: 0;
+  transform: scale(1.15) rotate(-6deg);
+  transition: opacity .3s var(--ease) .5s, transform .42s var(--ease) .5s;
 }
+.trayectoria-page .ts-stamp.in { opacity: 1; transform: scale(1) rotate(-6deg); }
 
-.ts-tracks-intro__top {
+/* ============ secciones ============ */
+.ts-sec {
+  position: relative;
+  z-index: 1;
+  padding: clamp(72px, 10vh, 120px) 0 0;
+  scroll-margin-top: 70px;
+}
+.ts-sec-head {
   display: flex;
-  justify-content: space-between;
-  align-items: center;
-  color: var(--ts-faint);
-  font-family: var(--font-mono);
-  font-size: 0.72rem;
-  letter-spacing: 0.18em;
-  margin-bottom: 2rem;
+  align-items: baseline;
+  gap: 18px;
   flex-wrap: wrap;
-  gap: 1rem;
+  margin-bottom: 8px;
 }
-
-.ts-tracks-intro__title {
-  font-family: var(--font-display);
-  font-size: clamp(2.3rem, 7.5vw, 7.5rem);
-  line-height: 0.96;
-  letter-spacing: -0.01em;
-  margin: 0 0 3rem;
+.ts-sec-no {
+  font-family: var(--mono);
+  font-size: var(--t-mono);
+  font-weight: 500;
+  letter-spacing: .16em;
+  background: var(--yellow);
+  padding: 5px 9px 4px;
+  align-self: center;
+}
+.ts-h2 {
+  font-family: var(--disp);
+  font-weight: 400;
   text-transform: uppercase;
-  color: var(--ts-fg);
-  font-weight: 400;
+  font-size: var(--t-h2);
+  line-height: 1;
+  letter-spacing: -.005em;
+  margin: 0;
+}
+.ts-sec-sub {
+  font-family: var(--mono);
+  font-size: var(--t-mono);
+  letter-spacing: .1em;
+  text-transform: uppercase;
+  color: var(--ink-soft);
+  margin: 10px 0 0;
 }
 
-.ts-tracks-intro__title em {
+/* linea que se traza */
+.ts-drawx {
+  height: 2px;
+  background: var(--ink);
+  margin-top: 22px;
+}
+.ts-drawx--thin { height: 1px; background: var(--line-2); margin-top: 0; }
+.trayectoria-page.ts-js .ts-drawx {
+  transform: scaleX(0); transform-origin: left;
+  transition: transform .9s var(--ease);
+}
+.trayectoria-page .ts-drawx.in { transform: scaleX(1); }
+
+/* reveals genericos */
+.trayectoria-page.ts-js .ts-rv {
+  opacity: 0;
+  transform: translateY(16px);
+  transition: opacity .7s var(--ease), transform .7s var(--ease);
+}
+.trayectoria-page .ts-rv.in { opacity: 1; transform: none; }
+.ts-d1 { transition-delay: .08s; }
+.ts-d2 { transition-delay: .16s; }
+.ts-d3 { transition-delay: .24s; }
+.ts-d4 { transition-delay: .32s; }
+
+/* ============ hoja 02: postura ============ */
+.ts-statement__title {
+  font-family: var(--disp);
   font-weight: 400;
+  text-transform: uppercase;
+  font-size: clamp(2.1rem, 5.6vw, 4.8rem);
+  line-height: 1.06;
+  letter-spacing: -.005em;
+  margin: clamp(30px, 5vh, 52px) 0 0;
+  max-width: 20ch;
+}
+.ts-statement__sub {
+  margin: 26px 0 0;
+  max-width: 62ch;
+  font-size: clamp(1rem, 1.3vw, 1.18rem);
+  color: var(--ink-soft);
 }
 
-.ts-tracks-intro__list {
+/* ============ hoja 03: datos IMCO (tabla de cotas) ============ */
+.ts-data-grid {
+  display: grid;
+  grid-template-columns: clamp(70px, 8vw, 110px) 1fr;
+  margin-top: 34px;
+}
+.ts-data-margin { border-right: 2px solid var(--ink); position: relative; }
+.ts-data-rot {
+  position: sticky;
+  top: 90px;
+  writing-mode: vertical-rl;
+  transform: rotate(180deg);
+  font-family: var(--mono);
+  font-size: var(--t-mono);
+  letter-spacing: .3em;
+  text-transform: uppercase;
+  color: var(--verm);
+  font-weight: 500;
+  padding: 6px 0 0;
+  margin-left: clamp(14px, 2vw, 30px);
+}
+.ts-data-table { min-width: 0; }
+.ts-data-row {
+  display: grid;
+  grid-template-columns: minmax(0, 1.4fr) auto minmax(0, 1fr);
+  gap: 8px clamp(14px, 3vw, 40px);
+  align-items: baseline;
+  padding: clamp(18px, 3vh, 30px) 0 clamp(16px, 2.6vh, 26px) clamp(16px, 2.5vw, 40px);
+}
+.ts-data-row__lab {
+  font-family: var(--mono);
+  font-size: var(--t-mono);
+  font-weight: 500;
+  letter-spacing: .14em;
+  text-transform: uppercase;
+  color: var(--ink);
+  line-height: 1.6;
+}
+.ts-data-row__lab small {
+  display: block;
+  color: var(--ink-soft);
+  font-weight: 400;
+  letter-spacing: .08em;
+  margin-top: 3px;
+  font-size: var(--t-mono);
+}
+.ts-data-row__num {
+  font-family: var(--disp);
+  font-weight: 400;
+  font-size: var(--t-num);
+  line-height: .95;
+  letter-spacing: -.01em;
+  color: var(--verm);
+  white-space: nowrap;
+  font-variant-numeric: tabular-nums;
+}
+.ts-unit { font-size: .34em; letter-spacing: .05em; vertical-align: baseline; }
+.ts-data-row__ref {
+  font-family: var(--mono);
+  font-size: var(--t-mono);
+  letter-spacing: .08em;
+  color: var(--ink-soft);
+  text-transform: uppercase;
+  line-height: 1.6;
+  text-align: right;
+}
+@media (max-width: 760px) {
+  .ts-data-grid { grid-template-columns: 1fr; }
+  .ts-data-margin { display: none; }
+  .ts-data-row { grid-template-columns: 1fr; padding-left: 0; gap: 6px; }
+  .ts-data-row__ref { text-align: left; }
+}
+.ts-data-note { display: grid; grid-template-columns: clamp(70px, 8vw, 110px) 1fr; }
+.ts-data-note__pad { border-right: 2px solid var(--ink); }
+.ts-data-note p {
+  padding: 20px 0 0 clamp(16px, 2.5vw, 40px);
+  max-width: 62ch;
+  color: var(--ink-soft);
+  font-size: .98rem;
+  margin: 0;
+}
+.ts-data-note p b { color: var(--ink); }
+.ts-src {
+  display: inline-block;
+  margin-top: 14px;
+  font-family: var(--mono);
+  font-size: var(--t-mono);
+  letter-spacing: .1em;
+  text-transform: uppercase;
+  color: var(--ink);
+  background: var(--yellow);
+  padding: 6px 10px 5px;
+  font-weight: 500;
+  line-height: 1.7;
+  text-decoration: none;
+  transition: box-shadow .15s var(--ease);
+}
+.ts-src:hover { box-shadow: 3px 3px 0 var(--ink); }
+@media (max-width: 760px) {
+  .ts-data-note { grid-template-columns: 1fr; }
+  .ts-data-note__pad { display: none; }
+  .ts-data-note p { padding-left: 0; }
+}
+
+/* ============ hoja 04: fichas / accordion ============ */
+.ts-tracks-list {
   display: flex;
   flex-direction: column;
-  gap: 0.5rem;
-  border-top: 1px solid var(--ts-line);
-  padding-top: 1.5rem;
+  gap: clamp(20px, 3vh, 30px);
+  margin-top: 40px;
 }
 
-/* Track items — accordion list. Each item: header (link/button) + detail (collapsible). */
 .ts-track-item {
-  border-bottom: 1px solid var(--ts-line);
-}
-.ts-track-item:first-child {
-  border-top: 1px solid var(--ts-line);
+  position: relative;
+  scroll-margin-top: 96px; /* libra el topline sticky en deep-links y accordion */
 }
 
-/* Track links — highlighter block on the label, arrow/plus indicator at line end.
-   Label highlighted by default (matches the brutalist-editorial reference);
-   sub line in muted off-white sans below for context. Button to toggle accordion. */
+/* marco que se traza: 4 bordes en secuencia, como delineante */
+.ts-frame { position: absolute; inset: 0; pointer-events: none; }
+.ts-frame i { position: absolute; background: var(--ink); display: block; }
+.ts-f-t { top: 0; left: 0; right: 0; height: 2px; }
+.ts-f-r { top: 0; right: 0; bottom: 0; width: 2px; }
+.ts-f-b { bottom: 0; left: 0; right: 0; height: 2px; }
+.ts-f-l { top: 0; left: 0; bottom: 0; width: 2px; }
+.trayectoria-page.ts-js .ts-f-t { transform: scaleX(0); transform-origin: left; transition: transform .32s var(--ease); }
+.trayectoria-page.ts-js .ts-f-r { transform: scaleY(0); transform-origin: top; transition: transform .32s var(--ease) .28s; }
+.trayectoria-page.ts-js .ts-f-b { transform: scaleX(0); transform-origin: right; transition: transform .32s var(--ease) .56s; }
+.trayectoria-page.ts-js .ts-f-l { transform: scaleY(0); transform-origin: bottom; transition: transform .32s var(--ease) .84s; }
+.trayectoria-page .ts-track-item.in .ts-frame i { transform: none; }
+
+/* esquinas vermilion */
+.ts-corner {
+  position: absolute;
+  width: 10px;
+  height: 10px;
+  border: 0 solid var(--verm);
+  z-index: 2;
+}
+.ts-c-tl { top: -5px; left: -5px; border-top-width: 2px; border-left-width: 2px; }
+.ts-c-br { bottom: -5px; right: -5px; border-bottom-width: 2px; border-right-width: 2px; }
+.trayectoria-page.ts-js .ts-corner { opacity: 0; transition: opacity .3s var(--ease) 1.15s; }
+.trayectoria-page .ts-track-item.in .ts-corner { opacity: 1; }
+
+/* cabecera de ficha (boton del accordion) */
 .ts-track-link {
-  color: var(--ts-fg);
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 18px;
+  text-align: left;
   background: transparent;
   border: 0;
-  text-decoration: none;
-  padding: 1.1rem 0;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 1.5rem;
-  width: 100%;
-  text-align: left;
-  cursor: pointer;
+  padding: clamp(16px, 2.4vw, 24px) clamp(16px, 2.4vw, 26px);
   font-family: inherit;
   font-size: inherit;
+  color: var(--ink);
 }
+.trayectoria-page.ts-js .ts-track-link {
+  opacity: 0;
+  transform: translateY(10px);
+  transition: opacity .6s var(--ease) .75s, transform .6s var(--ease) .75s;
+}
+.trayectoria-page .ts-track-item.in .ts-track-link { opacity: 1; transform: none; }
+
 .ts-track-link__main {
   display: flex;
   flex-direction: column;
   align-items: flex-start;
-  gap: 0.55rem;
+  gap: 8px;
+  min-width: 0;
 }
 .ts-track-link__label {
-  font-family: var(--font-display);
-  font-size: clamp(1.2rem, 2vw, 1.8rem);
-  letter-spacing: -0.01em;
-  background: var(--ts-accent);
-  color: var(--ts-ink);
-  padding: 0.18em 0.5em 0.22em;
-  transition: padding 0.25s var(--ts-ease);
+  font-family: var(--disp);
+  font-weight: 400;
+  text-transform: uppercase;
+  font-size: clamp(1.25rem, 2.2vw, 1.9rem);
+  line-height: 1.08;
+  letter-spacing: 0;
 }
 .ts-track-link__sub {
-  font-family: var(--font-body);
-  font-size: 0.85rem;
-  font-weight: 400;
+  font-family: var(--sans);
+  font-size: .88rem;
   line-height: 1.4;
-  color: var(--ts-dim);
-  letter-spacing: 0;
-  padding-left: 0.5em;
+  color: var(--ink-soft);
+}
+.ts-track-link__yrs {
+  color: var(--verm);
+  font-weight: 700;
+  white-space: nowrap;
+  margin-left: auto;
+  flex-shrink: 0;
 }
 .ts-track-link__arrow {
-  color: var(--ts-fg);
-  font-family: var(--font-mono);
-  font-size: 1.6rem;
+  font-family: var(--mono);
+  font-size: 1.5rem;
   line-height: 1;
-  transition: transform 0.35s var(--ts-ease), color 0.25s var(--ts-ease);
+  color: var(--verm);
   flex-shrink: 0;
   display: inline-block;
+  transition: transform .35s var(--ease);
 }
+.ts-track-link:hover .ts-track-link__sub { color: var(--ink); }
 .ts-track-link:hover .ts-track-link__label {
-  padding-right: 0.85em;
+  background-image: linear-gradient(var(--yellow), var(--yellow));
+  background-repeat: no-repeat;
+  background-position: left bottom;
+  background-size: 100% .84em;
 }
-.ts-track-link:hover .ts-track-link__sub {
-  color: var(--ts-fg);
-}
-.ts-track-link:hover .ts-track-link__arrow {
-  color: var(--ts-accent);
-}
+.trayectoria-page .ts-track-item[data-state="open"] .ts-track-link__arrow { transform: rotate(45deg); }
 
-/* Open state: rotate the + into × */
-.ts-track-item[data-state="open"] .ts-track-link__arrow {
-  transform: rotate(45deg);
-  color: var(--ts-accent);
-}
-
-/* DETAIL — collapsible panel using grid-template-rows trick */
+/* panel colapsable (truco grid-template-rows). Sin JS queda abierto. */
 .ts-track-detail {
   display: grid;
-  grid-template-rows: 0fr;
-  transition: grid-template-rows 0.45s var(--ts-ease);
-}
-.ts-track-item[data-state="open"] .ts-track-detail {
   grid-template-rows: 1fr;
+  transition: grid-template-rows .45s var(--ease);
 }
+.trayectoria-page.ts-js .ts-track-detail { grid-template-rows: 0fr; }
+.trayectoria-page .ts-track-item[data-state="open"] .ts-track-detail { grid-template-rows: 1fr; }
 .ts-track-detail__inner {
   overflow: hidden;
   min-height: 0;
-}
-
-.ts-track-item[data-state="open"] > .ts-track-detail > .ts-track-detail__inner {
-  padding: 1rem 0 2.5rem;
-}
-
-/* Detail layout — two-column when content is full, single column on small/pending */
-.ts-track-item:not(.ts-track-item--pending) .ts-track-detail__inner {
   display: grid;
   grid-template-columns: minmax(260px, 320px) 1fr;
-  gap: clamp(1.5rem, 4vw, 3rem);
+  gap: clamp(24px, 4vw, 48px);
   align-items: start;
+  padding: 0 clamp(16px, 2.4vw, 26px);
+}
+.trayectoria-page:not(.ts-js) .ts-track-detail__inner,
+.trayectoria-page .ts-track-item[data-state="open"] .ts-track-detail__inner {
+  padding-top: 6px;
+  padding-bottom: clamp(22px, 3vw, 34px);
 }
 @media (max-width: 800px) {
-  .ts-track-item:not(.ts-track-item--pending) .ts-track-detail__inner {
-    grid-template-columns: 1fr;
-  }
+  .ts-track-detail__inner { grid-template-columns: 1fr; }
 }
 
-/* Sidebar */
-.ts-track-detail__sidebar {
-  display: flex;
-  flex-direction: column;
-  gap: 0.85rem;
-}
+/* lateral de ficha */
+.ts-track-detail__sidebar { display: flex; flex-direction: column; gap: 14px; }
 .ts-track-detail__chip {
-  font-family: var(--font-mono);
-  font-size: 0.68rem;
+  font-family: var(--mono);
+  font-size: var(--t-mono);
   font-weight: 500;
-  letter-spacing: 0.16em;
-  padding: 0.35rem 0.7rem 0.3rem;
-  background: var(--ts-accent);
-  color: var(--ts-ink);
+  letter-spacing: .16em;
+  text-transform: uppercase;
+  background: var(--yellow);
+  color: var(--ink);
+  padding: 5px 9px 4px;
   align-self: flex-start;
 }
 .ts-track-detail__name {
-  font-family: var(--font-display);
-  font-size: clamp(1.6rem, 2.5vw, 2.2rem);
-  line-height: 1;
-  letter-spacing: -0.02em;
-  margin: 0.25rem 0 0;
-  color: var(--ts-fg);
+  font-family: var(--disp);
+  font-weight: 400;
+  text-transform: uppercase;
+  font-size: clamp(1.5rem, 2.5vw, 2.1rem);
+  line-height: 1.04;
+  letter-spacing: 0;
+  margin: 0;
 }
 .ts-track-detail__role {
-  font-family: var(--font-body);
-  font-size: 0.95rem;
+  font-size: .95rem;
   line-height: 1.45;
-  color: var(--ts-dim);
+  color: var(--ink-soft);
   margin: 0;
   max-width: 32ch;
 }
-.ts-track-detail__links {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.5rem 1.25rem;
-  margin: 0.25rem 0 0.5rem;
-}
+.ts-track-detail__links { display: flex; flex-wrap: wrap; gap: 8px 20px; }
 .ts-track-detail__link {
   display: inline-flex;
   align-items: center;
-  gap: 0.45rem;
-  font-family: var(--font-mono);
-  font-size: 0.7rem;
-  letter-spacing: 0.14em;
-  text-transform: uppercase;
-  color: var(--ts-accent);
+  gap: 7px;
+  color: var(--verm);
   text-decoration: none;
-  border-bottom: 1px solid rgba(202, 255, 0, 0.3);
-  padding-bottom: 0.2rem;
+  border-bottom: 1px solid var(--verm);
+  padding-bottom: 3px;
   width: fit-content;
-  transition: color 0.2s var(--ts-ease), border-color 0.2s var(--ts-ease), transform 0.15s var(--ts-ease);
+  font-weight: 700;
+  transition: background-color .2s var(--ease);
 }
-.ts-track-detail__link:hover {
-  color: var(--ts-fg);
-  border-color: var(--ts-fg);
-}
-.ts-track-detail__link:active { transform: scale(0.97); }
+.ts-track-detail__link:hover { background: var(--yellow); border-color: var(--ink); color: var(--ink); }
 
+/* foto real enmarcada como lamina con esquinas vermilion */
 .ts-track-detail__photo {
-  background: linear-gradient(180deg, #1a1c1a, #0e100f);
-  border-radius: 6px;
-  overflow: hidden;
+  position: relative;
+  border: 2px solid var(--ink);
+  background: var(--paper-2);
   aspect-ratio: 1 / 1;
-  margin-top: 0.5rem;
+  margin-top: 6px;
 }
+.ts-track-detail__photo::before,
+.ts-track-detail__photo::after {
+  content: "";
+  position: absolute;
+  width: 12px;
+  height: 12px;
+  border: 0 solid var(--verm);
+  z-index: 2;
+}
+.ts-track-detail__photo::before { top: -7px; left: -7px; border-top-width: 2px; border-left-width: 2px; }
+.ts-track-detail__photo::after { bottom: -7px; right: -7px; border-bottom-width: 2px; border-right-width: 2px; }
 .ts-track-detail__photo img {
   width: 100%;
   height: 100%;
@@ -535,251 +834,272 @@
   display: block;
 }
 
-/* Content side */
-.ts-track-detail__content {
-  display: flex;
-  flex-direction: column;
-  gap: 1.75rem;
-}
-.ts-track-detail__block {
-  display: flex;
-  flex-direction: column;
-  gap: 0.85rem;
+/* contenido de ficha */
+.ts-track-detail__content { display: flex; flex-direction: column; gap: 26px; }
+.ts-track-detail__block { display: flex; flex-direction: column; gap: 10px; }
+/* etiqueta de bloque: chip amarillo (la lee el generador de PDF) */
+.ts-track-detail__block .ts-eyebrow {
+  background: var(--yellow);
+  color: var(--ink);
+  letter-spacing: .16em;
+  font-weight: 500;
+  padding: 5px 9px 4px;
+  width: fit-content;
 }
 .ts-track-detail__block p {
   font-size: 1rem;
   line-height: 1.6;
-  color: var(--ts-fg);
-  max-width: 60ch;
+  max-width: 62ch;
   margin: 0;
 }
+
+/* stats como cajetin */
 .ts-track-detail__stats {
+  border-top: 2px solid var(--ink);
+  border-bottom: 1px solid var(--line-2);
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 2rem;
-  padding: 1.25rem 0;
-  border-top: 1px solid var(--ts-line);
-  border-bottom: 1px solid var(--ts-line);
-  max-width: 420px;
+  max-width: 480px;
 }
 .ts-track-detail__stat {
+  padding: 12px 14px 13px;
+  border-left: 1px solid var(--line-2);
   display: flex;
   flex-direction: column;
-  gap: 0.4rem;
+  gap: 5px;
 }
-.ts-track-detail__stat .mono-sm {
-  font-size: 0.65rem;
-  letter-spacing: 0.15em;
-  color: var(--ts-faint);
-}
+.ts-track-detail__stat:first-child { border-left: 0; }
+.ts-track-detail__stat .mono-sm { color: var(--ink-soft); letter-spacing: .14em; }
 .ts-track-detail__stat-value {
-  font-family: var(--font-body);
-  font-size: 1.25rem;
-  font-weight: 700;
-  line-height: 1.2;
-  letter-spacing: -0.005em;
-  color: var(--ts-fg);
+  font-family: var(--disp);
+  font-weight: 400;
+  text-transform: uppercase;
+  font-size: 1.4rem;
+  line-height: 1.1;
+  letter-spacing: .01em;
   font-variant-numeric: tabular-nums;
 }
 
-/* Skills list — 2-column grid of items with arrow markers */
+/* habilidades: celdas tecnicas */
 .ts-list {
   list-style: none;
   margin: 0;
   padding: 0;
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 0.5rem 1rem;
+  gap: 8px 12px;
 }
 .ts-list li {
-  font-family: var(--font-body);
-  font-size: 0.95rem;
+  font-size: .95rem;
   line-height: 1.4;
-  color: var(--ts-fg);
-  padding: 0.65rem 0.85rem;
-  background: rgba(245, 243, 234, 0.04);
-  border: 1px solid var(--ts-line);
-  border-radius: 4px;
+  padding: 10px 12px;
+  background: var(--paper-2);
+  border: 1px solid var(--line-2);
   display: flex;
   align-items: center;
-  gap: 0.5rem;
+  gap: 9px;
 }
 .ts-list li::before {
-  content: '→';
-  color: var(--ts-accent);
-  font-family: var(--font-mono);
-  font-weight: 500;
+  content: "→";
+  color: var(--verm);
+  font-family: var(--mono);
+  font-weight: 700;
   flex-shrink: 0;
 }
-
-/* Pending state inside accordion */
-.ts-track-item--pending .ts-track-detail__pending {
-  display: flex;
-  flex-direction: column;
-  gap: 1rem;
-  max-width: 56ch;
-  padding: 0.5rem 0;
-}
-.ts-track-detail__pending p {
-  font-size: 1rem;
-  line-height: 1.55;
-  color: var(--ts-dim);
-  margin: 0;
-}
-.ts-track-detail__pending-meta {
-  font-family: var(--font-mono);
-  font-size: 0.75rem !important;
-  letter-spacing: 0.08em;
-  color: var(--ts-faint) !important;
-  margin-top: 0.5rem !important;
-}
-.ts-track-detail__pending-meta a {
-  color: var(--ts-accent);
-  text-decoration: none;
-  border-bottom: 1px solid rgba(202, 255, 0, 0.3);
-  padding-bottom: 0.1em;
-  transition: border-color 0.2s var(--ts-ease), color 0.2s var(--ts-ease);
-}
-.ts-track-detail__pending-meta a:hover {
-  color: var(--ts-fg);
-  border-color: var(--ts-fg);
+@media (max-width: 900px) {
+  .ts-list { grid-template-columns: 1fr; }
+  .ts-track-link__yrs { display: none; }
 }
 
-/* ============================================
-   CLOSING STATEMENT
-   ============================================ */
-.ts-closing {
-  padding: clamp(4rem, 12vh, 9rem) clamp(1.25rem, 6vw, 5rem) clamp(3rem, 8vh, 6rem);
-  max-width: 1400px;
-  margin: 0 auto;
-  display: flex;
-  flex-direction: column;
-  gap: 1.5rem;
-  border-top: 1px solid var(--ts-line);
-}
+/* ============ hoja 05: cierre ============ */
 .ts-closing__statement {
-  font-family: var(--font-body);
-  font-size: clamp(1.4rem, 2.3vw, 2.2rem);
-  line-height: 1.4;
-  font-weight: 500;
-  color: var(--ts-fg);
-  max-width: 32ch;
-  margin: 0;
-  text-wrap: balance;
+  font-family: var(--sans);
+  font-size: clamp(1.35rem, 2.3vw, 2.1rem);
+  line-height: 1.42;
+  font-weight: 700;
+  max-width: 34ch;
+  margin: clamp(28px, 5vh, 46px) 0 clamp(48px, 7vh, 72px);
+}
+.ts-closing__statement em { font-weight: 500; }
+
+/* franja estatica de caminos (sin marquee: cero loops infinitos) */
+.ts-paths-strip {
+  border-top: 1px solid var(--line-2);
+  border-bottom: 1px solid var(--line-2);
+  background: var(--paper-2);
+  position: relative;
+  z-index: 1;
+}
+.ts-paths-strip__in {
+  display: flex;
+  align-items: baseline;
+  gap: 14px 18px;
+  flex-wrap: wrap;
+  padding-top: 16px;
+  padding-bottom: 14px;
+}
+.ts-paths-strip span {
+  font-family: var(--disp);
+  font-weight: 400;
+  text-transform: uppercase;
+  font-size: clamp(1rem, 1.8vw, 1.5rem);
+  letter-spacing: .01em;
+}
+.ts-paths-strip i {
+  font-style: normal;
+  color: var(--verm);
+  font-family: var(--mono);
+  font-weight: 700;
 }
 
-/* ============================================
-   MARQUEE
-   ============================================ */
-.ts-marquee {
-  border-top: 1px solid var(--ts-line);
-  border-bottom: 1px solid var(--ts-line);
-  padding: 1.25rem 0;
-  overflow: hidden;
-  background: var(--ts-bg);
+/* ============ hoja 06: descarga ============ */
+.ts-cta__desc {
+  margin: 26px 0 0;
+  max-width: 52ch;
+  color: var(--ink-soft);
+  font-size: clamp(1rem, 1.2vw, 1.15rem);
 }
-.ts-marquee__track {
+.ts-cta__actions {
+  margin-top: 30px;
   display: flex;
   align-items: center;
-  gap: 1.5rem;
-  white-space: nowrap;
-  font-family: var(--font-display);
-  font-size: clamp(1.4rem, 3vw, 2.5rem);
-  letter-spacing: -0.01em;
-  text-transform: uppercase;
-  color: var(--ts-fg);
-  will-change: transform;
+  gap: 18px;
+  flex-wrap: wrap;
+  padding-bottom: 8px;
 }
-.ts-marquee__star {
-  color: var(--ts-accent);
-  font-family: var(--font-mono);
-  font-size: 0.65em;
+.ts-cta__note { color: var(--ink-soft); line-height: 1.8; }
+
+/* ============ pie ============ */
+.ts-footer {
+  margin-top: clamp(72px, 10vh, 120px);
+  background: var(--ink);
+  color: var(--paper);
+  position: relative;
+  z-index: 1;
+}
+.ts-footer__top {
+  display: flex;
+  justify-content: space-between;
+  gap: 34px;
+  flex-wrap: wrap;
+  padding-top: clamp(36px, 5vh, 56px);
+  padding-bottom: clamp(28px, 4vh, 44px);
+}
+.ts-footer__logo {
+  font-family: var(--disp);
   font-weight: 400;
-  opacity: 0.9;
+  text-transform: uppercase;
+  font-size: clamp(1.8rem, 3vw, 2.6rem);
+  line-height: .96;
+  margin: 0 0 12px;
+  color: var(--paper);
 }
+.ts-footer__tag { color: rgba(241, 236, 223, .65); margin: 0; line-height: 1.7; }
+.ts-footer__links { display: flex; gap: clamp(28px, 5vw, 64px); flex-wrap: wrap; }
+.ts-footer__col { display: flex; flex-direction: column; gap: 9px; }
+.ts-footer__col-title { color: var(--yellow); margin-bottom: 4px; }
+.ts-footer__col a {
+  color: rgba(241, 236, 223, .85);
+  text-decoration: none;
+  font-size: .95rem;
+  width: fit-content;
+  border-bottom: 1px solid transparent;
+  transition: color .2s var(--ease), border-color .2s var(--ease);
+}
+.ts-footer__col a:hover { color: var(--yellow); border-color: var(--yellow); }
+.ts-footer__col a:focus-visible { outline-color: var(--yellow); }
+.ts-footer__bottom {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 14px;
+  flex-wrap: wrap;
+  border-top: 1px solid rgba(241, 236, 223, .22);
+  padding-top: 18px;
+  padding-bottom: 22px;
+}
+.ts-footer__bottom-left { display: flex; gap: 22px; flex-wrap: wrap; }
+.ts-footer__bottom .mono-sm { color: rgba(241, 236, 223, .65); }
+.ts-footer__logos { height: 38px; width: auto; display: block; }
 
 /* ============================================
-   CTA / CLOSING
+   CTA DE INDEX (esta clase se usa en index.html)
+   Alineada a los mismos tokens del sistema.
    ============================================ */
-.ts-cta {
-  padding: clamp(5rem, 14vh, 12rem) clamp(1.25rem, 4vw, 3rem);
-  max-width: 1800px;
+.trayectoria-cta {
+  padding: clamp(72px, 10vh, 120px) clamp(18px, 4.5vw, 64px);
+  max-width: 1240px;
   margin: 0 auto;
-  text-align: center;
-  border-top: 1px solid var(--ts-line);
-}
-
-.ts-cta__inner {
   display: flex;
   flex-direction: column;
-  align-items: center;
-  gap: 1.5rem;
+  align-items: flex-start;
+  gap: 18px;
+  border-top: 2px solid #1B1612;
 }
-
-.ts-cta__title {
-  font-family: var(--font-display);
-  font-size: clamp(2.3rem, 7vw, 6.5rem);
-  line-height: 0.98;
-  letter-spacing: -0.01em;
+.trayectoria-cta__label {
+  font-family: "JetBrains Mono", ui-monospace, monospace;
+  font-size: .72rem;
+  letter-spacing: .16em;
+  text-transform: uppercase;
+  background: #FFE000;
+  color: #1B1612;
+  padding: 5px 9px 4px;
+}
+.trayectoria-cta__title {
+  font-family: "Anton", "Arial Narrow", sans-serif;
+  font-weight: 400;
+  font-size: clamp(1.9rem, 4.4vw, 3.3rem);
+  line-height: 1;
   margin: 0;
   text-transform: uppercase;
-  color: var(--ts-fg);
+  letter-spacing: -.005em;
+  color: #1B1612;
+  max-width: 800px;
 }
-
-.ts-cta__desc {
-  font-size: clamp(1rem, 1.1vw, 1.15rem);
-  line-height: 1.5;
-  color: var(--ts-dim);
+.trayectoria-cta__desc {
+  font-size: clamp(1rem, 1.1vw, 1.1rem);
+  line-height: 1.6;
+  color: #5C564A;
   max-width: 600px;
   margin: 0;
 }
-
-/* ============================================
-   CTA on INDEX PAGE
-   ============================================ */
-.trayectoria-cta {
-  padding: var(--space-2xl) var(--space-md);
-  max-width: 1400px;
-  margin: 0 auto;
-  display: flex;
-  flex-direction: column;
+.trayectoria-cta__btn {
+  margin-top: 8px;
+  background: #FFE000;
+  color: #1B1612;
+  font-family: "Atkinson Hyperlegible", system-ui, sans-serif;
+  font-weight: 700;
+  font-size: .95rem;
+  letter-spacing: .04em;
+  text-transform: uppercase;
+  padding: 15px 24px;
+  border: 2px solid #1B1612;
+  box-shadow: 5px 5px 0 #1B1612;
+  cursor: pointer;
+  text-decoration: none;
+  display: inline-flex;
   align-items: center;
-  gap: var(--space-sm);
-  text-align: center;
-  border-top: 1px solid rgba(255, 255, 255, 0.06);
-  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+  gap: 12px;
+  transition: transform .15s cubic-bezier(.22, 1, .36, 1), box-shadow .15s cubic-bezier(.22, 1, .36, 1);
 }
-.trayectoria-cta__label { font-family: var(--font-mono); font-size: 0.75rem; letter-spacing: 0.15em; color: var(--accent); }
-.trayectoria-cta__title { font-family: var(--font-display); font-size: clamp(2rem, 5vw, 4rem); line-height: 1; margin: 0; text-transform: uppercase; letter-spacing: -0.02em; color: #fff; max-width: 800px; }
-.trayectoria-cta__desc { font-size: clamp(1rem, 1.1vw, 1.1rem); line-height: 1.6; color: rgba(255, 255, 255, 0.65); max-width: 600px; margin: 0; }
-.trayectoria-cta__btn { margin-top: var(--space-sm); background: var(--accent); color: #000; font-family: var(--font-mono); font-size: 0.85rem; letter-spacing: 0.12em; text-transform: uppercase; padding: 1rem 2rem; border: 0; border-radius: 999px; cursor: pointer; text-decoration: none; display: inline-flex; align-items: center; gap: 0.75rem; transition: transform 0.2s cubic-bezier(0.32, 0.72, 0, 1), background-color 0.25s cubic-bezier(0.32, 0.72, 0, 1), box-shadow 0.3s cubic-bezier(0.32, 0.72, 0, 1); will-change: transform; }
-.trayectoria-cta__btn:hover { background: #fff; transform: translateY(-2px); box-shadow: 0 12px 30px rgba(212, 255, 0, 0.18); }
-.trayectoria-cta__btn:active { transform: scale(0.97); }
-.trayectoria-cta__btn-arrow { display: inline-block; transition: transform 0.25s cubic-bezier(0.32, 0.72, 0, 1); }
-.trayectoria-cta__btn:hover .trayectoria-cta__btn-arrow { transform: translateX(4px); }
+.trayectoria-cta__btn:hover { transform: translate(-2px, -2px); box-shadow: 7px 7px 0 #1B1612; }
+.trayectoria-cta__btn:active { transform: translate(2px, 2px); box-shadow: 1px 1px 0 #1B1612; }
+.trayectoria-cta__btn-arrow { display: inline-block; }
 
 /* ============================================
-   RESPONSIVE
-   ============================================ */
-@media (max-width: 900px) {
-  .ts-hero { gap: 2rem; }
-  .ts-list { grid-template-columns: 1fr; }
-}
-
-/* ============================================
-   PDF GUIDE (A4 document, rendered offscreen for html2pdf export)
+   GUIA PDF (documento A4 offscreen para html2canvas/jsPDF)
+   Papel tecnico: valores literales porque html2canvas
+   rasteriza fuera del arbol con tokens.
    ============================================ */
 .guide-doc {
   position: fixed;
   left: -9999px;
   top: 0;
-  width: 794px; /* A4 width at 96dpi */
-  background: #050505;
+  width: 794px; /* ancho A4 a 96dpi */
+  background: #F1ECDF;
 }
-/* During export, put it in NORMAL document flow. html2canvas (the version
-   bundled with html2pdf) measures position:fixed/absolute elements as 0 height,
-   so static flow is required. It renders at the bottom of the body; the opaque
-   pdf-overlay (z-index 9999) covers the viewport so the user never sees it. */
+/* Durante el export pasa a flujo normal: html2canvas mide los elementos
+   position:fixed como altura 0. El pdf-overlay opaco cubre el viewport. */
 .guide-doc.is-exporting {
   position: static;
   left: auto;
@@ -788,18 +1108,18 @@
 
 .guide-page {
   width: 794px;
-  min-height: 1123px; /* A4 floor; grows for long content (contain-fit in PDF) */
+  min-height: 1123px; /* piso A4; crece con contenido largo (contain-fit en PDF) */
   box-sizing: border-box;
-  background: #050505;
-  color: #f5f3ea;
+  background: #F1ECDF;
+  color: #1B1612;
   padding: 48px 54px;
   display: flex;
   flex-direction: column;
   font-family: 'Atkinson Hyperlegible', system-ui, sans-serif;
   position: relative;
+  border: 2px solid #1B1612;
 }
 
-/* Shared marker chips */
 .guide-eyebrow {
   display: inline-block;
   font-family: 'JetBrains Mono', monospace;
@@ -807,32 +1127,27 @@
   font-weight: 500;
   letter-spacing: 0.16em;
   text-transform: uppercase;
-  color: #050505;
-  background: #caff00;
+  color: #1B1612;
+  background: #FFE000;
   padding: 6px 10px 5px;
   width: fit-content;
 }
-/* html2canvas does NOT support box-decoration-break, so a wrapping inline
-   highlight renders one giant rectangle across lines. inline-block +
-   white-space:nowrap keeps each mark on a single line; horizontal-only
-   padding avoids the vertical misalignment html2canvas gives padded inlines. */
+/* html2canvas NO soporta box-decoration-break: inline-block + nowrap mantiene
+   cada marca en una sola linea; padding horizontal evita desalineado vertical. */
 .guide-mark {
   display: inline-block;
   white-space: nowrap;
-  color: #050505;
-  background: #caff00;
+  color: #1B1612;
+  background: #FFE000;
   font-family: 'Spectral', Georgia, serif;
-  font-style: normal;
-  font-weight: 600;
-  /* Generous vertical padding so accents (top) and descenders (bottom) stay
-     fully inside the block. html2canvas renders inline-block text low in its
-     box, so bottom padding is larger than top. */
+  font-style: italic;
+  font-weight: 500;
   padding: 0.14em 0.3em 0.26em;
   line-height: 1;
   vertical-align: baseline;
 }
 
-/* COVER PAGE */
+/* PORTADA */
 .guide-cover { justify-content: space-between; }
 .guide-cover__top {
   display: flex;
@@ -841,16 +1156,18 @@
   font-family: 'JetBrains Mono', monospace;
   font-size: 11px;
   letter-spacing: 0.16em;
-  color: rgba(245, 243, 234, 0.6);
+  color: #5C564A;
   text-transform: uppercase;
 }
 .guide-cover__title {
-  font-family: 'Anton', 'Bebas Neue', sans-serif;
+  font-family: 'Anton', 'Arial Narrow', sans-serif;
+  font-weight: 400;
   font-size: 84px;
   line-height: 0.96;
   letter-spacing: -0.005em;
   text-transform: uppercase;
   margin: 0;
+  color: #1B1612;
 }
 .guide-cover__title .guide-mark {
   font-size: 0.78em;
@@ -860,7 +1177,7 @@
 .guide-cover__lead {
   font-size: 18px;
   line-height: 1.5;
-  color: #f5f3ea;
+  color: #1B1612;
   max-width: 46ch;
   margin: 24px 0 0;
 }
@@ -871,27 +1188,29 @@
   font-family: 'JetBrains Mono', monospace;
   font-size: 12px;
   letter-spacing: 0.08em;
-  color: rgba(245, 243, 234, 0.55);
+  color: #5C564A;
   text-transform: uppercase;
 }
 
-/* EGRESADO PAGE */
+/* PAGINA DE EGRESADO */
 .guide-profile__num {
-  font-family: 'Anton', 'Bebas Neue', sans-serif;
+  font-family: 'Anton', 'Arial Narrow', sans-serif;
+  font-weight: 400;
   font-size: 60px;
   line-height: 0.9;
-  color: #caff00;
+  color: #B23818;
   letter-spacing: -0.03em;
   margin: 0;
 }
 .guide-profile__path {
   display: inline-block;
-  font-family: 'Anton', 'Bebas Neue', sans-serif;
+  font-family: 'Anton', 'Arial Narrow', sans-serif;
+  font-weight: 400;
   font-size: 23px;
   letter-spacing: 0.01em;
   text-transform: uppercase;
-  color: #050505;
-  background: #caff00;
+  color: #1B1612;
+  background: #FFE000;
   padding: 3px 11px 5px;
   width: fit-content;
   margin: 6px 0 20px;
@@ -902,30 +1221,31 @@
   align-items: flex-start;
   margin-bottom: 18px;
 }
-/* Photo as a background-image div: html2canvas honors background-size:cover
-   (it does NOT honor <img> object-fit, which stretched the photo). */
+/* Foto como background-image: html2canvas respeta background-size:cover */
 .guide-profile__photo {
   width: 170px;
   height: 200px;
   flex-shrink: 0;
-  background-color: #1a1c1a;
+  background-color: #E7E1D0;
   background-size: cover;
   background-position: center top;
   background-repeat: no-repeat;
+  border: 2px solid #1B1612;
 }
 .guide-profile__id { flex: 1; }
 .guide-profile__name {
-  font-family: 'Anton', 'Bebas Neue', sans-serif;
+  font-family: 'Anton', 'Arial Narrow', sans-serif;
+  font-weight: 400;
   font-size: 46px;
   line-height: 0.95;
   letter-spacing: -0.01em;
   margin: 0 0 8px;
-  color: #f5f3ea;
+  color: #1B1612;
 }
 .guide-profile__role {
   font-size: 15px;
   line-height: 1.45;
-  color: rgba(245, 243, 234, 0.65);
+  color: #5C564A;
   margin: 0;
 }
 .guide-block { margin-bottom: 15px; }
@@ -936,23 +1256,23 @@
   font-weight: 500;
   letter-spacing: 0.15em;
   text-transform: uppercase;
-  color: #050505;
-  background: #caff00;
+  color: #1B1612;
+  background: #FFE000;
   padding: 4px 8px 3px;
   margin-bottom: 9px;
 }
 .guide-block p {
   font-size: 13.5px;
   line-height: 1.5;
-  color: #f5f3ea;
+  color: #1B1612;
   margin: 0 0 7px;
 }
 .guide-stats {
   display: flex;
   gap: 48px;
   padding: 12px 0;
-  border-top: 1px solid rgba(245, 243, 234, 0.12);
-  border-bottom: 1px solid rgba(245, 243, 234, 0.12);
+  border-top: 2px solid #1B1612;
+  border-bottom: 1px solid rgba(27, 22, 18, 0.34);
   margin-bottom: 15px;
 }
 .guide-stat__label {
@@ -961,13 +1281,13 @@
   font-size: 10px;
   letter-spacing: 0.15em;
   text-transform: uppercase;
-  color: rgba(245, 243, 234, 0.4);
+  color: #5C564A;
   margin-bottom: 6px;
 }
 .guide-stat__value {
   font-size: 18px;
   font-weight: 700;
-  color: #f5f3ea;
+  color: #1B1612;
 }
 .guide-skills {
   list-style: none;
@@ -979,14 +1299,14 @@
 }
 .guide-skills li {
   font-size: 12.5px;
-  color: #f5f3ea;
+  color: #1B1612;
   padding: 6px 9px;
-  background: rgba(245, 243, 234, 0.04);
-  border: 1px solid rgba(245, 243, 234, 0.1);
+  background: #E7E1D0;
+  border: 1px solid rgba(27, 22, 18, 0.34);
 }
 .guide-skills li::before {
   content: '→ ';
-  color: #caff00;
+  color: #B23818;
   font-family: 'JetBrains Mono', monospace;
 }
 .guide-profile__footer {
@@ -996,18 +1316,18 @@
   font-size: 10px;
   letter-spacing: 0.12em;
   text-transform: uppercase;
-  color: rgba(245, 243, 234, 0.4);
+  color: #5C564A;
   display: flex;
   justify-content: space-between;
 }
 
-/* CLOSING PAGE */
+/* PAGINA DE CIERRE */
 .guide-closing { justify-content: center; gap: 28px; }
 .guide-closing__statement {
   font-size: 30px;
   line-height: 1.4;
-  font-weight: 500;
-  color: #f5f3ea;
+  font-weight: 700;
+  color: #1B1612;
   max-width: 30ch;
   margin: 0;
 }
@@ -1015,98 +1335,135 @@
   font-family: 'JetBrains Mono', monospace;
   font-size: 13px;
   letter-spacing: 0.1em;
-  color: rgba(245, 243, 234, 0.6);
+  color: #5C564A;
   text-transform: uppercase;
 }
-.guide-closing__cta a { color: #caff00; text-decoration: none; }
+.guide-closing__cta a { color: #B23818; text-decoration: none; }
 
-/* PDF generating overlay */
+/* Overlay de generacion de PDF (papel, sin animacion infinita) */
 .pdf-overlay {
   position: fixed;
   inset: 0;
   z-index: 9999;
-  background: #050505;
+  background: #F1ECDF;
   display: flex;
+  flex-direction: column;
   align-items: center;
   justify-content: center;
+  gap: 1.75rem;
 }
 .pdf-overlay[hidden] { display: none; }
 .pdf-overlay__box {
   display: flex;
   align-items: center;
   gap: 16px;
-  font-family: var(--font-mono);
+  font-family: "JetBrains Mono", ui-monospace, monospace;
   font-size: 0.85rem;
+  font-weight: 700;
   letter-spacing: 0.16em;
-  color: var(--ts-accent);
+  color: #1B1612;
+  border: 2px solid #1B1612;
+  background: #FFE000;
+  padding: 16px 22px;
+  box-shadow: 5px 5px 0 #1B1612;
+  max-width: min(86vw, 560px);
+  text-align: left;
 }
+/* Marcador estatico (cero animaciones infinitas en el sistema) */
 .pdf-overlay__spinner {
-  width: 22px;
-  height: 22px;
-  border: 2px solid rgba(202, 255, 0, 0.25);
-  border-top-color: var(--ts-accent);
-  border-radius: 50%;
-  animation: pdfspin 0.7s linear infinite;
+  width: 14px;
+  height: 14px;
+  background: #B23818;
+  flex-shrink: 0;
 }
-@keyframes pdfspin { to { transform: rotate(360deg); } }
+.pdf-overlay__cancel {
+  font-family: "JetBrains Mono", ui-monospace, monospace;
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  color: #1B1612;
+  background: #F1ECDF;
+  border: 2px solid #1B1612;
+  padding: 10px 18px;
+  cursor: pointer;
+  transition: background-color 0.2s cubic-bezier(.22, 1, .36, 1);
+}
+.pdf-overlay__cancel:hover { background: #E7E1D0; }
+.pdf-overlay__cancel:focus-visible { outline: 2px solid #B23818; outline-offset: 3px; }
 
 /* ============================================
-   PRINT — force all accordions open and stack cleanly
+   PRINT: hoja en papel, accordions abiertos
    ============================================ */
 @media print {
-  .trayectoria-page, body { background: #fff !important; color: #000 !important; }
-  .nav, .ts-marquee, .ts-btn, .ts-hero__bottom, .ts-cta, .footer { display: none !important; }
+  .trayectoria-page { background: none !important; color: var(--ink) !important; }
+  .trayectoria-page::before { display: none !important; }
 
-  /* Force every track-item to render as open for a complete printed guide */
-  .ts-track-item .ts-track-detail {
-    grid-template-rows: 1fr !important;
-  }
-  .ts-track-item .ts-track-detail__inner {
+  .ts-topline__back,
+  .ts-hero__actions,
+  .ts-cta__actions,
+  .ts-paths-strip,
+  .ts-footer,
+  .pdf-overlay,
+  .guide-doc { display: none !important; }
+
+  /* Todas las fichas abiertas para una guia impresa completa */
+  .trayectoria-page .ts-track-detail,
+  .trayectoria-page.ts-js .ts-track-detail { grid-template-rows: 1fr !important; }
+  .ts-track-detail__inner {
     overflow: visible !important;
-    padding: 1rem 0 2rem !important;
+    padding-top: 6px !important;
+    padding-bottom: 24px !important;
   }
-  .ts-track-item {
-    page-break-inside: avoid;
-  }
+  .ts-track-item { page-break-inside: avoid; break-inside: avoid; }
   .ts-track-link__arrow { display: none !important; }
 
-  /* Black ink for headlines */
-  .ts-hero__title,
-  .ts-statement__title,
-  .ts-tracks-intro__title,
-  .ts-cta__title,
-  .ts-track-detail__name {
-    color: #000 !important;
-  }
-  .ts-track-detail__stat-value { color: #000 !important; }
-  .ts-list li { background: #f4f4f4 !important; border: 1px solid #ddd !important; color: #000 !important; }
+  /* Estados finales sin esperar al observer */
+  .trayectoria-page.ts-js .ts-rv,
+  .trayectoria-page.ts-js .ts-track-link { opacity: 1 !important; transform: none !important; }
+  .trayectoria-page.ts-js .ts-drawx,
+  .trayectoria-page.ts-js .ts-frame i,
+  .trayectoria-page.ts-js .ts-cota__line,
+  .trayectoria-page.ts-js .ts-cota__tick,
+  .trayectoria-page.ts-js .ts-h1 .ts-ln i { transform: none !important; }
+  .trayectoria-page.ts-js .ts-corner,
+  .trayectoria-page.ts-js .ts-cota__lbl { opacity: 1 !important; }
+  .trayectoria-page.ts-js .ts-stamp { opacity: 1 !important; transform: rotate(-6deg) !important; }
+  .trayectoria-page.ts-js .ts-hl { background-size: 100% .84em !important; }
 
-  /* Yellow highlights stay yellow on print for brand consistency */
+  /* Marcas amarillas, cotas vermilion y chips de proceso se imprimen */
   .trayectoria-page em,
-  .ts-eyebrow,
-  .ts-track-link__label,
-  .ts-track-detail__chip {
-    background: #caff00 !important;
-    color: #000 !important;
+  .trayectoria-page .ts-hl,
+  .ts-sec-no,
+  .ts-src,
+  .ts-topline__chip,
+  .ts-ctrlbar__chip,
+  .ts-track-detail__chip,
+  .ts-track-detail__block .ts-eyebrow {
     -webkit-print-color-adjust: exact;
     print-color-adjust: exact;
   }
 }
 
 /* ============================================
-   REDUCED MOTION
+   REDUCED MOTION: todo en estado final
    ============================================ */
 @media (prefers-reduced-motion: reduce) {
   .trayectoria-page *,
   .trayectoria-page *::before,
   .trayectoria-page *::after {
-    animation-duration: 0.01ms !important;
-    animation-iteration-count: 1 !important;
-    transition-duration: 0.15s !important;
-    scroll-behavior: auto !important;
+    animation: none !important;
+    transition: none !important;
   }
-  .trayectoria-page .ts-marquee__track { animation: none !important; }
-  .trayectoria-page .line-inner,
-  .trayectoria-page .word-inner { transform: none !important; opacity: 1 !important; }
-  .trayectoria-page .ts-eyebrow .dot { animation: none !important; }
+  .trayectoria-page html, .trayectoria-page { scroll-behavior: auto !important; }
+  .trayectoria-page.ts-js .ts-rv,
+  .trayectoria-page.ts-js .ts-track-link { opacity: 1 !important; transform: none !important; }
+  .trayectoria-page.ts-js .ts-stamp { opacity: 1 !important; transform: rotate(-6deg) !important; }
+  .trayectoria-page.ts-js .ts-drawx { transform: scaleX(1) !important; }
+  .trayectoria-page.ts-js .ts-h1 .ts-ln i { transform: none !important; }
+  .trayectoria-page.ts-js .ts-hl { background-size: 100% .84em !important; }
+  .trayectoria-page.ts-js .ts-frame i,
+  .trayectoria-page.ts-js .ts-cota__line,
+  .trayectoria-page.ts-js .ts-cota__tick { transform: none !important; }
+  .trayectoria-page.ts-js .ts-corner,
+  .trayectoria-page.ts-js .ts-cota__lbl { opacity: 1 !important; }
 }

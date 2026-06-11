@@ -1,20 +1,58 @@
 // ============================================
-// TRAYECTORIA — GSAP EDITORIAL
+// TRAYECTORIA · MESA DE REVISIÓN
 // ============================================
-
-gsap.registerPlugin(ScrollTrigger);
+// El accordion y el generador de PDF se inicializan SIEMPRE.
+// Motion: un solo IntersectionObserver (contrato DESIGN.md) que reparte .in
+// y dispara contadores; las coreografias viven en CSS. Sin GSAP ni
+// ScrollTrigger: menos dependencias y cero animaciones infinitas.
 
 const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
 // ---- DOWNLOAD PDF GUIDE ----
 // Builds a branded A4 document from the live track content and exports it as a
 // PDF file that downloads immediately (no browser print dialog).
+// html2canvas + jsPDF (~600KB) are NOT loaded with the page: they are injected
+// on the first click so they never block initial load.
 (function initPdfGuide() {
   const buttons = document.querySelectorAll('#downloadPdfBtn, #downloadPdfBtn2');
   if (!buttons.length) return;
 
   const overlay = document.getElementById('pdfOverlay');
   const guideDoc = document.getElementById('guideDoc');
+  const overlayText = overlay.querySelector('.pdf-overlay__text');
+  const overlaySpinner = overlay.querySelector('.pdf-overlay__spinner');
+  const cancelBtn = document.getElementById('pdfCancelBtn');
+
+  // Increments on every export/cancel; an in-flight export aborts silently
+  // when its token goes stale.
+  let exportToken = 0;
+  let libsPromise = null;
+
+  function loadScript(src) {
+    return new Promise((resolve, reject) => {
+      const s = document.createElement('script');
+      s.src = src;
+      s.onload = resolve;
+      s.onerror = () => reject(new Error('No se pudo cargar ' + src));
+      document.head.appendChild(s);
+    });
+  }
+
+  // Lazy-load html2canvas + jsPDF on first use; cached after the first success,
+  // retryable after a failure.
+  function loadPdfLibs() {
+    if (typeof html2canvas !== 'undefined' && window.jspdf) return Promise.resolve();
+    if (!libsPromise) {
+      libsPromise = Promise.all([
+        loadScript('https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js'),
+        loadScript('https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js')
+      ]).catch(err => {
+        libsPromise = null;
+        throw err;
+      });
+    }
+    return libsPromise;
+  }
 
   function esc(str) {
     return (str || '').replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
@@ -54,20 +92,6 @@ const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)
   }
 
   function buildProfilePage(d) {
-    const blocksHtml = d.blocks.map(b => {
-      if (b.skills.length) {
-        return `<div class="guide-block">
-          <span class="guide-block__label">${esc(b.label)}</span>
-          <ul class="guide-skills">${b.skills.map(s => `<li>${esc(s)}</li>`).join('')}</ul>
-        </div>`;
-      }
-      const paras = b.paras.map(p => `<p>${convertEm(p)}</p>`).join('');
-      return `<div class="guide-block">
-        <span class="guide-block__label">${esc(b.label)}</span>
-        ${paras}
-      </div>`;
-    }).join('');
-
     const statsHtml = d.stats.length ? `<div class="guide-stats">${d.stats.map(s => `
       <div class="guide-stat">
         <span class="guide-stat__label">${esc(s.label)}</span>
@@ -111,7 +135,7 @@ const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)
     const cover = `<section class="guide-page guide-cover">
       <div class="guide-cover__top">
         <span>Guía para padres / alumnos / dirección</span>
-        <span>[ 2026 — Edición 01 ]</span>
+        <span>[ 2026 · Edición 01 ]</span>
       </div>
       <div>
         <h1 class="guide-cover__title">Trayectoria profesional del <span class="guide-mark">LDG</span>.</h1>
@@ -162,32 +186,67 @@ const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)
     }));
   }
 
-  function showOverlayMessage(msg) {
-    const textEl = overlay.querySelector('.pdf-overlay__text');
-    const spinner = overlay.querySelector('.pdf-overlay__spinner');
-    if (textEl) textEl.textContent = msg;
-    if (spinner) spinner.style.display = 'none';
+  function setOverlayText(msg) {
+    if (overlayText) overlayText.textContent = msg;
+  }
+
+  function resetOverlay() {
+    overlay.hidden = true;
+    if (overlayText) overlayText.textContent = 'GENERANDO GUÍA PDF…';
+    if (overlaySpinner) overlaySpinner.style.display = '';
+  }
+
+  // Error messages persist until the user dismisses them (CANCELAR);
+  // only non-error messages auto-dismiss after 3.5s.
+  function showOverlayMessage(msg, isError) {
+    setOverlayText(msg);
+    if (overlaySpinner) overlaySpinner.style.display = 'none';
     overlay.hidden = false;
-    window.setTimeout(() => {
-      overlay.hidden = true;
-      if (textEl) textEl.textContent = 'GENERANDO GUÍA PDF…';
-      if (spinner) spinner.style.display = '';
-    }, 3500);
+    if (!isError) {
+      window.setTimeout(resetOverlay, 3500);
+    }
+  }
+
+  function cleanupExport() {
+    guideDoc.classList.remove('is-exporting');
+    guideDoc.innerHTML = '';
+  }
+
+  if (cancelBtn) {
+    cancelBtn.addEventListener('click', () => {
+      exportToken++; // any export in flight becomes stale and aborts
+      cleanupExport();
+      resetOverlay();
+    });
   }
 
   async function downloadPdf() {
-    // No window.print() fallback anywhere — the print dialog must never open.
-    if (typeof html2canvas === 'undefined' || !window.jspdf) {
-      showOverlayMessage('NO SE PUDO CARGAR EL GENERADOR DE PDF. REVISA TU CONEXIÓN.');
-      return;
-    }
+    const token = ++exportToken;
     overlay.hidden = false;
+
+    // No window.print() fallback anywhere; the print dialog must never open
+    // from this flow (the IMPRIMIR button is the explicit print path).
+    if (typeof html2canvas === 'undefined' || !window.jspdf) {
+      setOverlayText('CARGANDO GENERADOR…');
+      try {
+        await loadPdfLibs();
+      } catch (err) {
+        console.error('PDF libs failed to load', err);
+        if (token !== exportToken) return;
+        showOverlayMessage('NO SE PUDO CARGAR EL GENERADOR DE PDF. REVISA TU CONEXIÓN.', true);
+        return;
+      }
+      if (token !== exportToken) return;
+      setOverlayText('GENERANDO GUÍA PDF…');
+    }
+
     window.scrollTo(0, 0);
     buildGuide();
     guideDoc.classList.add('is-exporting');
 
     await inlinePhotos();
     await new Promise(r => requestAnimationFrame(() => requestAnimationFrame(r)));
+    if (token !== exportToken) return; // cancelled while preparing
 
     try {
       const { jsPDF } = window.jspdf;
@@ -197,13 +256,14 @@ const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)
       const pageAspect = A4_W / A4_H;
 
       for (let i = 0; i < pages.length; i++) {
+        if (token !== exportToken) return; // cancelled mid-generation
         // Capture each page at its NATURAL height (no fixed height clip) so long
         // profiles are never cut off.
         const el = pages[i];
         const naturalH = el.scrollHeight;
         const canvas = await html2canvas(el, {
           scale: 2,
-          backgroundColor: '#050505',
+          backgroundColor: '#F1ECDF',
           useCORS: true,
           logging: false,
           width: 794,
@@ -211,11 +271,12 @@ const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)
           windowWidth: 794,
           windowHeight: naturalH
         });
+        if (token !== exportToken) return;
         const imgData = canvas.toDataURL('image/jpeg', 0.92);
         if (i > 0) pdf.addPage();
 
-        // Dark page background so contain-fit margins blend with the design
-        pdf.setFillColor(5, 5, 5);
+        // Fondo papel para que los margenes del contain-fit se fundan con la hoja
+        pdf.setFillColor(241, 236, 223);
         pdf.rect(0, 0, A4_W, A4_H, 'F');
 
         // Contain-fit: scale the page image to fit fully inside A4, centered
@@ -228,139 +289,35 @@ const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)
         pdf.addImage(imgData, 'JPEG', x, y, w, h);
       }
 
+      if (token !== exportToken) return;
       pdf.save('Trayectoria-Profesional-LDG.pdf');
-      guideDoc.classList.remove('is-exporting');
-      guideDoc.innerHTML = '';
-      overlay.hidden = true;
+      cleanupExport();
+      resetOverlay();
     } catch (err) {
+      // Technical detail goes to the console only; the UI shows a clear message
       console.error('PDF export failed', err);
-      guideDoc.classList.remove('is-exporting');
-      guideDoc.innerHTML = '';
-      const detail = (err && (err.message || err.name)) ? String(err.message || err.name) : 'error desconocido';
-      showOverlayMessage('PDF ERROR: ' + detail.slice(0, 120));
+      if (token !== exportToken) return; // cancelled: the cancel handler already cleaned up
+      cleanupExport();
+      showOverlayMessage('NO SE PUDO GENERAR EL PDF. INTENTA DE NUEVO O USA EL BOTÓN IMPRIMIR.', true);
     }
   }
 
   buttons.forEach(btn => btn.addEventListener('click', downloadPdf));
 })();
 
-// ---- CUSTOM CURSOR — disabled on trayectoria.html ----
-// Per design-taste-frontend rule "NO Custom Mouse Cursors".
-// The shared cursor element is hidden via CSS scoped to .trayectoria-page.
-// We skip JS init entirely so no listeners are wired up here.
-
-// ---- HELPERS ----
-function setReveal(selector, options = {}) {
-  const els = document.querySelectorAll(selector);
-  els.forEach(el => {
-    const inners = el.querySelectorAll('.line-inner, .word-inner');
-    if (inners.length === 0) return;
-
-    if (prefersReducedMotion) {
-      gsap.set(inners, { yPercent: 0, opacity: 1 });
-      return;
-    }
-
-    gsap.set(inners, { yPercent: 110, opacity: 0 });
-
-    ScrollTrigger.create({
-      trigger: el,
-      start: options.start || 'top 85%',
-      onEnter: () => {
-        gsap.to(inners, {
-          yPercent: 0,
-          opacity: 1,
-          duration: options.duration || 0.65,
-          stagger: options.stagger || 0.04,
-          ease: options.ease || 'expo.out'
-        });
-      },
-      once: true
-    });
+// ---- PRINT BUTTONS ----
+// window.print() uses the @media print stylesheet in trayectoria.css
+// (accordions abiertos, hoja en papel).
+(function initPrintButtons() {
+  document.querySelectorAll('#printBtn, #printBtn2').forEach(btn => {
+    btn.addEventListener('click', () => window.print());
   });
-}
-
-// ---- HERO ENTRANCE ----
-function runHeroIntro() {
-  if (prefersReducedMotion) {
-    gsap.set('.ts-hero__top, .ts-hero__bottom', { opacity: 1, y: 0 });
-    gsap.set('.ts-hero__title .ts-line__inner', { yPercent: 0 });
-    gsap.set('.ts-hero__lead .word-inner', { yPercent: 0, opacity: 1 });
-    return;
-  }
-
-  gsap.set('.ts-hero__top, .ts-hero__bottom', { opacity: 0, y: 12 });
-  gsap.set('.ts-hero__title .ts-line__inner', { yPercent: 110 });
-  gsap.set('.ts-hero__lead .word-inner', { yPercent: 110, opacity: 0 });
-
-  const tl = gsap.timeline({ defaults: { ease: 'expo.out' } });
-
-  tl.to('.ts-hero__top', { opacity: 1, y: 0, duration: 0.6, ease: 'power2.out' });
-
-  tl.to('.ts-hero__title .ts-line__inner', {
-    yPercent: 0,
-    duration: 1.0,
-    stagger: 0.09,
-    ease: 'expo.out'
-  }, '-=0.3');
-
-  tl.to('.ts-hero__lead .word-inner', {
-    yPercent: 0,
-    opacity: 1,
-    duration: 0.6,
-    stagger: 0.03,
-    ease: 'expo.out'
-  }, '-=0.55');
-
-  tl.to('.ts-hero__bottom', {
-    opacity: 1, y: 0, duration: 0.6, ease: 'power3.out'
-  }, '-=0.45');
-}
-
-if (document.readyState === 'complete' || document.readyState === 'interactive') {
-  runHeroIntro();
-} else {
-  document.addEventListener('DOMContentLoaded', runHeroIntro);
-}
-
-// ---- STATEMENT ----
-setReveal('.ts-statement__title', { stagger: 0.05, duration: 0.7 });
-if (prefersReducedMotion) {
-  gsap.set('.ts-statement__sub', { opacity: 1, y: 0 });
-} else {
-  gsap.set('.ts-statement__sub', { opacity: 0, y: 20 });
-  ScrollTrigger.create({
-    trigger: '.ts-statement',
-    start: 'top 80%',
-    once: true,
-    onEnter: () => {
-      gsap.to('.ts-statement__sub', {
-        opacity: 1, y: 0, duration: 0.65, delay: 0.3, ease: 'power3.out'
-      });
-    }
-  });
-}
-
-// ---- TRACKS INTRO ----
-setReveal('.ts-tracks-intro__title', { stagger: 0.08, duration: 0.75 });
-if (prefersReducedMotion) {
-  gsap.set('.ts-track-link', { opacity: 1, y: 0 });
-} else {
-  gsap.set('.ts-track-link', { opacity: 0, y: 12 });
-  ScrollTrigger.create({
-    trigger: '.ts-tracks-intro__list',
-    start: 'top 85%',
-    once: true,
-    onEnter: () => {
-      gsap.to('.ts-track-link', {
-        opacity: 1, y: 0, duration: 0.5, stagger: 0.07, ease: 'expo.out', delay: 0.15
-      });
-    }
-  });
-}
+})();
 
 // ---- ACCORDION (track items expand inline) ----
 // Single-open behavior: opening one closes any other. Click again to close.
+// Each item has a stable id (e.g. #freelance) so profiles can be deep-linked
+// from presentations; the hash stays in sync via history.replaceState.
 (function initTrackAccordion() {
   const items = document.querySelectorAll('.ts-track-item');
   if (!items.length) return;
@@ -369,6 +326,11 @@ if (prefersReducedMotion) {
     item.dataset.state = open ? 'open' : 'closed';
     const btn = item.querySelector('.ts-track-link');
     if (btn) btn.setAttribute('aria-expanded', open ? 'true' : 'false');
+  }
+
+  function scrollToItem(item) {
+    // .ts-track-item has scroll-margin-top so the header clears the sticky topline
+    item.scrollIntoView({ behavior: prefersReducedMotion ? 'auto' : 'smooth', block: 'start' });
   }
 
   items.forEach(item => {
@@ -381,62 +343,79 @@ if (prefersReducedMotion) {
       // Open this if it was closed
       if (!isOpen) {
         setOpen(item, true);
+        if (item.id) history.replaceState(null, '', '#' + item.id);
         // Smooth scroll the header into view after the panel starts opening
-        window.setTimeout(() => {
-          btn.scrollIntoView({ behavior: prefersReducedMotion ? 'auto' : 'smooth', block: 'start' });
-        }, 80);
+        window.setTimeout(() => scrollToItem(item), 80);
+      } else if (item.id && window.location.hash === '#' + item.id) {
+        history.replaceState(null, '', window.location.pathname + window.location.search);
       }
-      if (window.ScrollTrigger) window.ScrollTrigger.refresh();
     });
   });
+
+  // Deep link: arriving with #id opens that track and scrolls to it
+  const hashId = decodeURIComponent(window.location.hash.slice(1));
+  const target = hashId ? document.getElementById(hashId) : null;
+  if (target && target.classList.contains('ts-track-item')) {
+    setOpen(target, true);
+    window.setTimeout(() => scrollToItem(target), 150);
+  }
 })();
 
-// ---- MARQUEE INFINITE ----
-const marqueeTrack = document.querySelector('.ts-marquee__track');
-if (marqueeTrack && !prefersReducedMotion) {
-  gsap.to(marqueeTrack, {
-    xPercent: -50,
-    duration: 40,
-    ease: 'none',
-    repeat: -1
-  });
-}
+// ---- MOTION: IO unico + contadores (patron DESIGN.md) ----
+// Un solo IntersectionObserver agrega .in (las coreografias viven en CSS con
+// delays) y dispara los contadores data-count; unobserve tras entrar.
+(function initMotion() {
+  function fmt(v, dec, group) {
+    if (dec) return v.toFixed(dec);
+    const n = Math.round(v);
+    return group ? n.toLocaleString('en-US') : String(n);
+  }
 
-// ---- CTA ----
-setReveal('.ts-cta__title', { stagger: 0.08, duration: 0.75 });
-if (prefersReducedMotion) {
-  gsap.set('.ts-cta__desc, .ts-cta .ts-btn', { opacity: 1, y: 0 });
-} else {
-  gsap.set('.ts-cta__desc, .ts-cta .ts-btn', { opacity: 0, y: 20 });
-  ScrollTrigger.create({
-    trigger: '.ts-cta',
-    start: 'top 80%',
-    once: true,
-    onEnter: () => {
-      gsap.to('.ts-cta__desc', {
-        opacity: 1, y: 0, duration: 0.6, delay: 0.35, ease: 'power3.out'
-      });
-      gsap.to('.ts-cta .ts-btn', {
-        opacity: 1, y: 0, duration: 0.55, delay: 0.5, ease: 'power3.out'
-      });
+  function runCounter(el) {
+    const target = parseFloat(el.getAttribute('data-count'));
+    const dec = parseInt(el.getAttribute('data-dec') || '0', 10);
+    const group = el.getAttribute('data-group') === '1';
+    if (Number.isNaN(target)) return;
+    if (prefersReducedMotion) { el.textContent = fmt(target, dec, group); return; }
+    const dur = 1400;
+    let t0 = null;
+    function step(ts) {
+      if (!t0) t0 = ts;
+      const p = Math.min((ts - t0) / dur, 1);
+      const e = 1 - Math.pow(1 - p, 5); // easeOutQuint
+      el.textContent = fmt(target * e, dec, group);
+      if (p < 1) requestAnimationFrame(step);
+      else el.textContent = fmt(target, dec, group);
     }
-  });
-}
+    requestAnimationFrame(step);
+  }
 
-// ---- BUTTON MAGNETIC HOVER ----
-if (!prefersReducedMotion) {
-  document.querySelectorAll('.ts-btn').forEach(btn => {
-    btn.addEventListener('mousemove', (e) => {
-      const rect = btn.getBoundingClientRect();
-      const x = e.clientX - rect.left - rect.width / 2;
-      const y = e.clientY - rect.top - rect.height / 2;
-      gsap.to(btn, {
-        x: x * 0.3, y: y * 0.3, duration: 0.4, ease: 'power2.out'
+  const targets = document.querySelectorAll('[data-io]');
+  if (!targets.length) return;
+
+  // Reduced motion (o entorno sin IntersectionObserver): todo en estado
+  // final, contadores en su valor exacto.
+  if (prefersReducedMotion || !('IntersectionObserver' in window)) {
+    targets.forEach(el => {
+      el.classList.add('in');
+      el.querySelectorAll('[data-count]').forEach(el2 => {
+        const v = parseFloat(el2.getAttribute('data-count'));
+        const dec = parseInt(el2.getAttribute('data-dec') || '0', 10);
+        const group = el2.getAttribute('data-group') === '1';
+        if (!Number.isNaN(v)) el2.textContent = fmt(v, dec, group);
       });
     });
-    btn.addEventListener('mouseleave', () => {
-      gsap.to(btn, { x: 0, y: 0, duration: 0.6, ease: 'elastic.out(1, 0.4)' });
-    });
-  });
-}
+    return;
+  }
 
+  const io = new IntersectionObserver(entries => {
+    entries.forEach(en => {
+      if (!en.isIntersecting) return;
+      en.target.classList.add('in');
+      en.target.querySelectorAll('[data-count]').forEach(runCounter);
+      io.unobserve(en.target);
+    });
+  }, { threshold: 0.25, rootMargin: '0px 0px -8% 0px' });
+
+  targets.forEach(el => io.observe(el));
+})();

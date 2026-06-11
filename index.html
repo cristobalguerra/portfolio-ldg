@@ -3,15 +3,16 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>PORTFOLIO LDG — Repositorio de Tesis</title>
+  <title>Portfolio LDG · UDEM | Carpeta de revisión del programa</title>
+  <meta name="description" content="Carpeta de revisión de la Licenciatura en Diseño Gráfico de la Universidad de Monterrey: proyectos finales con ficha técnica, datos de empleabilidad con fuente oficial y reconocimiento internacional verificable.">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;1,9..40,300;1,9..40,400&family=JetBrains+Mono:wght@300;400;500&family=Playfair+Display:wght@700;900&family=Space+Grotesk:wght@700&family=Syne:wght@700;800&family=Clash+Display:wght@600;700&family=Outfit:wght@700;800&family=Unbounded:wght@700&family=Righteous&family=Protest+Guerrilla&family=Bungee&family=Rubik+Mono+One&family=Anton&family=Archivo+Black&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Anton&family=Atkinson+Hyperlegible:ital,wght@0,400;0,700;1,400&family=JetBrains+Mono:wght@400;500;700&family=Spectral:ital@1&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="styles.css">
-  <link rel="stylesheet" href="trayectoria.css">
   <!-- Firebase SDK -->
   <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-database-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-auth-compat.js"></script>
   <script>
     const firebaseConfig = {
       apiKey: "AIzaSyBfWefsqHW90aqHP9Mz6s8w91eIar_x6j8",
@@ -28,23 +29,24 @@
 </head>
 <body>
 
-  <!-- CUSTOM CURSOR -->
-  <div class="cursor" id="cursor">
-    <div class="cursor__dot"></div>
-    <div class="cursor__circle"></div>
-  </div>
-
-  <!-- NAVIGATION -->
-  <nav class="nav" id="nav">
-    <button class="nav__burger" id="navBurger" aria-label="Menu">
-      <span></span><span></span><span></span><span></span>
-    </button>
-    <a href="#hero" class="nav__logo">PORTFOLIO / LDG</a>
-    <button class="nav__pef-btn" id="pefBtn" style="display:none;" aria-hidden="true">PEF TALKS</button>
-    <div class="nav__side-label">
-      <span>REPOSITORIO DE TESIS</span>
+  <!-- TOPLINE · rótulo de documento + navegación -->
+  <header class="topline" id="nav">
+    <div class="wrap">
+      <a href="#hero" class="topline__brand"><b>LDG <span class="chip">UDEM</span></b></a>
+      <nav class="topline__nav" aria-label="Navegación principal">
+        <a href="#datos">Datos</a>
+        <a href="#gallery">Proyectos</a>
+        <a href="#awards">Reconocimiento</a>
+        <a href="trayectoria.html">Trayectoria</a>
+        <a href="pef.html">Guía PEF</a>
+      </nav>
+      <span class="mono topline__doc">DOC LDG-HOME · CARPETA DE REVISIÓN DEL PROGRAMA</span>
+      <button class="nav__pef-btn" id="pefBtn" style="display:none;" aria-hidden="true">PEF TALKS</button>
+      <button class="nav__burger" id="navBurger" aria-label="Menú" aria-expanded="false">
+        <span></span><span></span><span></span>
+      </button>
     </div>
-  </nav>
+  </header>
 
   <!-- PEF TALKS ACCESS GATE -->
   <div class="pef-gate" id="pefGate">
@@ -125,11 +127,15 @@
       <button class="pef-gate__close" id="pefAdminGateClose">&times;</button>
       <div class="pef-gate__content">
         <span class="mono-sm">ACCESO ADMINISTRADOR</span>
-        <h2 class="pef-gate__title" style="font-size: clamp(2rem, 5vw, 3.5rem);">REGISTRAR PEF</h2>
-        <p class="pef-gate__desc">Ingresa la contraseña de administrador para dar de alta un nuevo proyecto PEF.</p>
+        <h2 class="pef-gate__title" style="font-size: clamp(2rem, 5vw, 3.5rem);">ADMIN PEF</h2>
+        <p class="pef-gate__desc">Inicia sesión con tu cuenta de administrador para continuar.</p>
         <form class="pef-gate__form" id="pefAdminForm">
           <div class="pef-gate__input-wrap">
-            <input type="password" class="pef-gate__input" id="pefAdminPass" placeholder="Contraseña" required>
+            <input type="email" class="pef-gate__input" id="pefAdminEmail" placeholder="Correo de administrador" autocomplete="username" required>
+            <div class="pef-gate__input-line"></div>
+          </div>
+          <div class="pef-gate__input-wrap">
+            <input type="password" class="pef-gate__input" id="pefAdminPass" placeholder="Contraseña" autocomplete="current-password" required>
             <div class="pef-gate__input-line"></div>
           </div>
           <span class="pef-gate__error" id="pefAdminError"></span>
@@ -242,180 +248,189 @@
     </div>
   </div>
 
-  <!-- FULLSCREEN MENU -->
+  <!-- MENÚ MÓVIL (hoja completa) -->
   <div class="menu" id="menu">
     <div class="menu__inner">
       <div class="menu__links">
         <a href="#hero" class="menu__link" data-index="01">INICIO</a>
-        <a href="#about" class="menu__link" data-index="02">ACERCA</a>
+        <a href="#datos" class="menu__link" data-index="02">DATOS</a>
         <a href="#gallery" class="menu__link" data-index="03">PROYECTOS</a>
-        <a href="#awards" class="menu__link" data-index="04">AWARDS</a>
+        <a href="#awards" class="menu__link" data-index="04">RECONOCIMIENTO</a>
         <a href="trayectoria.html" class="menu__link" data-index="05">TRAYECTORIA</a>
         <a href="pef.html" class="menu__link" data-index="06">GUÍA PEF</a>
-        <a href="#" class="menu__link" data-index="07" id="menuPefLink" style="display:none;" aria-hidden="true">PEF TALKS</a>
-        <a href="#footer" class="menu__link" data-index="08">CONTACTO</a>
+        <a href="#footer" class="menu__link" data-index="07">CONTACTO</a>
+        <a href="#" class="menu__link" data-index="08" id="menuPefLink" style="display:none;" aria-hidden="true">PEF TALKS</a>
       </div>
       <div class="menu__info">
         <p class="mono-sm">LICENCIATURA EN DISEÑO GRÁFICO</p>
-        <p class="mono-sm">REPOSITORIO ACADÉMICO DE TESIS</p>
+        <p class="mono-sm">CARPETA DE REVISIÓN DEL PROGRAMA</p>
         <p class="mono-sm">&copy; 2026</p>
       </div>
     </div>
   </div>
 
-  <!-- HERO SECTION -->
-  <section class="hero" id="hero">
-    <div class="hero__content">
-      <div class="hero__flip-phrase">
-        <span class="hero__flip-static">Diseño enfocado en</span>
-        <span class="hero__flip-word" id="flipWord">marcas</span>
+  <!-- HOJA 01 · PORTADA DE LÁMINA -->
+  <div class="sheet" id="hero">
+    <div class="sheet-in">
+      <div class="ruler" aria-hidden="true">
+        <span class="ink c"></span><span class="ink m"></span><span class="ink y"></span><span class="ink k"></span>
+        <svg class="reg" viewBox="0 0 14 14" focusable="false">
+          <circle cx="7" cy="7" r="4.4" fill="none" stroke="currentColor" stroke-width="1.2"/>
+          <path d="M7 .5v13M.5 7h13" fill="none" stroke="currentColor" stroke-width="1.2"/>
+        </svg>
+        <span class="leg">Formato 74×120 cm · 300 dpi<span class="leg-x"> · CMYK</span></span>
       </div>
-      <div class="hero__title-wrap">
-        <h1 class="hero__title">
-          <span class="hero__line hero__line--cycling" data-delay="0" id="heroPortfolio">PORTFOLIO</span>
+
+      <div class="hero-body" data-io>
+        <p class="eyebrow">Lámina 01 · Licenciatura en Diseño Gráfico · UDEM</p>
+        <h1>
+          <span class="ln"><i>Tesis de</i></span>
+          <span class="ln"><i><span class="hl">Diseño Gráfico</span></i></span>
         </h1>
-        <div class="hero__video-wrap">
-          <iframe src="https://player.vimeo.com/video/1160882204?background=1&autoplay=1&loop=1&muted=1&badge=0&autopause=0&player_id=0&app_id=58479" frameborder="0" allow="autoplay; fullscreen; picture-in-picture" referrerpolicy="strict-origin-when-cross-origin" class="hero__video" title="Hero Video"></iframe>
+
+        <div class="cota" data-io aria-hidden="true">
+          <i class="c-line"></i><i class="c-tick l"></i><i class="c-tick r"></i>
+          <span class="lbl">Formato 74×120 cm · 300 dpi</span>
         </div>
-        <h1 class="hero__title hero__title--bottom">
-          <span class="hero__line hero__line--outline" data-delay="1">LDG</span>
-        </h1>
-        <span class="hero__video-caption">BioDiseño x Sofía Porto | PEFsession OT25</span>
+
+        <p class="lede">Esta es la carpeta de revisión del programa: <b>proyectos finales con ficha técnica, datos de empleabilidad con fuente oficial y reconocimiento internacional verificable.</b> Sin adjetivos que no se puedan medir.</p>
       </div>
-      <div class="hero__subtitle">
-        <span class="hero__dash">&mdash;</span>
-        <span>REPOSITORIO DE TESIS DE LA<br>LICENCIATURA DE DISEÑO GRÁFICO<br>DE LA UNIVERSIDAD DE MONTERREY</span>
+
+      <div class="cajetin">
+        <span class="rev-stamp stamp" data-io style="transition-delay:.5s">VoBo · 2026</span>
+        <div class="cell"><span class="k">Proyecto</span><span class="v">Portfolio institucional · Home</span></div>
+        <div class="cell"><span class="k">Institución</span><span class="v">Universidad de Monterrey</span></div>
+        <div class="cell"><span class="k">Programa</span><span class="v">LDG</span></div>
+        <div class="cell"><span class="k">Periodo</span><span class="v big">OT26</span></div>
+        <div class="cell"><span class="k">Fecha</span><span class="v">JUN 2026</span></div>
+        <div class="cell"><span class="k">Lámina</span><span class="v big">01</span></div>
       </div>
     </div>
-    <div class="hero__bottom">
-      <span class="mono-sm">EXPLORA EL TRABAJO</span>
-      <span class="mono-sm hero__scroll">SCROLL &darr;</span>
-      <span class="mono-sm">&copy;2026</span>
-    </div>
-    <div class="hero__marquee">
-      <div class="hero__marquee-track">
-        <span>BRANDING &bull; EDITORIAL &bull; PACKAGING &bull; MOTION &bull; UI/UX &bull; IDENTIDAD &bull; BRANDING &bull; EDITORIAL &bull; PACKAGING &bull; MOTION &bull; UI/UX &bull; IDENTIDAD &bull; BRANDING &bull; EDITORIAL &bull; PACKAGING &bull; MOTION &bull; UI/UX &bull; IDENTIDAD &bull;</span>
+  </div>
+
+  <!-- HOJA 02 · DATOS DEL PROGRAMA (IMCO) -->
+  <section id="datos">
+    <div class="wrap">
+      <div class="sec-head rv" data-io>
+        <span class="sec-no">02</span>
+        <h2>Datos del programa</h2>
+      </div>
+      <p class="sec-sub rv d1" data-io>Mediciones externas · sin promedios inventados</p>
+      <div class="drawx" data-io style="margin-top:22px"></div>
+
+      <div class="data-grid">
+        <div class="data-margin"><span class="rot">Datos</span></div>
+        <div class="data-table">
+
+          <div class="data-row rv" data-io>
+            <span class="lab">Ingreso promedio mensual
+              <small>Egresados de la carrera a nivel nacional</small></span>
+            <span class="num">$<span data-count="18768" data-group="1">0</span> <span class="unit">MXN</span></span>
+            <span class="ref">IMCO · Compara Carreras 2025</span>
+          </div>
+          <div class="drawx thin" data-io></div>
+
+          <div class="data-row rv d1" data-io>
+            <span class="lab">Tasa de ocupación
+              <small>Egresados trabajando o buscando con éxito</small></span>
+            <span class="num"><span data-count="95.1" data-dec="1">0.0</span><span class="unit">%</span></span>
+            <span class="ref">IMCO · Compara Carreras 2025</span>
+          </div>
+          <div class="drawx thin" data-io></div>
+
+          <div class="data-row rv d2" data-io>
+            <span class="lab">Proyectos en esta carpeta
+              <small>Proyectos de Evaluación Final</small></span>
+            <span class="num"><span data-count="17">0</span> <span class="unit">PEF</span></span>
+            <span class="ref">LDG UDEM · Otoño 2025</span>
+          </div>
+          <div class="drawx" data-io></div>
+
+        </div>
+      </div>
+
+      <div class="data-note">
+        <div class="pad"></div>
+        <p class="rv d2" data-io>Ingreso y ocupación corresponden a la carrera <b>Diseño y Comunicación Gráfica y Editorial</b>, medidos por el Instituto Mexicano para la Competitividad. Son datos publicados y verificables, no estimaciones del programa.
+          <br><a class="src" href="https://imco.org.mx/comparacarreras/" target="_blank" rel="noopener">Fuente: IMCO Compara Carreras 2025 · ENOE 2T2024-1T2025</a></p>
       </div>
     </div>
   </section>
 
-  <!-- ABOUT SECTION -->
-  <section class="about" id="about">
-    <div class="about__grid">
-      <div class="about__left">
-        <span class="mono-sm about__label">( 01 )</span>
-        <h2 class="about__heading">
-          PORTFOLIO DE<br>
-          PROYECTOS<br>
-          FINALES DE LA<br>
-          LICENCIATURA<br>
-          EN DISEÑO<br>
-          GRÁFICO
-        </h2>
-      </div>
-      <div class="about__right">
-        <div class="about__text">
-          <p>Portfolio de proyectos finales de la Licenciatura en Diseño Gráfico. Cada proyecto parte de investigación y pensamiento estratégico para desarrollar sistemas visuales, narrativas y propuestas de comunicación con dirección de diseño.</p>
-          <p>Una muestra del enfoque conceptual y la capacidad de decisión de una nueva generación de diseñadores.</p>
+  <!-- HOJA 03 · FICHAS DE PROYECTO (galería de tesis) -->
+  <section class="gallery" id="gallery">
+    <div class="wrap">
+      <div class="gallery__header">
+        <div class="sec-head rv" data-io>
+          <span class="sec-no">03</span>
+          <h2 class="gallery__title">Proyectos de Evaluación Final</h2>
         </div>
-        <div class="about__focus">
-          <span class="mono-sm">ENFOQUES DE PROYECTO</span>
-          <div class="about__focus-slider">
-            <div class="about__focus-track">
-              <span class="about__focus-word">Investigación</span>
-              <span class="about__focus-word">Pensamiento sistémico</span>
-              <span class="about__focus-word">Estrategia de diseño</span>
-              <span class="about__focus-word">Sistemas de identidad y experiencia</span>
-              <span class="about__focus-word">Dirección y gestión de diseño</span>
+        <p class="sec-sub rv d1" data-io>Carpeta Otoño 2025 · cada ficha con tutor, abstracto y documento descargable</p>
+        <div class="drawx" data-io style="margin-top:22px"></div>
+
+        <div class="gallery__filters" id="filters">
+          <div class="gallery__filter-group">
+            <span class="mono-sm gallery__filter-label">CATEGORÍA</span>
+            <div class="gallery__filter-buttons" id="categoryFilters">
+              <button class="filter-btn active" data-filter="all">TODOS</button>
+              <button class="filter-btn" data-filter="branding">BRANDING</button>
+              <button class="filter-btn" data-filter="editorial">EDITORIAL</button>
+              <button class="filter-btn" data-filter="packaging">PACKAGING</button>
+              <button class="filter-btn" data-filter="motion">MOTION</button>
+              <button class="filter-btn" data-filter="uiux">UI/UX</button>
+              <button class="filter-btn" data-filter="identidad">IDENTIDAD</button>
+            </div>
+          </div>
+          <div class="gallery__filter-group">
+            <span class="mono-sm gallery__filter-label">AÑO</span>
+            <div class="gallery__filter-buttons" id="yearFilters">
+              <button class="filter-btn active" data-year="all">TODOS</button>
+              <button class="filter-btn" data-year="2025">OTOÑO 2025</button>
             </div>
           </div>
         </div>
       </div>
-    </div>
-    <div class="about__image-strip">
-      <div class="about__image-strip-inner" id="thesisReel">
-        <!-- Filled by JS with thesis thumbnails -->
+
+      <div class="gallery__slider">
+        <div class="gallery__grid" id="galleryGrid">
+          <!-- Fichas injected by JS -->
+        </div>
+      </div>
+
+      <div class="gallery__nav">
+        <div class="gallery__count">
+          <span class="mono-sm" id="projectCount">17 PROYECTOS</span>
+          <span class="mono-sm" id="pageIndicator">1 / 5</span>
+        </div>
+        <div class="gallery__arrows">
+          <button class="gallery__arrow gallery__arrow--prev" id="galleryPrev" aria-label="Anterior">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+          </button>
+          <button class="gallery__arrow gallery__arrow--next" id="galleryNext" aria-label="Siguiente">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+          </button>
+        </div>
       </div>
     </div>
   </section>
 
-  <!-- GALLERY SECTION -->
-  <section class="gallery" id="gallery">
-    <div class="gallery__header">
-      <div class="gallery__header-top">
-        <span class="mono-sm">( 02 )</span>
-        <h2 class="gallery__title">PROYECTOS<br>DE TESIS</h2>
-      </div>
-      <div class="gallery__filters" id="filters">
-        <div class="gallery__filter-group">
-          <span class="mono-sm gallery__filter-label">CATEGORÍA</span>
-          <div class="gallery__filter-buttons" id="categoryFilters">
-            <button class="filter-btn active" data-filter="all">TODOS</button>
-            <button class="filter-btn" data-filter="branding">BRANDING</button>
-            <button class="filter-btn" data-filter="editorial">EDITORIAL</button>
-            <button class="filter-btn" data-filter="packaging">PACKAGING</button>
-            <button class="filter-btn" data-filter="motion">MOTION</button>
-            <button class="filter-btn" data-filter="uiux">UI/UX</button>
-            <button class="filter-btn" data-filter="identidad">IDENTIDAD</button>
-          </div>
-        </div>
-        <div class="gallery__filter-group">
-          <span class="mono-sm gallery__filter-label">AÑO</span>
-          <div class="gallery__filter-buttons" id="yearFilters">
-            <button class="filter-btn active" data-year="all">TODOS</button>
-            <button class="filter-btn" data-year="2025">OTOÑO 2025</button>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <div class="gallery__slider">
-      <div class="gallery__grid" id="galleryGrid">
-        <!-- Cards injected by JS -->
-      </div>
-    </div>
-
-    <div class="gallery__nav">
-      <div class="gallery__count">
-        <span class="mono-sm" id="projectCount">17 PROYECTOS</span>
-        <span class="mono-sm" id="pageIndicator">1 / 5</span>
-      </div>
-      <div class="gallery__arrows">
-        <button class="gallery__arrow gallery__arrow--prev" id="galleryPrev" aria-label="Anterior">
-          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
-        </button>
-        <button class="gallery__arrow gallery__arrow--next" id="galleryNext" aria-label="Siguiente">
-          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
-        </button>
-      </div>
-    </div>
-  </section>
-
-  <!-- THESIS DETAIL MODAL -->
-  <div class="modal" id="modal">
+  <!-- LÁMINA DE DETALLE (modal de proyecto) -->
+  <div class="modal" id="modal" role="dialog" aria-modal="true">
     <div class="modal__backdrop" id="modalBackdrop"></div>
     <div class="modal__content" id="modalContent">
-      <button class="modal__close" id="modalClose">
+      <button class="modal__close" id="modalClose" aria-label="Cerrar proyecto">
         <span>&times;</span>
       </button>
       <div class="modal__inner">
+        <p class="modal__doc mono">LÁMINA DE DETALLE · CARPETA DE REVISIÓN LDG</p>
         <div class="modal__cover" id="modalCover"></div>
         <div class="modal__info">
-          <span class="mono-sm modal__category" id="modalCategory"></span>
           <h2 class="modal__title" id="modalTitle"></h2>
-          <div class="modal__meta">
-            <div class="modal__meta-item">
-              <span class="mono-sm">ESTUDIANTE</span>
-              <span class="modal__meta-value" id="modalStudent"></span>
-            </div>
-            <div class="modal__meta-item">
-              <span class="mono-sm">TUTOR</span>
-              <span class="modal__meta-value" id="modalTutor"></span>
-            </div>
-            <div class="modal__meta-item">
-              <span class="mono-sm">AÑO</span>
-              <span class="modal__meta-value" id="modalYear"></span>
-            </div>
+          <div class="modal__cajetin">
+            <div class="cell"><span class="k">Categoría</span><span class="v" id="modalCategory"></span></div>
+            <div class="cell"><span class="k">Estudiante</span><span class="v" id="modalStudent"></span></div>
+            <div class="cell"><span class="k">Tutor</span><span class="v" id="modalTutor"></span></div>
+            <div class="cell"><span class="k">Semestre</span><span class="v" id="modalSemester"></span><span id="modalYear" hidden></span></div>
           </div>
           <div class="modal__abstract" id="modalAbstract"></div>
           <div class="modal__gallery" id="modalGallery"></div>
@@ -428,89 +443,115 @@
     </div>
   </div>
 
-  <!-- AWARDS SECTION -->
+  <!-- HOJA 04 · RECONOCIMIENTO (sello + vitrina) -->
   <section class="awards" id="awards">
-    <div class="awards__header">
-      <span class="mono-sm">( 03 )</span>
-      <h2 class="awards__title">RECONOCI&shy;<br>MIENTOS</h2>
+    <div class="wrap">
+      <div class="sec-head rv" data-io>
+        <span class="sec-no">04</span>
+        <h2 class="awards__title">Reconocimiento</h2>
+      </div>
+      <p class="sec-sub rv d1" data-io>Verificación externa · competencia internacional</p>
+      <div class="drawx" data-io style="margin-top:22px"></div>
+
+      <div class="sello rv d1" data-io>
+        <div class="txt">
+          <p class="scene">Viernes de entregas en el taller del CRGS: láminas sobre la mesa, maquetas bajo luz de día, y un proyecto que salió de aquí con sello internacional.</p>
+          <h3>Roble &amp; Maca</h3>
+          <p><b>A' Design Award &amp; Competition, Bronce,</b> en la categoría de diseño gráfico. Un proyecto estudiantil del programa, evaluado por un jurado internacional con los mismos criterios que se aplican a estudios profesionales.</p>
+          <dl class="meta">
+            <dt>Alumnas</dt><dd>Eugenia Martínez-Abrego Sáenz · María Andrade Padilla · Paulina González Gracia · Valeria Marín Guzmán</dd>
+            <dt>Asesor</dt><dd>Sergio Trujillo</dd>
+          </dl>
+        </div>
+        <div class="vitrina">
+          <span class="zlbl mono">Vitrina · registro del proyecto</span>
+          <img src="proyectos/awards/roble-maca.jpg" alt="Roble &amp; Maca · proyecto galardonado con el A' Design Award &amp; Competition, Bronce" loading="lazy">
+          <div class="stamp" data-io>
+            <svg viewBox="0 0 240 240" role="img" aria-label="Sello: A' Design Award and Competition, Bronce">
+              <defs>
+                <path id="ringPath" d="M120,120 m-86,0 a86,86 0 1,1 172,0 a86,86 0 1,1 -172,0"/>
+              </defs>
+              <circle cx="120" cy="120" r="104" fill="none" stroke="#B23818" stroke-width="4"/>
+              <circle cx="120" cy="120" r="96" fill="none" stroke="#B23818" stroke-width="1.5"/>
+              <circle cx="120" cy="120" r="62" fill="none" stroke="#B23818" stroke-width="1.5"/>
+              <text font-size="13" letter-spacing="3.5">
+                <textPath href="#ringPath">A' DESIGN AWARD &amp; COMPETITION · 2025 ·</textPath>
+              </text>
+              <text x="120" y="113" text-anchor="middle" font-size="26" font-weight="700" letter-spacing="2">BRONCE</text>
+              <text x="120" y="138" text-anchor="middle" font-size="11" letter-spacing="2">DISEÑO GRÁFICO</text>
+            </svg>
+          </div>
+        </div>
+      </div>
+
+      <!-- Reconocimientos dinámicos (inyectados por JS desde Firebase) -->
+      <div class="awards__list"></div>
     </div>
-    <div class="awards__list">
-      <div class="awards__item awards__item--featured">
-        <div class="awards__item-image">
-          <img src="proyectos/awards/roble-maca.jpg" alt="Roble & Maca — A' Design Award" loading="lazy">
+  </section>
+
+  <!-- HOJA 05 · LÁMINA AUDIOVISUAL + CTA TRAYECTORIA -->
+  <section class="av" id="lamina">
+    <div class="wrap">
+      <div class="sec-head rv" data-io>
+        <span class="sec-no">05</span>
+        <h2>Lámina audiovisual</h2>
+      </div>
+      <p class="sec-sub rv d1" data-io>BioDiseño x Sofía Porto · PEF session · Otoño 2025</p>
+      <div class="drawx" data-io style="margin-top:22px"></div>
+
+      <figure class="lamina rv d1" data-io>
+        <div class="lamina__frame" id="videoLamina">
+          <a class="lamina__poster" id="videoPoster" href="https://vimeo.com/1160882204" target="_blank" rel="noopener" aria-label="Reproducir video: BioDiseño x Sofía Porto · PEF session Otoño 2025">
+            <img src="proyectos/thumbnails/biodiseo.jpg" alt="" loading="lazy">
+            <span class="lamina__play"><span class="mono">Reproducir video &#9654;</span></span>
+          </a>
         </div>
-        <div class="awards__item-content">
-          <div class="awards__tags">
-            <span class="awards__tag">A' DESIGN AWARD & COMPETITION</span>
-            <span class="awards__tag awards__tag--accent">BRONCE</span>
-          </div>
-          <h3 class="awards__name">Roble & Maca</h3>
-          <div class="awards__meta-grid">
-            <div class="awards__meta-item">
-              <span class="mono-sm">ALUMNAS</span>
-              <span>Eugenia Mart&iacute;nez-Abrego S&aacute;enz, Mar&iacute;a Andrade Padilla, Paulina Gonz&aacute;lez Gracia, Valeria Mar&iacute;n Guzm&aacute;n</span>
-            </div>
-            <div class="awards__meta-item">
-              <span class="mono-sm">ASESOR</span>
-              <span>Sergio Trujillo</span>
-            </div>
-            <div class="awards__meta-item">
-              <span class="mono-sm">PROYECTO</span>
-              <span>El proyecto Roble & Maca fue galardonado con el A' Design Award & Competition Bronce en la categor&iacute;a de dise&ntilde;o gr&aacute;fico.</span>
-            </div>
-          </div>
-        </div>
+        <figcaption class="lamina__cap mono">Lámina A/V · BioDiseño x Sofía Porto · PEFsession OT25 · Vimeo</figcaption>
+      </figure>
+
+      <div class="cta-row rv d2" data-io id="trayectoriaCta">
+        <a class="btn" href="trayectoria.html">Trayectoria profesional del LDG <span class="mono-arrow">&rarr;</span></a>
+        <span class="cta-note">Siguiente hoja: rutas reales del egresado<br>emprendedor · freelance · director creativo</span>
       </div>
     </div>
   </section>
 
-  <!-- CTA TRAYECTORIA -->
-  <section class="trayectoria-cta" id="trayectoriaCta">
-    <span class="trayectoria-cta__label">( 04 ) GUÍA PARA PADRES</span>
-    <h2 class="trayectoria-cta__title">¿Hacia dónde van<br>nuestros egresados?</h2>
-    <p class="trayectoria-cta__desc">Trayectorias profesionales reales del Licenciado en Diseño Gráfico de la UDEM. Para padres, alumnos y cualquiera que quiera conocer el futuro de esta carrera.</p>
-    <a href="trayectoria.html" class="trayectoria-cta__btn">
-      <span>VER TRAYECTORIAS</span>
-      <span class="trayectoria-cta__btn-arrow">&rarr;</span>
-    </a>
-  </section>
-
-  <!-- FOOTER -->
+  <!-- PIE · CAJETÍN EDITORIAL -->
   <footer class="footer" id="footer">
-    <div class="footer__top">
-      <div class="footer__brand">
-        <h2 class="footer__logo">PORTFOLIO<br>LDG</h2>
-        <p class="mono-sm">REPOSITORIO ACADÉMICO<br>DE TESIS DE DISEÑO GRÁFICO</p>
+    <div class="wrap">
+      <div class="foot-cajetin">
+        <div class="cell cell--brand">
+          <span class="k">Proyecto</span>
+          <span class="v big">Portfolio LDG</span>
+          <span class="v soft">Repositorio de Proyectos de Evaluación Final · Licenciatura en Diseño Gráfico</span>
+        </div>
+        <div class="cell">
+          <span class="k">Navegación</span>
+          <a class="v" href="#hero">Inicio</a>
+          <a class="v" href="#gallery">Proyectos</a>
+          <a class="v" href="trayectoria.html">Trayectoria</a>
+          <a class="v" href="pef.html">Guía PEF</a>
+        </div>
+        <div class="cell">
+          <span class="k">Contacto</span>
+          <a class="v" href="mailto:ldg.crgs@udem.edu">ldg.crgs@udem.edu</a>
+          <a class="v" href="https://www.instagram.com/ldg_udem?igsh=MWZ0a210dzhmZmRyZQ%3D%3D&utm_source=qr" target="_blank" rel="noopener">Instagram</a>
+          <a class="v" href="https://crgs.udem.edu.mx/arte-arquitectura-y-diseno/academia/profesional/licenciatura-en-diseno-grafico" target="_blank" rel="noopener">Sitio oficial LDG</a>
+        </div>
+        <div class="cell cell--logos">
+          <span class="k">Instituciones</span>
+          <img src="logos-institucionales.svg" alt="UDEM · Escuela de Arte y Diseño · Centro Roberto Garza Sada" class="footer__institutional-logos">
+        </div>
+        <button class="cell cell--admin" id="adminBtn" type="button" title="Acceso administrador">
+          <span class="k">Acceso</span>
+          <span class="v">ADMIN</span>
+        </button>
       </div>
-      <div class="footer__links">
-        <div class="footer__col">
-          <span class="mono-sm footer__col-title">NAVEGACIÓN</span>
-          <a href="#hero">Inicio</a>
-          <a href="#about">Acerca</a>
-          <a href="#gallery">Proyectos</a>
-        </div>
-        <div class="footer__col">
-          <span class="mono-sm footer__col-title">CONTACTO</span>
-          <a href="mailto:ldg.crgs@udem.edu">ldg.crgs@udem.edu</a>
-        </div>
-        <div class="footer__col">
-          <span class="mono-sm footer__col-title">ENLACES</span>
-          <a href="https://www.instagram.com/ldg_udem?igsh=MWZ0a210dzhmZmRyZQ%3D%3D&utm_source=qr" target="_blank" rel="noopener">Instagram</a>
-          <a href="https://crgs.udem.edu.mx/arte-arquitectura-y-diseno/academia/profesional/licenciatura-en-diseno-grafico" target="_blank" rel="noopener">Sitio Web</a>
-        </div>
+      <div class="foot-bar">
+        <span class="mono">&copy; 2026 <b>LDG · UDEM</b> · Centro Roberto Garza Sada</span>
+        <span class="mono">Mesa de Revisión · Lámina 01 · Todos los derechos reservados</span>
       </div>
     </div>
-    <div class="footer__bottom">
-      <div class="footer__bottom-left">
-        <span class="mono-sm">&copy; 2026 PORTFOLIO LDG</span>
-        <span class="mono-sm">LICENCIATURA EN DISEÑO GRÁFICO</span>
-        <span class="mono-sm">TODOS LOS DERECHOS RESERVADOS</span>
-      </div>
-      <div class="footer__bottom-right">
-        <img src="logos-institucionales.svg" alt="UDEM – Escuela de Arte y Diseño – Centro Roberto Garza Sada" class="footer__institutional-logos">
-      </div>
-    </div>
-    <button class="footer__admin-btn" id="adminBtn" title="Admin">&#9881;</button>
   </footer>
 
   <!-- ADMIN PANEL -->
@@ -522,7 +563,10 @@
           <span class="mono-sm">ADMINISTRADOR</span>
           <h2 class="pef-talks__title" style="font-size: clamp(2rem, 5vw, 3.5rem);">GESTIONAR CONTENIDO</h2>
         </div>
-        <button class="pef-talks__close" id="adminPanelClose">&times;</button>
+        <div style="display:flex; align-items:center; gap: 1rem;">
+          <button class="mono-sm admin-panel__logout" id="adminLogoutBtn">CERRAR SESI&Oacute;N</button>
+          <button class="pef-talks__close" id="adminPanelClose">&times;</button>
+        </div>
       </div>
 
       <!-- Tab navigation -->
@@ -673,10 +717,14 @@
       <div class="pef-gate__content">
         <span class="mono-sm">ACCESO ADMINISTRADOR</span>
         <h2 class="pef-gate__title" style="font-size: clamp(2rem, 5vw, 3.5rem);">ADMIN</h2>
-        <p class="pef-gate__desc">Ingresa la contrase&ntilde;a de administrador para gestionar proyectos y reconocimientos.</p>
+        <p class="pef-gate__desc">Inicia sesi&oacute;n con tu cuenta de administrador para gestionar proyectos y reconocimientos.</p>
         <form class="pef-gate__form" id="adminGateForm">
           <div class="pef-gate__input-wrap">
-            <input type="password" class="pef-gate__input" id="adminGatePass" placeholder="Contrase&ntilde;a" required>
+            <input type="email" class="pef-gate__input" id="adminGateEmail" placeholder="Correo de administrador" autocomplete="username" required>
+            <div class="pef-gate__input-line"></div>
+          </div>
+          <div class="pef-gate__input-wrap">
+            <input type="password" class="pef-gate__input" id="adminGatePass" placeholder="Contrase&ntilde;a" autocomplete="current-password" required>
             <div class="pef-gate__input-line"></div>
           </div>
           <span class="pef-gate__error" id="adminGateError"></span>

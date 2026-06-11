@@ -1,0 +1,56 @@
+{
+  "rules": {
+    ".read": false,
+    ".write": false,
+
+    "admins": {
+      "$uid": {
+        ".read": "auth != null && auth.uid === $uid",
+        ".write": false
+      }
+    },
+
+    "pefProjects": {
+      ".read": true,
+      ".write": "auth != null && root.child('admins').child(auth.uid).val() === true",
+      "$i": {
+        ".validate": "newData.hasChildren(['id', 'name', 'members', 'summary', 'problem', 'email'])",
+        "id": { ".validate": "newData.isString() && newData.val().length <= 64" },
+        "name": { ".validate": "newData.isString() && newData.val().length > 0 && newData.val().length <= 300" },
+        "members": { ".validate": "newData.isString() && newData.val().length <= 1000" },
+        "summary": { ".validate": "newData.isString() && newData.val().length <= 10000" },
+        "problem": { ".validate": "newData.isString() && newData.val().length <= 10000" },
+        "email": { ".validate": "newData.isString() && (newData.val().endsWith('@udem.edu') || newData.val().endsWith('@udem.edu.mx'))" },
+        "pdfUrl": { ".validate": "newData.isString() && newData.val().length <= 5000000" },
+        "createdAt": { ".validate": "newData.isString() && newData.val().length <= 40" },
+        "$other": { ".validate": false }
+      }
+    },
+
+    "pefFeedback": {
+      ".read": "auth != null && root.child('admins').child(auth.uid).val() === true",
+      ".write": "auth != null && root.child('admins').child(auth.uid).val() === true",
+      "$fbId": {
+        ".write": "auth != null && !data.exists() && newData.exists()",
+        ".validate": "newData.hasChildren(['projectId', 'profName', 'feedback', 'interest'])",
+        "projectId": { ".validate": "newData.isString() && newData.val().length <= 64" },
+        "profName": { ".validate": "newData.isString() && newData.val().length > 0 && newData.val().length <= 150" },
+        "feedback": { ".validate": "newData.isString() && newData.val().length > 0 && newData.val().length <= 5000" },
+        "interest": { ".validate": "newData.val() === 'si' || newData.val() === 'no' || newData.val() === 'sinodal'" },
+        "id": { ".validate": "newData.isString() && newData.val().length <= 64" },
+        "createdAt": { ".validate": "newData.isString() && newData.val().length <= 40" },
+        "$other": { ".validate": false }
+      }
+    },
+
+    "ldgProjects": {
+      ".read": true,
+      ".write": "auth != null && root.child('admins').child(auth.uid).val() === true"
+    },
+
+    "ldgAwards": {
+      ".read": true,
+      ".write": "auth != null && root.child('admins').child(auth.uid).val() === true"
+    }
+  }
+}

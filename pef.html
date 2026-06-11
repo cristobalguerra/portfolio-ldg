@@ -3,21 +3,22 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>PEF · Proyecto de Evaluación Final — Otoño 2026 · LDG UDEM</title>
+<title>PEF · Proyecto de Evaluación Final · Otoño 2026 · LDG UDEM</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Anton&family=Atkinson+Hyperlegible:wght@400;700&family=JetBrains+Mono:wght@300;400;500&display=swap" rel="stylesheet">
 <style>
   :root{
-    --paper:#F1ECDF;        /* warm bone */
-    --paper-2:#E6E0CF;
-    --ink:#161310;          /* warm near-black */
-    --ink-soft:#5A554A;
-    --yellow:#FFE000;       /* UDEM electric yellow */
+    --paper:#F1ECDF;        /* superficie papel crema */
+    --paper-2:#E7E1D0;      /* papel sombreado, celdas alternas */
+    --ink:#1B1612;          /* tinta casi-negra calida: texto y lineas de plano */
+    --ink-soft:#5C564A;     /* tinta secundaria */
+    --yellow:#FFE000;       /* marcador UDEM: bandas hl, chips, atencion */
     --yellow-deep:#E9CE00;
-    --red:#D2401E;          /* alert vermilion — sparse use only */
-    --line:rgba(22,19,16,.14);
-    /* Shared portfolio type system (matches trayectoria.html) */
+    --verm:#B23818;         /* vermilion: cotas, sellos, datos criticos (AA 5.13:1 sobre paper) */
+    --line:rgba(27,22,18,.16);   /* reticula */
+    --line-2:rgba(27,22,18,.34); /* divisiones de cajetin */
+    /* Sistema tipografico del sitio (DESIGN.md) */
     --disp:"Anton", "Arial Narrow", sans-serif;
     --sans:"Atkinson Hyperlegible", system-ui, -apple-system, sans-serif;
     --mono:"JetBrains Mono", "SFMono-Regular", ui-monospace, monospace;
@@ -28,7 +29,10 @@
     --t-h3:clamp(1.15rem, 1.5vw, 1.35rem);
     --t-lede:clamp(1.05rem, 1.5vw, 1.32rem);
     --t-body:clamp(.98rem, 1.05vw, 1.06rem);
-    --t-mono:.74rem;
+    --t-mono:.72rem;        /* piso absoluto de mono; nada menor */
+
+    --ease:cubic-bezier(.22,1,.36,1);  /* ease-out-quint; unico easing del sitio */
+    --gut:clamp(18px,4.5vw,64px);
   }
   *{box-sizing:border-box;margin:0;padding:0}
   html{scroll-behavior:smooth}
@@ -42,17 +46,14 @@
     -webkit-font-smoothing:antialiased;
     overflow-x:hidden;
   }
-  html.cursorize, html.cursorize *{cursor:none}
-  /* faint engineering grid + grain */
+  /* reticula de plano, fija (DESIGN.md: grid 56px de --line, opacity .5) */
   body::before{
     content:"";position:fixed;inset:0;z-index:0;pointer-events:none;
     background-image:
       linear-gradient(var(--line) 1px,transparent 1px),
       linear-gradient(90deg,var(--line) 1px,transparent 1px);
-    background-size:64px 64px;
-    opacity:.35;
-    -webkit-mask-image:radial-gradient(ellipse at 50% 0,#000,transparent 78%);
-            mask-image:radial-gradient(ellipse at 50% 0,#000,transparent 78%);
+    background-size:56px 56px;
+    opacity:.5;
   }
   body::after{
     content:"";position:fixed;inset:0;z-index:9990;pointer-events:none;opacity:.05;
@@ -61,14 +62,7 @@
   }
   ::selection{background:var(--yellow);color:var(--ink)}
   a{color:inherit}
-  .wrap{max-width:1180px;margin:0 auto;padding:0 clamp(20px,5vw,72px);position:relative;z-index:1}
-
-  /* ---- custom cursor ---- */
-  .cursor{position:fixed;top:0;left:0;width:13px;height:13px;border-radius:50%;
-    background:var(--ink);z-index:10000;pointer-events:none;mix-blend-mode:difference;
-    transform:translate(-50%,-50%);transition:width .18s,height .18s,background .18s}
-  .cursor.big{width:54px;height:54px;background:var(--yellow)}
-  @media (pointer:coarse){.cursor{display:none}body{cursor:auto}}
+  .wrap{max-width:1180px;margin:0 auto;padding:0 var(--gut);position:relative;z-index:1}
 
   /* ---- scroll progress ---- */
   .progress{position:fixed;top:0;left:0;height:5px;width:0;background:var(--yellow);
@@ -77,26 +71,57 @@
   /* ---- top bar (unified with portfolio nav) ---- */
   header.bar{position:fixed;top:0;left:0;right:0;z-index:9000;
     display:flex;align-items:center;justify-content:space-between;gap:24px;
-    padding:22px clamp(20px,5vw,72px);
+    padding:22px var(--gut);
     transition:background .3s,border-color .3s,padding .3s;border-bottom:1px solid transparent}
   header.bar.solid{background:rgba(241,236,223,.92);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);
     border-color:var(--line);padding-top:16px;padding-bottom:16px}
   .brand{display:flex;align-items:center;gap:13px;text-decoration:none}
   .brand__wm{font-family:var(--disp);font-weight:400;font-size:1.45rem;letter-spacing:.01em;
-    text-transform:uppercase;color:var(--ink);line-height:1}
-  .brand__chip{font-family:var(--mono);font-size:.66rem;font-weight:500;letter-spacing:.14em;
-    background:var(--yellow);color:var(--ink);padding:5px 9px 4px;text-transform:uppercase;line-height:1}
+    text-transform:uppercase;color:var(--ink);line-height:1;white-space:nowrap}
+  .brand__chip{font-family:var(--mono);font-size:.72rem;font-weight:500;letter-spacing:.14em;
+    background:var(--yellow);color:var(--ink);padding:5px 9px 4px;text-transform:uppercase;line-height:1;white-space:nowrap}
   nav.top{display:flex;gap:30px;font-family:var(--mono);font-size:.82rem;letter-spacing:.08em;text-transform:uppercase}
   nav.top a{text-decoration:none;opacity:.6;transition:opacity .2s;color:var(--ink)}
   nav.top a:hover{opacity:1}
+  nav.top a.active{opacity:1;box-shadow:inset 0 -2px 0 var(--yellow)}
   .back-btn{font-family:var(--mono);font-size:.78rem;letter-spacing:.1em;text-transform:uppercase;
     text-decoration:none;color:var(--ink);border:1.5px solid var(--ink);padding:10px 18px;line-height:1;
     transition:background .2s,color .2s;white-space:nowrap}
   .back-btn:hover{background:var(--ink);color:var(--paper)}
-  @media(max-width:1040px){nav.top{display:none}}
+  .bar-actions{display:flex;align-items:center;gap:10px}
+  /* mobile menu · native button + panel, same hard-edge paper/ink language */
+  .menu-btn{display:none;font-family:var(--mono);font-size:.78rem;letter-spacing:.1em;text-transform:uppercase;
+    background:transparent;color:var(--ink);border:1.5px solid var(--ink);padding:10px 14px;line-height:1;cursor:pointer;
+    transition:background .2s,color .2s}
+  .menu-btn:hover,.menu-btn[aria-expanded="true"]{background:var(--ink);color:var(--paper)}
+  .mnav{display:none;position:absolute;top:100%;left:0;right:0;background:var(--paper);
+    border-top:1px solid var(--line);border-bottom:2px solid var(--ink);flex-direction:column;
+    max-height:calc(100vh - 90px);overflow-y:auto}
+  .mnav a{font-family:var(--mono);font-size:.82rem;letter-spacing:.1em;text-transform:uppercase;
+    text-decoration:none;color:var(--ink);padding:15px var(--gut);border-bottom:1px solid var(--line)}
+  .mnav a:last-child{border-bottom:0}
+  .mnav a:hover{background:var(--paper-2)}
+  @media(max-width:1040px){nav.top{display:none}.menu-btn{display:inline-block}.mnav:not([hidden]){display:flex}}
+  /* narrow screens: the menu already lists Volver; the standalone button does not fit */
+  @media(max-width:560px){header.bar .back-btn{display:none}}
 
   /* ---- hero ---- */
-  .hero{position:relative;padding:168px 0 40px;z-index:1}
+  .hero{position:relative;padding:148px 0 40px;z-index:1}
+  /* barra de control de imprenta, bajo la barra (patron canonico DESIGN.md:
+     chips de proceso CMYK + cruz de registro + leyenda mono; el cian/magenta
+     SOLO viven dentro de este artefacto) */
+  .ctrlbar{display:flex;align-items:center;gap:14px;border-bottom:1px solid var(--line-2);
+    padding:8px 0 7px;margin-bottom:clamp(28px,5vh,46px)}
+  .ctrlbar .chips{display:flex;gap:5px}
+  .ctrlbar .chip{width:11px;height:11px;display:block;border:1px solid var(--line-2)}
+  .ctrlbar .ch-c{background:#00AEEF}
+  .ctrlbar .ch-m{background:#EC008C}
+  .ctrlbar .ch-y{background:var(--yellow)}
+  .ctrlbar .ch-k{background:var(--ink)}
+  .ctrlbar .reg{width:14px;height:14px;flex-shrink:0;color:var(--ink);display:block}
+  .ctrlbar .leg{font-family:var(--mono);font-size:var(--t-mono);letter-spacing:.12em;
+    text-transform:uppercase;color:var(--ink-soft);margin-left:auto;white-space:nowrap}
+  @media(max-width:560px){.ctrlbar .leg{letter-spacing:.04em}}
   .eyebrow{font-family:var(--mono);font-size:.74rem;letter-spacing:.22em;text-transform:uppercase;
     color:var(--ink-soft);display:flex;gap:12px;align-items:center;flex-wrap:wrap}
   .eyebrow::before{content:"";width:42px;height:2px;background:var(--ink)}
@@ -117,15 +142,15 @@
   .hero-meta .lede{font-family:var(--sans);font-weight:500;font-size:var(--t-lede);max-width:48ch;line-height:1.5}
   .hero-meta .tag{font-family:var(--disp);font-weight:400;font-size:clamp(2rem,4vw,3.2rem);
     line-height:1;letter-spacing:-.01em;white-space:nowrap;text-transform:uppercase}
-  .hero-meta .tag small{display:block;font-family:var(--mono);font-size:.7rem;font-weight:400;
+  .hero-meta .tag small{display:block;font-family:var(--mono);font-size:var(--t-mono);font-weight:400;
     letter-spacing:.14em;margin-top:8px;color:var(--ink-soft);text-transform:uppercase}
 
-  /* deliverables strip — static index, no animation */
+  /* deliverables strip · static index, no animation */
   .strip{margin-top:46px;border-top:2px solid var(--ink);border-bottom:2px solid var(--ink);
     display:grid;grid-template-columns:repeat(6,1fr)}
   .strip .it{padding:16px 18px;border-right:1px solid var(--line);display:flex;flex-direction:column;gap:6px}
   .strip .it:last-child{border-right:0}
-  .strip .it b{font-family:var(--mono);font-size:.66rem;font-weight:500;letter-spacing:.16em;color:var(--ink-soft)}
+  .strip .it b{font-family:var(--mono);font-size:.72rem;font-weight:500;letter-spacing:.16em;color:var(--ink-soft)}
   .strip .it span{font-family:var(--sans);font-weight:700;font-size:.94rem;letter-spacing:0;line-height:1.25}
   @media(max-width:860px){.strip{grid-template-columns:repeat(2,1fr)}
     .strip .it{border-right:1px solid var(--line);border-bottom:1px solid var(--line)}
@@ -158,33 +183,52 @@
   @media(max-width:860px){.timeline{grid-template-columns:1fr;border-top:0}
     .stage{border-right:0;border-top:2px solid var(--ink)}.stage .node{left:0;top:-9px}}
 
-  /* ---- deliverables grid ---- */
-  .deliv{display:grid;grid-template-columns:repeat(2,1fr);gap:0;border:2px solid var(--ink)}
-  .deliv .d{padding:30px 28px;border-right:2px solid var(--ink);border-bottom:2px solid var(--ink);
-    position:relative;overflow:hidden;transition:color .3s}
-  .deliv .d:nth-child(2n){border-right:0}
-  .deliv .d:nth-last-child(-n+2){border-bottom:0}
-  .deliv .d .num{font-family:var(--disp);font-weight:800;font-size:2.4rem;line-height:1;letter-spacing:-.04em}
+  /* ---- deliverables: fichas con ensamblaje marco-primero (patron canonico .ficha) ---- */
+  .deliv{display:grid;grid-template-columns:repeat(12,1fr);gap:clamp(26px,4vh,48px) 18px}
+  .deliv .d{position:relative;padding:clamp(20px,2.6vw,30px) clamp(18px,2.4vw,28px) clamp(18px,2.2vw,26px)}
+  .deliv .d:nth-child(1){grid-column:1/7}
+  .deliv .d:nth-child(2){grid-column:7/13}
+  .deliv .d:nth-child(3){grid-column:1/8}
+  .deliv .d:nth-child(4){grid-column:8/13}
+  .deliv .d:nth-child(5){grid-column:1/6}
+  .deliv .d:nth-child(6){grid-column:6/13}
+  @media(max-width:680px){.deliv .d:nth-child(n){grid-column:1/-1}}
+  /* marco que se traza: 4 bordes en secuencia, como delineante */
+  .deliv .d .frame{position:absolute;inset:0;pointer-events:none}
+  .deliv .d .frame i{position:absolute;background:var(--ink);display:block}
+  .deliv .d .f-t{top:0;left:0;right:0;height:2px;transform:scaleX(0);transform-origin:left;
+    transition:transform .32s var(--ease)}
+  .deliv .d .f-r{top:0;right:0;bottom:0;width:2px;transform:scaleY(0);transform-origin:top;
+    transition:transform .32s var(--ease) .28s}
+  .deliv .d .f-b{bottom:0;left:0;right:0;height:2px;transform:scaleX(0);transform-origin:right;
+    transition:transform .32s var(--ease) .56s}
+  .deliv .d .f-l{top:0;left:0;bottom:0;width:2px;transform:scaleY(0);transform-origin:bottom;
+    transition:transform .32s var(--ease) .84s}
+  .deliv .d.in .frame i{transform:none}
+  /* marcas de esquina */
+  .deliv .d .corner{position:absolute;width:10px;height:10px;border:0 solid var(--verm);opacity:0;
+    transition:opacity .3s var(--ease) 1.15s}
+  .deliv .d.in .corner{opacity:1}
+  .deliv .d .c-tl{top:-5px;left:-5px;border-top-width:2px;border-left-width:2px}
+  .deliv .d .c-br{bottom:-5px;right:-5px;border-bottom-width:2px;border-right-width:2px}
+  .deliv .d .inner{opacity:0;transform:translateY(10px);
+    transition:opacity .6s var(--ease) .75s,transform .6s var(--ease) .75s}
+  .deliv .d.in .inner{opacity:1;transform:none}
+  .deliv .d .num{font-family:var(--disp);font-weight:400;font-size:2.5rem;line-height:1;letter-spacing:-.02em}
   .deliv .d h3{font-family:var(--sans);font-weight:700;text-transform:uppercase;font-size:1.22rem;
     letter-spacing:0;margin:8px 0 8px;line-height:1.1}
   .deliv .d p{font-size:.96rem;color:var(--ink-soft);max-width:40ch}
-  .deliv .d .spec{font-family:var(--mono);font-size:.72rem;letter-spacing:.05em;margin-top:14px;
+  .deliv .d .spec{font-family:var(--mono);font-size:.78rem;letter-spacing:.05em;margin-top:14px;
     color:var(--ink);background:var(--paper-2);display:inline-block;padding:5px 10px}
-  .deliv .d .fill{position:absolute;inset:0;background:var(--yellow);transform:translateY(101%);
-    transition:transform .4s cubic-bezier(.2,.8,.2,1);z-index:-1}
-  .deliv .d:hover .fill{transform:translateY(0)}
-  .deliv .d:hover .spec{background:var(--ink);color:var(--yellow)}
-  @media(max-width:680px){.deliv{grid-template-columns:1fr}
-    .deliv .d{border-right:0!important;border-bottom:2px solid var(--ink)!important}
-    .deliv .d:last-child{border-bottom:0!important}}
 
   /* ---- rubric ---- */
   .rubric{border-top:2px solid var(--ink)}
   .row{display:grid;grid-template-columns:minmax(0,1.1fr) 3fr auto;gap:18px;align-items:center;
     padding:16px 0;border-bottom:1px solid var(--line);transition:padding .25s}
   .row .crit{font-family:var(--sans);font-weight:700;font-size:1.05rem;text-transform:uppercase;letter-spacing:0;line-height:1.15}
-  .bar{height:12px;background:var(--paper-2);position:relative;overflow:hidden}
-  .bar i{position:absolute;left:0;top:0;bottom:0;width:0;background:var(--ink);transition:width 1.1s cubic-bezier(.2,.8,.2,1)}
+  .rubric .bar{height:12px;background:var(--paper-2);position:relative;overflow:hidden}
+  .rubric .bar i{position:absolute;left:0;top:0;bottom:0;width:0;background:var(--ink);
+    transform:scaleX(0);transform-origin:left;transition:transform 1.1s var(--ease)}
   .row .pct{font-family:var(--disp);font-weight:400;font-size:1.6rem;letter-spacing:-.02em;min-width:64px;text-align:right}
   .row .guide{grid-column:1/-1;font-size:.86rem;color:var(--ink-soft);margin-top:4px;line-height:1.45;max-width:70ch}
   .row:hover{background:var(--paper-2)}
@@ -194,8 +238,8 @@
   .panel>div{padding:26px 28px}
   .panel>div:first-child{border-right:2px solid var(--ink);background:var(--ink);color:var(--paper)}
   .panel .evals{display:flex;gap:26px;margin-top:18px}
-  .panel .evals b{font-family:var(--disp);font-weight:800;font-size:2.2rem;display:block;letter-spacing:-.03em}
-  .panel .evals span{font-family:var(--mono);font-size:.68rem;letter-spacing:.14em;text-transform:uppercase;opacity:.7}
+  .panel .evals b{font-family:var(--disp);font-weight:400;font-size:2.3rem;display:block;letter-spacing:-.02em}
+  .panel .evals span{font-family:var(--mono);font-size:var(--t-mono);letter-spacing:.14em;text-transform:uppercase;opacity:.7}
   .panel .yellowdot{color:var(--yellow)}
   @media(max-width:680px){.panel{grid-template-columns:1fr}.panel>div:first-child{border-right:0;border-bottom:2px solid var(--ink)}}
 
@@ -241,17 +285,23 @@
     background:var(--ink);color:var(--paper)}
   .check-progress .pcount{font-family:var(--disp);font-weight:400;font-size:1.6rem;line-height:1;letter-spacing:-.01em;color:var(--yellow)}
   .check-progress .ptrack{flex:1;height:8px;background:rgba(242,238,227,.18);overflow:hidden}
-  .check-progress .pfill{height:100%;width:0;background:var(--yellow);transition:width .35s cubic-bezier(.2,.8,.2,1)}
-  .check-progress .plabel{font-family:var(--mono);font-size:.68rem;letter-spacing:.14em;text-transform:uppercase;opacity:.7}
+  .check-progress .pfill{height:100%;width:100%;background:var(--yellow);transform:scaleX(0);transform-origin:left;transition:transform .35s var(--ease)}
+  .check-progress .plabel{font-family:var(--mono);font-size:.72rem;letter-spacing:.14em;text-transform:uppercase;opacity:.7}
+  .check-progress .ckreset{font-family:var(--mono);font-size:.72rem;letter-spacing:.12em;text-transform:uppercase;
+    background:transparent;color:var(--paper);border:1px solid rgba(242,238,227,.4);padding:6px 10px;line-height:1;cursor:pointer;
+    transition:border-color .2s,color .2s}
+  .check-progress .ckreset:hover{border-color:var(--yellow);color:var(--yellow)}
+  .check-warn{font-family:var(--mono);font-size:.72rem;letter-spacing:.05em;color:var(--ink-soft);margin-top:10px}
   .check-group{border-top:1px solid var(--line)}
   .check-group:first-of-type{border-top:0}
-  .check-gtitle{font-family:var(--mono);font-size:.68rem;letter-spacing:.16em;text-transform:uppercase;
+  .check-gtitle{font-family:var(--mono);font-size:.72rem;letter-spacing:.16em;text-transform:uppercase;
     color:var(--ink-soft);padding:18px 22px 4px}
   .check-item{display:flex;align-items:flex-start;gap:14px;padding:12px 22px;cursor:pointer;
     transition:background .2s;border-top:1px solid var(--line)}
   .check-gtitle + .check-item{border-top:0}
   .check-item:hover{background:var(--paper-2)}
   .check-item input{position:absolute;opacity:0;width:0;height:0}
+  .check-item input:focus-visible ~ .check-box{outline:2.5px solid var(--ink);outline-offset:2px}
   .check-box{flex-shrink:0;width:22px;height:22px;border:2px solid var(--ink);margin-top:2px;
     display:grid;place-items:center;transition:background .15s}
   .check-box::after{content:"";width:6px;height:11px;border:solid var(--ink);border-width:0 2.5px 2.5px 0;
@@ -259,7 +309,7 @@
   .check-item input:checked ~ .check-box{background:var(--yellow)}
   .check-item input:checked ~ .check-box::after{opacity:1}
   .check-text b{font-family:var(--sans);font-weight:700;font-size:1rem;line-height:1.3;display:block;transition:color .2s}
-  .check-text .spec{font-family:var(--mono);font-size:.7rem;letter-spacing:.04em;color:var(--ink-soft);margin-top:3px;display:block}
+  .check-text .spec{font-family:var(--mono);font-size:var(--t-mono);letter-spacing:.04em;color:var(--ink-soft);margin-top:3px;display:block}
   .check-item input:checked ~ .check-text b{color:var(--ink-soft);text-decoration:line-through}
 
   /* ---- distinción (PEF Sobresaliente) ---- */
@@ -283,7 +333,7 @@
   .btn{font-family:var(--sans);font-weight:700;font-size:1rem;text-transform:uppercase;letter-spacing:.01em;
     background:var(--yellow);color:var(--ink);border:2px solid var(--ink);padding:16px 26px;text-decoration:none;
     display:inline-flex;align-items:center;gap:12px;box-shadow:5px 5px 0 var(--ink);
-    transition:transform .15s cubic-bezier(.2,.8,.2,1),box-shadow .15s cubic-bezier(.2,.8,.2,1)}
+    transition:transform .15s var(--ease),box-shadow .15s var(--ease)}
   .btn:hover{transform:translate(-2px,-2px);box-shadow:7px 7px 0 var(--ink)}
   .btn:active{transform:translate(2px,2px);box-shadow:1px 1px 0 var(--ink)}
   .cta-note{font-family:var(--mono);font-size:.74rem;letter-spacing:.05em;color:var(--ink-soft);max-width:32ch;line-height:1.55}
@@ -292,26 +342,37 @@
   .notes{display:grid;gap:16px}
   .note{border:1px solid var(--line);background:var(--paper-2);padding:18px 22px}
   .note.amber{border-color:var(--yellow-deep);box-shadow:inset 0 3px 0 var(--yellow)}
-  .note h4{font-family:var(--mono);font-size:.74rem;letter-spacing:.16em;text-transform:uppercase;margin-bottom:6px}
+  .note h3{font-family:var(--mono);font-size:.74rem;letter-spacing:.16em;text-transform:uppercase;margin-bottom:6px}
   .note p{font-size:.96rem;color:var(--ink-soft)}
 
   /* ---- titulación ---- */
-  .titul{border:2px solid var(--ink)}
+  .titul{border:2px solid var(--ink);position:relative}
   .titul .t{display:flex;justify-content:space-between;gap:20px;padding:15px 22px;border-bottom:1px solid var(--line);align-items:center}
   .titul .t:last-child{border-bottom:0}
   .titul .t span{font-size:.98rem}
   .titul .t b{font-family:var(--mono);font-weight:500;font-size:.82rem;letter-spacing:.06em;color:var(--ink);white-space:nowrap}
-  /* critical notice — ink panel with yellow accent, not red */
-  .alert{margin-top:30px;background:var(--ink);color:var(--paper);padding:30px 32px;position:relative;overflow:hidden;
+  /* aviso critico · panel tinta con acento amarillo */
+  .alert{margin-top:46px;background:var(--ink);color:var(--paper);padding:30px 32px;position:relative;
     border-top:4px solid var(--yellow)}
-  .alert h4{font-family:var(--sans);font-weight:700;text-transform:uppercase;font-size:1.35rem;letter-spacing:0;
+  .alert h3{font-family:var(--sans);font-weight:700;text-transform:uppercase;font-size:1.35rem;letter-spacing:0;
     margin-bottom:10px;color:var(--yellow)}
   .alert p{font-size:1rem;max-width:64ch;color:rgba(242,238,227,.85);line-height:1.6}
   .alert b{color:var(--paper)}
 
+  /* sello vermilion para momentos criticos (patron canonico .rev-stamp) */
+  .rev-stamp{position:absolute;z-index:3;border:3px solid var(--verm);color:var(--verm);
+    padding:9px 16px 8px;font-family:var(--mono);font-size:.8rem;font-weight:700;letter-spacing:.18em;
+    text-transform:uppercase;background:rgba(241,236,223,.85);white-space:nowrap;
+    opacity:0;transform:scale(1.15) rotate(-6deg);
+    transition:opacity .3s var(--ease) .45s,transform .42s var(--ease) .45s}
+  .rev-stamp.in{opacity:1;transform:scale(1) rotate(-6deg)}
+  .titul .rev-stamp{top:-28px;right:clamp(8px,3vw,34px)}
+  .alert .rev-stamp{top:-18px;right:clamp(12px,4vw,40px)}
+  @media(max-width:560px){.rev-stamp{font-size:var(--t-mono);padding:7px 12px 6px;letter-spacing:.14em}}
+
   /* ---- footer (shared structure with portfolio, PEF palette) ---- */
   footer{background:var(--ink);color:var(--paper);margin-top:90px;
-    padding:72px clamp(20px,5vw,72px) 32px;position:relative;z-index:1;
+    padding:72px var(--gut) 32px;position:relative;z-index:1;
     border-top:2px solid var(--yellow)}
   .foot-top{display:grid;grid-template-columns:1.3fr 1fr 1fr 1fr;gap:40px;margin-bottom:56px}
   .foot-brand .foot-logo{font-family:var(--disp);font-weight:400;font-size:clamp(2.6rem,5vw,4rem);
@@ -319,7 +380,7 @@
   .foot-brand .foot-tag{font-family:var(--mono);font-size:.72rem;letter-spacing:.1em;
     line-height:1.7;color:rgba(242,238,227,.55);text-transform:uppercase}
   .foot-col{display:flex;flex-direction:column;gap:7px}
-  .foot-col h5{font-family:var(--mono);font-size:.7rem;letter-spacing:.16em;text-transform:uppercase;
+  .foot-col h4{font-family:var(--mono);font-size:var(--t-mono);letter-spacing:.16em;text-transform:uppercase;
     color:var(--yellow);margin-bottom:8px}
   .foot-col a,.foot-col span.line{font-family:var(--sans);font-size:.92rem;
     color:rgba(242,238,227,.8);text-decoration:none;line-height:1.5;transition:color .25s,padding-left .25s}
@@ -327,23 +388,41 @@
   .foot-bottom{display:flex;justify-content:space-between;align-items:center;gap:24px;
     padding-top:26px;border-top:1px solid rgba(242,238,227,.14);flex-wrap:wrap}
   .foot-bottom-left{display:flex;flex-direction:column;gap:5px;font-family:var(--mono);
-    font-size:.68rem;letter-spacing:.1em;text-transform:uppercase;color:rgba(242,238,227,.55)}
+    font-size:var(--t-mono);letter-spacing:.1em;text-transform:uppercase;color:rgba(242,238,227,.55)}
   .foot-logos{width:340px;max-width:60vw;height:auto;opacity:.55}
   @media(max-width:860px){.foot-top{grid-template-columns:1fr 1fr}.foot-brand{grid-column:1/-1}}
   @media(max-width:560px){.foot-top{grid-template-columns:1fr}}
+  /* cajetin tecnico del documento (patron canonico .cajetin, version tinta) */
+  .foot-cajetin{display:grid;grid-template-columns:2.2fr 1.6fr 1fr 1fr .8fr .7fr;
+    border-top:2px solid rgba(242,238,227,.7);margin-bottom:26px}
+  .foot-cajetin .cell{padding:12px 14px 13px;border-left:1px solid rgba(242,238,227,.25);min-width:0}
+  .foot-cajetin .cell:first-child{border-left:0}
+  .foot-cajetin .k{display:block;font-family:var(--mono);font-size:var(--t-mono);letter-spacing:.14em;
+    text-transform:uppercase;color:rgba(242,238,227,.55);margin-bottom:4px}
+  .foot-cajetin .v{display:block;font-family:var(--sans);font-weight:700;font-size:.92rem;line-height:1.3;
+    color:rgba(242,238,227,.9)}
+  .foot-cajetin .v.big{font-family:var(--disp);font-weight:400;font-size:1.5rem;letter-spacing:.01em;color:var(--yellow)}
+  @media(max-width:860px){.foot-cajetin{grid-template-columns:1fr 1fr}
+    .foot-cajetin .cell{border-left:0;border-top:1px solid rgba(242,238,227,.14)}
+    .foot-cajetin .cell:nth-child(2n){border-left:1px solid rgba(242,238,227,.25)}
+    .foot-cajetin .cell:nth-child(-n+2){border-top:0}}
 
   /* ---- reveal ---- */
-  .rv{opacity:0;transform:translateY(26px);transition:opacity .8s cubic-bezier(.2,.8,.2,1),transform .8s cubic-bezier(.2,.8,.2,1)}
+  .rv{opacity:0;transform:translateY(26px);transition:opacity .8s var(--ease),transform .8s var(--ease)}
   .rv.in{opacity:1;transform:none}
   .rv.d1{transition-delay:.08s}.rv.d2{transition-delay:.16s}.rv.d3{transition-delay:.24s}.rv.d4{transition-delay:.32s}
+  /* reduced motion: TODO en estado final (marcos trazados, sellos estampados, barras pintadas) */
   @media(prefers-reduced-motion:reduce){
     *{animation:none!important;transition:none!important}
-    .rv{opacity:1;transform:none}.bar i{transition:none}
+    .rv{opacity:1;transform:none}.rubric .bar i{transition:none}
+    .deliv .d .frame i{transform:none!important}
+    .deliv .d .corner{opacity:1!important}
+    .deliv .d .inner{opacity:1!important;transform:none!important}
+    .rev-stamp{opacity:1!important;transform:rotate(-6deg)!important}
   }
 </style>
 </head>
 <body>
-<div class="cursor" id="cur"></div>
 <div class="progress" id="prog"></div>
 
 <header class="bar" id="bar">
@@ -360,12 +439,30 @@
     <a href="#checklist">Checklist</a>
     <a href="#sobresaliente">Sobresaliente</a>
   </nav>
-  <a class="back-btn" href="index.html">← Volver</a>
+  <div class="bar-actions">
+    <button class="menu-btn" id="menuBtn" type="button" aria-expanded="false" aria-controls="mnav">Menú</button>
+    <a class="back-btn" href="index.html">← Volver</a>
+  </div>
+  <nav class="mnav" id="mnav" hidden aria-label="Navegación de la guía">
+    <a href="#proceso">Proceso</a>
+    <a href="#entregables">Entregables</a>
+    <a href="#rubrica">Rúbrica</a>
+    <a href="#calificacion">Calificación</a>
+    <a href="#fechas">Titulación</a>
+    <a href="#checklist">Checklist</a>
+    <a href="#sobresaliente">Sobresaliente</a>
+    <a href="index.html">← Volver</a>
+  </nav>
 </header>
 
 <!-- HERO -->
 <div class="hero">
   <div class="wrap">
+    <div class="ctrlbar" aria-hidden="true">
+      <span class="chips"><i class="chip ch-c"></i><i class="chip ch-m"></i><i class="chip ch-y"></i><i class="chip ch-k"></i></span>
+      <svg class="reg" viewBox="0 0 14 14" focusable="false"><circle cx="7" cy="7" r="4.4" fill="none" stroke="currentColor" stroke-width="1.2"/><path d="M7 .5v13M.5 7h13" fill="none" stroke="currentColor" stroke-width="1.2"/></svg>
+      <span class="leg">CMYK · Marcas de registro</span>
+    </div>
     <div class="eyebrow rv">UDEM · Escuela de Arte y Diseño · Centro Roberto Garza Sada</div>
     <h1 class="title rv d1">Proyecto<br>de <span class="y">Evaluación</span><br>Final</h1>
     <div class="hero-meta">
@@ -388,13 +485,13 @@
   <span class="ghost">01</span>
   <div class="wrap">
     <div class="sec-head rv"><span class="sec-no">01 / EL PROCESO</span><h2>Mapa del semestre</h2></div>
-    <p class="sec-sub rv">Cinco etapas. Las fechas son del calendario Otoño 2026 (sujeto a cambios). El detalle vive en el Dossier.</p>
+    <p class="sec-sub rv">Cinco etapas. Las fechas son del calendario Otoño 2026 (sujeto a cambios). El detalle vive en el Dossier, que <a href="mailto:ldg.crgs@udem.edu?subject=Solicitud%20Dossier%20PEF%20OT26">se solicita por correo a la coordinación</a>.</p>
     <div class="timeline rv d1">
       <div class="stage"><span class="node"></span><div class="n">ETAPA 01</div><h3>Arranque</h3><div class="date">Inicio · 03 ago</div><p>Define la primera sesión con tu asesor para revisar avances de PEF 1.</p></div>
       <div class="stage"><span class="node"></span><div class="n">ETAPA 02</div><h3>Primer Parcial</h3><div class="date">04–19 sep · entrega ≤ 22 sep</div><p>Envía el avance de la Memoria (≥ 3 días hábiles antes). Presenta el avance del P1. Vale 20%.</p></div>
       <div class="stage"><span class="node"></span><div class="n">ETAPA 03</div><h3>Segundo Parcial</h3><div class="date">12–24 oct · entrega ≤ 27 oct</div><p>Envía el avance de la Memoria (≥ 3 días hábiles antes). Presenta el avance del P2. Vale 30%.</p></div>
-      <div class="stage"><span class="node"></span><div class="n">ETAPA 04</div><h3>Disertación</h3><div class="date">Eval. 17–23 nov · diserta. 23 nov–05 dic · últ. clase 20 nov</div><p>Memoria final consolidada. Presentación final (50 pts). Ticket to Fly montado.</p></div>
-      <div class="stage"><span class="node"></span><div class="n">ETAPA 05</div><h3>Carpeta final</h3><div class="date">Cierre del proyecto</div><p>Sube a Drive los 6 entregables de la carpeta. Apóyate en el Checklist.</p></div>
+      <div class="stage"><span class="node"></span><div class="n">ETAPA 04</div><h3>Disertación</h3><div class="date">Eval. 17–23 nov · diserta. 23 nov–05 dic · últ. clase 20 nov</div><p>Memoria final consolidada. Presentación final (50 pts). Ticket to Fly montado (ver sección 04).</p></div>
+      <div class="stage"><span class="node"></span><div class="n">ETAPA 05</div><h3>Carpeta final</h3><div class="date">Cierre del proyecto</div><p>Sube a Drive los 6 entregables de la carpeta (<a href="mailto:ldg.crgs@udem.edu?subject=Acceso%20carpeta%20Drive%20PEF%20OT26">solicita la liga</a>). Apóyate en el Checklist.</p></div>
     </div>
   </div>
 </section>
@@ -404,14 +501,38 @@
   <span class="ghost">02</span>
   <div class="wrap">
     <div class="sec-head rv"><span class="sec-no">02 / LA CARPETA</span><h2>Seis entregables</h2></div>
-    <p class="sec-sub rv">Cada archivo sube en su subcarpeta numerada de Drive, con el formato indicado.</p>
-    <div class="deliv rv d1">
-      <div class="d"><div class="fill"></div><div class="num">01</div><h3>Documentos oficiales</h3><p>Portada, carta de cesión de derechos y declaración académica.</p><div class="spec">PDF</div></div>
-      <div class="d"><div class="fill"></div><div class="num">02</div><h3>Ficha técnica</h3><p>En español y en inglés. Resumen ejecutivo: problema, objetivo y solución (máx. 1050 caracteres).</p><div class="spec">PDF · ES + EN</div></div>
-      <div class="d"><div class="fill"></div><div class="num">03</div><h3>Memoria académica</h3><p>Documento editorial con el rigor de una tesis. Formato libre acordado con el asesor.</p><div class="spec">PDF · + ejemplar impreso</div></div>
-      <div class="d"><div class="fill"></div><div class="num">04</div><h3>Fotografías</h3><p>7–8 generales y de detalle, 1 de autor(es) y 1 libre. Horizontales y verticales.</p><div class="spec">mín. 10 · JPG/PNG · 3000px · 300dpi</div></div>
-      <div class="d"><div class="fill"></div><div class="num">05</div><h3>Videos</h3><p>1 comercial (30–45 s) + 1 libre (hasta 90 s con proceso). Audio libre o con licencia.</p><div class="spec">mín. 2 · MP4 · 1080p · H.264</div></div>
-      <div class="d"><div class="fill"></div><div class="num">06</div><h3>Pósters</h3><p>Uno académico (proceso) y uno comercial (difusión). Listos para impresión.</p><div class="spec">2 · PDF · 74×120 cm · 300dpi</div></div>
+    <p class="sec-sub rv">Cada archivo sube en su subcarpeta numerada de Drive, con el formato indicado. La liga de la carpeta <a href="mailto:ldg.crgs@udem.edu?subject=Acceso%20carpeta%20Drive%20PEF%20OT26">se solicita a la coordinación</a>.</p>
+    <div class="deliv">
+      <article class="d frame-io">
+        <span class="frame" aria-hidden="true"><i class="f-t"></i><i class="f-r"></i><i class="f-b"></i><i class="f-l"></i></span>
+        <i class="corner c-tl" aria-hidden="true"></i><i class="corner c-br" aria-hidden="true"></i>
+        <div class="inner"><div class="num">01</div><h3>Documentos oficiales</h3><p>Portada, carta de cesión de derechos y declaración académica.</p><div class="spec">PDF</div></div>
+      </article>
+      <article class="d frame-io">
+        <span class="frame" aria-hidden="true"><i class="f-t"></i><i class="f-r"></i><i class="f-b"></i><i class="f-l"></i></span>
+        <i class="corner c-tl" aria-hidden="true"></i><i class="corner c-br" aria-hidden="true"></i>
+        <div class="inner"><div class="num">02</div><h3>Ficha técnica</h3><p>En español y en inglés. Resumen ejecutivo: problema, objetivo y solución (máx. 1050 caracteres).</p><div class="spec">PDF · ES + EN</div></div>
+      </article>
+      <article class="d frame-io">
+        <span class="frame" aria-hidden="true"><i class="f-t"></i><i class="f-r"></i><i class="f-b"></i><i class="f-l"></i></span>
+        <i class="corner c-tl" aria-hidden="true"></i><i class="corner c-br" aria-hidden="true"></i>
+        <div class="inner"><div class="num">03</div><h3>Memoria académica</h3><p>Documento editorial con el rigor de una tesis. Formato libre acordado con el asesor.</p><div class="spec">PDF · + ejemplar impreso</div></div>
+      </article>
+      <article class="d frame-io">
+        <span class="frame" aria-hidden="true"><i class="f-t"></i><i class="f-r"></i><i class="f-b"></i><i class="f-l"></i></span>
+        <i class="corner c-tl" aria-hidden="true"></i><i class="corner c-br" aria-hidden="true"></i>
+        <div class="inner"><div class="num">04</div><h3>Fotografías</h3><p>7–8 generales y de detalle, 1 de autor(es) y 1 libre. Horizontales y verticales.</p><div class="spec">mín. 10 · JPG/PNG · 3000px · 300dpi</div></div>
+      </article>
+      <article class="d frame-io">
+        <span class="frame" aria-hidden="true"><i class="f-t"></i><i class="f-r"></i><i class="f-b"></i><i class="f-l"></i></span>
+        <i class="corner c-tl" aria-hidden="true"></i><i class="corner c-br" aria-hidden="true"></i>
+        <div class="inner"><div class="num">05</div><h3>Videos</h3><p>1 comercial (30–45 s) + 1 libre (hasta 90 s con proceso). Audio libre o con licencia.</p><div class="spec">mín. 2 · MP4 · 1080p · H.264</div></div>
+      </article>
+      <article class="d frame-io">
+        <span class="frame" aria-hidden="true"><i class="f-t"></i><i class="f-r"></i><i class="f-b"></i><i class="f-l"></i></span>
+        <i class="corner c-tl" aria-hidden="true"></i><i class="corner c-br" aria-hidden="true"></i>
+        <div class="inner"><div class="num">06</div><h3>Pósters</h3><p>Uno académico (proceso) y uno comercial (difusión). Listos para impresión.</p><div class="spec">2 · PDF · 74×120 cm · 300dpi</div></div>
+      </article>
     </div>
   </div>
 </section>
@@ -433,7 +554,7 @@
     </div>
     <div class="panel rv d2">
       <div>
-        <h4 style="font-family:var(--mono);font-size:.74rem;letter-spacing:.16em;text-transform:uppercase;color:var(--yellow)">Ponderación de evaluadores</h4>
+        <h3 style="font-family:var(--mono);font-size:.74rem;letter-spacing:.16em;text-transform:uppercase;color:var(--yellow)">Ponderación de evaluadores</h3>
         <div class="evals">
           <div><b>50<span class="yellowdot">%</span></b><span>Asesor</span></div>
           <div><b>25<span class="yellowdot">%</span></b><span>Sinodal 1</span></div>
@@ -441,8 +562,8 @@
         </div>
       </div>
       <div>
-        <h4 style="font-family:var(--mono);font-size:.74rem;letter-spacing:.16em;text-transform:uppercase;color:var(--red)">Regla de la Memoria de avance</h4>
-        <p style="margin-top:12px;color:var(--ink-soft);font-size:.98rem">En cada parcial, la Memoria consolidada debe enviarse al asesor y a los sinodales con al menos <b style="color:var(--ink)">3 días hábiles</b> de anticipación a la presentación. Tras el <b style="color:var(--ink)">freeze</b> de P1, los cambios de alcance pueden impactar en el rubro Libre.</p>
+        <h3 style="font-family:var(--mono);font-size:.74rem;letter-spacing:.16em;text-transform:uppercase;color:var(--verm)">Regla de la Memoria de avance</h3>
+        <p style="margin-top:12px;color:var(--ink-soft);font-size:.98rem">En cada parcial, la Memoria consolidada debe enviarse al asesor y a los sinodales con al menos <b style="color:var(--ink)">3 días hábiles</b> de anticipación a la presentación. Tras el <b style="color:var(--ink)">cierre de alcance (freeze)</b> de P1, los cambios de alcance pueden impactar en el rubro Libre.</p>
       </div>
     </div>
   </div>
@@ -479,8 +600,8 @@
       </ul>
     </div>
     <div class="notes rv d2" style="margin-top:34px">
-      <div class="note"><h4>CENEVAL + asesorías · 10%</h4><p>Considera la asistencia a las asesorías programadas y la presentación del examen CENEVAL. Fecha por definir (Coordinación).</p></div>
-      <div class="note amber"><h4>Ticket to Fly · 10%</h4><p>Exposición pública en el CRGS, posterior a la disertación. 2 pósters por proyecto sobre foam board, montados en las islas del 6.º piso. Fecha por definir.</p></div>
+      <div class="note"><h3>CENEVAL + asesorías · 10%</h3><p>Considera la asistencia a las asesorías programadas y la presentación del examen CENEVAL. Fecha por definir (se anuncia por correo de coordinación).</p></div>
+      <div class="note amber"><h3>Ticket to Fly · 10%</h3><p>Exposición pública en el CRGS, posterior a la disertación. 2 pósters por proyecto sobre foam board, montados en las islas del 6.º piso. Fecha por definir (se anuncia por correo de coordinación).</p></div>
     </div>
   </div>
 </section>
@@ -509,9 +630,9 @@
         <li>Anexos</li>
       </ol>
       <div class="notes rv d2">
-        <div class="note"><h4>Entrega física obligatoria</h4><p>Además del PDF, se entrega un ejemplar impreso para resguardo del programa, con el mismo contenido y rigor que la versión digital.</p></div>
-        <div class="note"><h4>Diseño editorial</h4><p>Retícula y jerarquía tipográfica consistentes; imágenes en buena resolución con créditos; legibilidad y contraste; coherencia visual entre memoria y producto.</p></div>
-        <div class="note amber"><h4>Enfoques posibles</h4><p>Aplicación profesional · Innovación y emprendimiento · Investigación aplicada · Impacto social y cultural · Proyección académica.</p></div>
+        <div class="note"><h3>Entrega física obligatoria</h3><p>Además del PDF, se entrega un ejemplar impreso para resguardo del programa, con el mismo contenido y rigor que la versión digital.</p></div>
+        <div class="note"><h3>Diseño editorial</h3><p>Retícula y jerarquía tipográfica consistentes; imágenes en buena resolución con créditos; legibilidad y contraste; coherencia visual entre memoria y producto.</p></div>
+        <div class="note amber"><h3>Enfoques posibles</h3><p>Aplicación profesional · Innovación y emprendimiento · Investigación aplicada · Impacto social y cultural · Proyección académica.</p></div>
       </div>
     </div>
   </div>
@@ -549,8 +670,9 @@
   <span class="ghost">07</span>
   <div class="wrap">
     <div class="sec-head rv"><span class="sec-no">07 / TITULACIÓN</span><h2>Fechas que no se mueven</h2></div>
-    <p class="sec-sub rv">Nivel profesional — todas las licenciaturas excepto MCP y MCD.</p>
+    <p class="sec-sub rv">Nivel profesional · todas las licenciaturas excepto MCP y MCD.</p>
     <div class="titul rv d1">
+      <span class="rev-stamp" aria-hidden="true">Fechas inamovibles</span>
       <div class="t"><span>Solicitud en línea de inicio del trámite de titulación</span><b>24 ago – 23 oct</b></div>
       <div class="t"><span>Documentación para conclusión de estudios (CURP, fotos, pago)</span><b>24 ago – 23 oct</b></div>
       <div class="t"><span>Solicitud de exámenes a capacidad</span><b>03 ago – 09 oct</b></div>
@@ -559,8 +681,9 @@
       <div class="t"><span>Fecha límite para entregar resultados TOEFL</span><b>20 nov</b></div>
     </div>
     <div class="alert rv d2">
-      <h4>Sin esto no hay titulación</h4>
-      <p>Para ser prospecto a graduar (PG) haz la solicitud en el portal de graduación. Verifica con tiempo que el <b>TOEFL</b> y la <b>carta de Servicio Social</b> estén liberados en el sistema: si quedan pendientes, no podrás titularte. Vuelve a confirmarlo antes de la disertación.</p>
+      <span class="rev-stamp" aria-hidden="true">Sin esto no hay título</span>
+      <h3>Sin esto no hay titulación</h3>
+      <p>Para ser prospecto a graduar (PG) haz la solicitud en el portal de graduación (acceso desde tu Portal UDEM). Verifica con tiempo que el <b>TOEFL</b> y la <b>carta de Servicio Social</b> estén liberados en el sistema: si quedan pendientes, no podrás titularte. Vuelve a confirmarlo antes de la disertación.</p>
     </div>
   </div>
 </section>
@@ -576,6 +699,7 @@
         <span class="pcount" id="pcount">0/11</span>
         <span class="ptrack"><span class="pfill" id="pfill"></span></span>
         <span class="plabel">Completado</span>
+        <button class="ckreset" id="ckreset" type="button">Reiniciar</button>
       </div>
 
       <div class="check-group">
@@ -595,7 +719,7 @@
       </div>
 
       <div class="check-group">
-        <div class="check-gtitle">Titulación · sin esto no te titulas</div>
+        <div class="check-gtitle">Titulación · sin esto no hay título</div>
         <label class="check-item"><input type="checkbox" data-ck="t1"><span class="check-box"></span><span class="check-text"><b>Solicitud de graduación (PG) en el portal</b></span></label>
         <label class="check-item"><input type="checkbox" data-ck="t2"><span class="check-box"></span><span class="check-text"><b>TOEFL liberado en el sistema</b></span></label>
         <label class="check-item"><input type="checkbox" data-ck="t3"><span class="check-box"></span><span class="check-text"><b>Carta de Servicio Social liberada</b></span></label>
@@ -660,11 +784,16 @@
     </div>
 
     <div class="cta-row rv d2">
+      <p class="cta-note" style="flex-basis:100%;max-width:none">Solo asesores de proyecto postulan.</p>
       <a class="btn" id="postularBtn" href="mailto:ldg.crgs@udem.edu">Postular proyecto a PEF Sobresaliente <span aria-hidden="true">→</span></a>
-      <p class="cta-note">Solo asesores. Solicitud dirigida a la Dirección del Programa.</p>
+      <p class="cta-note">Solicitud dirigida a la Dirección del Programa.<br>Correo destino: <a href="mailto:ldg.crgs@udem.edu">ldg.crgs@udem.edu</a></p>
     </div>
   </div>
 </section>
+
+<div class="wrap" style="margin-top:80px;text-align:center">
+  <a class="back-btn" href="#">↑ Volver arriba</a>
+</div>
 
 <footer>
   <div class="foot-top">
@@ -673,25 +802,33 @@
       <p class="foot-tag">Repositorio académico<br>de tesis de diseño gráfico</p>
     </div>
     <div class="foot-col">
-      <h5>Navegación</h5>
+      <h4>Navegación</h4>
       <a href="index.html">Inicio</a>
       <a href="trayectoria.html">Trayectoria</a>
-      <a href="pef.html">Guía PEF</a>
+      <a href="pef.html" aria-current="page">Guía PEF</a>
       <a href="index.html#gallery">Proyectos</a>
     </div>
     <div class="foot-col">
-      <h5>PEF · OT26</h5>
+      <h4>PEF · OT26</h4>
       <a href="tel:8182151020">CIAA · 81 8215 1020</a>
       <a href="mailto:ciaa@udem.edu.mx">ciaa@udem.edu.mx</a>
       <a href="mailto:elena.degasperin@udem.edu">Titulación</a>
       <span class="line">Verifica TOEFL y Servicio Social.</span>
     </div>
     <div class="foot-col">
-      <h5>Programa</h5>
+      <h4>Programa</h4>
       <a href="mailto:ldg.crgs@udem.edu">ldg.crgs@udem.edu</a>
       <a href="https://www.instagram.com/ldg_udem" target="_blank" rel="noopener">Instagram</a>
       <a href="https://crgs.udem.edu.mx/arte-arquitectura-y-diseno/academia/profesional/licenciatura-en-diseno-grafico" target="_blank" rel="noopener">Sitio web</a>
     </div>
+  </div>
+  <div class="foot-cajetin">
+    <div class="cell"><span class="k">Documento</span><span class="v">Guía PEF · Otoño 2026</span></div>
+    <div class="cell"><span class="k">Programa</span><span class="v">Lic. en Diseño Gráfico</span></div>
+    <div class="cell"><span class="k">Sede</span><span class="v">CRGS · UDEM</span></div>
+    <div class="cell"><span class="k">Formato</span><span class="v big">74×120</span></div>
+    <div class="cell"><span class="k">Rev.</span><span class="v">OT26</span></div>
+    <div class="cell"><span class="k">Lámina</span><span class="v big">03</span></div>
   </div>
   <div class="foot-bottom">
     <div class="foot-bottom-left">
@@ -706,19 +843,22 @@
 (function(){
   var reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
-  // custom cursor — disabled for institutional sobriety (kept code path inert)
-  var cur = document.getElementById('cur');
-  if (false){
-    document.documentElement.classList.add('cursorize');
-    var cx=0,cy=0,tx=0,ty=0;
-    document.addEventListener('mousemove',function(e){tx=e.clientX;ty=e.clientY;});
-    (function loop(){cx+=(tx-cx)*.22;cy+=(ty-cy)*.22;cur.style.transform='translate('+cx+'px,'+cy+'px) translate(-50%,-50%)';requestAnimationFrame(loop);})();
-    var hov='a, .d, .stage, .row, button, .mark';
-    document.querySelectorAll(hov).forEach(function(el){
-      el.addEventListener('mouseenter',function(){cur.classList.add('big');});
-      el.addEventListener('mouseleave',function(){cur.classList.remove('big');});
+  // mobile menu · native toggle, closes on anchor pick and Esc
+  var menuBtn=document.getElementById('menuBtn'), mnav=document.getElementById('mnav');
+  function closeMenu(){
+    if(!mnav||mnav.hidden) return;
+    mnav.hidden=true; menuBtn.setAttribute('aria-expanded','false'); onScroll();
+  }
+  if(menuBtn&&mnav){
+    menuBtn.addEventListener('click',function(){
+      var open=mnav.hidden;
+      mnav.hidden=!open; menuBtn.setAttribute('aria-expanded',open?'true':'false'); onScroll();
     });
-  } else { cur.style.display='none'; }
+    mnav.querySelectorAll('a').forEach(function(a){ a.addEventListener('click',closeMenu); });
+    document.addEventListener('keydown',function(e){
+      if(e.key==='Escape'&&!mnav.hidden){ closeMenu(); menuBtn.focus(); }
+    });
+  }
 
   // scroll progress + sticky bar
   var prog=document.getElementById('prog'), bar=document.getElementById('bar');
@@ -726,7 +866,7 @@
     var h=document.documentElement, sc=h.scrollTop||document.body.scrollTop;
     var max=h.scrollHeight-h.clientHeight;
     prog.style.width=(max>0?(sc/max*100):0)+'%';
-    if(sc>40)bar.classList.add('solid');else bar.classList.remove('solid');
+    if(sc>40||(mnav&&!mnav.hidden))bar.classList.add('solid');else bar.classList.remove('solid');
   }
   document.addEventListener('scroll',onScroll,{passive:true}); onScroll();
 
@@ -734,22 +874,23 @@
   var io=new IntersectionObserver(function(es){
     es.forEach(function(e){ if(e.isIntersecting){ e.target.classList.add('in'); io.unobserve(e.target);} });
   },{threshold:.12, rootMargin:'0px 0px -8% 0px'});
-  document.querySelectorAll('.rv').forEach(function(el){ if(reduce){el.classList.add('in');} else io.observe(el); });
+  document.querySelectorAll('.rv,.frame-io,.rev-stamp').forEach(function(el){ if(reduce){el.classList.add('in');} else io.observe(el); });
 
   // animate rubric bars when visible
   var rub=document.getElementById('rubrica');
   var rio=new IntersectionObserver(function(es){
     es.forEach(function(e){ if(e.isIntersecting){
       document.querySelectorAll('#rubrica .row').forEach(function(r,i){
-        var w=r.getAttribute('data-w');
-        setTimeout(function(){ r.querySelector('.bar i').style.width=(w*4)+'%'; }, reduce?0:i*90);
+        var w=r.getAttribute('data-w'), fill=r.querySelector('.bar i');
+        fill.style.width=(w*4)+'%'; /* final width up front; only transform animates */
+        setTimeout(function(){ fill.style.transform='scaleX(1)'; }, reduce?0:i*90);
       });
       rio.disconnect();
     }});
   },{threshold:.3});
   if(rub) rio.observe(rub);
 
-  // checklist — progress + persistence (localStorage)
+  // checklist · progress + persistence (localStorage)
   var ckBox=document.getElementById('checklist-box');
   if(ckBox){
     var boxes=ckBox.querySelectorAll('input[type="checkbox"][data-ck]');
@@ -762,21 +903,54 @@
       boxes.forEach(function(b){ if(b.checked) done++; });
       var total=boxes.length;
       if(pcount) pcount.textContent=done+'/'+total;
-      if(pfill) pfill.style.width=(total?Math.round(done/total*100):0)+'%';
+      if(pfill) pfill.style.transform='scaleX('+(total?done/total:0)+')';
+    }
+    var warned=false;
+    function storageWarn(){ /* one-time notice if localStorage is unavailable */
+      if(warned) return; warned=true;
+      var n=document.createElement('p');
+      n.className='check-warn';
+      n.textContent='El progreso no se guardará en este navegador.';
+      ckBox.insertAdjacentElement('afterend',n);
     }
     boxes.forEach(function(b){
       var id=b.getAttribute('data-ck');
       b.checked=!!saved[id]; /* authoritative: overrides browser form restoration */
       b.addEventListener('change',function(){
         saved[id]=b.checked;
-        try{ localStorage.setItem(KEY,JSON.stringify(saved)); }catch(e){}
+        try{ localStorage.setItem(KEY,JSON.stringify(saved)); }catch(e){ storageWarn(); }
         refresh();
       });
     });
+    var ckReset=document.getElementById('ckreset');
+    if(ckReset){
+      ckReset.addEventListener('click',function(){
+        if(!confirm('¿Reiniciar el checklist? Se borrará el progreso guardado.')) return;
+        saved={};
+        try{ localStorage.removeItem(KEY); }catch(e){}
+        boxes.forEach(function(b){ b.checked=false; });
+        refresh();
+      });
+    }
     refresh();
   }
 
-  // PEF Sobresaliente — pre-fill the postulation email (subject + body template)
+  // scrollspy · highlight the active anchor in the top nav
+  var spyLinks=document.querySelectorAll('nav.top a[href^="#"]');
+  if(spyLinks.length){
+    var spyById={};
+    spyLinks.forEach(function(a){ spyById[a.getAttribute('href').slice(1)]=a; });
+    var spy=new IntersectionObserver(function(es){
+      es.forEach(function(e){
+        if(!e.isIntersecting) return;
+        spyLinks.forEach(function(a){ a.classList.remove('active'); });
+        var a=spyById[e.target.id]; if(a) a.classList.add('active');
+      });
+    },{rootMargin:'-25% 0px -65% 0px'});
+    Object.keys(spyById).forEach(function(id){ var s=document.getElementById(id); if(s) spy.observe(s); });
+  }
+
+  // PEF Sobresaliente · pre-fill the postulation email (subject + body template)
   var pb=document.getElementById('postularBtn');
   if(pb){
     var subject='Postulación PEF Sobresaliente · [nombre del proyecto]';

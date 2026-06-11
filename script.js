@@ -1,6 +1,6 @@
 /* ============================================
-   PORTFOLIO LDG — Script
-   Valiente-inspired interactions
+   PORTFOLIO LDG · Script
+   Sistema "Mesa de Revisión" (ver DESIGN.md)
    ============================================ */
 
 // ---- THESIS DATA ----
@@ -239,6 +239,20 @@ function getItemsPerPage() {
   return 4;                 // 2 cols × 2 rows
 }
 
+// ---- ACCESSIBILITY FLAGS ----
+const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+// ---- HTML ESCAPING (datos de Firebase / dinámicos) ----
+function escapeHtml(text) {
+  const div = document.createElement('div');
+  div.textContent = text;
+  return div.innerHTML;
+}
+
+function escapeAttr(text) {
+  return String(text == null ? '' : text).replace(/&/g, '&amp;').replace(/"/g, '&quot;').replace(/'/g, '&#39;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+}
+
 // ---- DOM ELEMENTS ----
 const navBurger = document.getElementById('navBurger');
 const menu = document.getElementById('menu');
@@ -252,137 +266,100 @@ const modalBackdrop = document.getElementById('modalBackdrop');
 const modalClose = document.getElementById('modalClose');
 
 // ============================================
-// CUSTOM CURSOR (Valiente-style)
+// MOTION · Sistema "Mesa de Revisión"
+// Un solo IntersectionObserver: añade .in y dispara
+// contadores, luego unobserve. Las coreografías viven
+// en CSS con delays; JS solo reparte .in.
 // ============================================
-const cursor = document.getElementById('cursor');
-const cursorDot = cursor.querySelector('.cursor__dot');
-const cursorCircle = cursor.querySelector('.cursor__circle');
-let cursorX = 0, cursorY = 0;
-let circleX = 0, circleY = 0;
-
-document.addEventListener('mousemove', (e) => {
-  cursorX = e.clientX;
-  cursorY = e.clientY;
-  cursorDot.style.transform = `translate(${cursorX}px, ${cursorY}px)`;
-});
-
-function animateCursor() {
-  circleX += (cursorX - circleX) * 0.15;
-  circleY += (cursorY - circleY) * 0.15;
-  cursorCircle.style.transform = `translate(${circleX}px, ${circleY}px)`;
-  requestAnimationFrame(animateCursor);
+function fmtCount(v, dec, group) {
+  if (dec) return v.toFixed(dec);
+  const n = Math.round(v);
+  return group ? n.toLocaleString('en-US') : String(n);
 }
-animateCursor();
 
-// Hover detection for cursor scale
-const hoverTargets = () => document.querySelectorAll('a, button, .thesis-card, .filter-btn, .about__strip-item');
-function bindCursorHover() {
-  hoverTargets().forEach(el => {
-    el.addEventListener('mouseenter', () => cursor.classList.add('hovering'));
-    el.addEventListener('mouseleave', () => cursor.classList.remove('hovering'));
+function runCounter(el) {
+  const target = parseFloat(el.getAttribute('data-count'));
+  const dec = parseInt(el.getAttribute('data-dec') || '0', 10);
+  const group = el.getAttribute('data-group') === '1';
+  if (reduceMotion) {
+    el.textContent = fmtCount(target, dec, group);
+    return;
+  }
+  const dur = 1400;
+  let t0 = null;
+  function step(ts) {
+    if (!t0) t0 = ts;
+    const p = Math.min((ts - t0) / dur, 1);
+    const e = 1 - Math.pow(1 - p, 5); // easeOutQuint
+    el.textContent = fmtCount(target * e, dec, group);
+    if (p < 1) requestAnimationFrame(step);
+    else el.textContent = fmtCount(target, dec, group);
+  }
+  requestAnimationFrame(step);
+}
+
+let mesaIO = null;
+
+function revealNow(el) {
+  el.classList.add('in');
+  el.querySelectorAll('[data-count]').forEach(runCounter);
+}
+
+function ioObserve(el) {
+  if (reduceMotion || !('IntersectionObserver' in window)) {
+    revealNow(el);
+    return;
+  }
+  if (!mesaIO) {
+    mesaIO = new IntersectionObserver((entries) => {
+      entries.forEach((en) => {
+        if (!en.isIntersecting) return;
+        revealNow(en.target);
+        mesaIO.unobserve(en.target);
+      });
+    }, { threshold: 0.25, rootMargin: '0px 0px -8% 0px' });
+  }
+  mesaIO.observe(el);
+}
+
+function initMotion() {
+  document.querySelectorAll('[data-io]').forEach(ioObserve);
+}
+
+// ============================================
+// LÁMINA AUDIOVISUAL · Vimeo bajo demanda
+// (poster como fallback; el video solo carga y suena
+// tras la acción del usuario; sin autoplay con sonido)
+// ============================================
+function initVideoLamina() {
+  const poster = document.getElementById('videoPoster');
+  const frame = document.getElementById('videoLamina');
+  if (!poster || !frame) return;
+  poster.addEventListener('click', (e) => {
+    e.preventDefault();
+    const iframe = document.createElement('iframe');
+    iframe.src = 'https://player.vimeo.com/video/1160882204?autoplay=1&badge=0&app_id=58479';
+    iframe.className = 'lamina__video';
+    iframe.title = 'BioDiseño x Sofía Porto · PEF session Otoño 2025';
+    iframe.setAttribute('allow', 'autoplay; fullscreen; picture-in-picture');
+    iframe.setAttribute('allowfullscreen', '');
+    iframe.setAttribute('referrerpolicy', 'strict-origin-when-cross-origin');
+    frame.innerHTML = '';
+    frame.appendChild(iframe);
   });
 }
 
-// ============================================
-// HERO ANIMATIONS (on load)
-// ============================================
-window.addEventListener('load', () => {
-  document.querySelectorAll('.hero__line').forEach(el => el.classList.add('animated'));
-});
-
-// ============================================
-// FLIP WORDS
-// ============================================
-(function initFlipWords() {
-  const words = ['marcas', 'productos digitales', 'experiencias'];
-  const el = document.getElementById('flipWord');
-  if (!el) return;
-  let index = 0;
-
-  setInterval(() => {
-    el.classList.add('flip-out');
-    setTimeout(() => {
-      index = (index + 1) % words.length;
-      el.textContent = words[index];
-      el.classList.remove('flip-out');
-      el.classList.add('flip-in');
-      setTimeout(() => el.classList.remove('flip-in'), 400);
-    }, 400);
-  }, 3000);
-})();
-
-// ============================================
-// TEXT CURSOR PROXIMITY
-// ============================================
-(function initCursorProximity() {
-  const RADIUS = 120;
-  const mousePos = { x: -9999, y: -9999 };
-  const targets = [];
-
-  // Split text into individual letter spans (only for simple text nodes, no <br>)
-  function splitLetters(el) {
-    // Skip elements with child elements like <br>
-    if (el.querySelector('br')) return;
-    const text = el.textContent;
-    el.innerHTML = '';
-    el.setAttribute('data-proximity', 'true');
-    text.split('').forEach(char => {
-      const span = document.createElement('span');
-      span.textContent = char === ' ' ? '\u00A0' : char;
-      span.style.display = 'inline-block';
-      span.style.transition = 'none';
-      span.style.willChange = 'transform, color';
-      el.appendChild(span);
-      targets.push(span);
-    });
-  }
-
-  // Apply only to LDG
-  document.querySelectorAll('.hero__line--outline').forEach(splitLetters);
-
-  // Track mouse
-  document.addEventListener('mousemove', e => {
-    mousePos.x = e.clientX;
-    mousePos.y = e.clientY;
-  });
-
-  // Animation loop
-  function animate() {
-    targets.forEach(span => {
-      const rect = span.getBoundingClientRect();
-      const cx = rect.left + rect.width / 2;
-      const cy = rect.top + rect.height / 2;
-      const dx = mousePos.x - cx;
-      const dy = mousePos.y - cy;
-      const dist = Math.sqrt(dx * dx + dy * dy);
-
-      // Gaussian falloff
-      const proximity = dist < RADIUS ? Math.exp(-Math.pow(dist / (RADIUS / 2), 2) / 2) : 0;
-
-      const scale = 1 + proximity * 0.3;
-      span.style.transform = 'scale(' + scale + ')';
-
-      // Color shift: from current to accent
-      if (proximity > 0.01) {
-        const r = Math.round(255 - proximity * 43);
-        const g = Math.round(255 - proximity * 0);
-        const b = Math.round(255 - proximity * 255);
-        span.style.color = 'rgb(' + r + ',' + g + ',' + b + ')';
-      } else {
-        span.style.color = '';
-      }
-    });
-    requestAnimationFrame(animate);
-  }
-
-  if (targets.length > 0) requestAnimationFrame(animate);
-})();
 
 // ---- NAVIGATION ----
+function syncBurgerExpanded() {
+  navBurger.setAttribute('aria-expanded', menu.classList.contains('open') ? 'true' : 'false');
+}
+
 navBurger.addEventListener('click', () => {
   navBurger.classList.toggle('active');
   menu.classList.toggle('open');
   document.body.classList.toggle('menu-open');
+  syncBurgerExpanded();
 });
 
 menuLinks.forEach(link => {
@@ -390,6 +367,7 @@ menuLinks.forEach(link => {
     navBurger.classList.remove('active');
     menu.classList.remove('open');
     document.body.classList.remove('menu-open');
+    syncBurgerExpanded();
   });
 });
 
@@ -430,37 +408,42 @@ function renderGallery(animate = true) {
     }
 
     card.innerHTML = `
-      <div class="thesis-card__image">
-        <img src="${thesis.thumbnail}" alt="${thesis.title}" class="thesis-card__thumbnail" loading="lazy">
-        <div class="thesis-card__overlay">
-          <span>VER PROYECTO &rarr;</span>
+      <span class="frame" aria-hidden="true"><i class="f-t"></i><i class="f-r"></i><i class="f-b"></i><i class="f-l"></i></span>
+      <i class="corner c-tl" aria-hidden="true"></i><i class="corner c-br" aria-hidden="true"></i>
+      <div class="inner">
+        <div class="fhead">
+          <span class="fno">Ficha Nº ${String(start + i + 1).padStart(2, '0')}</span>
+          <span class="fcat">${escapeHtml(thesis.categoryLabel)}</span>
+          <span class="fyr">${escapeHtml(thesis.year)}</span>
         </div>
-      </div>
-      <div class="thesis-card__info">
-        <span class="mono-sm thesis-card__category">${thesis.categoryLabel}</span>
-        <h3 class="thesis-card__title">${thesis.title}</h3>
-        <div class="thesis-card__meta">
-          <span class="thesis-card__student">${thesis.student}</span>
-          <span class="thesis-card__year">${thesis.year}</span>
+        <div class="fbody">
+          <figure class="thesis-card__image">
+            <img src="${escapeAttr(thesis.thumbnail)}" alt="" class="thesis-card__thumbnail" loading="lazy">
+          </figure>
+          <div class="thesis-card__info">
+            <h3 class="thesis-card__title">${escapeHtml(thesis.title)}</h3>
+            <dl class="fmeta">
+              <dt>Estudiantes</dt><dd>${escapeHtml(thesis.student)}</dd>
+              <dt>Tutor</dt><dd class="soft">${escapeHtml(thesis.tutor)}</dd>
+            </dl>
+            <span class="fopen mono" aria-hidden="true">Ver ficha &rarr;</span>
+          </div>
         </div>
       </div>
     `;
 
-    // Tilt effect on mouse move (Valiente-style)
-    const image = card.querySelector('.thesis-card__image');
-    card.addEventListener('mousemove', (e) => {
-      const rect = image.getBoundingClientRect();
-      const x = (e.clientX - rect.left) / rect.width - 0.5;
-      const y = (e.clientY - rect.top) / rect.height - 0.5;
-      image.style.transform = `perspective(600px) rotateY(${x * 8}deg) rotateX(${-y * 8}deg)`;
-    });
-    card.addEventListener('mouseleave', () => {
-      image.style.transform = 'perspective(600px) rotateY(0deg) rotateX(0deg)';
-      image.style.transition = 'transform 0.5s cubic-bezier(0.16, 1, 0.3, 1)';
-      setTimeout(() => { image.style.transition = ''; }, 500);
+    // Acceso por teclado: la tarjeta actúa como botón
+    card.setAttribute('tabindex', '0');
+    card.setAttribute('role', 'button');
+    card.setAttribute('aria-label', `Ver proyecto: ${thesis.title}`);
+    card.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter' || e.key === ' ') {
+        e.preventDefault();
+        openModal(thesis, card);
+      }
     });
 
-    card.addEventListener('click', () => openModal(thesis));
+    card.addEventListener('click', () => openModal(thesis, card));
     galleryGrid.appendChild(card);
   });
 
@@ -474,7 +457,8 @@ function renderGallery(animate = true) {
   if (prevBtn) prevBtn.disabled = currentPage === 0;
   if (nextBtn) nextBtn.disabled = currentPage >= totalPages - 1;
 
-  bindCursorHover();
+  // Motion del sistema: el marco de cada ficha se traza al entrar en viewport
+  galleryGrid.querySelectorAll('.thesis-card').forEach(ioObserve);
 }
 
 function slideGallery(direction) {
@@ -538,14 +522,20 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 
 // ---- MODAL ----
-function openModal(thesis) {
-  document.getElementById('modalCover').innerHTML = `<img src="${thesis.thumbnail}" alt="${thesis.title}" style="width:100%;height:100%;object-fit:cover;">`;
+// Elemento (tarjeta) que abrió el modal, para devolverle el foco al cerrar
+let modalOriginEl = null;
+
+function openModal(thesis, originEl) {
+  document.getElementById('modalCover').innerHTML = `<img src="${escapeAttr(thesis.thumbnail)}" alt="${escapeAttr(thesis.title)}" style="width:100%;height:100%;object-fit:cover;">`;
   document.getElementById('modalCategory').textContent = thesis.categoryLabel;
   document.getElementById('modalTitle').textContent = thesis.title;
   document.getElementById('modalStudent').textContent = thesis.student;
   document.getElementById('modalTutor').textContent = thesis.tutor;
   document.getElementById('modalYear').textContent = thesis.year;
+  const modalSemester = document.getElementById('modalSemester');
+  if (modalSemester) modalSemester.textContent = thesis.semester || thesis.year;
   document.getElementById('modalAbstract').textContent = thesis.abstract;
+  modal.setAttribute('aria-label', thesis.title);
 
   // Clear gallery section
   const galleryEl = document.getElementById('modalGallery');
@@ -559,20 +549,48 @@ function openModal(thesis) {
       link.href = thesis.pdfUrl;
       link.download = '';
       link.click();
+      // Feedback al usuario mientras el navegador abre el PDF
+      const label = modalDownload.querySelector('span:first-child');
+      if (label) {
+        label.textContent = 'ABRIENDO…';
+        setTimeout(() => { label.textContent = 'DESCARGAR PDF'; }, 1500);
+      }
     };
   }
 
+  modalOriginEl = originEl || null;
   modal.classList.add('open');
   document.body.classList.add('modal-open');
+  modalClose.focus();
 }
 
 function closeModal() {
   modal.classList.remove('open');
   document.body.classList.remove('modal-open');
+  if (modalOriginEl && document.contains(modalOriginEl)) {
+    modalOriginEl.focus();
+  }
+  modalOriginEl = null;
 }
 
 modalClose.addEventListener('click', closeModal);
 modalBackdrop.addEventListener('click', closeModal);
+
+// Trampa de foco simple dentro del modal
+modal.addEventListener('keydown', (e) => {
+  if (e.key !== 'Tab' || !modal.classList.contains('open')) return;
+  const focusables = modal.querySelectorAll('button, [href], [tabindex]:not([tabindex="-1"])');
+  if (!focusables.length) return;
+  const first = focusables[0];
+  const last = focusables[focusables.length - 1];
+  if (e.shiftKey && document.activeElement === first) {
+    e.preventDefault();
+    last.focus();
+  } else if (!e.shiftKey && document.activeElement === last) {
+    e.preventDefault();
+    first.focus();
+  }
+});
 
 document.addEventListener('keydown', (e) => {
   if (e.key === 'Escape') {
@@ -581,168 +599,87 @@ document.addEventListener('keydown', (e) => {
       navBurger.classList.remove('active');
       menu.classList.remove('open');
       document.body.classList.remove('menu-open');
+      syncBurgerExpanded();
     }
   }
 });
 
 // ============================================
-// SCROLL REVEAL (enhanced stagger)
+// ADMIN AUTH · Firebase Authentication
+// La autorización real vive en las reglas del RTDB (database.rules.json):
+// solo los UID listados en /admins pueden escribir. Este módulo solo
+// gestiona la sesión y el estado de UI.
 // ============================================
-function initScrollReveal() {
-  const reveals = document.querySelectorAll('.about__heading, .about__text, .about__stats');
-  reveals.forEach(el => el.classList.add('reveal'));
+const fbAuth = firebase.auth();
+let isAdminUser = false;
+const adminStateListeners = [];
 
-  const revealLefts = document.querySelectorAll('.about__label, .gallery__title, .awards__title');
-  revealLefts.forEach(el => el.classList.add('reveal-left'));
+function onAdminStateChange(fn) { adminStateListeners.push(fn); }
 
-  // Awards items stagger
-  document.querySelectorAll('.awards__item').forEach((el, i) => {
-    el.classList.add('reveal');
-    el.style.transitionDelay = `${i * 0.08}s`;
-  });
+fbAuth.onAuthStateChanged(async (user) => {
+  let admin = false;
+  if (user && !user.isAnonymous) {
+    try {
+      const snap = await db.ref('admins/' + user.uid).get();
+      admin = snap.val() === true;
+    } catch (err) {
+      admin = false;
+    }
+  }
+  isAdminUser = admin;
+  adminStateListeners.forEach(fn => fn(admin));
+});
 
-  const revealScales = document.querySelectorAll('.about__strip-item');
-  revealScales.forEach((el, i) => {
-    el.classList.add('reveal-scale');
-    el.style.transitionDelay = `${i * 0.12}s`;
-  });
+async function adminSignIn(email, password) {
+  const cred = await fbAuth.signInWithEmailAndPassword(email.trim(), password);
+  const snap = await db.ref('admins/' + cred.user.uid).get();
+  if (snap.val() !== true) {
+    await fbAuth.signOut();
+    const err = new Error('Cuenta sin permisos de administrador');
+    err.code = 'app/not-admin';
+    throw err;
+  }
+  isAdminUser = true;
+  return cred.user;
+}
 
-  const allReveals = document.querySelectorAll('.reveal, .reveal-left, .reveal-scale');
-  const observer = new IntersectionObserver((entries) => {
-    entries.forEach(entry => {
-      if (entry.isIntersecting) {
-        entry.target.classList.add('visible');
-      }
-    });
-  }, { threshold: 0.15, rootMargin: '0px 0px -50px 0px' });
+function adminAuthErrorMessage(err) {
+  switch (err && err.code) {
+    case 'auth/invalid-credential':
+    case 'auth/invalid-login-credentials':
+    case 'auth/wrong-password':
+    case 'auth/user-not-found':
+      return '⚠ Correo o contraseña incorrectos';
+    case 'auth/invalid-email':
+      return '⚠ Correo inválido';
+    case 'auth/too-many-requests':
+      return '⚠ Demasiados intentos. Espera unos minutos';
+    case 'auth/configuration-not-found':
+    case 'auth/operation-not-allowed':
+      return '⚠ Firebase Auth no está habilitado en el proyecto (ver SEGURIDAD-FIREBASE.md)';
+    case 'app/not-admin':
+      return '⚠ Esta cuenta no tiene permisos de administrador';
+    default:
+      return '⚠ No se pudo iniciar sesión. Revisa tu conexión';
+  }
+}
 
-  allReveals.forEach(el => observer.observe(el));
+// Sesión anónima para que los formularios públicos (feedback) puedan
+// escribir bajo las reglas que exigen auth != null. Si Auth aún no está
+// habilitado en el proyecto, seguimos sin sesión: la escritura queda en
+// manos de las reglas vigentes (permite publicar código y reglas en
+// cualquier orden sin romper el formulario).
+async function ensureAnonSession() {
+  if (fbAuth.currentUser) return;
+  try {
+    await fbAuth.signInAnonymously();
+  } catch (err) {
+    console.warn('Sesión anónima no disponible:', err && err.code);
+  }
 }
 
 // ============================================
-// PARALLAX on scroll
-// ============================================
-function initParallax() {
-  const heroWrap = document.querySelector('.hero__title-wrap');
-  const footerBig = document.querySelector('.footer__big-text');
-  const marquee = document.querySelector('.hero__marquee');
-
-  window.addEventListener('scroll', () => {
-    const scrollY = window.scrollY;
-
-    // Hero parallax
-    if (heroWrap && scrollY < window.innerHeight) {
-      heroWrap.style.transform = `translateY(${scrollY * 0.15}px)`;
-    }
-
-    // Marquee speed boost on scroll
-    if (marquee && scrollY < window.innerHeight) {
-      marquee.style.transform = `translateX(${-scrollY * 0.1}px)`;
-    }
-
-    // Footer big text parallax
-    if (footerBig) {
-      const footerRect = footerBig.closest('.footer').getBoundingClientRect();
-      if (footerRect.top < window.innerHeight) {
-        const progress = (window.innerHeight - footerRect.top) / (window.innerHeight + footerRect.height);
-        footerBig.style.transform = `translateX(${progress * 50}px)`;
-      }
-    }
-  });
-}
-
-// ============================================
-// MAGNETIC BUTTONS (Valiente-style)
-// ============================================
-function initMagnetic() {
-  const magneticEls = document.querySelectorAll('.nav__burger, .nav__logo, .modal__close');
-  magneticEls.forEach(el => {
-    el.addEventListener('mousemove', (e) => {
-      const rect = el.getBoundingClientRect();
-      const x = e.clientX - rect.left - rect.width / 2;
-      const y = e.clientY - rect.top - rect.height / 2;
-      el.style.transform = `translate(${x * 0.3}px, ${y * 0.3}px)`;
-    });
-    el.addEventListener('mouseleave', () => {
-      el.style.transform = '';
-      el.style.transition = 'transform 0.4s cubic-bezier(0.16, 1, 0.3, 1)';
-      setTimeout(() => { el.style.transition = ''; }, 400);
-    });
-  });
-}
-
-// ============================================
-// FONT CYCLING on "PORTFOLIO" (random every 2s)
-// ============================================
-const cycleVariants = [
-  { weight: '100', style: 'normal', stretch: 'normal' },
-  { weight: '100', style: 'italic', stretch: 'normal' },
-  { weight: '200', style: 'normal', stretch: 'normal' },
-  { weight: '300', style: 'normal', stretch: 'normal' },
-  { weight: '300', style: 'italic', stretch: 'normal' },
-  { weight: '400', style: 'normal', stretch: 'normal' },
-  { weight: '400', style: 'italic', stretch: 'normal' },
-  { weight: '500', style: 'normal', stretch: 'normal' },
-  { weight: '700', style: 'normal', stretch: 'normal' },
-  { weight: '700', style: 'italic', stretch: 'normal' },
-  { weight: '800', style: 'normal', stretch: 'normal' },
-  { weight: '900', style: 'normal', stretch: 'normal' },
-  { weight: '100', style: 'normal', stretch: 'condensed' },
-  { weight: '700', style: 'normal', stretch: 'condensed' },
-  { weight: '900', style: 'normal', stretch: 'condensed' },
-];
-let lastVariantIndex = -1;
-
-// Language cycle: every 2 font changes, switch language
-const languageCycle = [
-  'PORTFOLIO',    // español/inglés
-  'ポートフォリオ',  // japonés
-  'PORTFOLIO',    // normal
-  'PORTEFEUILLE', // francés
-  'PORTFOLIO',    // normal
-  'PORTAFOGLIO',  // italiano
-  'PORTFOLIO',    // normal
-  '作品集',        // chino
-  'PORTFOLIO',    // normal
-  'PORTFÓLIO',   // portugués
-];
-let cycleTickCount = 0;
-let currentLangIndex = 0;
-
-function initFontCycling() {
-  const el = document.getElementById('heroPortfolio');
-  if (!el) return;
-
-  setInterval(() => {
-    cycleTickCount++;
-
-    // Every 2 ticks, advance to next language
-    if (cycleTickCount % 2 === 0) {
-      currentLangIndex = (currentLangIndex + 1) % languageCycle.length;
-    }
-
-    let idx;
-    do {
-      idx = Math.floor(Math.random() * cycleVariants.length);
-    } while (idx === lastVariantIndex);
-    lastVariantIndex = idx;
-
-    const v = cycleVariants[idx];
-    el.style.opacity = '0';
-    el.style.transform = 'translateY(10px)';
-    setTimeout(() => {
-      el.textContent = languageCycle[currentLangIndex];
-      el.style.fontWeight = v.weight;
-      el.style.fontStyle = v.style;
-      el.style.fontStretch = v.stretch;
-      el.style.opacity = '1';
-      el.style.transform = 'translateY(0)';
-    }, 150);
-  }, 500);
-}
-
-// ============================================
-// PEF TALKS — Full System
+// PEF TALKS · Full System
 // ============================================
 function initPefTalks() {
   // ---- DOM Elements ----
@@ -767,6 +704,7 @@ function initPefTalks() {
   const pefAdminGateBackdrop = document.getElementById('pefAdminGateBackdrop');
   const pefAdminGateClose = document.getElementById('pefAdminGateClose');
   const pefAdminForm = document.getElementById('pefAdminForm');
+  const pefAdminEmail = document.getElementById('pefAdminEmail');
   const pefAdminPass = document.getElementById('pefAdminPass');
   const pefAdminError = document.getElementById('pefAdminError');
   // Register form
@@ -785,10 +723,10 @@ function initPefTalks() {
   // Toast
   const pefToast = document.getElementById('pefToast');
 
-  const ADMIN_PASSWORD = 'pefpr26';
   let pefAuthenticated = sessionStorage.getItem('pefAuth') === 'true';
   let editingProjectId = null;
-  let deletingProjectId = null;
+  // Acción admin pendiente: se ejecuta tras iniciar sesión en el gate
+  let pendingAdminAction = null;
 
   // ---- Firebase helpers ----
   let pefProjectsCache = [];
@@ -799,7 +737,23 @@ function initPefTalks() {
 
   function savePefProjects(projects) {
     pefProjectsCache = projects;
-    db.ref('pefProjects').set(projects);
+    db.ref('pefProjects').set(projects).catch((err) => {
+      console.error(err);
+      showToast('⚠ SIN PERMISOS PARA GUARDAR. INICIA SESIÓN COMO ADMIN');
+    });
+  }
+
+  function requirePefAdmin(action) {
+    if (isAdminUser) { action(); return; }
+    pendingAdminAction = action;
+    openAdminGate();
+  }
+
+  function deletePefProject(projectId) {
+    const projects = getPefProjects().filter(p => p.id !== projectId);
+    savePefProjects(projects);
+    renderPefProjects();
+    showToast('✓ PROYECTO BORRADO');
   }
 
   // Listen for real-time updates
@@ -844,15 +798,15 @@ function initPefTalks() {
       card.innerHTML = `
         <div class="pef-talks__card-accent"></div>
         <span class="mono-sm">PEF ${String(i + 1).padStart(2, '0')}</span>
-        <button class="pef-talks__card-edit-btn" data-project-id="${proj.id}" title="Editar">&#9998;</button>
-        <button class="pef-talks__card-delete-btn" data-project-id="${proj.id}" title="Borrar">&times;</button>
+        <button class="pef-talks__card-edit-btn" data-project-id="${escapeAttr(proj.id)}" title="Editar">&#9998;</button>
+        <button class="pef-talks__card-delete-btn" data-project-id="${escapeAttr(proj.id)}" title="Borrar">&times;</button>
         <h3 class="pef-talks__card-title">${escapeHtml(proj.name)}</h3>
         <span class="pef-talks__card-members">${escapeHtml(proj.members)}</span>
         <p class="pef-talks__card-desc">${escapeHtml(proj.summary)}</p>
         <p class="pef-talks__card-problem"><strong>Problemática:</strong> ${escapeHtml(proj.problem)}</p>
         <div class="pef-talks__card-actions">
           ${posterBtn}
-          <button class="pef-talks__card-feedback-btn" data-project-id="${proj.id}">DAR FEEDBACK &rarr;</button>
+          <button class="pef-talks__card-feedback-btn" data-project-id="${escapeAttr(proj.id)}">DAR FEEDBACK &rarr;</button>
         </div>
       `;
       pefProjectsGrid.appendChild(card);
@@ -874,18 +828,17 @@ function initPefTalks() {
       });
     });
 
-    // Bind edit buttons (admin gate first)
+    // Bind edit buttons (requiere sesión de admin)
     pefProjectsGrid.querySelectorAll('.pef-talks__card-edit-btn').forEach(btn => {
       btn.addEventListener('click', (e) => {
         e.stopPropagation();
         const projectId = e.currentTarget.dataset.projectId;
         editingProjectId = projectId;
-        deletingProjectId = null;
-        openAdminGate();
+        requirePefAdmin(openRegisterForm);
       });
     });
 
-    // Bind delete buttons (admin gate first + confirm)
+    // Bind delete buttons (requiere sesión de admin + confirm)
     pefProjectsGrid.querySelectorAll('.pef-talks__card-delete-btn').forEach(btn => {
       btn.addEventListener('click', (e) => {
         e.stopPropagation();
@@ -894,23 +847,9 @@ function initPefTalks() {
         const proj = projects.find(p => p.id === projectId);
         if (!proj) return;
         if (!confirm(`¿Borrar "${proj.name}"? Esta acción no se puede deshacer.`)) return;
-        deletingProjectId = projectId;
-        editingProjectId = null;
-        openAdminGate();
+        requirePefAdmin(() => deletePefProject(projectId));
       });
     });
-
-    bindCursorHover();
-  }
-
-  function escapeHtml(text) {
-    const div = document.createElement('div');
-    div.textContent = text;
-    return div.innerHTML;
-  }
-
-  function escapeAttr(text) {
-    return String(text || '').replace(/&/g, '&amp;').replace(/"/g, '&quot;').replace(/'/g, '&#39;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
   }
 
   // ---- Poster Image Upload (compress to base64) ----
@@ -1042,13 +981,15 @@ function initPefTalks() {
 
   function openAdminGate() {
     pefAdminGate.classList.add('open');
-    pefAdminPass.focus();
+    pefAdminEmail.focus();
   }
 
   function closeAdminGate() {
     pefAdminGate.classList.remove('open');
     pefAdminError.textContent = '';
+    pefAdminEmail.value = '';
     pefAdminPass.value = '';
+    pendingAdminAction = null;
   }
 
   function openRegisterForm() {
@@ -1071,7 +1012,7 @@ function initPefTalks() {
         if (pefPosterHidden) pefPosterHidden.value = proj.pdfUrl || '';
         if (proj.pdfUrl) {
           setPosterPreview(proj.pdfUrl);
-          if (pefPosterLabel) pefPosterLabel.textContent = 'Imagen actual — reemplazar';
+          if (pefPosterLabel) pefPosterLabel.textContent = 'Imagen actual · reemplazar';
         } else {
           setPosterPreview('');
           if (pefPosterLabel) pefPosterLabel.textContent = 'Seleccionar imagen…';
@@ -1130,6 +1071,7 @@ function initPefTalks() {
     navBurger.classList.remove('active');
     menu.classList.remove('open');
     document.body.classList.remove('menu-open');
+    syncBurgerExpanded();
     setTimeout(openPefGate, 300);
   });
 
@@ -1142,7 +1084,7 @@ function initPefTalks() {
     const email = pefEmail.value;
     if (!validateUdemEmail(email)) {
       pefError.textContent = '⚠ Solo se permiten correos @udem.edu o @udem.edu.mx';
-      pefEmail.style.borderBottomColor = 'var(--orange)';
+      pefEmail.style.borderBottomColor = 'var(--verm)';
       setTimeout(() => { pefEmail.style.borderBottomColor = ''; }, 2000);
       return;
     }
@@ -1155,37 +1097,33 @@ function initPefTalks() {
   pefTalksClose.addEventListener('click', closePefTalks);
   pefTalksBackdrop.addEventListener('click', closePefTalks);
 
-  // Add PEF button -> admin password
+  // Add PEF button -> requiere sesión de admin
   pefAddBtn.addEventListener('click', () => {
     editingProjectId = null;
-    openAdminGate();
+    requirePefAdmin(openRegisterForm);
   });
 
   // Admin gate
   pefAdminGateClose.addEventListener('click', closeAdminGate);
   pefAdminGateBackdrop.addEventListener('click', closeAdminGate);
 
-  pefAdminForm.addEventListener('submit', (e) => {
+  pefAdminForm.addEventListener('submit', async (e) => {
     e.preventDefault();
-    if (pefAdminPass.value !== ADMIN_PASSWORD) {
-      pefAdminError.textContent = '⚠ Contrasena incorrecta';
-      pefAdminPass.style.borderBottomColor = 'var(--orange)';
-      setTimeout(() => { pefAdminPass.style.borderBottomColor = ''; }, 2000);
-      return;
-    }
-
-    // Delete flow: password confirmed → delete directly
-    if (deletingProjectId) {
-      const projects = getPefProjects().filter(p => p.id !== deletingProjectId);
-      savePefProjects(projects);
-      deletingProjectId = null;
+    const submitBtn = pefAdminForm.querySelector('button[type="submit"]');
+    submitBtn.disabled = true;
+    pefAdminError.textContent = '';
+    try {
+      await adminSignIn(pefAdminEmail.value, pefAdminPass.value);
+      const action = pendingAdminAction;
       closeAdminGate();
-      renderPefProjects();
-      showToast('✓ PROYECTO BORRADO');
-      return;
+      if (action) action();
+    } catch (err) {
+      pefAdminError.textContent = adminAuthErrorMessage(err);
+      pefAdminPass.style.borderBottomColor = 'var(--verm)';
+      setTimeout(() => { pefAdminPass.style.borderBottomColor = ''; }, 2000);
+    } finally {
+      submitBtn.disabled = false;
     }
-
-    openRegisterForm();
   });
 
   // Register form
@@ -1256,10 +1194,21 @@ function initPefTalks() {
   const pefTableBody = document.getElementById('pefTableBody');
 
   let feedbackCache = [];
+  let feedbackListenerAttached = false;
 
-  db.ref('pefFeedback').on('value', (snapshot) => {
-    feedbackCache = snapshot.val() || [];
-  });
+  // Las reglas restringen la lectura de pefFeedback a admins; el listener
+  // solo se suscribe cuando hay sesión de admin para evitar permission_denied.
+  function attachFeedbackListener() {
+    if (feedbackListenerAttached) return;
+    feedbackListenerAttached = true;
+    db.ref('pefFeedback').on('value', (snapshot) => {
+      const val = snapshot.val() || {};
+      feedbackCache = Array.isArray(val) ? val.filter(Boolean) : Object.values(val);
+      if (pefTable.classList.contains('open')) renderTable();
+    });
+  }
+
+  onAdminStateChange((admin) => { if (admin) attachFeedbackListener(); });
 
   function openTable() {
     renderTable();
@@ -1305,7 +1254,7 @@ function initPefTalks() {
         } else if (val === 'no') {
           html += '<td class="pef-table__cell--no">✗ NO</td>';
         } else {
-          html += '<td>—</td>';
+          html += '<td>·</td>';
         }
       });
       html += '</tr>';
@@ -1316,10 +1265,7 @@ function initPefTalks() {
   }
 
   pefTableBtn.addEventListener('click', () => {
-    const pass = prompt('Contraseña para ver la tabla:');
-    if (pass === ADMIN_PASSWORD) {
-      openTable();
-    }
+    requirePefAdmin(openTable);
   });
   pefTableClose.addEventListener('click', closeTable);
   pefTableBackdrop.addEventListener('click', closeTable);
@@ -1328,7 +1274,7 @@ function initPefTalks() {
   pefFeedbackClose.addEventListener('click', closeFeedbackForm);
   pefFeedbackBackdrop.addEventListener('click', closeFeedbackForm);
 
-  pefFeedbackForm.addEventListener('submit', (e) => {
+  pefFeedbackForm.addEventListener('submit', async (e) => {
     e.preventDefault();
     const profName = document.getElementById('pefFbProfName').value.trim();
     const fbText = document.getElementById('pefFbText').value.trim();
@@ -1341,7 +1287,8 @@ function initPefTalks() {
     const project = projects.find(p => p.id === projectId);
     if (!project) return;
 
-    // Save feedback to Firebase
+    // Save feedback to Firebase (push: las reglas solo permiten crear
+    // entradas nuevas, nunca modificar o borrar las existentes)
     const newFeedback = {
       id: 'fb_' + Date.now(),
       projectId,
@@ -1350,8 +1297,14 @@ function initPefTalks() {
       interest: interest.value,
       createdAt: new Date().toISOString()
     };
-    const allFeedback = [...feedbackCache, newFeedback];
-    db.ref('pefFeedback').set(allFeedback);
+    try {
+      await ensureAnonSession();
+      await db.ref('pefFeedback').push(newFeedback);
+    } catch (err) {
+      console.error(err);
+      showToast('⚠ NO SE PUDO GUARDAR EL FEEDBACK. INTENTA DE NUEVO');
+      return;
+    }
 
     // Build mailto link with feedback
     const interestLabel = interest.value === 'si' ? 'Si, me interesa asesorar'
@@ -1416,30 +1369,17 @@ window.addEventListener('scroll', () => {
   }
 });
 
-// ---- INIT ----
-// ---- THESIS REEL ----
-function initThesisReel() {
-  const reel = document.getElementById('thesisReel');
-  if (!reel) return;
-  const items = theses.map(t =>
-    `<div class="about__strip-item"><img src="${t.thumbnail}" alt="${t.title}" loading="lazy"></div>`
-  ).join('');
-  // Duplicate for seamless loop
-  reel.innerHTML = items + items;
-}
-
 // ============================================
-// ADMIN SYSTEM — Projects & Awards Management
+// ADMIN SYSTEM · Projects & Awards Management
 // ============================================
 function initAdmin() {
-  const ADMIN_PASSWORD = 'pefpr26';
-
   // ---- DOM ----
   const adminBtn = document.getElementById('adminBtn');
   const adminGate = document.getElementById('adminGate');
   const adminGateBackdrop = document.getElementById('adminGateBackdrop');
   const adminGateClose = document.getElementById('adminGateClose');
   const adminGateForm = document.getElementById('adminGateForm');
+  const adminGateEmail = document.getElementById('adminGateEmail');
   const adminGatePass = document.getElementById('adminGatePass');
   const adminGateError = document.getElementById('adminGateError');
   const adminPanel = document.getElementById('adminPanel');
@@ -1454,8 +1394,6 @@ function initAdmin() {
   const adminAwardFormClose = document.getElementById('adminAwardFormClose');
   const adminAwardFormEl = document.getElementById('adminAwardFormEl');
 
-  let adminAuthenticated = sessionStorage.getItem('adminAuth') === 'true';
-
   // ---- Firebase helpers ----
   let dynamicProjectsCache = [];
   let dynamicAwardsCache = [];
@@ -1463,23 +1401,28 @@ function initAdmin() {
   function getDynamicProjects() { return dynamicProjectsCache; }
   function saveDynamicProjects(p) {
     dynamicProjectsCache = p;
-    db.ref('ldgProjects').set(p);
+    db.ref('ldgProjects').set(p).catch((err) => {
+      console.error(err);
+      showToast('⚠ SIN PERMISOS PARA GUARDAR. INICIA SESIÓN COMO ADMIN');
+    });
   }
 
   function getDynamicAwards() { return dynamicAwardsCache; }
   function saveDynamicAwards(a) {
     dynamicAwardsCache = a;
-    db.ref('ldgAwards').set(a);
+    db.ref('ldgAwards').set(a).catch((err) => {
+      console.error(err);
+      showToast('⚠ SIN PERMISOS PARA GUARDAR. INICIA SESIÓN COMO ADMIN');
+    });
   }
 
   // Listen for real-time updates
   db.ref('ldgProjects').on('value', (snapshot) => {
     dynamicProjectsCache = snapshot.val() || [];
     // Reload dynamic projects into theses array
-    theses = theses.filter(t => !t.id || !t.id.startsWith('dyn_'));
+    theses = theses.filter(t => typeof t.id !== 'string' || !t.id.startsWith('dyn_'));
     loadDynamicProjects();
     renderGallery(false);
-    initThesisReel();
   });
 
   db.ref('ldgAwards').on('value', (snapshot) => {
@@ -1553,16 +1496,6 @@ function initAdmin() {
     });
   }
 
-  function escapeHtml(text) {
-    const div = document.createElement('div');
-    div.textContent = text;
-    return div.innerHTML;
-  }
-
-  function escapeAttr(text) {
-    return text.replace(/"/g, '&quot;').replace(/'/g, '&#39;');
-  }
-
   // ---- Admin Panel List Renderers ----
   function renderAdminProjectsList() {
     const list = document.getElementById('adminProjectsList');
@@ -1577,9 +1510,9 @@ function initAdmin() {
       <div class="admin-panel__list-item">
         <div class="admin-panel__list-item-info">
           <span class="admin-panel__list-item-title">${escapeHtml(p.title)}</span>
-          <span class="admin-panel__list-item-meta">${escapeHtml(p.student)} · ${p.semester}</span>
+          <span class="admin-panel__list-item-meta">${escapeHtml(p.student)} · ${escapeHtml(p.semester)}</span>
         </div>
-        <button class="admin-panel__list-item-delete" data-id="${p.id}" data-type="project">ELIMINAR</button>
+        <button class="admin-panel__list-item-delete" data-id="${escapeAttr(p.id)}" data-type="project">ELIMINAR</button>
       </div>
     `).join('');
 
@@ -1594,7 +1527,6 @@ function initAdmin() {
         if (idx !== -1) theses.splice(idx, 1);
         renderAdminProjectsList();
         renderGallery();
-        initThesisReel();
         showToast('✓ PROYECTO ELIMINADO');
       });
     });
@@ -1615,7 +1547,7 @@ function initAdmin() {
           <span class="admin-panel__list-item-title">${escapeHtml(a.name)}</span>
           <span class="admin-panel__list-item-meta">${escapeHtml(a.prize)} · ${escapeHtml(a.badge)}</span>
         </div>
-        <button class="admin-panel__list-item-delete" data-id="${a.id}" data-type="award">ELIMINAR</button>
+        <button class="admin-panel__list-item-delete" data-id="${escapeAttr(a.id)}" data-type="award">ELIMINAR</button>
       </div>
     `).join('');
 
@@ -1641,16 +1573,17 @@ function initAdmin() {
 
   // ---- Open/Close ----
   function openAdminGate() {
-    if (adminAuthenticated) { openAdminPanel(); return; }
+    if (isAdminUser) { openAdminPanel(); return; }
     adminGate.classList.add('open');
     document.body.classList.add('modal-open');
-    adminGatePass.focus();
+    adminGateEmail.focus();
   }
 
   function closeAdminGate() {
     adminGate.classList.remove('open');
     document.body.classList.remove('modal-open');
     adminGateError.textContent = '';
+    adminGateEmail.value = '';
     adminGatePass.value = '';
   }
 
@@ -1673,19 +1606,29 @@ function initAdmin() {
   adminGateClose.addEventListener('click', closeAdminGate);
   adminGateBackdrop.addEventListener('click', closeAdminGate);
 
-  adminGateForm.addEventListener('submit', (e) => {
+  adminGateForm.addEventListener('submit', async (e) => {
     e.preventDefault();
-    if (adminGatePass.value !== ADMIN_PASSWORD) {
-      adminGateError.textContent = '⚠ Contraseña incorrecta';
-      return;
+    const submitBtn = adminGateForm.querySelector('button[type="submit"]');
+    submitBtn.disabled = true;
+    adminGateError.textContent = '';
+    try {
+      await adminSignIn(adminGateEmail.value, adminGatePass.value);
+      openAdminPanel();
+    } catch (err) {
+      adminGateError.textContent = adminAuthErrorMessage(err);
+    } finally {
+      submitBtn.disabled = false;
     }
-    adminAuthenticated = true;
-    sessionStorage.setItem('adminAuth', 'true');
-    openAdminPanel();
   });
 
   adminPanelClose.addEventListener('click', closeAdminPanel);
   adminPanelBackdrop.addEventListener('click', closeAdminPanel);
+
+  document.getElementById('adminLogoutBtn').addEventListener('click', async () => {
+    await fbAuth.signOut();
+    closeAdminPanel();
+    showToast('SESIÓN CERRADA');
+  });
 
   // Tabs
   document.querySelectorAll('.admin-panel__tab').forEach(tab => {
@@ -1742,7 +1685,6 @@ function initAdmin() {
     adminProjectFormEl.reset();
     openAdminPanel();
     renderGallery();
-    initThesisReel();
     showToast('✓ PROYECTO REGISTRADO');
   });
 
@@ -1801,11 +1743,7 @@ function initAdmin() {
 document.addEventListener('DOMContentLoaded', () => {
   initAdmin(); // Load dynamic data first
   renderGallery();
-  initThesisReel();
-  initScrollReveal();
-  initParallax();
-  initMagnetic();
-  bindCursorHover();
-  initFontCycling();
+  initMotion();
+  initVideoLamina();
   initPefTalks();
 });
