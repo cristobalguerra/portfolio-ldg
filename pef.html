@@ -7,6 +7,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Anton&family=Atkinson+Hyperlegible:wght@400;700&family=JetBrains+Mono:wght@300;400;500&display=swap" rel="stylesheet">
+<script>document.documentElement.classList.add('js');</script>
 <style>
   :root{
     --paper:#F1ECDF;        /* superficie papel crema */
@@ -193,27 +194,29 @@
   .deliv .d:nth-child(5){grid-column:1/6}
   .deliv .d:nth-child(6){grid-column:6/13}
   @media(max-width:680px){.deliv .d:nth-child(n){grid-column:1/-1}}
-  /* marco que se traza: 4 bordes en secuencia, como delineante */
+  /* marco que se traza: 4 bordes en secuencia, como delineante.
+     Estados ocultos gateados por .js (sin JS, todo visible); la capa GSAP
+     (html.gsap) apaga estas transiciones y dibuja el marco con scrub. */
   .deliv .d .frame{position:absolute;inset:0;pointer-events:none}
   .deliv .d .frame i{position:absolute;background:var(--ink);display:block}
-  .deliv .d .f-t{top:0;left:0;right:0;height:2px;transform:scaleX(0);transform-origin:left;
+  .deliv .d .f-t{top:0;left:0;right:0;height:2px;transform-origin:left;
     transition:transform .32s var(--ease)}
-  .deliv .d .f-r{top:0;right:0;bottom:0;width:2px;transform:scaleY(0);transform-origin:top;
+  .deliv .d .f-r{top:0;right:0;bottom:0;width:2px;transform-origin:top;
     transition:transform .32s var(--ease) .28s}
-  .deliv .d .f-b{bottom:0;left:0;right:0;height:2px;transform:scaleX(0);transform-origin:right;
+  .deliv .d .f-b{bottom:0;left:0;right:0;height:2px;transform-origin:right;
     transition:transform .32s var(--ease) .56s}
-  .deliv .d .f-l{top:0;left:0;bottom:0;width:2px;transform:scaleY(0);transform-origin:bottom;
+  .deliv .d .f-l{top:0;left:0;bottom:0;width:2px;transform-origin:bottom;
     transition:transform .32s var(--ease) .84s}
-  .deliv .d.in .frame i{transform:none}
+  .js .deliv .d:not(.in) .f-t,.js .deliv .d:not(.in) .f-b{transform:scaleX(0)}
+  .js .deliv .d:not(.in) .f-r,.js .deliv .d:not(.in) .f-l{transform:scaleY(0)}
   /* marcas de esquina */
-  .deliv .d .corner{position:absolute;width:10px;height:10px;border:0 solid var(--verm);opacity:0;
+  .deliv .d .corner{position:absolute;width:10px;height:10px;border:0 solid var(--verm);
     transition:opacity .3s var(--ease) 1.15s}
-  .deliv .d.in .corner{opacity:1}
+  .js .deliv .d:not(.in) .corner{opacity:0}
   .deliv .d .c-tl{top:-5px;left:-5px;border-top-width:2px;border-left-width:2px}
   .deliv .d .c-br{bottom:-5px;right:-5px;border-bottom-width:2px;border-right-width:2px}
-  .deliv .d .inner{opacity:0;transform:translateY(10px);
-    transition:opacity .6s var(--ease) .75s,transform .6s var(--ease) .75s}
-  .deliv .d.in .inner{opacity:1;transform:none}
+  .deliv .d .inner{transition:opacity .6s var(--ease) .75s,transform .6s var(--ease) .75s}
+  .js .deliv .d:not(.in) .inner{opacity:0;transform:translateY(10px)}
   .deliv .d .num{font-family:var(--disp);font-weight:400;font-size:2.5rem;line-height:1;letter-spacing:-.02em}
   .deliv .d h3{font-family:var(--sans);font-weight:700;text-transform:uppercase;font-size:1.22rem;
     letter-spacing:0;margin:8px 0 8px;line-height:1.1}
@@ -363,9 +366,14 @@
   .rev-stamp{position:absolute;z-index:3;border:3px solid var(--verm);color:var(--verm);
     padding:9px 16px 8px;font-family:var(--mono);font-size:.8rem;font-weight:700;letter-spacing:.18em;
     text-transform:uppercase;background:rgba(241,236,223,.85);white-space:nowrap;
-    opacity:0;transform:scale(1.15) rotate(-6deg);
+    transform:rotate(-6deg);
     transition:opacity .3s var(--ease) .45s,transform .42s var(--ease) .45s}
+  .js .rev-stamp:not(.in){opacity:0;transform:scale(1.15) rotate(-6deg)}
   .rev-stamp.in{opacity:1;transform:scale(1) rotate(-6deg)}
+  /* aro exterior del sello: segundo trazo del estampado; la capa GSAP lo dibuja con DrawSVG */
+  .rev-stamp .ring{position:absolute;left:-7px;top:-7px;width:calc(100% + 14px);height:calc(100% + 14px);
+    pointer-events:none;display:block;overflow:visible}
+  .rev-stamp .ring rect{fill:none;stroke:currentColor;stroke-width:1.5;vector-effect:non-scaling-stroke}
   .titul .rev-stamp{top:-28px;right:clamp(8px,3vw,34px)}
   .alert .rev-stamp{top:-18px;right:clamp(12px,4vw,40px)}
   @media(max-width:560px){.rev-stamp{font-size:var(--t-mono);padding:7px 12px 6px;letter-spacing:.14em}}
@@ -407,20 +415,36 @@
     .foot-cajetin .cell:nth-child(2n){border-left:1px solid rgba(242,238,227,.25)}
     .foot-cajetin .cell:nth-child(-n+2){border-top:0}}
 
-  /* ---- reveal ---- */
-  .rv{opacity:0;transform:translateY(26px);transition:opacity .8s var(--ease),transform .8s var(--ease)}
+  /* ---- reveal · 3 capas (DESIGN.md · Motion contrato v2) ----
+     capa 1 · html sin .js (sin JS): todo visible, sin estados ocultos
+     capa 2 · .js + módulo IO: .in dispara las transiciones CSS de siempre
+     capa 3 · html.gsap: transiciones CSS apagadas; GSAP anima inline */
+  .rv{transition:opacity .8s var(--ease),transform .8s var(--ease)}
+  .js .rv:not(.in){opacity:0;transform:translateY(26px)}
   .rv.in{opacity:1;transform:none}
   .rv.d1{transition-delay:.08s}.rv.d2{transition-delay:.16s}.rv.d3{transition-delay:.24s}.rv.d4{transition-delay:.32s}
+  .gsap .rv,.gsap .rv.d1,.gsap .rv.d2,.gsap .rv.d3,.gsap .rv.d4,
+  .gsap .deliv .d .frame i,.gsap .deliv .d .corner,.gsap .deliv .d .inner,
+  .gsap .rev-stamp{transition:none}
+  /* la capa GSAP esconde la barra de control hasta el intro (el timeline la restituye) */
+  .gsap .ctrlbar > *{opacity:0}
   /* reduced motion: TODO en estado final (marcos trazados, sellos estampados, barras pintadas) */
   @media(prefers-reduced-motion:reduce){
     *{animation:none!important;transition:none!important}
-    .rv{opacity:1;transform:none}.rubric .bar i{transition:none}
+    .rv{opacity:1!important;transform:none!important}.rubric .bar i{transition:none}
+    .ctrlbar > *{opacity:1!important}
     .deliv .d .frame i{transform:none!important}
     .deliv .d .corner{opacity:1!important}
     .deliv .d .inner{opacity:1!important;transform:none!important}
     .rev-stamp{opacity:1!important;transform:rotate(-6deg)!important}
   }
 </style>
+<!-- GSAP 3.13 vendoreado · solo los plugins que usa esta página (sin ScrollSmoother:
+     guía de consulta con checklist/anclas/scrollspy; el scroll nativo es el correcto) -->
+<script defer src="assets/vendor/gsap/gsap.min.js"></script>
+<script defer src="assets/vendor/gsap/ScrollTrigger.min.js"></script>
+<script defer src="assets/vendor/gsap/SplitText.min.js"></script>
+<script defer src="assets/vendor/gsap/DrawSVGPlugin.min.js"></script>
 </head>
 <body>
 <div class="progress" id="prog"></div>
@@ -672,7 +696,7 @@
     <div class="sec-head rv"><span class="sec-no">07 / TITULACIÓN</span><h2>Fechas que no se mueven</h2></div>
     <p class="sec-sub rv">Nivel profesional · todas las licenciaturas excepto MCP y MCD.</p>
     <div class="titul rv d1">
-      <span class="rev-stamp" aria-hidden="true">Fechas inamovibles</span>
+      <span class="rev-stamp" aria-hidden="true"><svg class="ring" viewBox="0 0 100 100" preserveAspectRatio="none" focusable="false"><rect x="1" y="1" width="98" height="98" vector-effect="non-scaling-stroke"/></svg>Fechas inamovibles</span>
       <div class="t"><span>Solicitud en línea de inicio del trámite de titulación</span><b>24 ago – 23 oct</b></div>
       <div class="t"><span>Documentación para conclusión de estudios (CURP, fotos, pago)</span><b>24 ago – 23 oct</b></div>
       <div class="t"><span>Solicitud de exámenes a capacidad</span><b>03 ago – 09 oct</b></div>
@@ -681,7 +705,7 @@
       <div class="t"><span>Fecha límite para entregar resultados TOEFL</span><b>20 nov</b></div>
     </div>
     <div class="alert rv d2">
-      <span class="rev-stamp" aria-hidden="true">Sin esto no hay título</span>
+      <span class="rev-stamp" aria-hidden="true"><svg class="ring" viewBox="0 0 100 100" preserveAspectRatio="none" focusable="false"><rect x="1" y="1" width="98" height="98" vector-effect="non-scaling-stroke"/></svg>Sin esto no hay título</span>
       <h3>Sin esto no hay titulación</h3>
       <p>Para ser prospecto a graduar (PG) haz la solicitud en el portal de graduación (acceso desde tu Portal UDEM). Verifica con tiempo que el <b>TOEFL</b> y la <b>carta de Servicio Social</b> estén liberados en el sistema: si quedan pendientes, no podrás titularte. Vuelve a confirmarlo antes de la disertación.</p>
     </div>
@@ -870,11 +894,186 @@
   }
   document.addEventListener('scroll',onScroll,{passive:true}); onScroll();
 
-  // reveal on scroll
-  var io=new IntersectionObserver(function(es){
-    es.forEach(function(e){ if(e.isIntersecting){ e.target.classList.add('in'); io.unobserve(e.target);} });
-  },{threshold:.12, rootMargin:'0px 0px -8% 0px'});
-  document.querySelectorAll('.rv,.frame-io,.rev-stamp').forEach(function(el){ if(reduce){el.classList.add('in');} else io.observe(el); });
+  // ---- motion · 3 capas (DESIGN.md · Motion contrato v2) ----
+  // capa 1 · sin JS: html sin .js → CSS muestra todo (no hay nada que hacer aquí)
+  // capa 2 · JS sin GSAP (carga fallida): módulo IO original como fallback
+  // capa 3 · GSAP presente: ScrollTrigger + SplitText + DrawSVG (sin ScrollSmoother:
+  //          esta guía vive del scroll nativo: checklist, anclas, scrollspy)
+  function initIO(){
+    var io=new IntersectionObserver(function(es){
+      es.forEach(function(e){ if(e.isIntersecting){ e.target.classList.add('in'); io.unobserve(e.target);} });
+    },{threshold:.12, rootMargin:'0px 0px -8% 0px'});
+    document.querySelectorAll('.rv,.frame-io,.rev-stamp').forEach(function(el){ if(reduce){el.classList.add('in');} else io.observe(el); });
+  }
+
+  function finalStateAll(){ /* estado final directo, cero animación */
+    document.querySelectorAll('.rv,.frame-io,.rev-stamp').forEach(function(el){ el.classList.add('in'); });
+  }
+
+  function buildGsap(coarse, splits){
+    var handled=[];
+    function mark(el){ if(el) handled.push(el); }
+    function settle(el){ /* deja el DOM como lo dejaría el fallback: .in, sin estilos inline */
+      return function(){ el.classList.add('in'); gsap.set(el,{clearProps:'all'}); };
+    }
+
+    // -- hero · intro una sola vez: cruz de registro (DrawSVG) + H1 por palabras --
+    var title=document.querySelector('h1.title');
+    var eyebrow=document.querySelector('.hero .eyebrow');
+    var lede=document.querySelector('.hero .lede');
+    var tag=document.querySelector('.hero .tag');
+    var strip=document.querySelector('.hero .strip');
+    [title,eyebrow,lede,tag,strip].forEach(mark);
+
+    var intro=gsap.timeline();
+    intro.set('.ctrlbar .chips,.ctrlbar .reg',{autoAlpha:1},0)
+         .fromTo('.ctrlbar .reg circle',{drawSVG:'0%'},{drawSVG:'100%',duration:.55},.05)
+         .fromTo('.ctrlbar .reg path',{drawSVG:'0%'},{drawSVG:'100%',duration:.6},.2)
+         .from('.ctrlbar .chip',{autoAlpha:0,duration:.3,stagger:.07},.05)
+         .fromTo('.ctrlbar .leg',{autoAlpha:0},{autoAlpha:1,duration:.5},.3);
+    if(eyebrow) intro.fromTo(eyebrow,{autoAlpha:0,y:14},{autoAlpha:1,y:0,duration:.6,onComplete:settle(eyebrow)},.1);
+    if(title){
+      var sw=SplitText.create(title,{type:'words',mask:'words'});
+      splits.push(sw);
+      intro.set(title,{autoAlpha:1},.16)
+           .from(sw.words,{yPercent:112,duration:.85,stagger:.06,onComplete:function(){
+              try{ sw.revert(); }catch(e){}
+              title.classList.add('in'); gsap.set(title,{clearProps:'all'});
+            }},.16);
+    }
+    if(lede) intro.fromTo(lede,{autoAlpha:0,y:18},{autoAlpha:1,y:0,duration:.7,onComplete:settle(lede)},.62);
+    if(tag) intro.fromTo(tag,{autoAlpha:0,y:18},{autoAlpha:1,y:0,duration:.7,onComplete:settle(tag)},.72);
+    if(strip){
+      var its=strip.querySelectorAll('.it');
+      intro.set(strip,{autoAlpha:1},.7)
+           .from(its,{autoAlpha:0,y:16,duration:.55,stagger:.06,onComplete:function(){
+              strip.classList.add('in'); gsap.set(strip,{clearProps:'all'}); gsap.set(its,{clearProps:'all'});
+            }},.78);
+    }
+
+    // -- h2 de sección · SplitText por líneas con mask, una vez al entrar --
+    document.querySelectorAll('.sec-head').forEach(function(head){
+      mark(head);
+      var h2=head.querySelector('h2'), chip=head.querySelector('.sec-no'), sp=null;
+      try{ sp=SplitText.create(h2,{type:'lines',mask:'lines'}); splits.push(sp); }catch(e){ sp=null; }
+      gsap.set(head,{autoAlpha:1});
+      var tl=gsap.timeline({scrollTrigger:{trigger:head,start:'top 86%',once:true},
+        onComplete:function(){
+          if(sp){ try{ sp.revert(); }catch(e){} }
+          head.classList.add('in'); gsap.set(head,{clearProps:'all'});
+          if(chip) gsap.set(chip,{clearProps:'all'});
+        }});
+      if(chip) tl.fromTo(chip,{autoAlpha:0,x:-12},{autoAlpha:1,x:0,duration:.5},0);
+      if(sp&&sp.lines.length) tl.from(sp.lines,{yPercent:112,duration:.85,stagger:.1},.08);
+      else if(h2) tl.fromTo(h2,{autoAlpha:0,y:18},{autoAlpha:1,y:0,duration:.7},.08);
+    });
+
+    // -- mapa del semestre · etapas en cascada --
+    var tgrid=document.querySelector('.timeline');
+    if(tgrid){
+      mark(tgrid);
+      var stages=tgrid.querySelectorAll('.stage');
+      gsap.set(tgrid,{autoAlpha:1});
+      gsap.from(stages,{autoAlpha:0,y:22,duration:.7,stagger:.09,
+        scrollTrigger:{trigger:tgrid,start:'top 85%',once:true},
+        onComplete:function(){ tgrid.classList.add('in'); gsap.set(tgrid,{clearProps:'all'}); gsap.set(stages,{clearProps:'all'}); }});
+    }
+
+    // -- fichas .deliv · marco trazado como delineante (scrub en fine; one-shot en coarse) --
+    document.querySelectorAll('.deliv .d').forEach(function(card){
+      var ft=card.querySelector('.f-t'),fr=card.querySelector('.f-r'),
+          fb=card.querySelector('.f-b'),fl=card.querySelector('.f-l'),
+          corners=card.querySelectorAll('.corner'),inner=card.querySelector('.inner');
+      if(!(ft&&fr&&fb&&fl&&inner)){ card.classList.add('in'); return; }
+      var cfg=coarse
+        ? {defaults:{ease:'quint.out'},scrollTrigger:{trigger:card,start:'top 85%',once:true},
+           onComplete:function(){
+             card.classList.add('in');
+             gsap.set(card.querySelectorAll('.frame i,.corner,.inner'),{clearProps:'all'});
+           }}
+        : {defaults:{ease:'none'},scrollTrigger:{trigger:card,start:'top 88%',end:'top 45%',scrub:1}};
+      var tl=gsap.timeline(cfg);
+      tl.fromTo(ft,{scaleX:0},{scaleX:1,transformOrigin:'left center',duration:.24},0)
+        .fromTo(fr,{scaleY:0},{scaleY:1,transformOrigin:'center top',duration:.18},.22)
+        .fromTo(fb,{scaleX:0},{scaleX:1,transformOrigin:'right center',duration:.24},.38)
+        .fromTo(fl,{scaleY:0},{scaleY:1,transformOrigin:'center bottom',duration:.18},.6)
+        .fromTo(corners,{autoAlpha:0},{autoAlpha:1,duration:.16,stagger:.05},.72)
+        .fromTo(inner,{autoAlpha:0,y:14},{autoAlpha:1,y:0,duration:.34},.5);
+    });
+
+    // -- sellos · estampado + aro trazado con DrawSVG --
+    document.querySelectorAll('.rev-stamp').forEach(function(stamp){
+      var ringR=stamp.querySelector('.ring rect');
+      var tl=gsap.timeline({scrollTrigger:{trigger:stamp.parentElement||stamp,start:'top 80%',once:true},
+        onComplete:function(){ stamp.classList.add('in'); gsap.set(stamp,{clearProps:'all'}); }});
+      tl.fromTo(stamp,{autoAlpha:0,scale:1.15,rotation:-6},{autoAlpha:1,scale:1,rotation:-6,duration:.5},0);
+      if(ringR) tl.fromTo(ringR,{drawSVG:'0%'},{drawSVG:'100%',duration:.6},.18);
+    });
+
+    // -- numerales fantasma · deriva sutil con scrub (solo pointer fine) --
+    if(!coarse){
+      document.querySelectorAll('section .ghost').forEach(function(g){
+        gsap.fromTo(g,{y:60},{y:-60,ease:'none',
+          scrollTrigger:{trigger:g.parentElement,start:'top bottom',end:'bottom top',scrub:1.2}});
+      });
+    }
+
+    // -- resto de .rv · reveal genérico one-shot --
+    document.querySelectorAll('.rv').forEach(function(el){
+      if(handled.indexOf(el)!==-1) return;
+      gsap.fromTo(el,{autoAlpha:0,y:26},{autoAlpha:1,y:0,duration:.8,
+        scrollTrigger:{trigger:el,start:'top 88%',once:true},
+        onComplete:settle(el)});
+    });
+  }
+
+  function initGsapLayer(){
+    gsap.registerPlugin(ScrollTrigger, SplitText, DrawSVGPlugin);
+    gsap.defaults({ease:'quint.out',overwrite:'auto'});
+    var root=document.documentElement, mm=gsap.matchMedia(), matched=false;
+    mm.add({
+      reduce:'(prefers-reduced-motion: reduce)',
+      motion:'(prefers-reduced-motion: no-preference)',
+      coarse:'(pointer: coarse)'
+    }, function(ctx){
+      matched=true;
+      if(ctx.conditions.reduce){ /* reduced motion: cero animación GSAP */
+        root.classList.remove('gsap');
+        finalStateAll();
+        return;
+      }
+      root.classList.add('gsap');
+      var coarse=!!ctx.conditions.coarse, splits=[], dead=false;
+      /* SplitText solo tras document.fonts.ready (tope de 2 s por robustez) */
+      var fontsReady=(document.fonts&&document.fonts.ready)?document.fonts.ready:Promise.resolve();
+      Promise.race([fontsReady,new Promise(function(r){ setTimeout(r,2000); })]).then(function(){
+        if(dead) return;
+        ctx.add(function(){
+          /* si la capa rica truena en su arranque asíncrono, nunca dejamos contenido oculto */
+          try{ buildGsap(coarse, splits); }
+          catch(err){ root.classList.remove('gsap'); finalStateAll(); }
+        });
+      });
+      return function(){ /* cleanup al cambiar de media (los tweens los revierte el contexto) */
+        dead=true;
+        for(var i=0;i<splits.length;i++){ try{ splits[i].revert(); }catch(e){} }
+        splits.length=0;
+      };
+    });
+    if(!matched){ root.classList.remove('gsap'); finalStateAll(); }
+  }
+
+  function initMotion(){
+    if(window.gsap&&window.ScrollTrigger&&window.SplitText&&window.DrawSVGPlugin){
+      try{ initGsapLayer(); }
+      catch(err){ document.documentElement.classList.remove('gsap'); initIO(); }
+    }else{
+      initIO();
+    }
+  }
+  /* los vendors van con defer: deciden capa 2 vs 3 en DOMContentLoaded */
+  if(document.readyState==='loading') document.addEventListener('DOMContentLoaded',initMotion);
+  else initMotion();
 
   // animate rubric bars when visible
   var rub=document.getElementById('rubrica');

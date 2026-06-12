@@ -8,7 +8,17 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Anton&family=Atkinson+Hyperlegible:ital,wght@0,400;0,700;1,400&family=JetBrains+Mono:wght@400;500;700&family=Spectral:ital@1&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="styles.css">
+  <link rel="stylesheet" href="styles.css?v=20260612">
+  <!-- Capa 1 del contrato de motion: los estados ocultos se gatean con .js (sin JS, todo visible) -->
+  <script>document.documentElement.classList.add('js');</script>
+  <!-- GSAP 3.13 vendoreado (DESIGN.md · Motion: contrato v2). Solo los plugins que usa esta página. -->
+  <script defer src="assets/vendor/gsap/gsap.min.js"></script>
+  <script defer src="assets/vendor/gsap/ScrollTrigger.min.js"></script>
+  <script defer src="assets/vendor/gsap/ScrollSmoother.min.js"></script>
+  <script defer src="assets/vendor/gsap/SplitText.min.js"></script>
+  <script defer src="assets/vendor/gsap/DrawSVGPlugin.min.js"></script>
+  <script defer src="assets/vendor/gsap/Flip.min.js"></script>
+  <script defer src="assets/vendor/gsap/ScrambleTextPlugin.min.js"></script>
   <!-- Firebase SDK -->
   <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-database-compat.js"></script>
@@ -269,6 +279,11 @@
     </div>
   </div>
 
+  <!-- FLUJO DEL DOCUMENTO · ScrollSmoother envuelve SOLO el flujo;
+       topline, menú, modales, gates, toasts y visores viven fuera (fixed) -->
+  <div id="smooth-wrapper">
+  <div id="smooth-content">
+
   <!-- HOJA 01 · PORTADA DE LÁMINA -->
   <div class="sheet" id="hero">
     <div class="sheet-in">
@@ -284,7 +299,7 @@
       <div class="hero-body" data-io>
         <p class="eyebrow">Lámina 01 · Licenciatura en Diseño Gráfico · UDEM</p>
         <h1>
-          <span class="ln"><i>Tesis de</i></span>
+          <span class="ln"><i>Proyectos de</i></span>
           <span class="ln"><i><span class="hl">Diseño Gráfico</span></i></span>
         </h1>
 
@@ -325,7 +340,7 @@
           <div class="data-row rv" data-io>
             <span class="lab">Ingreso promedio mensual
               <small>Egresados de la carrera a nivel nacional</small></span>
-            <span class="num">$<span data-count="18768" data-group="1">0</span> <span class="unit">MXN</span></span>
+            <span class="num">$<span data-count="18768" data-group="1">18,768</span> <span class="unit">MXN</span></span>
             <span class="ref">IMCO · Compara Carreras 2025</span>
           </div>
           <div class="drawx thin" data-io></div>
@@ -333,7 +348,7 @@
           <div class="data-row rv d1" data-io>
             <span class="lab">Tasa de ocupación
               <small>Egresados trabajando o buscando con éxito</small></span>
-            <span class="num"><span data-count="95.1" data-dec="1">0.0</span><span class="unit">%</span></span>
+            <span class="num"><span data-count="95.1" data-dec="1">95.1</span><span class="unit">%</span></span>
             <span class="ref">IMCO · Compara Carreras 2025</span>
           </div>
           <div class="drawx thin" data-io></div>
@@ -341,7 +356,7 @@
           <div class="data-row rv d2" data-io>
             <span class="lab">Proyectos en esta carpeta
               <small>Proyectos de Evaluación Final</small></span>
-            <span class="num"><span data-count="17">0</span> <span class="unit">PEF</span></span>
+            <span class="num"><span data-count="17">17</span> <span class="unit">PEF</span></span>
             <span class="ref">LDG UDEM · Otoño 2025</span>
           </div>
           <div class="drawx" data-io></div>
@@ -414,35 +429,6 @@
     </div>
   </section>
 
-  <!-- LÁMINA DE DETALLE (modal de proyecto) -->
-  <div class="modal" id="modal" role="dialog" aria-modal="true">
-    <div class="modal__backdrop" id="modalBackdrop"></div>
-    <div class="modal__content" id="modalContent">
-      <button class="modal__close" id="modalClose" aria-label="Cerrar proyecto">
-        <span>&times;</span>
-      </button>
-      <div class="modal__inner">
-        <p class="modal__doc mono">LÁMINA DE DETALLE · CARPETA DE REVISIÓN LDG</p>
-        <div class="modal__cover" id="modalCover"></div>
-        <div class="modal__info">
-          <h2 class="modal__title" id="modalTitle"></h2>
-          <div class="modal__cajetin">
-            <div class="cell"><span class="k">Categoría</span><span class="v" id="modalCategory"></span></div>
-            <div class="cell"><span class="k">Estudiante</span><span class="v" id="modalStudent"></span></div>
-            <div class="cell"><span class="k">Tutor</span><span class="v" id="modalTutor"></span></div>
-            <div class="cell"><span class="k">Semestre</span><span class="v" id="modalSemester"></span><span id="modalYear" hidden></span></div>
-          </div>
-          <div class="modal__abstract" id="modalAbstract"></div>
-          <div class="modal__gallery" id="modalGallery"></div>
-          <button class="modal__download" id="modalDownload">
-            <span>DESCARGAR PDF</span>
-            <span class="modal__download-arrow">&darr;</span>
-          </button>
-        </div>
-      </div>
-    </div>
-  </div>
-
   <!-- HOJA 04 · RECONOCIMIENTO (sello + vitrina) -->
   <section class="awards" id="awards">
     <div class="wrap">
@@ -500,7 +486,7 @@
       <div class="drawx" data-io style="margin-top:22px"></div>
 
       <figure class="lamina rv d1" data-io>
-        <div class="lamina__frame" id="videoLamina">
+        <div class="lamina__frame" id="videoLamina" data-speed="1.04">
           <a class="lamina__poster" id="videoPoster" href="https://vimeo.com/1160882204" target="_blank" rel="noopener" aria-label="Reproducir video: BioDiseño x Sofía Porto · PEF session Otoño 2025">
             <img src="proyectos/thumbnails/biodiseo.jpg" alt="" loading="lazy">
             <span class="lamina__play"><span class="mono">Reproducir video &#9654;</span></span>
@@ -553,6 +539,38 @@
       </div>
     </div>
   </footer>
+
+  </div><!-- /#smooth-content -->
+  </div><!-- /#smooth-wrapper -->
+
+  <!-- LÁMINA DE DETALLE (modal de proyecto) · fuera del wrapper: position fixed -->
+  <div class="modal" id="modal" role="dialog" aria-modal="true">
+    <div class="modal__backdrop" id="modalBackdrop"></div>
+    <div class="modal__content" id="modalContent">
+      <button class="modal__close" id="modalClose" aria-label="Cerrar proyecto">
+        <span>&times;</span>
+      </button>
+      <div class="modal__inner">
+        <p class="modal__doc mono">LÁMINA DE DETALLE · CARPETA DE REVISIÓN LDG</p>
+        <div class="modal__cover" id="modalCover"></div>
+        <div class="modal__info">
+          <h2 class="modal__title" id="modalTitle"></h2>
+          <div class="modal__cajetin">
+            <div class="cell"><span class="k">Categoría</span><span class="v" id="modalCategory"></span></div>
+            <div class="cell"><span class="k">Estudiante</span><span class="v" id="modalStudent"></span></div>
+            <div class="cell"><span class="k">Tutor</span><span class="v" id="modalTutor"></span></div>
+            <div class="cell"><span class="k">Semestre</span><span class="v" id="modalSemester"></span><span id="modalYear" hidden></span></div>
+          </div>
+          <div class="modal__abstract" id="modalAbstract"></div>
+          <div class="modal__gallery" id="modalGallery"></div>
+          <button class="modal__download" id="modalDownload">
+            <span>DESCARGAR PDF</span>
+            <span class="modal__download-arrow">&darr;</span>
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
 
   <!-- ADMIN PANEL -->
   <div class="admin-panel" id="adminPanel">
@@ -749,6 +767,6 @@
   <!-- TOAST NOTIFICATION -->
   <div class="pef-toast" id="pefToast"></div>
 
-  <script src="script.js"></script>
+  <script src="script.js?v=20260612" defer></script>
 </body>
 </html>

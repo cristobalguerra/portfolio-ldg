@@ -242,6 +242,19 @@ function getItemsPerPage() {
 // ---- ACCESSIBILITY FLAGS ----
 const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
+// ---- MOTION · CONTRATO v2 (DESIGN.md) ----
+// Capa 1: sin JS todo visible (la clase .js gatea los estados ocultos;
+// también la añade un inline en <head> para evitar FOUC).
+document.documentElement.classList.add('js');
+// Capa 3 solo si GSAP cargó; con reduced-motion al cargar, la rama IO
+// ya entrega el estado final directo (cero animación GSAP).
+const MESA_GSAP = !!(window.gsap && window.ScrollTrigger && !reduceMotion);
+// Hooks que instala la capa GSAP. null => fallback IO (capa 2).
+let gsapCardBinder = null;   // (cards) => void · marcos de ficha vía ScrollTrigger
+let gsapFlipCapture = null;  // () => FlipState · antes del re-render de galería
+let gsapFlipPlay = null;     // (state) => void · después del re-render
+let suppressFlip = false;    // re-render por resize: sin Flip
+
 // ---- HTML ESCAPING (datos de Firebase / dinámicos) ----
 function escapeHtml(text) {
   const div = document.createElement('div');
@@ -251,6 +264,15 @@ function escapeHtml(text) {
 
 function escapeAttr(text) {
   return String(text == null ? '' : text).replace(/&/g, '&amp;').replace(/"/g, '&quot;').replace(/'/g, '&#39;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+}
+
+// Los links "compartir" de Drive son páginas HTML, no imágenes; un <img> no
+// puede pintarlos. Se convierten al endpoint de imagen de Drive al renderizar.
+function normalizeThumbUrl(url) {
+  if (!url) return url;
+  const m = String(url).match(/drive\.google\.com\/(?:file\/d\/([\w-]{20,})|open\?id=([\w-]{20,})|uc\?[^"' ]*id=([\w-]{20,}))/);
+  const id = m && (m[1] || m[2] || m[3]);
+  return id ? 'https://drive.google.com/thumbnail?id=' + id + '&sz=w1600' : url;
 }
 
 // ---- DOM ELEMENTS ----
@@ -281,7 +303,7 @@ function runCounter(el) {
   const target = parseFloat(el.getAttribute('data-count'));
   const dec = parseInt(el.getAttribute('data-dec') || '0', 10);
   const group = el.getAttribute('data-group') === '1';
-  if (reduceMotion) {
+  if (reduceMotion || window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
     el.textContent = fmtCount(target, dec, group);
     return;
   }
@@ -324,6 +346,451 @@ function ioObserve(el) {
 
 function initMotion() {
   document.querySelectorAll('[data-io]').forEach(ioObserve);
+}
+
+// ============================================
+// MOTION · CAPA 3 (GSAP) · contrato v2 de DESIGN.md
+// ScrollSmoother + SplitText + scrubs de delineante +
+// pin IMCO + Flip en galería + DrawSVG + ScrambleText.
+// El módulo IO de arriba queda como fallback (capa 2).
+// ============================================
+function initGsapMotion() {
+  gsap.registerPlugin(ScrollTrigger);
+  [window.ScrollSmoother, window.SplitText, window.DrawSVGPlugin, window.Flip, window.ScrambleTextPlugin]
+    .forEach((p) => { if (p) gsap.registerPlugin(p); });
+
+  const mm = gsap.matchMedia();
+  mm.add({
+    motion: '(prefers-reduced-motion: no-preference)',
+    reduce: '(prefers-reduced-motion: reduce)'
+  }, (ctx) => {
+    if (ctx.conditions.reduce) {
+      // Reduced motion: cero animación GSAP, estado final directo
+      gsapCardBinder = null;
+      gsapFlipCapture = null;
+      gsapFlipPlay = null;
+      document.querySelectorAll('[data-io]').forEach(revealNow);
+      document.querySelectorAll('.thesis-card').forEach(revealNow);
+      const hb = document.querySelector('.hero-body');
+      if (hb) hb.classList.add('in');
+      return;
+    }
+    return buildMesaGsap(ctx);
+  });
+}
+
+function buildMesaGsap(ctx) {
+  const EASE = 'quint.out';
+  const root = document.documentElement;
+  // pointer coarse => sin pins, sin smoother, reveals one-shot (coreografía CSS)
+  const finePointer = window.matchMedia('(pointer: fine)').matches;
+  const cleanups = [];
+  let alive = true;
+
+  root.classList.add('ts-gsap');
+  cleanups.push(() => root.classList.remove('ts-gsap'));
+
+  // ---------- ScrollSmoother (solo pointer fine) ----------
+  let smoother = null;
+  const topline = document.getElementById('nav');
+  const topH = () => (topline ? topline.offsetHeight : 52);
+
+  if (finePointer && window.ScrollSmoother) {
+    const setToplineH = () => root.style.setProperty('--topline-h', topH() + 'px');
+    setToplineH();
+    root.classList.add('ts-smooth');
+    smoother = ScrollSmoother.create({
+      wrapper: '#smooth-wrapper',
+      content: '#smooth-content',
+      smooth: 1,
+      effects: true
+    });
+    const onSmoothResize = () => setToplineH();
+    window.addEventListener('resize', onSmoothResize);
+    cleanups.push(() => {
+      window.removeEventListener('resize', onSmoothResize);
+      if (smoother) smoother.kill();
+      root.classList.remove('ts-smooth');
+      root.style.removeProperty('--topline-h');
+    });
+
+    // Anclas y deep-links con offset del topline
+    const anchorScroll = (target, smooth) => {
+      const y = Math.max(0, smoother.offset(target, 'top top') - topH() - 12);
+      smoother.scrollTo(y, smooth);
+    };
+    const onAnchorClick = (e) => {
+      const a = e.target.closest('a[href^="#"]');
+      if (!a) return;
+      const href = a.getAttribute('href');
+      if (!href || href === '#') return;
+      let target = null;
+      try { target = document.querySelector(href); } catch (err) { return; }
+      if (!target) return;
+      e.preventDefault();
+      anchorScroll(target, true);
+      if (history.pushState) history.pushState(null, '', href);
+    };
+    document.addEventListener('click', onAnchorClick);
+    cleanups.push(() => document.removeEventListener('click', onAnchorClick));
+
+    // Hash al cargar: también vía smoother
+    const applyHash = () => {
+      if (!location.hash) return;
+      let target = null;
+      try { target = document.querySelector(location.hash); } catch (err) { return; }
+      if (target) anchorScroll(target, false);
+    };
+
+    // Al abrir cualquier modal/gate/menú: smoother.paused(true); al cerrar: false
+    const overlayIds = ['pefGate', 'pefTalks', 'pefTable', 'pefAdminGate', 'pefRegister',
+      'pefFeedback', 'menu', 'modal', 'adminPanel', 'adminProjectForm',
+      'adminAwardForm', 'adminGate', 'pdfViewer'];
+    const overlays = overlayIds.map((id) => document.getElementById(id)).filter(Boolean);
+    const syncPaused = () => {
+      if (smoother) smoother.paused(overlays.some((el) => el.classList.contains('open')));
+    };
+    const overlayMo = new MutationObserver(syncPaused);
+    overlays.forEach((el) => overlayMo.observe(el, { attributes: true, attributeFilter: ['class'] }));
+    syncPaused();
+    cleanups.push(() => overlayMo.disconnect());
+
+    // Refresh al cargar todo (imágenes) + hash inicial
+    const onLoaded = () => { ScrollTrigger.refresh(); applyHash(); };
+    if (document.readyState === 'complete') {
+      requestAnimationFrame(onLoaded);
+    } else {
+      window.addEventListener('load', onLoaded);
+      cleanups.push(() => window.removeEventListener('load', onLoaded));
+    }
+  }
+
+  // ---------- Barra de control: chips CMYK + cruz de registro + leyenda ----------
+  const ruler = document.querySelector('.ruler');
+  if (ruler) {
+    const chips = ruler.querySelectorAll('.ink');
+    const regParts = ruler.querySelectorAll('.reg circle, .reg path');
+    const tlRuler = gsap.timeline({ defaults: { ease: EASE } });
+    if (chips.length) tlRuler.from(chips, { opacity: 0, y: 5, duration: .45, stagger: .07 }, .1);
+    if (regParts.length && window.DrawSVGPlugin) {
+      tlRuler.from(regParts, { drawSVG: 0, duration: .6, stagger: .12 }, .3);
+    }
+    // ScrambleText SOLO en la leyenda, ≤0.8s
+    const leg = ruler.querySelector('.leg');
+    if (leg && window.ScrambleTextPlugin && leg.firstChild && leg.firstChild.nodeType === 3) {
+      const legSpan = document.createElement('span');
+      const legText = leg.firstChild.textContent;
+      legSpan.textContent = legText;
+      leg.replaceChild(legSpan, leg.firstChild);
+      tlRuler.to(legSpan, { duration: .8, scrambleText: { text: legText, chars: 'upperCase', speed: .4 } }, .15);
+    }
+  }
+
+  // ---------- Hero: H1 SplitText por chars (una sola vez, al cargar) ----------
+  const h1 = document.querySelector('#hero h1');
+  const heroBody = document.querySelector('.hero-body');
+  let splitH1 = null;
+  const splitHeads = [];
+  const useSplit = !!window.SplitText;
+  // SplitText siempre tras document.fonts.ready
+  const fontsReady = (document.fonts && document.fonts.ready)
+    ? document.fonts.ready
+    : Promise.resolve();
+
+  if (h1 && useSplit) {
+    fontsReady.then(() => {
+      if (!alive) return;
+      ctx.add(() => {
+        splitH1 = new SplitText(h1, { type: 'chars', charsClass: 'h1-char' });
+        gsap.set(splitH1.chars, { yPercent: 112 });
+        gsap.set(h1.querySelectorAll('.ln i'), { y: 0, transition: 'none' });
+        const tlH1 = gsap.timeline({ defaults: { ease: EASE } });
+        tlH1.to(splitH1.chars, { yPercent: 0, duration: .9, stagger: .02 }, .1);
+        const hl = h1.querySelector('.hl');
+        if (hl) {
+          // la banda .hl anima su background-size después del split
+          tlH1.fromTo(hl, { backgroundSize: '0% .84em' },
+            { backgroundSize: '100% .84em', duration: .7 }, '-=.35');
+        }
+        ScrollTrigger.refresh();
+      });
+    });
+  } else if (heroBody) {
+    heroBody.classList.add('in'); // sin SplitText: coreografía CSS
+  }
+
+  // ---------- h2 de secciones: SplitText por líneas con mask al entrar ----------
+  if (useSplit) {
+    fontsReady.then(() => {
+      if (!alive) return;
+      ctx.add(() => {
+        document.querySelectorAll('.sec-head').forEach((head) => {
+          const h2 = head.querySelector('h2');
+          if (!h2) return;
+          gsap.set(head, { opacity: 1, y: 0, transition: 'none' });
+          head.classList.add('in');
+          const split = new SplitText(h2, { type: 'lines', mask: 'lines', linesClass: 'h2-line' });
+          splitHeads.push(split);
+          gsap.set(split.lines, { yPercent: 110 });
+          const chip = head.querySelector('.sec-no');
+          const tlHead = gsap.timeline({
+            defaults: { ease: EASE },
+            scrollTrigger: { trigger: head, start: 'top 85%', once: true }
+          });
+          if (chip) tlHead.from(chip, { opacity: 0, y: 10, duration: .5 }, 0);
+          tlHead.to(split.lines, { yPercent: 0, duration: .8, stagger: .1 }, .05);
+        });
+        ScrollTrigger.refresh();
+      });
+    });
+  }
+
+  // ---------- Sello VoBo del cajetín: estampado -6deg con settle ----------
+  const vobo = document.querySelector('#hero .rev-stamp');
+  if (vobo) {
+    gsap.set(vobo, { transition: 'none' });
+    gsap.fromTo(vobo,
+      { opacity: 0, scale: 1.16, rotation: -1 },
+      { opacity: 1, scale: 1, rotation: -6, duration: .5, ease: EASE, delay: .95 });
+  }
+
+  // ---------- Cota del hero: scrub de delineante (fine) ----------
+  const cota = document.querySelector('#hero .cota');
+  if (cota && finePointer) {
+    const cLine = cota.querySelector('.c-line');
+    const cTicks = cota.querySelectorAll('.c-tick');
+    const cLbl = cota.querySelector('.lbl');
+    gsap.set([cLine, cLbl], { transition: 'none' });
+    gsap.set(cTicks, { transition: 'none' });
+    const tlCota = gsap.timeline({
+      defaults: { ease: 'none' },
+      scrollTrigger: { trigger: '#hero', start: 'top top', end: '+=420', scrub: 1 }
+    });
+    tlCota.fromTo(cLine, { scaleX: 0 }, { scaleX: 1, duration: .7 }, 0)
+      .fromTo(cTicks, { scaleY: 0 }, { scaleY: 1, duration: .14, stagger: .05 }, .66)
+      .fromTo(cLbl, { opacity: 0 }, { opacity: 1, duration: .18 }, .82);
+  }
+
+  // ---------- drawx: trazo con scrub (fine); los de #datos van en el pin ----------
+  const datos = document.getElementById('datos');
+  if (finePointer) {
+    document.querySelectorAll('.drawx').forEach((dx) => {
+      if (datos && datos.contains(dx)) return;
+      gsap.set(dx, { transition: 'none' });
+      gsap.fromTo(dx, { scaleX: 0 }, {
+        scaleX: 1,
+        ease: 'none',
+        scrollTrigger: { trigger: dx, start: 'top 88%', end: 'top 55%', scrub: 1 }
+      });
+    });
+  }
+
+  // ---------- PIN IMCO: #datos anclado, filas que se trazan y cuentan ----------
+  if (datos && finePointer) {
+    const rows = Array.from(datos.querySelectorAll('.data-row'));
+    const lines = Array.from(datos.querySelectorAll('.drawx'));
+    const sub = datos.querySelector('.sec-sub');
+    const note = datos.querySelector('.data-note p');
+
+    if (sub) gsap.set(sub, { opacity: 0, y: 14, transition: 'none' });
+    if (note) gsap.set(note, { opacity: 0, y: 14, transition: 'none' });
+    gsap.set(rows, { opacity: 0, y: 18, transition: 'none' });
+    gsap.set(lines, { scaleX: 0, transition: 'none' });
+
+    const tlPin = gsap.timeline({
+      defaults: { ease: 'none' },
+      scrollTrigger: {
+        trigger: datos,
+        start: 'top top',
+        end: '+=1400',
+        pin: true,
+        scrub: 1
+      }
+    });
+
+    if (sub) tlPin.to(sub, { opacity: 1, y: 0, duration: .3 }, 0);
+    if (lines[0]) tlPin.to(lines[0], { scaleX: 1, duration: .5 }, .05);
+
+    rows.forEach((row, i) => {
+      const at = .7 + i * 1.05;
+      tlPin.to(row, { opacity: 1, y: 0, duration: .45 }, at);
+      const cEl = row.querySelector('[data-count]');
+      if (cEl) {
+        const target = parseFloat(cEl.getAttribute('data-count'));
+        const dec = parseInt(cEl.getAttribute('data-dec') || '0', 10);
+        const group = cEl.getAttribute('data-group') === '1';
+        const proxy = { v: 0 };
+        tlPin.to(proxy, {
+          v: target,
+          duration: .8,
+          onUpdate: () => { cEl.textContent = fmtCount(proxy.v, dec, group); },
+          // el contador cierra SIEMPRE en el valor exacto
+          onComplete: () => { cEl.textContent = fmtCount(target, dec, group); }
+        }, at + .15);
+      }
+      if (lines[i + 1]) tlPin.to(lines[i + 1], { scaleX: 1, duration: .4 }, at + .55);
+    });
+    if (note) tlPin.to(note, { opacity: 1, y: 0, duration: .4 }, '>-.2');
+  }
+
+  // ---------- Fichas de galería: marco trazado con scrub (fine) / one-shot (coarse) ----------
+  let cardAnims = [];
+  const killCardAnims = () => {
+    cardAnims.forEach((a) => {
+      if (a.scrollTrigger) a.scrollTrigger.kill();
+      a.kill();
+    });
+    cardAnims = [];
+  };
+
+  const bindCards = (cards) => {
+    killCardAnims();
+    cards.forEach((card) => {
+      if (finePointer) {
+        const ft = card.querySelector('.f-t');
+        const fr = card.querySelector('.f-r');
+        const fb = card.querySelector('.f-b');
+        const fl = card.querySelector('.f-l');
+        const corners = card.querySelectorAll('.corner');
+        const inner = card.querySelector('.inner');
+        if (!ft || !fr || !fb || !fl || !inner) return;
+        gsap.set([ft, fr, fb, fl, inner], { transition: 'none' });
+        gsap.set(corners, { transition: 'none' });
+        const tl = gsap.timeline({
+          defaults: { ease: 'none' },
+          scrollTrigger: { trigger: card, start: 'top 88%', end: 'top 45%', scrub: 1 }
+        });
+        tl.fromTo(ft, { scaleX: 0 }, { scaleX: 1, duration: .22 }, 0)
+          .fromTo(fr, { scaleY: 0 }, { scaleY: 1, duration: .22 }, .18)
+          .fromTo(fb, { scaleX: 0 }, { scaleX: 1, duration: .22 }, .36)
+          .fromTo(fl, { scaleY: 0 }, { scaleY: 1, duration: .22 }, .54)
+          .fromTo(corners, { opacity: 0 }, { opacity: 1, duration: .12 }, .7)
+          .fromTo(inner, { opacity: 0, y: 10 }, { opacity: 1, y: 0, duration: .28, ease: EASE }, .66);
+        cardAnims.push(tl);
+      } else {
+        // coarse: one-shot con la coreografía CSS del sistema
+        const st = ScrollTrigger.create({
+          trigger: card,
+          start: 'top 88%',
+          once: true,
+          onEnter: () => revealNow(card)
+        });
+        cardAnims.push(st);
+      }
+    });
+  };
+  gsapCardBinder = bindCards;
+  bindCards(galleryGrid.querySelectorAll('.thesis-card'));
+  cleanups.push(() => { gsapCardBinder = null; killCardAnims(); });
+
+  // ---------- Flip en galería (filtros y paginación) ----------
+  if (window.Flip) {
+    gsapFlipCapture = () => Flip.getState(galleryGrid.querySelectorAll('.thesis-card'));
+    gsapFlipPlay = (state) => {
+      if (!state || !state.targets || !state.targets.length) {
+        ScrollTrigger.refresh();
+        return;
+      }
+      Flip.from(state, {
+        targets: galleryGrid.querySelectorAll('.thesis-card'),
+        duration: .6,
+        ease: EASE,
+        absolute: true,
+        onEnter: (els) => gsap.fromTo(els, { opacity: 0, y: 14 }, { opacity: 1, y: 0, duration: .45, ease: EASE }),
+        onLeave: (els) => gsap.to(els, { opacity: 0, duration: .3, ease: EASE }),
+        onComplete: () => ScrollTrigger.refresh()
+      });
+    };
+    cleanups.push(() => { gsapFlipCapture = null; gsapFlipPlay = null; });
+  }
+
+  // ---------- Sello del premio: DrawSVG del aro + estampado 1.15→1 ----------
+  const prizeStamp = document.querySelector('.vitrina .stamp');
+  if (prizeStamp) {
+    const rings = prizeStamp.querySelectorAll('circle');
+    const texts = prizeStamp.querySelectorAll('text');
+    gsap.set(prizeStamp, { transition: 'none' });
+    const tlStamp = gsap.timeline({
+      defaults: { ease: EASE },
+      scrollTrigger: { trigger: prizeStamp, start: 'top 85%', once: true }
+    });
+    tlStamp.fromTo(prizeStamp,
+      { opacity: 0, scale: 1.15, rotation: -8 },
+      { opacity: 1, scale: 1, rotation: -8, duration: .42 }, 0);
+    if (rings.length && window.DrawSVGPlugin) {
+      tlStamp.from(rings, { drawSVG: 0, duration: .7, stagger: .12 }, .12);
+    }
+    if (texts.length) tlStamp.from(texts, { opacity: 0, duration: .4 }, .5);
+  }
+
+  // ---------- Magnetic sutil ±6px: solo el CTA principal a trayectoria ----------
+  if (finePointer) {
+    const ctaBtn = document.querySelector('#trayectoriaCta .btn');
+    if (ctaBtn) {
+      const prevTransition = ctaBtn.style.transition;
+      ctaBtn.style.transition = 'box-shadow .15s var(--ease)';
+      const xTo = gsap.quickTo(ctaBtn, 'x', { duration: .4, ease: EASE });
+      const yTo = gsap.quickTo(ctaBtn, 'y', { duration: .4, ease: EASE });
+      const onMove = (e) => {
+        const r = ctaBtn.getBoundingClientRect();
+        const dx = ((e.clientX - (r.left + r.width / 2)) / (r.width / 2)) * 6;
+        const dy = ((e.clientY - (r.top + r.height / 2)) / (r.height / 2)) * 6;
+        xTo(Math.max(-6, Math.min(6, dx)));
+        yTo(Math.max(-6, Math.min(6, dy)));
+      };
+      const onLeave = () => { xTo(0); yTo(0); };
+      ctaBtn.addEventListener('pointermove', onMove);
+      ctaBtn.addEventListener('pointerleave', onLeave);
+      cleanups.push(() => {
+        ctaBtn.removeEventListener('pointermove', onMove);
+        ctaBtn.removeEventListener('pointerleave', onLeave);
+        ctaBtn.style.transition = prevTransition;
+      });
+    }
+  }
+
+  // ---------- Reveals genéricos: la coreografía CSS del sistema, vía ScrollTrigger ----------
+  const special = new Set();
+  if (heroBody) special.add(heroBody);
+  if (vobo) special.add(vobo);
+  if (prizeStamp) special.add(prizeStamp);
+  if (cota && finePointer) special.add(cota);
+  if (useSplit) document.querySelectorAll('.sec-head[data-io]').forEach((el) => special.add(el));
+  if (finePointer) {
+    document.querySelectorAll('.drawx[data-io]').forEach((el) => special.add(el));
+    if (datos) {
+      datos.querySelectorAll('[data-io]').forEach((el) => {
+        if (!el.classList.contains('sec-head')) special.add(el);
+      });
+    }
+  }
+  document.querySelectorAll('[data-io]').forEach((el) => {
+    if (special.has(el) || el.classList.contains('thesis-card')) return;
+    ScrollTrigger.create({
+      trigger: el,
+      start: 'top 88%',
+      once: true,
+      onEnter: () => revealNow(el)
+    });
+  });
+
+  // refresh general cuando carga todo (también sin smoother)
+  if (!smoother) {
+    const onLoadedPlain = () => ScrollTrigger.refresh();
+    if (document.readyState !== 'complete') {
+      window.addEventListener('load', onLoadedPlain);
+      cleanups.push(() => window.removeEventListener('load', onLoadedPlain));
+    }
+  }
+
+  // ---------- limpieza del contexto (gsap.matchMedia revierte sus tweens) ----------
+  return () => {
+    alive = false;
+    if (splitH1) { splitH1.revert(); splitH1 = null; }
+    splitHeads.forEach((s) => s.revert());
+    splitHeads.length = 0;
+    cleanups.forEach((fn) => fn());
+  };
 }
 
 // ============================================
@@ -385,6 +852,9 @@ function getTotalPages(filtered) {
 }
 
 function renderGallery(animate = true) {
+  // Capa GSAP · Flip: captura el estado del layout antes del re-render
+  const flipState = (!suppressFlip && gsapFlipCapture) ? gsapFlipCapture() : null;
+
   const filtered = getFilteredTheses();
   const totalPages = getTotalPages(filtered);
 
@@ -399,6 +869,7 @@ function renderGallery(animate = true) {
   pageItems.forEach((thesis, i) => {
     const card = document.createElement('div');
     card.className = 'thesis-card';
+    card.dataset.flipId = 'tesis-' + thesis.id;
     if (animate) {
       card.style.animationDelay = `${i * 0.1}s`;
     } else {
@@ -418,7 +889,7 @@ function renderGallery(animate = true) {
         </div>
         <div class="fbody">
           <figure class="thesis-card__image">
-            <img src="${escapeAttr(thesis.thumbnail)}" alt="" class="thesis-card__thumbnail" loading="lazy">
+            <img src="${escapeAttr(normalizeThumbUrl(thesis.thumbnail))}" alt="" class="thesis-card__thumbnail" loading="lazy">
           </figure>
           <div class="thesis-card__info">
             <h3 class="thesis-card__title">${escapeHtml(thesis.title)}</h3>
@@ -457,8 +928,14 @@ function renderGallery(animate = true) {
   if (prevBtn) prevBtn.disabled = currentPage === 0;
   if (nextBtn) nextBtn.disabled = currentPage >= totalPages - 1;
 
-  // Motion del sistema: el marco de cada ficha se traza al entrar en viewport
-  galleryGrid.querySelectorAll('.thesis-card').forEach(ioObserve);
+  // Motion del sistema: el marco de cada ficha se traza al entrar en viewport.
+  // Capa GSAP si está activa; si no, el IO de la capa 2.
+  const cards = galleryGrid.querySelectorAll('.thesis-card');
+  if (gsapCardBinder) gsapCardBinder(cards);
+  else cards.forEach(ioObserve);
+
+  // Capa GSAP · Flip: anima del estado previo al nuevo layout
+  if (flipState && gsapFlipPlay) gsapFlipPlay(flipState);
 }
 
 function slideGallery(direction) {
@@ -467,6 +944,13 @@ function slideGallery(direction) {
   const newPage = currentPage + direction;
 
   if (newPage < 0 || newPage >= totalPages) return;
+
+  // Capa GSAP: el cambio de página lo anima Flip dentro de renderGallery
+  if (gsapFlipCapture && gsapFlipPlay) {
+    currentPage = newPage;
+    renderGallery(false);
+    return;
+  }
 
   // Slide out
   galleryGrid.classList.add('sliding-out');
@@ -516,7 +1000,9 @@ document.addEventListener('DOMContentLoaded', () => {
   window.addEventListener('resize', () => {
     clearTimeout(resizeTimer);
     resizeTimer = setTimeout(() => {
+      suppressFlip = true;
       renderGallery(false);
+      suppressFlip = false;
     }, 200);
   });
 });
@@ -526,7 +1012,7 @@ document.addEventListener('DOMContentLoaded', () => {
 let modalOriginEl = null;
 
 function openModal(thesis, originEl) {
-  document.getElementById('modalCover').innerHTML = `<img src="${escapeAttr(thesis.thumbnail)}" alt="${escapeAttr(thesis.title)}" style="width:100%;height:100%;object-fit:cover;">`;
+  document.getElementById('modalCover').innerHTML = `<img src="${escapeAttr(normalizeThumbUrl(thesis.thumbnail))}" alt="${escapeAttr(thesis.title)}" style="width:100%;height:100%;object-fit:cover;">`;
   document.getElementById('modalCategory').textContent = thesis.categoryLabel;
   document.getElementById('modalTitle').textContent = thesis.title;
   document.getElementById('modalStudent').textContent = thesis.student;
@@ -1672,19 +2158,12 @@ function initAdmin() {
     const projects = getDynamicProjects();
     projects.push(project);
     saveDynamicProjects(projects);
-
-    // Add to live theses array
-    const categoryLabels = { branding: 'BRANDING', editorial: 'EDITORIAL', packaging: 'PACKAGING', motion: 'MOTION', uiux: 'UI/UX', identidad: 'IDENTIDAD' };
-    theses.push({
-      ...project,
-      year: parseInt(project.year),
-      categoryLabel: categoryLabels[project.category] || project.category.toUpperCase()
-    });
+    // El listener de ldgProjects ya re-mete el proyecto a theses y re-renderiza;
+    // empujarlo aquí también lo duplicaba en la galería.
 
     adminProjectForm.classList.remove('open');
     adminProjectFormEl.reset();
     openAdminPanel();
-    renderGallery();
     showToast('✓ PROYECTO REGISTRADO');
   });
 
@@ -1742,8 +2221,20 @@ function initAdmin() {
 
 document.addEventListener('DOMContentLoaded', () => {
   initAdmin(); // Load dynamic data first
+
+  // Capa 3 (GSAP) si cargó y no hay reduced-motion; si falla, capa 2 (IO).
+  let usedGsap = false;
+  if (MESA_GSAP) {
+    try {
+      initGsapMotion();
+      usedGsap = true;
+    } catch (err) {
+      console.warn('Capa GSAP no disponible; fallback al módulo IO:', err);
+    }
+  }
+
   renderGallery();
-  initMotion();
+  if (!usedGsap) initMotion();
   initVideoLamina();
   initPefTalks();
 });

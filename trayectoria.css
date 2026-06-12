@@ -103,8 +103,9 @@
   -webkit-box-decoration-break: clone;
   box-decoration-break: clone;
 }
-/* Dentro del H1 la italica va sin banda (la banda vive en .ts-hl) */
-.trayectoria-page .ts-h1 em { background-image: none; padding: 0; }
+/* Dentro del H1 la italica va sin banda (la banda vive en .ts-hl);
+   inline-block para que el "LDG." pueda llevar su settle propio en GSAP */
+.trayectoria-page .ts-h1 em { background-image: none; padding: 0; display: inline-block; }
 
 /* Banda marcadora animada (pinta al entrar) */
 .trayectoria-page .ts-hl {
@@ -208,22 +209,21 @@
 .ts-ctrlbar__chip--m { background: #EC008C; }
 .ts-ctrlbar__chip--y { background: var(--yellow); }
 .ts-ctrlbar__chip--k { background: var(--ink); }
+/* Cruz de registro como SVG inline: sin GSAP se pinta completa;
+   con DrawSVG el trazo se dibuja al cargar la hoja. */
 .ts-ctrlbar__reg {
-  position: relative;
-  width: 12px;
-  height: 12px;
-  border: 1px solid var(--ink);
-  border-radius: 50%;
+  display: block;
+  width: 18px;
+  height: 18px;
   flex-shrink: 0;
+  overflow: visible;
 }
-.ts-ctrlbar__reg::before,
-.ts-ctrlbar__reg::after {
-  content: "";
-  position: absolute;
-  background: var(--ink);
+.ts-ctrlbar__reg circle,
+.ts-ctrlbar__reg line {
+  fill: none;
+  stroke: var(--ink);
+  stroke-width: 1;
 }
-.ts-ctrlbar__reg::before { left: 50%; top: -3px; bottom: -3px; width: 1px; transform: translateX(-50%); }
-.ts-ctrlbar__reg::after { top: 50%; left: -3px; right: -3px; height: 1px; transform: translateY(-50%); }
 .ts-ctrlbar__lbl {
   font-family: var(--mono);
   font-size: var(--t-mono);
@@ -293,10 +293,12 @@
   position: absolute; left: 0; right: 0; top: 16px; height: 2px;
   background: var(--verm);
 }
+/* Remates de cota como SVG inline (DrawSVG los traza; sin GSAP, completos) */
 .ts-cota__tick {
   position: absolute; top: 6px; width: 2px; height: 22px;
-  background: var(--verm);
+  display: block; overflow: visible;
 }
+.ts-cota__tick line { stroke: var(--verm); stroke-width: 2; }
 .ts-cota__tick--l { left: 0; }
 .ts-cota__tick--r { right: 0; }
 .ts-cota__lbl {
@@ -1392,11 +1394,52 @@
 .pdf-overlay__cancel:focus-visible { outline: 2px solid #B23818; outline-offset: 3px; }
 
 /* ============================================
+   CAPA GSAP (Motion: contrato v2)
+   Con .ts-gsap presente, los estados iniciales y
+   el timing los gobierna GSAP con estilos inline;
+   el stylesheet cede (sin transiciones que peleen
+   con el ticker). El fallback IO (.in) queda
+   intacto cuando .ts-gsap no existe.
+   ============================================ */
+.trayectoria-page.ts-gsap.ts-js .ts-h1 .ts-ln i { transform: none; transition: none; }
+.trayectoria-page.ts-gsap.ts-js .ts-hl { background-size: 100% .84em; transition: none; }
+.trayectoria-page.ts-gsap.ts-js .ts-cota__line,
+.trayectoria-page.ts-gsap.ts-js .ts-cota__tick { transform: none; transition: none; }
+.trayectoria-page.ts-gsap.ts-js .ts-cota__lbl { opacity: 1; transition: none; }
+.trayectoria-page.ts-gsap.ts-js .ts-stamp { opacity: 1; transform: rotate(-6deg); transition: none; }
+.trayectoria-page.ts-gsap.ts-js .ts-drawx { transform: none; transition: none; }
+.trayectoria-page.ts-gsap.ts-js .ts-rv,
+.trayectoria-page.ts-gsap.ts-js .ts-track-link { opacity: 1; transform: none; transition: none; }
+.trayectoria-page.ts-gsap.ts-js .ts-frame i { transform: none; transition: none; }
+.trayectoria-page.ts-gsap.ts-js .ts-corner { opacity: 1; transition: none; }
+
+/* ScrollSmoother activo: el topline sale del flujo (fixed, fuera del wrapper)
+   y su alto se compensa con padding en el primer bloque del contenido.
+   scroll-margin-top deja de aplicar dentro del smoother: el offset de las
+   anclas lo calcula JS (smoother.offset + alto real del topline). */
+.trayectoria-page.ts-smooth .ts-topline { position: fixed; top: 0; left: 0; right: 0; }
+.trayectoria-page.ts-smooth #smooth-content { padding-top: var(--ts-topline-h, 54px); }
+
+/* ============================================
    PRINT: hoja en papel, accordions abiertos
    ============================================ */
 @media print {
-  .trayectoria-page { background: none !important; color: var(--ink) !important; }
+  .trayectoria-page { background: none !important; color: var(--ink) !important; height: auto !important; overflow: visible !important; }
   .trayectoria-page::before { display: none !important; }
+
+  /* ScrollSmoother: en papel el wrapper vuelve al flujo, sin transform */
+  .trayectoria-page #smooth-wrapper { position: static !important; height: auto !important; overflow: visible !important; }
+  .trayectoria-page #smooth-content { transform: none !important; padding-top: 0 !important; }
+  .trayectoria-page.ts-smooth .ts-topline { position: static !important; }
+
+  /* Estados gobernados por GSAP (estilos inline): forzar finales en papel */
+  .trayectoria-page .ts-gs { opacity: 1 !important; visibility: visible !important; transform: none !important; clip-path: none !important; }
+  .trayectoria-page .ts-split-ln { transform: none !important; opacity: 1 !important; }
+  .trayectoria-page .ts-track-detail__photo img { clip-path: none !important; }
+  .trayectoria-page .ts-h1 em { transform: none !important; }
+  .trayectoria-page .ts-cota__tick line,
+  .trayectoria-page .ts-ctrlbar__reg circle,
+  .trayectoria-page .ts-ctrlbar__reg line { stroke-dasharray: none !important; stroke-dashoffset: 0 !important; }
 
   .ts-topline__back,
   .ts-hero__actions,
@@ -1466,4 +1509,13 @@
   .trayectoria-page.ts-js .ts-cota__tick { transform: none !important; }
   .trayectoria-page.ts-js .ts-corner,
   .trayectoria-page.ts-js .ts-cota__lbl { opacity: 1 !important; }
+
+  /* Capa GSAP: estado final directo tambien para lo gobernado inline */
+  .trayectoria-page .ts-gs { opacity: 1 !important; visibility: visible !important; transform: none !important; clip-path: none !important; }
+  .trayectoria-page .ts-split-ln { transform: none !important; opacity: 1 !important; }
+  .trayectoria-page .ts-track-detail__photo img { clip-path: none !important; }
+  .trayectoria-page .ts-h1 em { transform: none !important; }
+  .trayectoria-page .ts-cota__tick line,
+  .trayectoria-page .ts-ctrlbar__reg circle,
+  .trayectoria-page .ts-ctrlbar__reg line { stroke-dasharray: none !important; stroke-dashoffset: 0 !important; }
 }

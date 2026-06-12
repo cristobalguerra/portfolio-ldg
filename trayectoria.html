@@ -8,8 +8,8 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Anton&family=Atkinson+Hyperlegible:ital,wght@0,400;0,700;1,400&family=JetBrains+Mono:wght@400;500;700&family=Spectral:ital,wght@1,400;1,500&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="styles.css">
-  <link rel="stylesheet" href="trayectoria.css?v=20260611">
+  <link rel="stylesheet" href="styles.css?v=20260612">
+  <link rel="stylesheet" href="trayectoria.css?v=20260612">
   <!-- html2canvas + jsPDF NO se cargan aqui: trayectoria.js los inyecta al primer click de PDF -->
 </head>
 <body class="trayectoria-page">
@@ -24,6 +24,12 @@
     </div>
   </header>
 
+  <!-- SMOOTH WRAPPER: ScrollSmoother envuelve TODO el flujo (contrato v2).
+       Topline, overlay PDF y guideDoc viven FUERA (fixed). Sin GSAP estos
+       divs son neutros y la pagina fluye igual que siempre. -->
+  <div id="smooth-wrapper">
+  <div id="smooth-content">
+
   <!-- HOJA 01 · PORTADA DE LÁMINA -->
   <div class="ts-sheet">
     <div class="ts-sheet__in">
@@ -33,7 +39,7 @@
         <span class="ts-ctrlbar__chips">
           <i class="ts-ctrlbar__chip ts-ctrlbar__chip--c"></i><i class="ts-ctrlbar__chip ts-ctrlbar__chip--m"></i><i class="ts-ctrlbar__chip ts-ctrlbar__chip--y"></i><i class="ts-ctrlbar__chip ts-ctrlbar__chip--k"></i>
         </span>
-        <span class="ts-ctrlbar__reg"></span>
+        <svg class="ts-ctrlbar__reg" width="18" height="18" viewBox="0 0 18 18" aria-hidden="true" focusable="false"><circle cx="9" cy="9" r="5.5"/><line x1="9" y1="1" x2="9" y2="17"/><line x1="1" y1="9" x2="17" y2="9"/></svg>
         <span class="ts-ctrlbar__lbl">Formato A4 · 300 dpi · CMYK</span>
       </div>
 
@@ -47,7 +53,7 @@
         </h1>
 
         <div class="ts-cota" data-io aria-hidden="true">
-          <i class="ts-cota__line"></i><i class="ts-cota__tick ts-cota__tick--l"></i><i class="ts-cota__tick ts-cota__tick--r"></i>
+          <i class="ts-cota__line"></i><svg class="ts-cota__tick ts-cota__tick--l" width="2" height="22" viewBox="0 0 2 22" aria-hidden="true" focusable="false"><line x1="1" y1="0" x2="1" y2="22"/></svg><svg class="ts-cota__tick ts-cota__tick--r" width="2" height="22" viewBox="0 0 2 22" aria-hidden="true" focusable="false"><line x1="1" y1="0" x2="1" y2="22"/></svg>
           <span class="ts-cota__lbl">6 caminos · 1 licenciatura</span>
         </div>
 
@@ -66,7 +72,7 @@
       </div>
 
       <div class="ts-cajetin">
-        <span class="ts-rev-stamp ts-stamp" data-io>Ed. 01</span>
+        <span class="ts-rev-stamp ts-stamp" data-io data-lag="0.12">Ed. 01</span>
         <div class="ts-cajetin__cell"><span class="ts-cajetin__k">Proyecto</span><span class="ts-cajetin__v">Trayectoria profesional del egresado</span></div>
         <div class="ts-cajetin__cell"><span class="ts-cajetin__k">Institución</span><span class="ts-cajetin__v">Universidad de Monterrey</span></div>
         <div class="ts-cajetin__cell"><span class="ts-cajetin__k">Programa</span><span class="ts-cajetin__v">LDG</span></div>
@@ -124,14 +130,6 @@
           <div class="ts-drawx ts-drawx--thin" data-io></div>
 
           <div class="ts-data-row ts-rv ts-d2" data-io>
-            <span class="ts-data-row__lab">Informalidad laboral
-              <small>Empleo sin seguridad social · referencia de riesgo</small></span>
-            <span class="ts-data-row__num"><span data-count="25.4" data-dec="1">25.4</span><span class="ts-unit">%</span></span>
-            <span class="ts-data-row__ref">ENOE 2T2024-1T2025</span>
-          </div>
-          <div class="ts-drawx ts-drawx--thin" data-io></div>
-
-          <div class="ts-data-row ts-rv ts-d3" data-io>
             <span class="ts-data-row__lab">Ingreso con posgrado
               <small>Sube a &asymp; $34,400 MXN mensuales</small></span>
             <span class="ts-data-row__num">+<span data-count="83">83</span><span class="ts-unit">%</span></span>
@@ -144,7 +142,7 @@
 
       <div class="ts-data-note">
         <div class="ts-data-note__pad"></div>
-        <p class="ts-rv ts-d2" data-io>Promedios nacionales de la disciplina <b>Diseño y Comunicación Gráfica y Editorial</b>, medidos por el Instituto Mexicano para la Competitividad con datos de la ENOE. Describen el mercado laboral de la disciplina en México · no son promesas del programa.
+        <p class="ts-rv ts-d2" data-io>Promedios nacionales de la disciplina <b>Diseño y Comunicación Gráfica y Editorial</b>, medidos por el Instituto Mexicano para la Competitividad con datos de la ENOE. Describen el mercado laboral de la disciplina en México.
           <br><a class="ts-src" href="https://comparacarreras.imco.org.mx/dise%C3%B1o_y_comunicaci%C3%B3n_gr%C3%A1fica_y_editorial" target="_blank" rel="noopener noreferrer">IMCO Compara Carreras 2025 · Diseño y Comunicación Gráfica y Editorial · ENOE 2T2024-1T2025 <span aria-hidden="true">&nearr;</span></a></p>
       </div>
     </div>
@@ -604,6 +602,9 @@
     </div>
   </footer>
 
+  </div><!-- /#smooth-content -->
+  </div><!-- /#smooth-wrapper -->
+
   <!-- GUIA PDF: construida por JS, render fuera de pantalla, export A4 -->
   <div id="guideDoc" class="guide-doc" aria-hidden="true"></div>
 
@@ -616,6 +617,13 @@
     <button type="button" class="pdf-overlay__cancel" id="pdfCancelBtn">CANCELAR</button>
   </div>
 
-  <script src="trayectoria.js?v=20260611" defer></script>
+  <!-- GSAP 3.13 vendoreado (capa rica de motion; solo los plugins que la pagina usa).
+       Si falla la carga, trayectoria.js cae al modulo IO sin perder nada. -->
+  <script defer src="assets/vendor/gsap/gsap.min.js"></script>
+  <script defer src="assets/vendor/gsap/ScrollTrigger.min.js"></script>
+  <script defer src="assets/vendor/gsap/ScrollSmoother.min.js"></script>
+  <script defer src="assets/vendor/gsap/SplitText.min.js"></script>
+  <script defer src="assets/vendor/gsap/DrawSVGPlugin.min.js"></script>
+  <script src="trayectoria.js?v=20260612" defer></script>
 </body>
 </html>

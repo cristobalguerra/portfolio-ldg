@@ -66,11 +66,30 @@ Nota #D2401E: el probe usa `#D2401E` para el vermilion; en producción el token 
 - **Sec-no**: número de sección en chip amarillo mono + h2 Anton.
 - **Contadores**: `data-count` + `data-dec` + `data-group`, easeOutQuint 1400ms, formato final exacto.
 
-## Motion: contrato
+## Motion: contrato v2 (capa GSAP sobre base IO, 2026-06-11)
 
-Un solo `IntersectionObserver` (`threshold:.25, rootMargin:"0px 0px -8% 0px"`) que añade `.in` y dispara contadores; `unobserve` tras entrar. Todas las coreografías viven en CSS con delays; JS solo reparte `.in`.
+GSAP 3.13 (gratis, todos los plugins) **vendoreado** en `assets/vendor/gsap/`: gsap, ScrollTrigger, ScrollSmoother, SplitText, DrawSVGPlugin, Flip, ScrambleTextPlugin, Observer (.min.js). Cargar con `<script defer src="assets/vendor/gsap/...">` SOLO los que la página use; mismo origen, sin CDNs externos.
 
-`@media(prefers-reduced-motion:reduce)`: TODO termina en su estado final (bandas pintadas, marcos trazados, contadores en valor final, sellos estampados). Copiar el bloque del probe.
+**Progressive enhancement obligatorio (3 capas):**
+1. Sin JS: todo el contenido visible (estados ocultos gateados por clase `.js`/`.ts-js`).
+2. JS sin GSAP (carga fallida): el módulo IO existente (`.in` + contadores) es la rama `else`; NO se elimina.
+3. GSAP presente: `if (window.gsap && window.ScrollTrigger)` inicializa la capa rica y el IO no arranca.
+
+**gsap.matchMedia():** `(prefers-reduced-motion: reduce)` → cero animación GSAP, estado final inmediato (el bloque CSS de reduce se conserva además). `(pointer: coarse)` → sin pins, scrubs simplificados (ScrollSmoother ya se desactiva solo en touch).
+
+**Técnicas canónicas:**
+- **ScrollSmoother**: `#smooth-wrapper > #smooth-content` envuelve TODO el flujo; topline/barras de progreso/modales/gates/toasts viven FUERA (fixed, compensar alto con padding del primer bloque). `effects:true` para parallax con `data-speed` (numerales fantasma .92-.96, láminas 1.04). Anclas y deep-links pasan por `smoother.scrollTo(target, true)` (también hash al cargar); al abrir modal `smoother.paused(true)`.
+- **SplitText**: h2 por líneas (`type:"lines"`, mask, stagger .08-.12, `quint.out`); chars SOLO en el H1 del hero. Esperar `document.fonts.ready` antes de partir.
+- **Scrub de delineante**: cotas, marcos de ficha y reglas se trazan con `scrub: 1` (start "top 85%", end "top 45%"): avanzas y se dibuja, regresas y se desdibuja.
+- **Pin IMCO (index)**: la sección de datos se ancla (`pin:true`, `+=1400`) y las 3 filas se trazan/cuentan por progreso, una a una. En coarse/mobile: sin pin, reveals one-shot.
+- **DrawSVG**: cruz de registro, sello circular del premio y remates de cota como stroke SVG trazándose.
+- **Flip (galería index)**: `data-flip-id` por tesis; en `renderGallery` capturar `Flip.getState` antes del re-render y `Flip.from(state,{duration:.6, ease:"quint.out", absolute:true})` con fades en enter/leave.
+- **ScrambleText**: máx 1-2 labels mono por página (chars:"upperCase", ≤0.8s), nunca en prosa.
+- **Magnetic sutil**: solo el CTA principal (±6px, quint.out); nada de cursor custom.
+
+**Easing:** `quint.out` en todo. **Prohibido:** loops infinitos, bounce, animar propiedades de layout, pin en mobile, scrub dentro de modales. Contadores fuera del pin: one-shot al entrar con valor final exacto.
+
+Easing base CSS para lo no-GSAP sigue siendo `--ease` (cubic-bezier(.22,1,.36,1)).
 
 ## Por página
 

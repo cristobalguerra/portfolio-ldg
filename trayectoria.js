@@ -2,11 +2,30 @@
 // TRAYECTORIA · MESA DE REVISIÓN
 // ============================================
 // El accordion y el generador de PDF se inicializan SIEMPRE.
-// Motion: un solo IntersectionObserver (contrato DESIGN.md) que reparte .in
-// y dispara contadores; las coreografias viven en CSS. Sin GSAP ni
-// ScrollTrigger: menos dependencias y cero animaciones infinitas.
+// Motion (contrato v2 de DESIGN.md), 3 capas:
+//   1. Sin JS: todo visible (estados gateados por .ts-js).
+//   2. JS sin GSAP (carga fallida): el modulo IO de abajo (.in + contadores).
+//   3. GSAP presente: capa rica (ScrollSmoother + ScrollTrigger + SplitText +
+//      DrawSVG) y el IO no arranca. Cero loops infinitos.
 
 const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+// Estado compartido entre modulos (la capa GSAP lo llena si inicializa)
+const TS = { smoother: null, onToggle: null };
+
+// Scroll a un elemento librando el topline. Dentro de ScrollSmoother el
+// scroll-margin-top deja de aplicar: el offset se calcula aqui con el alto
+// real del topline; sin smoother se conserva el scrollIntoView de siempre.
+function tsScrollToEl(el) {
+  if (TS.smoother) {
+    const topline = document.querySelector('.ts-topline');
+    const off = ((topline && topline.offsetHeight) || 54) + 14;
+    TS.smoother.scrollTo(TS.smoother.offset(el, 'top ' + off + 'px'), !prefersReducedMotion);
+  } else {
+    // .ts-track-item / .ts-sec tienen scroll-margin-top para librar el topline
+    el.scrollIntoView({ behavior: prefersReducedMotion ? 'auto' : 'smooth', block: 'start' });
+  }
+}
 
 // ---- DOWNLOAD PDF GUIDE ----
 // Builds a branded A4 document from the live track content and exports it as a
@@ -329,8 +348,9 @@ const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)
   }
 
   function scrollToItem(item) {
-    // .ts-track-item has scroll-margin-top so the header clears the sticky topline
-    item.scrollIntoView({ behavior: prefersReducedMotion ? 'auto' : 'smooth', block: 'start' });
+    // Con ScrollSmoother el offset del topline lo pone tsScrollToEl;
+    // sin smoother sigue siendo scrollIntoView + scroll-margin-top.
+    tsScrollToEl(item);
   }
 
   items.forEach(item => {
@@ -349,6 +369,9 @@ const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)
       } else if (item.id && window.location.hash === '#' + item.id) {
         history.replaceState(null, '', window.location.pathname + window.location.search);
       }
+      // Abrir/cerrar cambia la altura del documento: la capa GSAP refresca
+      // sus ScrollTriggers cuando termina la transicion del panel.
+      if (TS.onToggle) TS.onToggle();
     });
   });
 
@@ -358,13 +381,369 @@ const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)
   if (target && target.classList.contains('ts-track-item')) {
     setOpen(target, true);
     window.setTimeout(() => scrollToItem(target), 150);
+    // La capa GSAP (si existe) aun no corrio en este punto del script:
+    // diferir el aviso de cambio de altura al siguiente tick.
+    window.setTimeout(() => { if (TS.onToggle) TS.onToggle(); }, 0);
+  }
+})();
+
+// ---- CAPA GSAP (Motion: contrato v2 de DESIGN.md) ----
+// Si GSAP no llego (CDN-less, carga fallida), este modulo no arranca y el
+// modulo IO de abajo es la rama else. gsap.matchMedia: reduced-motion = cero
+// animacion GSAP (estado final directo); pointer coarse = sin smoother y los
+// scrubs se simplifican a reveals one-shot (DESIGN.md: "En coarse/mobile:
+// sin pin, reveals one-shot"). Sin pins en esta pagina: el pin IMCO vive en
+// la home y el truco no se repite.
+(function initGsapLayer() {
+  if (!(window.gsap && window.ScrollTrigger)) return;
+  const hasSmoother = !!window.ScrollSmoother;
+  const hasSplit = !!window.SplitText;
+  const hasDraw = !!window.DrawSVGPlugin;
+  let mm = null;
+
+  function fmt(v, dec, group) {
+    if (dec) return v.toFixed(dec);
+    const n = Math.round(v);
+    return group ? n.toLocaleString('en-US') : String(n);
+  }
+
+  // Valor final EXACTO en todos los contadores ($18,768 · 95.1 · 25.4 · 83)
+  function settleCounters() {
+    document.querySelectorAll('[data-count]').forEach(el => {
+      const v = parseFloat(el.getAttribute('data-count'));
+      if (Number.isNaN(v)) return;
+      el.textContent = fmt(v, parseInt(el.getAttribute('data-dec') || '0', 10), el.getAttribute('data-group') === '1');
+    });
+  }
+
+  try {
+    gsap.registerPlugin(ScrollTrigger);
+    if (hasSmoother) gsap.registerPlugin(ScrollSmoother);
+    if (hasSplit) gsap.registerPlugin(SplitText);
+    if (hasDraw) gsap.registerPlugin(DrawSVGPlugin);
+    ScrollTrigger.config({ ignoreMobileResize: true });
+    gsap.defaults({ ease: 'quint.out', duration: 0.7 });
+
+    // El stylesheet cede los estados iniciales a GSAP (ver bloque .ts-gsap)
+    document.body.classList.add('ts-gsap');
+
+    // SplitText y el hero esperan a las fuentes; con red lenta no se retiene
+    // el contenido mas de 900ms (se anima con la fuente de fallback).
+    const fontsReady = Promise.race([
+      document.fonts && document.fonts.ready ? document.fonts.ready : Promise.resolve(),
+      new Promise(r => { window.setTimeout(r, 900); })
+    ]);
+
+    // Delay heredado de las clases ts-d1..ts-d4 del fallback CSS
+    const dlyOf = el => {
+      const m = (el.getAttribute('class') || '').match(/ts-d(\d)/);
+      return m ? parseInt(m[1], 10) * 0.08 : 0;
+    };
+    // .ts-gs marca todo lo que GSAP oculta inline: print y reduced-motion lo
+    // fuerzan a estado final via CSS aunque el inline style diga opacity 0.
+    const mark = el => { if (el) el.classList.add('ts-gs'); return el; };
+
+    mm = gsap.matchMedia();
+    mm.add({
+      base: 'all',
+      reduce: '(prefers-reduced-motion: reduce)',
+      coarse: '(pointer: coarse)'
+    }, (ctx) => {
+      const { reduce, coarse } = ctx.conditions;
+
+      // Reduced motion: cero animacion GSAP. La CSS de .ts-gsap ya entrega
+      // todo en estado final y los contadores conservan su valor del HTML.
+      if (reduce) return;
+
+      let alive = true;
+      let ro = null;
+      const splits = [];
+
+      // ---------- ScrollSmoother: solo pointer fine ----------
+      if (hasSmoother && !coarse) {
+        const topline = document.querySelector('.ts-topline');
+        const setToplineH = () => {
+          document.body.style.setProperty('--ts-topline-h', ((topline && topline.offsetHeight) || 54) + 'px');
+        };
+        setToplineH();
+        document.body.classList.add('ts-smooth');
+        TS.smoother = ScrollSmoother.create({
+          wrapper: '#smooth-wrapper',
+          content: '#smooth-content',
+          smooth: 1,
+          effects: true,
+          smoothTouch: 0
+        });
+        if (topline && 'ResizeObserver' in window) {
+          ro = new ResizeObserver(setToplineH);
+          ro.observe(topline);
+        }
+      }
+
+      // ---------- HOJA 01 · entrada del hero (one-shot) ----------
+      const hero = document.querySelector('.ts-hero');
+      if (hero) {
+        const eyebrow = mark(hero.querySelector('.ts-eyebrow--mark'));
+        const h1Lines = gsap.utils.toArray('.ts-h1 .ts-ln i');
+        const h1Hl = gsap.utils.toArray('.ts-h1 .ts-hl');
+        const ldg = hero.querySelector('.ts-h1 em');
+        const cotaLine = document.querySelector('.ts-cota__line');
+        const cotaTicks = gsap.utils.toArray('.ts-cota__tick');
+        const tickStrokes = gsap.utils.toArray('.ts-cota__tick line');
+        const cotaLbl = mark(document.querySelector('.ts-cota__lbl'));
+        const lede = mark(document.querySelector('.ts-lede'));
+        const actions = mark(document.querySelector('.ts-hero__actions'));
+        const stamp = mark(document.querySelector('.ts-stamp'));
+        const regStrokes = gsap.utils.toArray('.ts-ctrlbar__reg circle, .ts-ctrlbar__reg line');
+        const chips = gsap.utils.toArray('.ts-ctrlbar__chip');
+
+        // Estados iniciales en el mismo tick de script: sin flash posible
+        const fade = [eyebrow, lede, actions].filter(Boolean);
+        if (fade.length) gsap.set(fade, { autoAlpha: 0, y: 16 });
+        if (h1Lines.length) gsap.set(h1Lines, { yPercent: 110 });
+        if (h1Hl.length) gsap.set(h1Hl, { backgroundSize: '0% .84em' });
+        if (cotaLine) gsap.set(cotaLine, { scaleX: 0, transformOrigin: 'left center' });
+        if (hasDraw && tickStrokes.length) gsap.set(tickStrokes, { drawSVG: '50% 50%' });
+        else if (cotaTicks.length) gsap.set(cotaTicks, { scaleY: 0, transformOrigin: 'top center' });
+        if (cotaLbl) gsap.set(cotaLbl, { autoAlpha: 0 });
+        if (stamp) gsap.set(stamp, { autoAlpha: 0, scale: 1.15 });
+        if (chips.length) gsap.set(chips, { autoAlpha: 0 });
+        if (hasDraw && regStrokes.length) gsap.set(regStrokes, { drawSVG: '0%' });
+
+        fontsReady.then(() => {
+          if (!alive) return;
+          ctx.add(() => {
+            const tl = gsap.timeline({ defaults: { ease: 'quint.out' } });
+            if (chips.length) tl.to(chips, { autoAlpha: 1, duration: .3, stagger: .06 }, 0);
+            if (hasDraw && regStrokes.length) tl.to(regStrokes, { drawSVG: '0% 100%', duration: .6, stagger: .12 }, .05);
+            if (eyebrow) tl.to(eyebrow, { autoAlpha: 1, y: 0, duration: .6 }, .1);
+            if (h1Lines.length) tl.to(h1Lines, { yPercent: 0, duration: .9, stagger: .1 }, .2);
+            if (h1Hl.length) tl.to(h1Hl, { backgroundSize: '100% .84em', duration: .7 }, .75);
+            // El "LDG." en Spectral italica asienta solo, tras subir su linea
+            if (ldg) tl.from(ldg, { yPercent: 26, rotation: 2.4, transformOrigin: 'left bottom', duration: .7 }, .62);
+            if (cotaLine) tl.to(cotaLine, { scaleX: 1, duration: .8 }, .85);
+            if (hasDraw && tickStrokes.length) tl.to(tickStrokes, { drawSVG: '0% 100%', duration: .35 }, 1.5);
+            else if (cotaTicks.length) tl.to(cotaTicks, { scaleY: 1, duration: .35 }, 1.5);
+            if (cotaLbl) tl.to(cotaLbl, { autoAlpha: 1, duration: .4 }, 1.6);
+            if (lede) tl.to(lede, { autoAlpha: 1, y: 0, duration: .7 }, .8);
+            if (actions) tl.to(actions, { autoAlpha: 1, y: 0, duration: .7 }, .95);
+            if (stamp) tl.to(stamp, { autoAlpha: 1, scale: 1, duration: .45 }, 1.1);
+          });
+        }).catch(() => {});
+      }
+
+      // ---------- H2 por lineas con mascara (SplitText tras fonts.ready) ----------
+      const heads = gsap.utils.toArray('.ts-sec-head');
+      if (heads.length) {
+        fontsReady.then(() => {
+          if (!alive) return;
+          ctx.add(() => {
+            heads.forEach(head => {
+              const no = mark(head.querySelector('.ts-sec-no'));
+              const h2 = head.querySelector('.ts-h2');
+              const tlh = gsap.timeline({
+                scrollTrigger: { trigger: head, start: 'clamp(top 86%)', once: true }
+              });
+              if (no) tlh.from(no, { autoAlpha: 0, x: -12, duration: .5 }, 0);
+              let splitOk = false;
+              if (h2 && hasSplit) {
+                try {
+                  const split = SplitText.create(h2, { type: 'lines', mask: 'lines', linesClass: 'ts-split-ln' });
+                  splits.push(split);
+                  tlh.from(split.lines, {
+                    yPercent: 110, duration: .8, stagger: .1,
+                    onComplete: () => {
+                      // DOM limpio tras animar: el texto vuelve a ser uno solo
+                      split.revert();
+                      const i = splits.indexOf(split);
+                      if (i > -1) splits.splice(i, 1);
+                    }
+                  }, .08);
+                  splitOk = true;
+                } catch (e) { /* fallback abajo */ }
+              }
+              if (h2 && !splitOk) {
+                mark(h2);
+                tlh.from(h2, { autoAlpha: 0, y: 18, duration: .7 }, .08);
+              }
+            });
+          });
+        }).catch(() => {});
+      }
+
+      // ---------- Reveals genericos (.ts-rv) con el stagger de ts-dN ----------
+      gsap.utils.toArray('.ts-rv').forEach(el => {
+        if (el.classList.contains('ts-sec-head')) return; // lo lleva SplitText
+        mark(el);
+        gsap.from(el, {
+          autoAlpha: 0, y: 16, duration: .7, delay: dlyOf(el),
+          scrollTrigger: { trigger: el, start: 'clamp(top 88%)', once: true }
+        });
+      });
+
+      // ---------- HOJA 02 · statement con banda marcadora ----------
+      const stTitle = document.querySelector('.ts-statement__title');
+      if (stTitle) {
+        mark(stTitle);
+        const bands = gsap.utils.toArray('.ts-statement__title .ts-hl');
+        if (bands.length) gsap.set(bands, { backgroundSize: '0% .84em' });
+        const tls = gsap.timeline({
+          scrollTrigger: { trigger: stTitle, start: 'clamp(top 84%)', once: true }
+        });
+        tls.from(stTitle, { autoAlpha: 0, y: 24, duration: .8 }, 0);
+        if (bands.length) tls.to(bands, { backgroundSize: '100% .84em', duration: .7 }, .45);
+      }
+
+      // ---------- Reglas y cotas: trazo de delineante ----------
+      // fine: scrub 1 (avanzas y se dibuja, regresas y se desdibuja);
+      // coarse: one-shot. clamp() evita extremos sin recorrido.
+      gsap.utils.toArray('.ts-drawx').forEach(line => {
+        gsap.set(line, { scaleX: 0, transformOrigin: 'left center' });
+        if (coarse) {
+          gsap.to(line, {
+            scaleX: 1, duration: .9, ease: 'quint.out',
+            scrollTrigger: { trigger: line, start: 'clamp(top 90%)', once: true }
+          });
+        } else {
+          gsap.to(line, {
+            scaleX: 1, ease: 'none',
+            scrollTrigger: { trigger: line, start: 'clamp(top 85%)', end: 'clamp(top 45%)', scrub: 1 }
+          });
+        }
+      });
+
+      // ---------- HOJA 04 · marcos de ficha trazados en secuencia ----------
+      gsap.utils.toArray('.ts-track-item').forEach(item => {
+        const ft = item.querySelector('.ts-f-t');
+        const fr = item.querySelector('.ts-f-r');
+        const fb = item.querySelector('.ts-f-b');
+        const fl = item.querySelector('.ts-f-l');
+        const corners = gsap.utils.toArray(item.querySelectorAll('.ts-corner'));
+        const link = mark(item.querySelector('.ts-track-link'));
+
+        if (ft) gsap.set(ft, { scaleX: 0, transformOrigin: 'left center' });
+        if (fr) gsap.set(fr, { scaleY: 0, transformOrigin: 'top center' });
+        if (fb) gsap.set(fb, { scaleX: 0, transformOrigin: 'right center' });
+        if (fl) gsap.set(fl, { scaleY: 0, transformOrigin: 'bottom center' });
+        if (corners.length) gsap.set(corners, { autoAlpha: 0 });
+        if (link) gsap.set(link, { autoAlpha: 0, y: 10 });
+
+        const tlf = gsap.timeline({
+          defaults: { ease: coarse ? 'quint.out' : 'none' },
+          scrollTrigger: coarse
+            ? { trigger: item, start: 'clamp(top 88%)', once: true }
+            : { trigger: item, start: 'clamp(top 88%)', end: 'clamp(top 45%)', scrub: 1 }
+        });
+        if (ft) tlf.to(ft, { scaleX: 1, duration: .32 }, 0);
+        if (fr) tlf.to(fr, { scaleY: 1, duration: .32 }, .26);
+        if (fb) tlf.to(fb, { scaleX: 1, duration: .32 }, .52);
+        if (fl) tlf.to(fl, { scaleY: 1, duration: .32 }, .78);
+        if (link) tlf.to(link, { autoAlpha: 1, y: 0, duration: .55 }, .8);
+        if (corners.length) tlf.to(corners, { autoAlpha: 1, duration: .25 }, 1.0);
+      });
+
+      // ---------- Fotos de egresados: mascara de revelado desde abajo ----------
+      gsap.utils.toArray('.ts-track-detail__photo img').forEach(img => {
+        mark(img);
+        const photoBox = img.closest('.ts-track-detail__photo');
+        gsap.set(img, { clipPath: 'inset(100% 0% 0% 0%)' });
+        if (coarse) {
+          gsap.to(img, {
+            clipPath: 'inset(0% 0% 0% 0%)', duration: .9, ease: 'quint.out',
+            scrollTrigger: { trigger: photoBox, start: 'clamp(top 92%)', once: true }
+          });
+        } else {
+          gsap.to(img, {
+            clipPath: 'inset(0% 0% 0% 0%)', ease: 'none',
+            scrollTrigger: { trigger: photoBox, start: 'clamp(top 94%)', end: 'clamp(top 72%)', scrub: 1 }
+          });
+        }
+      });
+
+      // ---------- HOJA 03 · contadores IMCO one-shot exactos (SIN pin) ----------
+      gsap.utils.toArray('.ts-data-row').forEach(row => {
+        const counters = gsap.utils.toArray(row.querySelectorAll('[data-count]'));
+        if (!counters.length) return;
+        ScrollTrigger.create({
+          trigger: row, start: 'clamp(top 85%)', once: true,
+          onEnter: () => counters.forEach(el => {
+            const target = parseFloat(el.getAttribute('data-count'));
+            if (Number.isNaN(target)) return;
+            const dec = parseInt(el.getAttribute('data-dec') || '0', 10);
+            const group = el.getAttribute('data-group') === '1';
+            const state = { v: 0 };
+            gsap.to(state, {
+              v: target, duration: 1.4, ease: 'quint.out',
+              onUpdate: () => { el.textContent = fmt(state.v, dec, group); },
+              onComplete: () => { el.textContent = fmt(target, dec, group); }
+            });
+          })
+        });
+      });
+
+      // Limpieza del contexto (cambio de condicion de media query)
+      return () => {
+        alive = false;
+        if (ro) ro.disconnect();
+        TS.smoother = null;
+        document.body.classList.remove('ts-smooth');
+        document.body.style.removeProperty('--ts-topline-h');
+        splits.forEach(s => { try { s.revert(); } catch (e) { /* noop */ } });
+        splits.length = 0;
+        settleCounters();
+      };
+    });
+
+    // ---- Integraciones fuera de matchMedia (validas en todo contexto) ----
+
+    // Abrir/cerrar fichas cambia la altura del documento: refresh diferido
+    // hasta que la transicion de grid-template-rows (.45s) termina.
+    let refreshT = 0;
+    TS.onToggle = function () {
+      window.clearTimeout(refreshT);
+      refreshT = window.setTimeout(() => { ScrollTrigger.refresh(); }, 520);
+    };
+
+    // Overlay PDF: al mostrarse se pausa el smoother; al ocultarse, vuelve.
+    const overlay = document.getElementById('pdfOverlay');
+    if (overlay && 'MutationObserver' in window) {
+      new MutationObserver(() => {
+        if (TS.smoother) TS.smoother.paused(!overlay.hidden);
+      }).observe(overlay, { attributes: true, attributeFilter: ['hidden'] });
+    }
+
+    // Hash al cargar: las fichas las atiende el accordion (tsScrollToEl);
+    // cualquier otra ancla se reubica con el offset del topline tras refresh.
+    const hashId = decodeURIComponent((window.location.hash || '').slice(1));
+    if (hashId) {
+      const hashTarget = document.getElementById(hashId);
+      window.setTimeout(() => {
+        ScrollTrigger.refresh();
+        if (hashTarget && !hashTarget.classList.contains('ts-track-item')) tsScrollToEl(hashTarget);
+      }, 700);
+    }
+
+    // El swap de fuentes mueve la metrica: recalibrar triggers.
+    fontsReady.then(() => { ScrollTrigger.refresh(); }).catch(() => {});
+
+    window.__TS_GSAP_OK = true;
+  } catch (err) {
+    // Produccion: cualquier fallo revierte la capa y deja arrancar al IO.
+    window.__TS_GSAP_OK = false;
+    if (mm) { try { mm.revert(); } catch (e) { /* noop */ } }
+    document.body.classList.remove('ts-gsap', 'ts-smooth');
+    document.body.style.removeProperty('--ts-topline-h');
+    settleCounters();
+    if (window.console && console.error) console.error('Capa GSAP desactivada; fallback IO:', err);
   }
 })();
 
 // ---- MOTION: IO unico + contadores (patron DESIGN.md) ----
 // Un solo IntersectionObserver agrega .in (las coreografias viven en CSS con
 // delays) y dispara los contadores data-count; unobserve tras entrar.
+// Rama else del contrato v2: solo arranca si la capa GSAP no inicializo.
 (function initMotion() {
+  if (window.__TS_GSAP_OK) return;
   function fmt(v, dec, group) {
     if (dec) return v.toFixed(dec);
     const n = Math.round(v);

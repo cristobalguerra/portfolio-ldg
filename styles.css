@@ -3216,3 +3216,59 @@ select.pef-register__input option {
     opacity: 1 !important;
   }
 }
+
+/* ============================================
+   MOTION · CONTRATO v2 (DESIGN.md)
+   Capa 1 · Sin JS: todo el contenido visible.
+   La clase .js la añade un script inline en index.html;
+   sin ella, los estados ocultos pre-animación no aplican.
+   (Selectores propios de index; trayectoria usa prefijo ts-)
+   ============================================ */
+html:not(.js) .rv,
+html:not(.js) .thesis-card .inner,
+html:not(.js) .stamp,
+html:not(.js) .rev-stamp {
+  opacity: 1;
+  transform: none;
+}
+
+html:not(.js) .stamp { transform: rotate(-8deg); }
+html:not(.js) .rev-stamp { transform: rotate(-6deg); }
+
+html:not(.js) .drawx { transform: scaleX(1); }
+
+html:not(.js) h1 .ln i { transform: none; }
+html:not(.js) h1 .hl { background-size: 100% .84em; }
+
+html:not(.js) .thesis-card .frame i,
+html:not(.js) .cota .c-line,
+html:not(.js) .cota .c-tick {
+  transform: none;
+}
+
+html:not(.js) .thesis-card .corner,
+html:not(.js) .cota .lbl {
+  opacity: 1;
+}
+
+/* Capa 3 · GSAP activo (html.ts-gsap): GSAP manda inline sobre el H1;
+   se anulan las transiciones CSS para que no peleen con SplitText */
+html.ts-gsap h1 .ln i,
+html.ts-gsap h1 .hl {
+  transition: none;
+}
+
+/* ScrollSmoother activo (html.ts-smooth, solo pointer fine):
+   el topline sale del flujo (fixed) y el primer bloque compensa su alto */
+html.ts-smooth { scroll-behavior: auto; }
+
+html.ts-smooth .topline {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+}
+
+html.ts-smooth #smooth-content {
+  padding-top: var(--topline-h, 52px);
+}
