@@ -7,6 +7,18 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Anton&family=Atkinson+Hyperlegible:wght@400;700&family=JetBrains+Mono:wght@300;400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/menu.css?v=20260612">
+<!-- Menú de sitio compartido (mismo componente en las 3 páginas) -->
+<script>window.SITE_MENU = { current: 'pef', sections: [
+  { href: '#proceso', label: 'Proceso' },
+  { href: '#entregables', label: 'Entregables' },
+  { href: '#rubrica', label: 'Rúbrica' },
+  { href: '#calificacion', label: 'Calificación' },
+  { href: '#fechas', label: 'Titulación' },
+  { href: '#checklist', label: 'Checklist' },
+  { href: '#sobresaliente', label: 'Sobresaliente' }
+] };</script>
+<script defer src="assets/menu.js?v=20260612"></script>
 <script>document.documentElement.classList.add('js');</script>
 <style>
   :root{
@@ -67,7 +79,8 @@
 
   /* ---- scroll progress ---- */
   .progress{position:fixed;top:0;left:0;height:5px;width:0;background:var(--yellow);
-    z-index:9999;box-shadow:0 0 0 1px var(--ink) inset}
+    z-index:1050;box-shadow:0 0 0 1px var(--ink) inset}
+  html.site-menu-open .progress{opacity:0}
 
   /* ---- top bar (unified with portfolio nav) ---- */
   header.bar{position:fixed;top:0;left:0;right:0;z-index:9000;
@@ -107,7 +120,7 @@
   @media(max-width:560px){header.bar .back-btn{display:none}}
 
   /* ---- hero ---- */
-  .hero{position:relative;padding:148px 0 40px;z-index:1}
+  .hero{position:relative;padding:64px 0 40px;z-index:1}
   /* barra de control de imprenta, bajo la barra (patron canonico DESIGN.md:
      chips de proceso CMYK + cruz de registro + leyenda mono; el cian/magenta
      SOLO viven dentro de este artefacto) */
@@ -449,35 +462,12 @@
 <body>
 <div class="progress" id="prog"></div>
 
-<header class="bar" id="bar">
-  <a class="brand" href="index.html">
-    <span class="brand__wm">Portfolio / LDG</span>
-    <span class="brand__chip">PEF · OT26</span>
-  </a>
-  <nav class="top">
-    <a href="#proceso">Proceso</a>
-    <a href="#entregables">Entregables</a>
-    <a href="#rubrica">Rúbrica</a>
-    <a href="#calificacion">Calificación</a>
-    <a href="#fechas">Titulación</a>
-    <a href="#checklist">Checklist</a>
-    <a href="#sobresaliente">Sobresaliente</a>
+<!-- La barra y el menú (con las secciones de esta página) los inyecta assets/menu.js -->
+<noscript>
+  <nav aria-label="Navegación principal">
+    <a href="index.html">Inicio</a> · <a href="trayectoria.html">Trayectoria</a> · <a href="pef.html">Guía PEF</a>
   </nav>
-  <div class="bar-actions">
-    <button class="menu-btn" id="menuBtn" type="button" aria-expanded="false" aria-controls="mnav">Menú</button>
-    <a class="back-btn" href="index.html">← Volver</a>
-  </div>
-  <nav class="mnav" id="mnav" hidden aria-label="Navegación de la guía">
-    <a href="#proceso">Proceso</a>
-    <a href="#entregables">Entregables</a>
-    <a href="#rubrica">Rúbrica</a>
-    <a href="#calificacion">Calificación</a>
-    <a href="#fechas">Titulación</a>
-    <a href="#checklist">Checklist</a>
-    <a href="#sobresaliente">Sobresaliente</a>
-    <a href="index.html">← Volver</a>
-  </nav>
-</header>
+</noscript>
 
 <!-- HERO -->
 <div class="hero">
@@ -867,30 +857,15 @@
 (function(){
   var reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
-  // mobile menu · native toggle, closes on anchor pick and Esc
-  var menuBtn=document.getElementById('menuBtn'), mnav=document.getElementById('mnav');
-  function closeMenu(){
-    if(!mnav||mnav.hidden) return;
-    mnav.hidden=true; menuBtn.setAttribute('aria-expanded','false'); onScroll();
-  }
-  if(menuBtn&&mnav){
-    menuBtn.addEventListener('click',function(){
-      var open=mnav.hidden;
-      mnav.hidden=!open; menuBtn.setAttribute('aria-expanded',open?'true':'false'); onScroll();
-    });
-    mnav.querySelectorAll('a').forEach(function(a){ a.addEventListener('click',closeMenu); });
-    document.addEventListener('keydown',function(e){
-      if(e.key==='Escape'&&!mnav.hidden){ closeMenu(); menuBtn.focus(); }
-    });
-  }
+  // La barra y el menú (con las secciones de esta página) son el componente
+  // compartido assets/menu.js. Aquí solo queda la barra de progreso de scroll.
 
-  // scroll progress + sticky bar
-  var prog=document.getElementById('prog'), bar=document.getElementById('bar');
+  // scroll progress
+  var prog=document.getElementById('prog');
   function onScroll(){
     var h=document.documentElement, sc=h.scrollTop||document.body.scrollTop;
     var max=h.scrollHeight-h.clientHeight;
-    prog.style.width=(max>0?(sc/max*100):0)+'%';
-    if(sc>40||(mnav&&!mnav.hidden))bar.classList.add('solid');else bar.classList.remove('solid');
+    if(prog) prog.style.width=(max>0?(sc/max*100):0)+'%';
   }
   document.addEventListener('scroll',onScroll,{passive:true}); onScroll();
 
@@ -1132,21 +1107,6 @@
       });
     }
     refresh();
-  }
-
-  // scrollspy · highlight the active anchor in the top nav
-  var spyLinks=document.querySelectorAll('nav.top a[href^="#"]');
-  if(spyLinks.length){
-    var spyById={};
-    spyLinks.forEach(function(a){ spyById[a.getAttribute('href').slice(1)]=a; });
-    var spy=new IntersectionObserver(function(es){
-      es.forEach(function(e){
-        if(!e.isIntersecting) return;
-        spyLinks.forEach(function(a){ a.classList.remove('active'); });
-        var a=spyById[e.target.id]; if(a) a.classList.add('active');
-      });
-    },{rootMargin:'-25% 0px -65% 0px'});
-    Object.keys(spyById).forEach(function(id){ var s=document.getElementById(id); if(s) spy.observe(s); });
   }
 
   // PEF Sobresaliente · pre-fill the postulation email (subject + body template)

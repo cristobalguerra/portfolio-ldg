@@ -18,11 +18,11 @@ const TS = { smoother: null, onToggle: null };
 // real del topline; sin smoother se conserva el scrollIntoView de siempre.
 function tsScrollToEl(el) {
   if (TS.smoother) {
-    const topline = document.querySelector('.ts-topline');
-    const off = ((topline && topline.offsetHeight) || 54) + 14;
+    const bar = document.querySelector('.site-bar');
+    const off = ((bar && bar.offsetHeight) || 60) + 14;
     TS.smoother.scrollTo(TS.smoother.offset(el, 'top ' + off + 'px'), !prefersReducedMotion);
   } else {
-    // .ts-track-item / .ts-sec tienen scroll-margin-top para librar el topline
+    // .ts-track-item / .ts-sec tienen scroll-margin-top para librar la barra fija
     el.scrollIntoView({ behavior: prefersReducedMotion ? 'auto' : 'smooth', block: 'start' });
   }
 }

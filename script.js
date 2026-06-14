@@ -392,8 +392,8 @@ function buildMesaGsap(ctx) {
 
   // ---------- ScrollSmoother (solo pointer fine) ----------
   let smoother = null;
-  const topline = document.getElementById('nav');
-  const topH = () => (topline ? topline.offsetHeight : 52);
+  const topline = document.getElementById('siteBar');
+  const topH = () => (topline ? topline.offsetHeight : 60);
 
   if (finePointer && window.ScrollSmoother) {
     const setToplineH = () => root.style.setProperty('--topline-h', topH() + 'px');
@@ -818,25 +818,10 @@ function initVideoLamina() {
 
 
 // ---- NAVIGATION ----
-function syncBurgerExpanded() {
-  navBurger.setAttribute('aria-expanded', menu.classList.contains('open') ? 'true' : 'false');
-}
-
-navBurger.addEventListener('click', () => {
-  navBurger.classList.toggle('active');
-  menu.classList.toggle('open');
-  document.body.classList.toggle('menu-open');
-  syncBurgerExpanded();
-});
-
-menuLinks.forEach(link => {
-  link.addEventListener('click', () => {
-    navBurger.classList.remove('active');
-    menu.classList.remove('open');
-    document.body.classList.remove('menu-open');
-    syncBurgerExpanded();
-  });
-});
+// La barra y el menú son ahora el componente compartido (assets/menu.js).
+// El menú antiguo (#navBurger / #menu) se retiró; esta función queda como
+// no-op por si algún resto de código la invoca.
+function syncBurgerExpanded() {}
 
 // ---- RENDER GALLERY ----
 function getFilteredTheses() {
@@ -1081,12 +1066,7 @@ modal.addEventListener('keydown', (e) => {
 document.addEventListener('keydown', (e) => {
   if (e.key === 'Escape') {
     closeModal();
-    if (menu.classList.contains('open')) {
-      navBurger.classList.remove('active');
-      menu.classList.remove('open');
-      document.body.classList.remove('menu-open');
-      syncBurgerExpanded();
-    }
+    // El menú de sitio (assets/menu.js) maneja su propio cierre con Escape.
   }
 });
 
@@ -1550,14 +1530,10 @@ function initPefTalks() {
 
   // ---- Event Listeners ----
 
-  // Nav button & menu link
-  pefBtn.addEventListener('click', openPefGate);
-  menuPefLink.addEventListener('click', (e) => {
+  // Disparadores ocultos de PEF TALKS (admin). Guardados por si no existen.
+  if (pefBtn) pefBtn.addEventListener('click', openPefGate);
+  if (menuPefLink) menuPefLink.addEventListener('click', (e) => {
     e.preventDefault();
-    navBurger.classList.remove('active');
-    menu.classList.remove('open');
-    document.body.classList.remove('menu-open');
-    syncBurgerExpanded();
     setTimeout(openPefGate, 300);
   });
 
@@ -1827,33 +1803,7 @@ function initPefTalks() {
 }
 
 // ---- NAV SCROLL STYLE ----
-let lastScroll = 0;
-let ticking = false;
-window.addEventListener('scroll', () => {
-  if (!ticking) {
-    requestAnimationFrame(() => {
-      const nav = document.getElementById('nav');
-      const scrollY = window.scrollY;
-
-      if (scrollY > 100) {
-        nav.classList.add('nav--scrolled');
-        // Hide on fast scroll down, show on scroll up
-        if (scrollY > lastScroll && scrollY > 300) {
-          nav.classList.add('nav--hidden');
-        } else {
-          nav.classList.remove('nav--hidden');
-        }
-      } else {
-        nav.classList.remove('nav--scrolled');
-        nav.classList.remove('nav--hidden');
-      }
-
-      lastScroll = scrollY;
-      ticking = false;
-    });
-    ticking = true;
-  }
-});
+// La barra de sitio (assets/menu.js) es fija y permanece siempre visible.
 
 // ============================================
 // ADMIN SYSTEM · Projects & Awards Management

@@ -10,13 +10,17 @@
   <link href="https://fonts.googleapis.com/css2?family=Anton&family=Atkinson+Hyperlegible:ital,wght@0,400;0,700;1,400&family=JetBrains+Mono:wght@400;500;700&family=Spectral:ital,wght@1,400;1,500&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="styles.css?v=20260612">
   <link rel="stylesheet" href="trayectoria.css?v=20260612">
+  <link rel="stylesheet" href="assets/menu.css?v=20260612">
+  <!-- Menú de sitio compartido (mismo componente en las 3 páginas) -->
+  <script>window.SITE_MENU = { current: 'trayectoria' };</script>
+  <script defer src="assets/menu.js?v=20260612"></script>
   <!-- html2canvas + jsPDF NO se cargan aqui: trayectoria.js los inyecta al primer click de PDF -->
 </head>
 <body class="trayectoria-page">
   <script>document.body.classList.add('ts-js');</script>
 
   <!-- TOPLINE: rotulo de documento -->
-  <header class="ts-topline">
+  <header class="ts-topline" hidden>
     <div class="ts-wrap ts-topline__in">
       <b class="ts-topline__brand">LDG <span class="ts-topline__chip">UDEM</span></b>
       <span class="mono-sm ts-topline__doc">DOC LDG-TRY-01 · TRAYECTORIA PROFESIONAL DEL EGRESADO</span>

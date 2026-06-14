@@ -9,6 +9,10 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Anton&family=Atkinson+Hyperlegible:ital,wght@0,400;0,700;1,400&family=JetBrains+Mono:wght@400;500;700&family=Spectral:ital@1&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="styles.css?v=20260612">
+  <link rel="stylesheet" href="assets/menu.css?v=20260612">
+  <!-- Menú de sitio compartido (mismo componente en las 3 páginas) -->
+  <script>window.SITE_MENU = { current: 'inicio' };</script>
+  <script defer src="assets/menu.js?v=20260612"></script>
   <!-- Capa 1 del contrato de motion: los estados ocultos se gatean con .js (sin JS, todo visible) -->
   <script>document.documentElement.classList.add('js');</script>
   <!-- GSAP 3.13 vendoreado (DESIGN.md · Motion: contrato v2). Solo los plugins que usa esta página. -->
@@ -39,24 +43,14 @@
 </head>
 <body>
 
-  <!-- TOPLINE · rótulo de documento + navegación -->
-  <header class="topline" id="nav">
-    <div class="wrap">
-      <a href="#hero" class="topline__brand"><b>LDG <span class="chip">UDEM</span></b></a>
-      <nav class="topline__nav" aria-label="Navegación principal">
-        <a href="#datos">Datos</a>
-        <a href="#gallery">Proyectos</a>
-        <a href="#awards">Reconocimiento</a>
-        <a href="trayectoria.html">Trayectoria</a>
-        <a href="pef.html">Guía PEF</a>
-      </nav>
-      <span class="mono topline__doc">DOC LDG-HOME · CARPETA DE REVISIÓN DEL PROGRAMA</span>
-      <button class="nav__pef-btn" id="pefBtn" style="display:none;" aria-hidden="true">PEF TALKS</button>
-      <button class="nav__burger" id="navBurger" aria-label="Menú" aria-expanded="false">
-        <span></span><span></span><span></span>
-      </button>
-    </div>
-  </header>
+  <!-- La barra y el menú los inyecta assets/menu.js (componente compartido) -->
+  <noscript>
+    <nav aria-label="Navegación principal">
+      <a href="index.html">Inicio</a> · <a href="trayectoria.html">Trayectoria</a> · <a href="pef.html">Guía PEF</a>
+    </nav>
+  </noscript>
+  <!-- Disparador oculto de PEF TALKS (admin); el gate sigue operando desde JS -->
+  <button id="pefBtn" style="display:none;" aria-hidden="true" tabindex="-1">PEF TALKS</button>
 
   <!-- PEF TALKS ACCESS GATE -->
   <div class="pef-gate" id="pefGate">
@@ -259,25 +253,8 @@
   </div>
 
   <!-- MENÚ MÓVIL (hoja completa) -->
-  <div class="menu" id="menu">
-    <div class="menu__inner">
-      <div class="menu__links">
-        <a href="#hero" class="menu__link" data-index="01">INICIO</a>
-        <a href="#datos" class="menu__link" data-index="02">DATOS</a>
-        <a href="#gallery" class="menu__link" data-index="03">PROYECTOS</a>
-        <a href="#awards" class="menu__link" data-index="04">RECONOCIMIENTO</a>
-        <a href="trayectoria.html" class="menu__link" data-index="05">TRAYECTORIA</a>
-        <a href="pef.html" class="menu__link" data-index="06">GUÍA PEF</a>
-        <a href="#footer" class="menu__link" data-index="07">CONTACTO</a>
-        <a href="#" class="menu__link" data-index="08" id="menuPefLink" style="display:none;" aria-hidden="true">PEF TALKS</a>
-      </div>
-      <div class="menu__info">
-        <p class="mono-sm">LICENCIATURA EN DISEÑO GRÁFICO</p>
-        <p class="mono-sm">CARPETA DE REVISIÓN DEL PROGRAMA</p>
-        <p class="mono-sm">&copy; 2026</p>
-      </div>
-    </div>
-  </div>
+  <!-- Enlace oculto que abre PEF TALKS (admin); el menú visible lo inyecta menu.js -->
+  <a href="#" id="menuPefLink" style="display:none;" aria-hidden="true" tabindex="-1">PEF TALKS</a>
 
   <!-- FLUJO DEL DOCUMENTO · ScrollSmoother envuelve SOLO el flujo;
        topline, menú, modales, gates, toasts y visores viven fuera (fixed) -->
