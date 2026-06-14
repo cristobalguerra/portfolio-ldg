@@ -1,0 +1,1457 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Mi Avance · LDG UDEM</title>
+<link rel="icon" href="assets/favicon.svg?v=4" type="image/svg+xml">
+<link rel="icon" href="assets/favicon-32.png?v=4" sizes="32x32" type="image/png">
+<link rel="apple-touch-icon" href="assets/favicon-180.png?v=4">
+<meta name="theme-color" content="#1B1612">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Anton&family=Atkinson+Hyperlegible:wght@400;700&family=JetBrains+Mono:wght@300;400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="styles.css?v=20260620">
+<link rel="stylesheet" href="assets/menu.css?v=20260620">
+<!-- Menú de sitio compartido (mismo componente en las páginas) -->
+<script>window.SITE_MENU = { current: 'avance', sections: [
+  { href: '#resumen', label: 'Resumen' },
+  { href: '#proximo', label: 'Próximo semestre' },
+  { href: '#sugerencias', label: 'Sugerencias' },
+  { href: '#malla', label: 'Malla completa' }
+] };</script>
+<script defer src="assets/menu.js?v=20260620"></script>
+<script>document.documentElement.classList.add('js');</script>
+<style>
+  :root{
+    --paper:#F1ECDF;        /* superficie papel crema */
+    --paper-2:#E7E1D0;      /* papel sombreado, celdas alternas */
+    --ink:#1B1612;          /* tinta casi-negra calida: texto y lineas de plano */
+    --ink-soft:#5C564A;     /* tinta secundaria */
+    --yellow:#FFE000;       /* marcador UDEM: bandas hl, chips, atencion */
+    --yellow-deep:#E9CE00;
+    --verm:#B23818;         /* vermilion: cotas, sellos, datos criticos (AA 5.13:1 sobre paper) */
+    --green:#3E6B3A;        /* tinta verde sobria para el estado CURSADA (check) */
+    --line:rgba(27,22,18,.16);   /* reticula */
+    --line-2:rgba(27,22,18,.34); /* divisiones de cajetin */
+    /* Sistema tipografico del sitio (DESIGN.md) */
+    --disp:"Anton", "Arial Narrow", sans-serif;
+    --sans:"Atkinson Hyperlegible", system-ui, -apple-system, sans-serif;
+    --mono:"JetBrains Mono", "SFMono-Regular", ui-monospace, monospace;
+
+    --t-hero:clamp(3.2rem, 9vw, 8rem);
+    --t-h2:clamp(2rem, 4.6vw, 3.4rem);
+    --t-h3:clamp(1.15rem, 1.5vw, 1.35rem);
+    --t-lede:clamp(1.05rem, 1.5vw, 1.32rem);
+    --t-body:clamp(.98rem, 1.05vw, 1.06rem);
+    --t-mono:.72rem;        /* piso absoluto de mono; nada menor */
+
+    --ease:cubic-bezier(.22,1,.36,1);  /* ease-out-quint; unico easing del sitio */
+    --gut:clamp(18px,4.5vw,64px);
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html{scroll-behavior:smooth;overflow-x:hidden}
+  body{
+    background:var(--paper);
+    color:var(--ink);
+    font-family:var(--sans);
+    font-size:var(--t-body);
+    line-height:1.62;
+    letter-spacing:.002em;
+    -webkit-font-smoothing:antialiased;
+    overflow-x:hidden;
+  }
+  /* reticula de plano, fija (DESIGN.md: grid 56px de --line, opacity .5) */
+  body::before{
+    content:"";position:fixed;inset:0;z-index:0;pointer-events:none;
+    background-image:
+      linear-gradient(var(--line) 1px,transparent 1px),
+      linear-gradient(90deg,var(--line) 1px,transparent 1px);
+    background-size:56px 56px;
+    opacity:.5;
+  }
+  body::after{
+    content:"";position:fixed;inset:0;z-index:9990;pointer-events:none;opacity:.05;
+    background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='3'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+    mix-blend-mode:multiply;
+  }
+  ::selection{background:var(--yellow);color:var(--ink)}
+  a{color:inherit}
+  .wrap{max-width:1180px;margin:0 auto;padding:0 var(--gut);position:relative;z-index:1}
+
+  /* ---- scroll progress ---- */
+  .progress{position:fixed;top:0;left:0;height:5px;width:0;background:var(--yellow);
+    z-index:1050;box-shadow:0 0 0 1px var(--ink) inset}
+  html.site-menu-open .progress{opacity:0}
+
+  .back-btn{font-family:var(--mono);font-size:.78rem;letter-spacing:.1em;text-transform:uppercase;
+    text-decoration:none;color:var(--ink);border:1.5px solid var(--ink);padding:10px 18px;line-height:1;
+    transition:background .2s,color .2s;white-space:nowrap}
+  .back-btn:hover{background:var(--ink);color:var(--paper)}
+
+  /* ---- hero ---- */
+  .hero{position:relative;padding:64px 0 40px;z-index:1}
+  .ctrlbar{display:flex;align-items:center;gap:14px;border-bottom:1px solid var(--line-2);
+    padding:8px 0 7px;margin-bottom:clamp(28px,5vh,46px)}
+  .ctrlbar .chips{display:flex;gap:5px}
+  .ctrlbar .chip{width:11px;height:11px;display:block;border:1px solid var(--line-2)}
+  .ctrlbar .ch-c{background:#00AEEF}
+  .ctrlbar .ch-m{background:#EC008C}
+  .ctrlbar .ch-y{background:var(--yellow)}
+  .ctrlbar .ch-k{background:var(--ink)}
+  .ctrlbar .reg{width:14px;height:14px;flex-shrink:0;color:var(--ink);display:block}
+  .ctrlbar .leg{font-family:var(--mono);font-size:var(--t-mono);letter-spacing:.12em;
+    text-transform:uppercase;color:var(--ink-soft);margin-left:auto;white-space:nowrap}
+  @media(max-width:560px){.ctrlbar .leg{letter-spacing:.04em}}
+  .eyebrow{font-family:var(--mono);font-size:.74rem;letter-spacing:.22em;text-transform:uppercase;
+    color:var(--ink-soft);display:flex;gap:12px;align-items:center;flex-wrap:wrap}
+  .eyebrow::before{content:"";width:42px;height:2px;background:var(--ink)}
+  h1.title{font-family:var(--disp);font-weight:400;line-height:1.14;letter-spacing:-.01em;
+    font-size:var(--t-hero);margin:.16em 0 .1em;text-transform:uppercase}
+  h1.title .y{
+    background-image:linear-gradient(var(--yellow),var(--yellow));
+    background-repeat:no-repeat;
+    background-position:left bottom;
+    background-size:100% .82em;
+    padding:0 .1em .04em;
+    -webkit-box-decoration-break:clone;box-decoration-break:clone}
+  .hero-meta{display:flex;flex-wrap:wrap;gap:28px;align-items:flex-end;
+    border-top:2px solid var(--ink);margin-top:18px;padding-top:18px}
+  .hero-meta .lede{font-family:var(--sans);font-weight:500;font-size:var(--t-lede);max-width:48ch;line-height:1.5}
+  .hero-meta .tag{font-family:var(--disp);font-weight:400;font-size:clamp(2rem,4vw,3.2rem);
+    line-height:1;letter-spacing:-.01em;white-space:nowrap;text-transform:uppercase}
+  .hero-meta .tag small{display:block;font-family:var(--mono);font-size:var(--t-mono);font-weight:400;
+    letter-spacing:.14em;margin-top:8px;color:var(--ink-soft);text-transform:uppercase}
+
+  /* ---- sections ---- */
+  section{position:relative;padding:84px 0 30px;z-index:1}
+  .sec-head{display:flex;align-items:baseline;gap:20px;margin-bottom:30px;flex-wrap:wrap}
+  .sec-no{font-family:var(--mono);font-size:.74rem;letter-spacing:.18em;color:var(--ink-soft);font-weight:500;
+    background:var(--yellow);color:var(--ink);padding:5px 9px 4px;align-self:center}
+  h2{font-family:var(--disp);font-weight:400;letter-spacing:-.01em;line-height:1;
+    font-size:var(--t-h2);text-transform:uppercase}
+  .sec-sub{font-family:var(--mono);font-size:.78rem;letter-spacing:.02em;color:var(--ink-soft);
+    max-width:66ch;margin-top:-18px;margin-bottom:32px;line-height:1.55}
+  .ghost{position:absolute;right:-2vw;top:30px;font-family:var(--disp);font-weight:400;
+    font-size:clamp(8rem,24vw,20rem);color:var(--ink);opacity:.04;line-height:.7;z-index:-1;pointer-events:none;letter-spacing:-.02em}
+
+  /* ===== CAJETIN RESUMEN (patron canonico .cajetin) ===== */
+  .summary{border:2px solid var(--ink);position:relative;background:var(--paper)}
+  .summary .sum-top{display:grid;grid-template-columns:1.5fr 1fr 1fr 1fr;border-bottom:2px solid var(--ink)}
+  .summary .cell{padding:18px 20px;border-left:1px solid var(--line-2);min-width:0}
+  .summary .cell:first-child{border-left:0}
+  .summary .cell .k{display:block;font-family:var(--mono);font-size:var(--t-mono);letter-spacing:.14em;
+    text-transform:uppercase;color:var(--ink-soft);margin-bottom:7px}
+  .summary .cell .v{display:block;font-family:var(--disp);font-weight:400;line-height:.95;letter-spacing:-.01em;
+    font-size:clamp(2.4rem,6vw,3.8rem)}
+  .summary .cell .v small{font-family:var(--mono);font-size:.9rem;letter-spacing:.04em;color:var(--ink-soft)}
+  .summary .cell.accent .v{color:var(--verm)}
+  .summary .cell .vsub{display:block;font-family:var(--mono);font-size:var(--t-mono);letter-spacing:.08em;
+    color:var(--ink-soft);margin-top:7px;text-transform:uppercase}
+  @media(max-width:760px){
+    .summary .sum-top{grid-template-columns:1fr 1fr}
+    .summary .cell{border-left:0;border-top:1px solid var(--line-2)}
+    .summary .cell:nth-child(2n){border-left:1px solid var(--line-2)}
+    .summary .cell:nth-child(-n+2){border-top:0}
+  }
+  /* barra de avance */
+  .sum-bar-wrap{padding:20px 20px 22px}
+  .sum-bar-head{display:flex;justify-content:space-between;align-items:baseline;gap:14px;margin-bottom:10px;flex-wrap:wrap}
+  .sum-bar-head .lab{font-family:var(--mono);font-size:.72rem;letter-spacing:.14em;text-transform:uppercase;color:var(--ink-soft)}
+  .sum-bar-head .big{font-family:var(--disp);font-weight:400;font-size:1.5rem;letter-spacing:-.01em;line-height:1}
+  .sum-bar{height:16px;border:2px solid var(--ink);background:var(--paper-2);position:relative;overflow:hidden}
+  .sum-bar i{position:absolute;left:0;top:0;bottom:0;width:100%;background:var(--yellow);
+    transform:scaleX(0);transform-origin:left;transition:transform 1.1s var(--ease);
+    box-shadow:1px 0 0 var(--ink)}
+  /* franja inferior · datos del alumno + planeado + acciones */
+  .sum-foot{display:grid;grid-template-columns:1.4fr 1fr;gap:0;border-top:2px solid var(--ink)}
+  .sum-foot>div{padding:18px 20px}
+  .sum-foot .ident{border-right:1px solid var(--line-2)}
+  .sum-foot label{display:block;font-family:var(--mono);font-size:var(--t-mono);letter-spacing:.12em;
+    text-transform:uppercase;color:var(--ink-soft);margin-bottom:5px}
+  .sum-foot .ident-row{display:flex;gap:14px;flex-wrap:wrap}
+  .sum-foot .ident-row > div{flex:1;min-width:140px}
+  .sum-foot input[type=text]{width:100%;font-family:var(--sans);font-size:1rem;color:var(--ink);
+    background:var(--paper);border:0;border-bottom:2px solid var(--ink);padding:6px 2px;line-height:1.3}
+  .sum-foot input[type=text]:focus-visible{outline:none;border-bottom-color:var(--verm);background:var(--paper-2)}
+  .sum-foot .planbox{background:var(--ink);color:var(--paper);margin:-18px -20px;padding:18px 20px;
+    display:flex;flex-direction:column;justify-content:center}
+  .sum-foot .planbox .k{font-family:var(--mono);font-size:var(--t-mono);letter-spacing:.12em;text-transform:uppercase;color:var(--yellow);margin-bottom:6px}
+  .sum-foot .planbox .v{font-family:var(--disp);font-weight:400;font-size:2.2rem;line-height:1;letter-spacing:-.01em}
+  .sum-foot .planbox .v small{font-family:var(--mono);font-size:.78rem;letter-spacing:.04em;color:rgba(242,238,227,.7)}
+  .sum-foot .planbox .vsub{font-family:var(--mono);font-size:var(--t-mono);letter-spacing:.06em;color:rgba(242,238,227,.7);margin-top:6px}
+  @media(max-width:680px){
+    .sum-foot{grid-template-columns:1fr}
+    .sum-foot .ident{border-right:0;border-bottom:2px solid var(--ink)}
+    .sum-foot .planbox{margin:0;border:0}
+  }
+  .actions{display:flex;gap:14px;flex-wrap:wrap;margin-top:24px;align-items:center}
+  .btn{font-family:var(--sans);font-weight:700;font-size:1rem;text-transform:uppercase;letter-spacing:.01em;
+    background:var(--yellow);color:var(--ink);border:2px solid var(--ink);padding:14px 22px;text-decoration:none;
+    display:inline-flex;align-items:center;gap:12px;box-shadow:5px 5px 0 var(--ink);cursor:pointer;
+    transition:transform .15s var(--ease),box-shadow .15s var(--ease)}
+  .btn:hover{transform:translate(-2px,-2px);box-shadow:7px 7px 0 var(--ink)}
+  .btn:active{transform:translate(2px,2px);box-shadow:1px 1px 0 var(--ink)}
+  .btn:focus-visible{outline:2px solid var(--verm);outline-offset:3px}
+  .btn.ghost-btn{background:transparent;box-shadow:none;border-color:var(--ink)}
+  .btn.ghost-btn:hover{background:var(--ink);color:var(--paper);transform:none;box-shadow:none}
+  .actions .hint{font-family:var(--mono);font-size:.72rem;letter-spacing:.05em;color:var(--ink-soft);max-width:34ch;line-height:1.5}
+
+  /* ===== LEYENDA DE ESTADOS ===== */
+  .legend-states{display:flex;flex-wrap:wrap;gap:14px 24px;align-items:center;margin:30px 0 4px;
+    border-top:1px solid var(--line);border-bottom:1px solid var(--line);padding:16px 0}
+  .legend-states .li{display:flex;align-items:center;gap:10px;font-family:var(--mono);font-size:.74rem;
+    letter-spacing:.06em;text-transform:uppercase;color:var(--ink-soft)}
+  .legend-states .swatch{width:26px;height:26px;border:2px solid var(--ink);flex-shrink:0;display:grid;place-items:center;background:var(--paper)}
+  .legend-states .swatch.s-cursada{background:var(--green);border-color:var(--green)}
+  .legend-states .swatch.s-cursada::after{content:"";width:6px;height:11px;border:solid var(--paper);border-width:0 2.5px 2.5px 0;transform:rotate(45deg) translateY(-1px)}
+  .legend-states .swatch.s-planeada{background:var(--yellow);border-color:var(--ink);box-shadow:inset 0 0 0 2px var(--paper),inset 0 0 0 4px var(--yellow)}
+  .legend-states .swatch.s-planeada::after{content:"P";font-family:var(--disp);font-size:.9rem;color:var(--ink);line-height:1}
+
+  /* ===== SUGERENCIAS ===== */
+  .suggest{display:grid;gap:16px}
+  .sug{border:1px solid var(--line);background:var(--paper-2);padding:18px 22px;position:relative}
+  .sug.amber{border-color:var(--yellow-deep);box-shadow:inset 0 3px 0 var(--yellow)}
+  .sug.ink{background:var(--ink);color:var(--paper);border-color:var(--ink)}
+  .sug .tag{font-family:var(--mono);font-size:.72rem;letter-spacing:.16em;text-transform:uppercase;margin-bottom:7px;display:block;color:var(--ink-soft)}
+  .sug.ink .tag{color:var(--yellow)}
+  .sug h3{font-family:var(--sans);font-weight:700;font-size:1.08rem;line-height:1.25;margin-bottom:6px;text-transform:uppercase;letter-spacing:0}
+  .sug p{font-size:.96rem;color:var(--ink-soft);line-height:1.5}
+  .sug.ink p{color:rgba(242,238,227,.85)}
+  .sug ul{list-style:none;margin-top:10px;display:flex;flex-wrap:wrap;gap:8px}
+  .sug ul li{font-family:var(--mono);font-size:.74rem;letter-spacing:.03em;background:var(--paper);
+    border:1px solid var(--line-2);padding:5px 10px;line-height:1.3;display:inline-flex;align-items:center;gap:8px}
+  .sug ul li .cr{color:var(--verm);font-weight:500}
+  .sug.ink ul li{background:rgba(242,238,227,.1);border-color:rgba(242,238,227,.3);color:var(--paper)}
+  .sug.ink ul li .cr{color:var(--yellow)}
+  .sug.empty{opacity:.7;font-family:var(--mono);font-size:.8rem}
+
+  /* ===== PROXIMO SEMESTRE (panel) ===== */
+  .next-panel{border:2px solid var(--ink)}
+  .next-head{background:var(--ink);color:var(--paper);padding:16px 22px;display:flex;
+    justify-content:space-between;align-items:center;gap:16px;flex-wrap:wrap;border-bottom:2px solid var(--yellow)}
+  .next-head .ttl{font-family:var(--sans);font-weight:700;text-transform:uppercase;font-size:1.1rem;letter-spacing:0}
+  .next-head .meta{font-family:var(--mono);font-size:.74rem;letter-spacing:.1em;text-transform:uppercase;color:rgba(242,238,227,.78)}
+  .next-head .cr{font-family:var(--disp);font-weight:400;font-size:1.7rem;line-height:1;color:var(--yellow);letter-spacing:-.01em}
+  .next-list{display:grid;grid-template-columns:1fr 1fr;gap:0}
+  @media(max-width:680px){.next-list{grid-template-columns:1fr}}
+  .next-row{display:flex;align-items:flex-start;gap:12px;padding:13px 22px;border-top:1px solid var(--line);
+    border-right:1px solid var(--line);cursor:pointer;transition:background .18s}
+  .next-list .next-row:nth-child(2n){border-right:0}
+  .next-row:hover{background:var(--paper-2)}
+  .next-row .tick{flex-shrink:0;width:20px;height:20px;border:2px solid var(--ink);margin-top:2px;display:grid;place-items:center;transition:background .15s}
+  .next-row.is-planned .tick{background:var(--yellow)}
+  .next-row.is-planned .tick::after{content:"P";font-family:var(--disp);font-size:.78rem;color:var(--ink);line-height:1}
+  .next-row .nm{font-size:.96rem;font-weight:700;line-height:1.25}
+  .next-row .nm small{display:block;font-family:var(--mono);font-size:var(--t-mono);font-weight:400;letter-spacing:.05em;color:var(--ink-soft);margin-top:3px;text-transform:uppercase}
+  .next-empty{padding:22px;font-family:var(--mono);font-size:.82rem;color:var(--ink-soft);line-height:1.6}
+
+  /* ===== MALLA · APARTADOS ===== */
+  .malla{display:grid;gap:clamp(26px,4vh,40px)}
+  .apartado{border:2px solid var(--ink);position:relative;background:var(--paper)}
+  .ap-head{display:flex;align-items:center;gap:14px;padding:14px 20px;border-bottom:2px solid var(--ink);
+    flex-wrap:wrap}
+  .ap-head .ap-no{font-family:var(--mono);font-size:.72rem;letter-spacing:.14em;background:var(--yellow);
+    color:var(--ink);padding:4px 8px 3px;font-weight:500;flex-shrink:0}
+  .ap-head h3{font-family:var(--disp);font-weight:400;font-size:clamp(1.3rem,2.6vw,1.9rem);
+    text-transform:uppercase;letter-spacing:-.01em;line-height:1;flex:1;min-width:0}
+  .ap-head .ap-prog{display:flex;gap:18px;align-items:baseline;flex-wrap:wrap;margin-left:auto}
+  .ap-head .ap-prog .blk{font-family:var(--mono);font-size:.74rem;letter-spacing:.06em;color:var(--ink-soft);white-space:nowrap}
+  .ap-head .ap-prog .blk b{font-family:var(--disp);font-weight:400;font-size:1.15rem;color:var(--ink);letter-spacing:0}
+  .ap-head .ap-prog .blk.done b{color:var(--green)}
+  .ap-rule{font-family:var(--mono);font-size:.72rem;letter-spacing:.06em;color:var(--verm);
+    padding:9px 20px 0;text-transform:uppercase}
+  /* grupos por semestre / bloque dentro de un apartado */
+  .grp{border-top:1px solid var(--line)}
+  .grp:first-of-type{border-top:0}
+  .grp-title{font-family:var(--mono);font-size:.72rem;letter-spacing:.16em;text-transform:uppercase;
+    color:var(--ink-soft);padding:16px 20px 2px}
+  .courses{display:grid;grid-template-columns:1fr 1fr;gap:0;padding:8px 0 4px}
+  @media(max-width:680px){.courses{grid-template-columns:1fr}}
+  /* tarjeta/fila de materia · ciclo de estado por clic */
+  .course{display:flex;align-items:flex-start;gap:12px;padding:11px 20px;cursor:pointer;
+    border-top:1px solid transparent;transition:background .16s;-webkit-user-select:none;user-select:none}
+  .course:hover{background:var(--paper-2)}
+  .course:focus-visible{outline:2px solid var(--verm);outline-offset:-2px;background:var(--paper-2)}
+  .course .box{flex-shrink:0;width:22px;height:22px;border:2px solid var(--ink);margin-top:1px;
+    display:grid;place-items:center;background:var(--paper);transition:background .15s,border-color .15s;position:relative}
+  .course .box .mk{opacity:0;line-height:1}
+  /* estado CURSADA: relleno tinta verde + check papel */
+  .course[data-state="cursada"] .box{background:var(--green);border-color:var(--green)}
+  .course[data-state="cursada"] .box .mk-check{opacity:1;display:block;width:6px;height:11px;
+    border:solid var(--paper);border-width:0 2.5px 2.5px 0;transform:rotate(45deg) translateY(-1px)}
+  /* estado PLANEADA: relleno amarillo + "P" tinta (estilo distinto) */
+  .course[data-state="planeada"] .box{background:var(--yellow);border-color:var(--ink);
+    box-shadow:inset 0 0 0 2px var(--paper),inset 0 0 0 4px var(--yellow)}
+  .course[data-state="planeada"] .box .mk-p{opacity:1;font-family:var(--disp);font-size:.92rem;color:var(--ink)}
+  .course .info{min-width:0;flex:1}
+  .course .nm{font-size:.97rem;font-weight:700;line-height:1.22;transition:color .15s}
+  .course[data-state="cursada"] .nm{color:var(--ink-soft);text-decoration:line-through;text-decoration-color:var(--line-2)}
+  .course .specs{font-family:var(--mono);font-size:var(--t-mono);letter-spacing:.04em;color:var(--ink-soft);
+    margin-top:3px;display:flex;flex-wrap:wrap;gap:4px 12px}
+  .course .specs .cr{color:var(--verm)}
+  .course[data-state="planeada"]{background:rgba(255,224,0,.14)}
+  .course[data-state="planeada"]:hover{background:rgba(255,224,0,.22)}
+  /* borde-relleno amarillo distintivo para PLANEADA (DESIGN.md: estilo DISTINTO) */
+  .course[data-state="planeada"]{box-shadow:inset 3px 0 0 var(--yellow-deep)}
+
+  /* sello de hito sobre apartado completado (patron .rev-stamp) */
+  .rev-stamp{position:absolute;z-index:3;border:3px solid var(--verm);color:var(--verm);
+    padding:7px 13px 6px;font-family:var(--mono);font-size:.72rem;font-weight:700;letter-spacing:.16em;
+    text-transform:uppercase;background:rgba(241,236,223,.9);white-space:nowrap;
+    transform:rotate(-6deg) scale(.6);opacity:0;pointer-events:none;
+    transition:opacity .35s var(--ease),transform .42s var(--ease);top:-16px;right:clamp(10px,3vw,28px)}
+  .apartado.is-complete .rev-stamp{opacity:1;transform:rotate(-6deg) scale(1)}
+
+  /* ---- reveal · 3 capas (DESIGN.md) ---- */
+  .rv{transition:opacity .8s var(--ease),transform .8s var(--ease)}
+  .js .rv:not(.in){opacity:0;transform:translateY(26px)}
+  .rv.in{opacity:1;transform:none}
+  .rv.d1{transition-delay:.08s}.rv.d2{transition-delay:.16s}.rv.d3{transition-delay:.24s}.rv.d4{transition-delay:.32s}
+
+  @media(prefers-reduced-motion:reduce){
+    *{animation:none!important;transition:none!important}
+    .rv{opacity:1!important;transform:none!important}
+    .sum-bar i{transition:none}
+    .ctrlbar > *{opacity:1!important}
+    .rev-stamp{transition:none}
+    .apartado.is-complete .rev-stamp{transform:rotate(-6deg)!important}
+  }
+
+  /* ---- footer (estructura compartida, paleta paper) ---- */
+  footer{background:var(--ink);color:var(--paper);margin-top:90px;
+    padding:72px var(--gut) 32px;position:relative;z-index:1;border-top:2px solid var(--yellow)}
+  .foot-top{display:grid;grid-template-columns:1.3fr 1fr 1fr 1fr;gap:40px;margin-bottom:56px}
+  .foot-brand .foot-logo{font-family:var(--disp);font-weight:400;font-size:clamp(2.6rem,5vw,4rem);
+    line-height:.92;color:var(--yellow);text-transform:uppercase;letter-spacing:-.01em;margin-bottom:14px}
+  .foot-brand .foot-tag{font-family:var(--mono);font-size:.72rem;letter-spacing:.1em;
+    line-height:1.7;color:rgba(242,238,227,.55);text-transform:uppercase}
+  .foot-col{display:flex;flex-direction:column;gap:7px}
+  .foot-col h4{font-family:var(--mono);font-size:var(--t-mono);letter-spacing:.16em;text-transform:uppercase;
+    color:var(--yellow);margin-bottom:8px}
+  .foot-col a,.foot-col span.line{font-family:var(--sans);font-size:.92rem;
+    color:rgba(242,238,227,.8);text-decoration:none;line-height:1.5;transition:color .25s,padding-left .25s}
+  .foot-col a:hover{color:var(--yellow);padding-left:7px}
+  .foot-bottom{display:flex;justify-content:space-between;align-items:center;gap:24px;
+    padding-top:26px;border-top:1px solid rgba(242,238,227,.14);flex-wrap:wrap}
+  .foot-bottom-left{display:flex;flex-direction:column;gap:5px;font-family:var(--mono);
+    font-size:var(--t-mono);letter-spacing:.1em;text-transform:uppercase;color:rgba(242,238,227,.55)}
+  .foot-logos{width:340px;max-width:60vw;height:auto;opacity:.55}
+  @media(max-width:860px){.foot-top{grid-template-columns:1fr 1fr}.foot-brand{grid-column:1/-1}}
+  @media(max-width:560px){.foot-top{grid-template-columns:1fr}}
+  .foot-cajetin{display:grid;grid-template-columns:2.2fr 1.6fr 1fr 1fr .8fr .7fr;
+    border-top:2px solid rgba(242,238,227,.7);margin-bottom:26px}
+  .foot-cajetin .cell{padding:12px 14px 13px;border-left:1px solid rgba(242,238,227,.25);min-width:0}
+  .foot-cajetin .cell:first-child{border-left:0}
+  .foot-cajetin .k{display:block;font-family:var(--mono);font-size:var(--t-mono);letter-spacing:.14em;
+    text-transform:uppercase;color:rgba(242,238,227,.55);margin-bottom:4px}
+  .foot-cajetin .v{display:block;font-family:var(--sans);font-weight:700;font-size:.92rem;line-height:1.3;
+    color:rgba(242,238,227,.9)}
+  .foot-cajetin .v.big{font-family:var(--disp);font-weight:400;font-size:1.5rem;letter-spacing:.01em;color:var(--yellow)}
+  @media(max-width:860px){.foot-cajetin{grid-template-columns:1fr 1fr}
+    .foot-cajetin .cell{border-left:0;border-top:1px solid rgba(242,238,227,.14)}
+    .foot-cajetin .cell:nth-child(2n){border-left:1px solid rgba(242,238,227,.25)}
+    .foot-cajetin .cell:nth-child(-n+2){border-top:0}}
+
+  /* =========================================================
+     IMPRESION · @media print (PDF limpio en papel, sin librerias)
+     Oculta menu/controles; lista datos, %, cursadas, planeadas y sugerencias.
+     ========================================================= */
+  .print-only{display:none}
+  @media print{
+    @page{margin:14mm}
+    html{scroll-behavior:auto}
+    body{background:#fff;color:#1B1612;font-size:11pt;line-height:1.4;overflow:visible}
+    body::before,body::after{display:none!important}
+    /* ocultar todo lo interactivo / decorativo */
+    #site-menu-root,.site-bar,.site-scrim,.site-pills,.progress,.ctrlbar,.ghost,
+    .actions,.legend-states,.next-panel,#malla,.back-btn,footer,.hero .tag,
+    .sum-foot input,.summary .sum-bar-wrap,.sec-sub{display:none!important}
+    section{padding:0;margin:0 0 14pt;page-break-inside:avoid}
+    .hero{padding:0 0 8pt}
+    .wrap{max-width:none;padding:0}
+    h1.title{font-size:24pt;line-height:1.05;margin:0 0 4pt}
+    h1.title .y{background:none;padding:0}
+    .eyebrow{font-size:8pt}.eyebrow::before{display:none}
+    h2{font-size:15pt;margin-bottom:6pt}
+    .sec-head{margin-bottom:8pt;border-bottom:1.5pt solid #1B1612;padding-bottom:4pt}
+    .sec-no{background:none;color:#000;padding:0;border:1pt solid #1B1612;padding:2pt 5pt}
+    /* el resumen se imprime como tabla de datos */
+    .summary{border:1.5pt solid #1B1612;break-inside:avoid}
+    .summary .sum-top{grid-template-columns:1fr 1fr 1fr 1fr;border-bottom:1pt solid #1B1612}
+    .summary .cell{border-left:1pt solid #999;padding:8pt 10pt}
+    .summary .cell .v{font-size:20pt}
+    .summary .cell.accent .v{color:#B23818}
+    .sum-foot{border-top:1pt solid #1B1612}
+    .sum-foot .ident{border-right:1pt solid #999}
+    .sum-foot .planbox{background:#1B1612!important;color:#fff!important;-webkit-print-color-adjust:exact;print-color-adjust:exact;margin:0}
+    .sum-foot .planbox .v{color:#fff}.sum-foot .planbox .k{color:#FFE000}
+    /* bloques print-only con las listas para copiar al sistema oficial */
+    .print-only{display:block!important}
+    .print-block{margin-top:14pt;break-inside:avoid}
+    .print-block h2{font-size:13pt;border-bottom:1.5pt solid #1B1612;padding-bottom:3pt;margin-bottom:7pt}
+    .print-list{list-style:none;columns:2;column-gap:24pt}
+    .print-list li{font-size:9.5pt;line-height:1.5;break-inside:avoid;padding:1pt 0;
+      border-bottom:.5pt solid #ddd}
+    .print-list li .cr{font-family:var(--mono);color:#B23818}
+    .print-list.single{columns:1}
+    .print-sug{margin-top:6pt}
+    .print-sug li{font-size:9.5pt;line-height:1.45;margin-bottom:5pt;list-style:square;margin-left:14pt}
+    .print-foot{margin-top:16pt;border-top:1pt solid #1B1612;padding-top:6pt;
+      font-family:var(--mono);font-size:8pt;color:#555;letter-spacing:.04em}
+    .suggest{display:block}
+    #sugerencias .suggest{display:none}
+  }
+</style>
+<!-- GSAP 3.13 vendoreado · solo los plugins que usa esta pagina (sin ScrollSmoother:
+     herramienta de seguimiento con scroll nativo) -->
+<script defer src="assets/vendor/gsap/gsap.min.js"></script>
+<script defer src="assets/vendor/gsap/ScrollTrigger.min.js"></script>
+<script defer src="assets/vendor/gsap/SplitText.min.js"></script>
+<script defer src="assets/vendor/gsap/DrawSVGPlugin.min.js"></script>
+</head>
+<body>
+<div class="progress" id="prog"></div>
+
+<noscript>
+  <nav aria-label="Navegación principal">
+    <a href="index.html">Inicio</a> · <a href="trayectoria.html">Trayectoria</a> · <a href="pef.html">Guía PEF</a> · <a href="avance.html">Mi Avance</a>
+  </nav>
+</noscript>
+
+<!-- HERO -->
+<div class="hero">
+  <div class="wrap">
+    <div class="ctrlbar" aria-hidden="true">
+      <span class="chips"><i class="chip ch-c"></i><i class="chip ch-m"></i><i class="chip ch-y"></i><i class="chip ch-k"></i></span>
+      <svg class="reg" viewBox="0 0 14 14" focusable="false"><circle cx="7" cy="7" r="4.4" fill="none" stroke="currentColor" stroke-width="1.2"/><path d="M7 .5v13M.5 7h13" fill="none" stroke="currentColor" stroke-width="1.2"/></svg>
+      <span class="leg">Trayecto LDG · Control de avance</span>
+    </div>
+    <div class="eyebrow rv">UDEM · Licenciatura en Diseño Gráfico · Trayecto del alumno</div>
+    <h1 class="title rv d1">Mi <span class="y">avance</span><br>en la malla</h1>
+    <div class="hero-meta">
+      <p class="lede rv d2">Marca lo que ya cursaste, planea tu próximo semestre y revisa cuánto te falta para titularte. Tu avance se guarda en este navegador y lo puedes descargar en PDF.</p>
+      <div class="tag rv d3">LDG<small>Plan de estudios · Trayecto</small></div>
+    </div>
+  </div>
+</div>
+
+<!-- 01 RESUMEN -->
+<section id="resumen">
+  <span class="ghost">01</span>
+  <div class="wrap">
+    <div class="sec-head rv"><span class="sec-no">01 / RESUMEN</span><h2>Tu avance de carrera</h2></div>
+    <div class="summary rv d1" id="summary-box">
+      <div class="sum-top">
+        <div class="cell"><span class="k">Avance de carrera</span><span class="v" id="m-pct">0<small>%</small></span><span class="vsub" id="m-pct-sub">0 de 0 créditos</span></div>
+        <div class="cell"><span class="k">Créditos cursados</span><span class="v" id="m-done">0</span><span class="vsub">aprobados</span></div>
+        <div class="cell accent"><span class="k">Créditos faltantes</span><span class="v" id="m-left">0</span><span class="vsub">por cursar</span></div>
+        <div class="cell"><span class="k">Total requerido</span><span class="v" id="m-total">0</span><span class="vsub">para titularte</span></div>
+      </div>
+      <div class="sum-bar-wrap">
+        <div class="sum-bar-head">
+          <span class="lab">Barra de avance · créditos cursados sobre total requerido</span>
+          <span class="big" id="m-pct-bar">0%</span>
+        </div>
+        <div class="sum-bar" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" aria-label="Avance de carrera" id="m-bar-aria"><i id="m-bar"></i></div>
+      </div>
+      <div class="sum-foot">
+        <div class="ident">
+          <div class="ident-row">
+            <div>
+              <label for="f-nombre">Nombre (opcional · para el PDF)</label>
+              <input type="text" id="f-nombre" autocomplete="name" placeholder="Tu nombre">
+            </div>
+            <div>
+              <label for="f-matricula">Matrícula (opcional)</label>
+              <input type="text" id="f-matricula" autocomplete="off" placeholder="000000">
+            </div>
+          </div>
+        </div>
+        <div class="planbox">
+          <span class="k">Planeado · próximo semestre</span>
+          <span class="v" id="m-plan-cr">0<small> cr</small></span>
+          <span class="vsub" id="m-plan-n">0 materias marcadas como planeadas</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="actions rv d2">
+      <button class="btn" id="btn-pdf" type="button">Descargar mi avance (PDF) <span aria-hidden="true">↓</span></button>
+      <button class="btn ghost-btn" id="btn-reset" type="button">Reiniciar</button>
+      <p class="hint">El PDF lista tus datos, el % y créditos, las materias cursadas y las planeadas con sus créditos exactos, listas para copiar al sistema oficial de Trayecto.</p>
+    </div>
+
+    <div class="legend-states rv d2" aria-hidden="false">
+      <span class="li"><span class="swatch"></span>Pendiente</span>
+      <span class="li"><span class="swatch s-cursada"></span>Cursada</span>
+      <span class="li"><span class="swatch s-planeada"></span>Planeada · próximo semestre</span>
+      <span class="li" style="color:var(--ink);font-weight:500">Clic en cada materia para ciclar el estado · Enter / Espacio con teclado</span>
+    </div>
+  </div>
+</section>
+
+<!-- 02 PROXIMO SEMESTRE -->
+<section id="proximo">
+  <span class="ghost">02</span>
+  <div class="wrap">
+    <div class="sec-head rv"><span class="sec-no">02 / PLAN</span><h2>Tu próximo semestre</h2></div>
+    <p class="sec-sub rv">Materias del siguiente semestre del mapa que aún no has cursado, según el semestre más alto que ya tengas completo. Marca con un clic las que pienses inscribir: se cuentan como planeadas arriba.</p>
+    <div class="next-panel rv d1" id="next-panel">
+      <div class="next-head">
+        <div>
+          <span class="ttl" id="next-ttl">Próximo semestre</span>
+          <div class="meta" id="next-meta">Calculado a partir de tus materias cursadas</div>
+        </div>
+        <span class="cr" id="next-cr">0 cr</span>
+      </div>
+      <div id="next-body"></div>
+    </div>
+  </div>
+</section>
+
+<!-- 03 SUGERENCIAS -->
+<section id="sugerencias">
+  <span class="ghost">03</span>
+  <div class="wrap">
+    <div class="sec-head rv"><span class="sec-no">03 / GUÍA</span><h2>Sugerencias para ti</h2></div>
+    <p class="sec-sub rv">Recomendaciones automáticas según tu avance. Son orientativas: confirma siempre con tu Trayecto oficial y con coordinación.</p>
+    <div class="suggest rv d1" id="suggest-box"></div>
+  </div>
+</section>
+
+<!-- 04 MALLA COMPLETA -->
+<section id="malla">
+  <span class="ghost">04</span>
+  <div class="wrap">
+    <div class="sec-head rv"><span class="sec-no">04 / MALLA</span><h2>Malla completa</h2></div>
+    <p class="sec-sub rv">Agrupada por los apartados del Trayecto UDEM. Cada apartado muestra cuántas materias y créditos exige y cuántos llevas. Para los apartados de "elige N", se cuenta cuántas opciones marcaste.</p>
+    <div class="malla" id="malla"></div>
+  </div>
+</section>
+
+<div class="wrap" style="margin-top:80px;text-align:center">
+  <a class="back-btn" href="#">↑ Volver arriba</a>
+</div>
+
+<!-- bloques que solo aparecen en impresion/PDF -->
+<div class="print-only" id="print-extra"></div>
+
+<footer>
+  <div class="foot-top">
+    <div class="foot-brand">
+      <div class="foot-logo">Portfolio / LDG</div>
+      <p class="foot-tag">Repositorio académico<br>de tesis de diseño gráfico</p>
+    </div>
+    <div class="foot-col">
+      <h4>Navegación</h4>
+      <a href="index.html">Inicio</a>
+      <a href="trayectoria.html">Trayectoria</a>
+      <a href="pef.html">Guía PEF</a>
+      <a href="avance.html" aria-current="page">Mi Avance</a>
+    </div>
+    <div class="foot-col">
+      <h4>Trayecto · LDG</h4>
+      <a href="mailto:ldg.crgs@udem.edu">Coordinación LDG</a>
+      <span class="line">Verifica créditos en tu Trayecto oficial.</span>
+      <span class="line">Tu avance se guarda solo en este navegador.</span>
+    </div>
+    <div class="foot-col">
+      <h4>Programa</h4>
+      <a href="mailto:ldg.crgs@udem.edu">ldg.crgs@udem.edu</a>
+      <a href="https://www.instagram.com/ldg_udem" target="_blank" rel="noopener">Instagram</a>
+      <a href="https://crgs.udem.edu.mx/arte-arquitectura-y-diseno/academia/profesional/licenciatura-en-diseno-grafico" target="_blank" rel="noopener">Sitio web</a>
+    </div>
+  </div>
+  <div class="foot-cajetin">
+    <div class="cell"><span class="k">Documento</span><span class="v">Mi Avance · Trayecto LDG</span></div>
+    <div class="cell"><span class="k">Programa</span><span class="v">Lic. en Diseño Gráfico</span></div>
+    <div class="cell"><span class="k">Sede</span><span class="v">CRGS · UDEM</span></div>
+    <div class="cell"><span class="k">Total cr.</span><span class="v big" id="foot-total">·</span></div>
+    <div class="cell"><span class="k">Rev.</span><span class="v">2026</span></div>
+    <div class="cell"><span class="k">Lámina</span><span class="v big">04</span></div>
+  </div>
+  <div class="foot-bottom">
+    <div class="foot-bottom-left">
+      <span>&copy; 2026 Portfolio LDG</span>
+      <span>Control de avance · Trayecto · Licenciatura en Diseño Gráfico</span>
+    </div>
+    <img src="logos-institucionales.svg" alt="UDEM" class="foot-logos">
+  </div>
+</footer>
+
+<script>
+(function(){
+  'use strict';
+  var reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  /* =====================================================================
+     ███  VERIFICAR CRÉDITOS · leídos del Trayecto oficial  ███
+     ---------------------------------------------------------------------
+     Toda la malla vive aquí. Los créditos (cr) y las reglas "elige N"
+     (eligeN) son lectura APROXIMADA del Trayecto oficial UDEM + el mapa
+     de la Licenciatura en Diseño Gráfico. Si algún crédito no coincide
+     con tu Trayecto, corrígelo SOLO en este objeto: toda la UI (contadores,
+     barras, %, sugerencias, PDF) se recalcula a partir de estos datos,
+     nada está hardcodeado en el render.
+
+       cr     = créditos de la materia
+       sem    = semestre / bloque del mapa (1..9; 0 = sin semestre fijo)
+       area   = 'Representación' (Estudios) | 'Técnica' | 'General' |
+                'Concentración' | 'Requisito'
+       tipo   = 'obligatorias' (todas cuentan) | 'elige' (elige eligeN)
+
+     Total de la carrera = Σ obligatorias + Σ(elige: eligeN × cr promedio)
+     % de avance = créditos cursados / total requerido.
+     ===================================================================== */
+  var MALLA = [
+    /* ---------- A) ESTUDIOS PROFESIONALES ---------- */
+    {
+      id:'A1', no:'A1', titulo:'Estudios Profesionales · Obligatorias', tipo:'obligatorias',
+      grupos:[
+        {label:'Semestre 1', materias:[
+          {name:'Estudio Experimental', cr:12, sem:1, area:'Representación'},
+          {name:'Dibujo y Representación', cr:6, sem:1, area:'Técnica'},
+          {name:'Fundamentos de la Cultura Visual', cr:6, sem:1, area:'Técnica'},
+          {name:'Estudio de Introducción a la Composición Visual', cr:6, sem:1, area:'Técnica'},
+          {name:'Herramientas Digitales para el Diseño', cr:6, sem:1, area:'Técnica'}
+        ]},
+        {label:'Semestre 2', materias:[
+          {name:'Estudio de Fundamentos del Diseño Gráfico', cr:12, sem:2, area:'Representación'},
+          {name:'Introducción a la Tipografía', cr:6, sem:2, area:'Técnica'},
+          {name:'Medios Impresos y Digitales', cr:6, sem:2, area:'Técnica'},
+          {name:'Ilustración', cr:6, sem:2, area:'Técnica'},
+          {name:'Desarrollo de Concepto y Narrativa', cr:6, sem:2, area:'Técnica'},
+          {name:'Filosofía e Historia del Diseño Gráfico', cr:6, sem:2, area:'Técnica'}
+        ]},
+        {label:'Semestre 3', materias:[
+          {name:'Estudio de Diseño de Identidad de Marca', cr:12, sem:3, area:'Representación'},
+          {name:'Texto Tipográfico', cr:6, sem:3, area:'Técnica'},
+          {name:'Imagen en Movimiento', cr:6, sem:3, area:'Técnica'},
+          {name:'Iconografía y Signos', cr:6, sem:3, area:'Técnica'},
+          {name:'Fotografía Profesional de Objetos', cr:6, sem:3, area:'Técnica'}
+        ]},
+        {label:'Semestre 4', materias:[
+          {name:'Estudio de Diseño Informativo', cr:12, sem:4, area:'Representación'},
+          {name:'Diseño de Letra', cr:6, sem:4, area:'Técnica'},
+          {name:'Estudio de Publicaciones', cr:6, sem:4, area:'Técnica'},
+          {name:'Métodos de Investigación para el Diseño Gráfico', cr:6, sem:4, area:'Técnica'},
+          {name:'Empaque y Marca', cr:6, sem:4, area:'Técnica'}
+        ]},
+        {label:'Semestre 5', materias:[
+          {name:'Estudio de Estrategia Publicitaria', cr:12, sem:5, area:'Representación'},
+          {name:'Mercadotecnia y Publicación de Marca', cr:6, sem:5, area:'Técnica'},
+          {name:'Gestión y Operación de Proyectos de Diseño', cr:6, sem:5, area:'Técnica'},
+          {name:'Programación para Diseñadores', cr:6, sem:5, area:'Técnica'}
+        ]},
+        {label:'Semestre 6', materias:[
+          {name:'Estudio de Diseño de Interacción', cr:12, sem:6, area:'Representación'},
+          {name:'Diseño para Medios Digitales', cr:6, sem:6, area:'Técnica'},
+          {name:'Diseño de Experiencia', cr:6, sem:6, area:'Técnica'}
+        ]},
+        {label:'Semestre 7', materias:[
+          {name:'Estudio de Diseño de Servicio', cr:12, sem:7, area:'Representación'},
+          {name:'Seminario de Tendencias de Diseño', cr:6, sem:7, area:'Técnica'},
+          {name:'Diseño Sustentable', cr:6, sem:7, area:'Técnica'}
+        ]},
+        {label:'Semestre 8', materias:[
+          {name:'Estudio Integral de Diseño', cr:12, sem:8, area:'Representación'}
+        ]}
+      ]
+    },
+    {
+      id:'A2', no:'A2', titulo:'Estudios Profesional · Optativas', tipo:'elige', eligeN:3,
+      grupos:[
+        {label:'Elige 3 · 6 cr c/u · son los 3 tracks de Concentración (Espacios / Interactivo / Estratégico)', materias:[
+          {name:'Intervención Espacial: Iluminación, Sonido y Materiales', cr:6, sem:0, area:'Representación'},
+          {name:'Diseño Especulativo', cr:6, sem:0, area:'Representación'},
+          {name:'Contexto del Diseño para los Negocios', cr:6, sem:0, area:'Representación'},
+          {name:'Espacios Efímeros', cr:6, sem:0, area:'Representación'},
+          {name:'Programación de Objetos Interactivos', cr:6, sem:0, area:'Representación'},
+          {name:'Creación de Nuevos Productos y Servicios', cr:6, sem:0, area:'Representación'},
+          {name:'Escaparatismo', cr:6, sem:0, area:'Representación'},
+          {name:'Diseño y Prototipos de Estudios Interactivos', cr:6, sem:0, area:'Representación'},
+          {name:'Diseño de Estrategias para Emprendimiento', cr:6, sem:0, area:'Representación'}
+        ]}
+      ]
+    },
+    {
+      id:'A3', no:'A3', titulo:'Estudios obligatorios · Práctica y Evaluación', tipo:'obligatorias',
+      grupos:[
+        {label:'Cursos Diseño Gráfico', materias:[
+          {name:'Prácticas Profesionales Intensivas de Diseño Gráfico', cr:6, sem:7, area:'Práctica · 320 h'},
+          {name:'Programa de Evaluación Final I', cr:6, sem:8, area:'Evaluación'},
+          {name:'Programa de Evaluación Final II', cr:6, sem:9, area:'Evaluación'}
+        ]}
+      ]
+    },
+    /* ---------- B) ESTUDIOS GENERALES OBLIGATORIOS ---------- */
+    {
+      id:'B', no:'B', titulo:'Estudios Generales Obligatorios', tipo:'obligatorias',
+      grupos:[
+        {label:'Formación general · UDEM', materias:[
+          {name:'Pensamiento Crítico y Creativo', cr:6, sem:1, area:'General'},
+          {name:'Tendencias en el Liderazgo', cr:6, sem:3, area:'General'},
+          {name:'Retos de la Comunicación Contemporánea', cr:6, sem:3, area:'General'},
+          {name:'Retos y Dinámicas Globales', cr:6, sem:4, area:'General'},
+          {name:'Sostenibilidad y Responsabilidad Social', cr:6, sem:5, area:'General'},
+          {name:'Ética Social Cristiana', cr:6, sem:6, area:'General'},
+          {name:'Pensamiento Científico y Tecnológico', cr:6, sem:7, area:'General'},
+          {name:'Fundamentos de la Salud y Bienestar', cr:6, sem:8, area:'General'},
+          {name:'Antropología Filosófica', cr:6, sem:9, area:'General'}
+        ]}
+      ]
+    },
+    /* ---------- C) ESTUDIOS GENERALES OPTATIVOS ---------- */
+    {
+      id:'C', no:'C', titulo:'Estudios Generales Optativos', tipo:'elige', eligeN:2,
+      grupos:[
+        {label:'Elige 2 · 6 cr c/u', materias:[
+          {name:'Inteligencia Espiritual', cr:6, sem:0, area:'General'},
+          {name:'Historia del Arte', cr:6, sem:0, area:'General'},
+          {name:'Estudios Mexicanos', cr:6, sem:0, area:'General'},
+          {name:'Cultura de la Legalidad', cr:6, sem:0, area:'General'},
+          {name:'Emprendimiento e Innovación Social', cr:6, sem:0, area:'General'},
+          {name:'Derechos Humanos', cr:6, sem:0, area:'General'},
+          {name:'Dinámicas Interpersonales/Sociales y de Personalidad', cr:6, sem:0, area:'General'},
+          {name:'Innovación Humanitaria', cr:6, sem:0, area:'General'},
+          {name:'Estudios Selectos/Actuales/Generales de Arte', cr:6, sem:0, area:'General'},
+          {name:'Estudios de Ciencias Naturales', cr:6, sem:0, area:'General'},
+          {name:'Estudios de Ciencias Sociales', cr:6, sem:0, area:'General'},
+          {name:'Estudios de Humanidades', cr:6, sem:0, area:'General'},
+          {name:'Estudios del Comportamiento', cr:6, sem:0, area:'General'},
+          {name:'Estudios de Ciencias Exactas', cr:6, sem:0, area:'General'}
+        ]}
+      ]
+    },
+    /* ---------- D) COMUNIDAD Y REQUISITOS NO ACADÉMICOS ---------- */
+    {
+      id:'D1', no:'D1', titulo:'Seminario de Inducción · Vida Universitaria', tipo:'obligatorias',
+      grupos:[
+        {label:'Inducción', materias:[
+          {name:'UDEM 101 · Inducción a la Vida Universitaria', cr:0, sem:1, area:'Requisito'}
+        ]}
+      ]
+    },
+    {
+      id:'D2', no:'D2', titulo:'VRTA · Materia Enfocada en Temas Actuales', tipo:'obligatorias',
+      grupos:[
+        {label:'Requisito', materias:[
+          {name:'Materia Enfocada en Temas Actuales (VRTA)', cr:0, sem:0, area:'Requisito'}
+        ]}
+      ]
+    },
+    {
+      id:'D3', no:'D3', titulo:'COCAP · Concentración profesional', tipo:'elige', eligeN:3,
+      grupos:[
+        {label:'Elige 3 · 3 cr c/u · designación del track elegido (Espacios / Interactivo / Estratégico)', materias:[
+          {name:'COCAP · Concentración 1', cr:3, sem:0, area:'Concentración'},
+          {name:'COCAP · Concentración 2', cr:3, sem:0, area:'Concentración'},
+          {name:'COCAP · Concentración 3', cr:3, sem:0, area:'Concentración'}
+        ]}
+      ]
+    },
+    /* ---------- E) SERVICIO SOCIAL ---------- */
+    {
+      id:'E', no:'E', titulo:'Servicio Social', tipo:'obligatorias',
+      grupos:[
+        {label:'Formación social', materias:[
+          {name:'Taller de Formación Social I', cr:1, sem:0, area:'Requisito'},
+          {name:'Horas de Servicio', cr:0, sem:0, area:'Requisito'}
+        ]}
+      ]
+    },
+    /* ---------- F) EXAMEN TOEFL ---------- */
+    {
+      id:'F', no:'F', titulo:'Examen TOEFL', tipo:'obligatorias',
+      grupos:[
+        {label:'Requisito de egreso', materias:[
+          {name:'Examen TOEFL', cr:0, sem:0, area:'Requisito'}
+        ]}
+      ]
+    }
+  ];
+
+  /* =====================================================================
+     ███  SUGERENCIAS · reglas generales EDITABLES  ███
+     Cambia umbrales y textos aquí. Tono institucional.
+     ===================================================================== */
+  var REGLAS = {
+    // créditos mínimos para poder inscribir Servicio Social
+    servicioSocialCreditos: 132,
+    servicioSocialHoras: 480,
+    practicasHoras: 320,
+    toeflPuntos: 540,
+    // rango de semestre (por créditos) en el que se sugiere intercambio
+    intercambioSemMin: 5,
+    intercambioSemMax: 6,
+    txt: {
+      proximoTitulo: 'Tu próximo semestre',
+      proximoVacio: 'Marca tus materias cursadas en la malla para que calculemos qué sigue. Cuando completes un semestre, aquí aparecerá el siguiente.',
+      proximoFin: 'Ya tienes cursadas las materias con semestre asignado en el mapa. Revisa tus optativas, la concentración (COCAP) y los requisitos de egreso (Servicio Social y TOEFL).',
+      servicioTitulo: 'Ya puedes iniciar tu Servicio Social',
+      servicioCuerpo: 'Superaste los 132 créditos requeridos. Puedes inscribir tu Servicio Social: son 480 horas que cubres en uno o dos semestres, más el Taller de Formación Social I. Confirma fechas con coordinación.',
+      intercambioTitulo: 'Considera un intercambio',
+      intercambioCuerpo: 'Por tu avance vas alrededor del semestre %SEM%, una ventana ideal para intercambio. Revisa con tu coordinador qué materias podrías homologar antes de salir.',
+      titulacionTitulo: 'Encara la recta final',
+      titulacionCuerpo: 'Vas por arriba del 80%. Asegura PEF I y II, el TOEFL acreditado y la carta de Servicio Social: sin esos requisitos no hay titulación.'
+    }
+  };
+
+  /* =====================================================================
+     ESTADO + PERSISTENCIA
+     ===================================================================== */
+  var KEY = 'ldg-avance-v1';
+  var STATES = ['pendiente','cursada','planeada'];   // ciclo de estado
+  // estado: { courses: { <uid>: 'cursada'|'planeada' }, nombre, matricula }
+  var state = { courses:{}, nombre:'', matricula:'' };
+  var storageOk = true;
+
+  function load(){
+    try{
+      var raw = localStorage.getItem(KEY);
+      if(raw){
+        var p = JSON.parse(raw);
+        if(p && typeof p==='object'){
+          state.courses = (p.courses && typeof p.courses==='object') ? p.courses : {};
+          state.nombre = p.nombre || '';
+          state.matricula = p.matricula || '';
+        }
+      }
+    }catch(e){ storageOk=false; }
+  }
+  function save(){
+    try{ localStorage.setItem(KEY, JSON.stringify(state)); }
+    catch(e){ storageOk=false; warnStorage(); }
+  }
+  var warned=false;
+  function warnStorage(){
+    if(warned) return; warned=true;
+    var box=document.getElementById('summary-box');
+    if(!box) return;
+    var n=document.createElement('p');
+    n.style.cssText='font-family:var(--mono);font-size:.72rem;letter-spacing:.05em;color:var(--verm);margin-top:12px';
+    n.textContent='Aviso · este navegador no permite guardar; tu avance no se conservará al recargar.';
+    box.insertAdjacentElement('afterend', n);
+  }
+
+  /* uid estable por materia (apartado + nombre, sin acentos/espacios) */
+  function uid(secId, name){
+    return secId + '::' + name.toLowerCase()
+      .normalize('NFD').replace(/[̀-ͯ]/g,'')
+      .replace(/[^a-z0-9]+/g,'-').replace(/(^-|-$)/g,'');
+  }
+  function getState(id){ return state.courses[id] || 'pendiente'; }
+  function setState(id, s){
+    if(s==='pendiente') delete state.courses[id];
+    else state.courses[id]=s;
+  }
+  // estado de la 1ª materia cuyo nombre contiene 'sub' (para reglas: TOEFL, PEF, etc.)
+  function stateOfName(sub){
+    var c = COURSES.filter(function(x){ return x.name.indexOf(sub)>-1; })[0];
+    return c ? getState(c.uid) : 'pendiente';
+  }
+
+  /* index plano de todas las materias con su uid y refs DOM */
+  var COURSES = [];   // {uid, name, cr, sem, area, secId, tipo, eligeN, el}
+  MALLA.forEach(function(sec){
+    sec.grupos.forEach(function(g){
+      g.materias.forEach(function(m){
+        COURSES.push({
+          uid: uid(sec.id, m.name), name:m.name, cr:m.cr, sem:m.sem, area:m.area,
+          secId: sec.id, secTitulo: sec.titulo, tipo: sec.tipo, eligeN: sec.eligeN||0, el:null
+        });
+      });
+    });
+  });
+  function byUid(id){ for(var i=0;i<COURSES.length;i++){ if(COURSES[i].uid===id) return COURSES[i]; } return null; }
+
+  /* =====================================================================
+     CÁLCULO DE TOTALES (lee de los datos, no hardcode)
+     Para apartados "elige N": el requerido = N × (cr promedio de las opciones).
+     ===================================================================== */
+  function avgCr(sec){
+    var all=[], n=0;
+    sec.grupos.forEach(function(g){ g.materias.forEach(function(m){ all.push(m.cr); }); });
+    if(!all.length) return 0;
+    var sum=all.reduce(function(a,b){return a+b;},0);
+    return sum/all.length;
+  }
+  function secRequiredCr(sec){
+    if(sec.tipo==='elige'){ return Math.round(avgCr(sec)*sec.eligeN); }
+    var t=0; sec.grupos.forEach(function(g){ g.materias.forEach(function(m){ t+=m.cr; }); });
+    return t;
+  }
+  function secRequiredCount(sec){
+    if(sec.tipo==='elige') return sec.eligeN;
+    var c=0; sec.grupos.forEach(function(g){ c+=g.materias.length; });
+    return c;
+  }
+  /* total requerido de la carrera */
+  var TOTAL_CR = 0, TOTAL_COUNT = 0;
+  MALLA.forEach(function(sec){ TOTAL_CR += secRequiredCr(sec); TOTAL_COUNT += secRequiredCount(sec); });
+
+  /* créditos/conteo CURSADOS por apartado, respetando "elige N" (tope en N) */
+  function secProgress(sec){
+    var doneCount=0, doneCr=0, planCount=0, planCr=0;
+    sec.grupos.forEach(function(g){
+      g.materias.forEach(function(m){
+        var s=getState(uid(sec.id,m.name));
+        if(s==='cursada'){ doneCount++; doneCr+=m.cr; }
+        else if(s==='planeada'){ planCount++; planCr+=m.cr; }
+      });
+    });
+    if(sec.tipo==='elige'){
+      // no contar de más: tope en lo requerido
+      var reqCount=sec.eligeN, reqCr=secRequiredCr(sec);
+      doneCount=Math.min(doneCount,reqCount);
+      doneCr=Math.min(doneCr,reqCr);
+    }
+    return {doneCount:doneCount, doneCr:doneCr, planCount:planCount, planCr:planCr};
+  }
+
+  /* totales globales (cursados topados por apartado para no pasar de 100%) */
+  function totals(){
+    var doneCr=0, doneCount=0, planCr=0, planCount=0;
+    MALLA.forEach(function(sec){
+      var p=secProgress(sec);
+      doneCr+=p.doneCr; doneCount+=p.doneCount;
+    });
+    // planeados: suma exacta de TODO lo marcado planeada (sin tope; es un plan)
+    COURSES.forEach(function(c){
+      if(getState(c.uid)==='planeada'){ planCr+=c.cr; planCount++; }
+    });
+    var pct = TOTAL_CR>0 ? Math.round(doneCr/TOTAL_CR*100) : 0;
+    if(pct>100) pct=100;
+    return {doneCr:doneCr, doneCount:doneCount, leftCr:Math.max(0,TOTAL_CR-doneCr),
+            planCr:planCr, planCount:planCount, totalCr:TOTAL_CR, pct:pct};
+  }
+
+  /* =====================================================================
+     RENDER · MALLA
+     ===================================================================== */
+  function esc(s){ return String(s==null?'':s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+  function semLabel(sem){ return sem>0 ? ('Sem '+sem) : 'Sin sem. fijo'; }
+  function crLabel(cr){ return cr+' cr'; }
+  function matLabel(n){ return n+(n===1?' materia':' materias'); }
+
+  function renderMalla(){
+    var host=document.getElementById('malla');
+    var html='';
+    MALLA.forEach(function(sec){
+      var reqCount=secRequiredCount(sec), reqCr=secRequiredCr(sec);
+      html += '<div class="apartado rv" data-sec="'+esc(sec.id)+'">';
+      html +=   '<span class="rev-stamp" aria-hidden="true">Completo</span>';
+      html +=   '<div class="ap-head">';
+      html +=     '<span class="ap-no">'+esc(sec.no)+'</span>';
+      html +=     '<h3>'+esc(sec.titulo)+'</h3>';
+      html +=     '<span class="ap-prog">';
+      html +=       '<span class="blk done" data-prog="count">Materias <b>0</b> / '+reqCount+(sec.tipo==='elige'?' (elige '+sec.eligeN+')':'')+'</span>';
+      html +=       '<span class="blk" data-prog="cr">Créditos <b>0</b> / '+reqCr+'</span>';
+      html +=     '</span>';
+      html +=   '</div>';
+      if(sec.tipo==='elige'){
+        html += '<div class="ap-rule">Regla · elige '+sec.eligeN+' de esta lista</div>';
+      }
+      sec.grupos.forEach(function(g){
+        html += '<div class="grp">';
+        html +=   '<div class="grp-title">'+esc(g.label)+'</div>';
+        html +=   '<div class="courses">';
+        g.materias.forEach(function(m){
+          var id=uid(sec.id,m.name), st=getState(id);
+          html += '<div class="course" role="button" tabindex="0" data-uid="'+esc(id)+'" data-state="'+st+'" '+
+                  'aria-pressed="'+(st!=='pendiente')+'" '+
+                  'aria-label="'+esc(m.name)+', '+crLabel(m.cr)+', estado: '+st+'. Activa para cambiar de estado.">';
+          html +=   '<span class="box" aria-hidden="true"><span class="mk mk-check"></span><span class="mk mk-p">P</span></span>';
+          html +=   '<span class="info"><span class="nm">'+esc(m.name)+'</span>';
+          html +=     '<span class="specs"><span class="cr">'+crLabel(m.cr)+'</span><span>'+semLabel(m.sem)+'</span><span>'+esc(m.area)+'</span></span>';
+          html +=   '</span>';
+          html += '</div>';
+        });
+        html +=   '</div>';
+        html += '</div>';
+      });
+      html += '</div>';
+    });
+    host.innerHTML=html;
+    // cachear refs DOM
+    host.querySelectorAll('.course').forEach(function(el){
+      var c=byUid(el.getAttribute('data-uid')); if(c) c.el=el;
+    });
+  }
+
+  /* ciclo de estado pendiente → cursada → planeada → pendiente */
+  function cycle(id){
+    var cur=getState(id);
+    var i=STATES.indexOf(cur); if(i<0) i=0;
+    var next=STATES[(i+1)%STATES.length];
+    setState(id, next);
+    save();
+    syncCourseEl(id);
+    refreshAll();
+  }
+  function syncCourseEl(id){
+    var c=byUid(id); if(!c||!c.el) return;
+    var st=getState(id);
+    c.el.setAttribute('data-state', st);
+    c.el.setAttribute('aria-pressed', st!=='pendiente');
+    c.el.setAttribute('aria-label', c.name+', '+crLabel(c.cr)+', estado: '+st+'. Activa para cambiar de estado.');
+  }
+
+  /* =====================================================================
+     RENDER · CONTADORES / BARRA / RESUMEN
+     ===================================================================== */
+  var animatedOnce=false;
+  function refreshSummary(){
+    var t=totals();
+    var pctEl=document.getElementById('m-pct');
+    pctEl.innerHTML=t.pct+'<small>%</small>';
+    document.getElementById('m-pct-sub').textContent=t.doneCr+' de '+t.totalCr+' créditos';
+    document.getElementById('m-done').textContent=t.doneCr;
+    document.getElementById('m-left').textContent=t.leftCr;
+    document.getElementById('m-total').textContent=t.totalCr;
+    document.getElementById('m-pct-bar').textContent=t.pct+'%';
+    var bar=document.getElementById('m-bar');
+    bar.style.transform='scaleX('+(t.pct/100)+')';
+    var aria=document.getElementById('m-bar-aria');
+    aria.setAttribute('aria-valuenow', t.pct);
+    // planeado
+    document.getElementById('m-plan-cr').innerHTML=t.planCr+'<small> cr</small>';
+    document.getElementById('m-plan-n').textContent=t.planCount+(t.planCount===1?' materia marcada como planeada':' materias marcadas como planeadas');
+    var foot=document.getElementById('foot-total'); if(foot) foot.textContent=t.totalCr;
+  }
+
+  function refreshSectionProgress(){
+    MALLA.forEach(function(sec){
+      var ap=document.querySelector('.apartado[data-sec="'+sec.id+'"]');
+      if(!ap) return;
+      var p=secProgress(sec);
+      var reqCount=secRequiredCount(sec), reqCr=secRequiredCr(sec);
+      var cEl=ap.querySelector('[data-prog="count"] b');
+      var crEl=ap.querySelector('[data-prog="cr"] b');
+      if(cEl) cEl.textContent=p.doneCount;
+      if(crEl) crEl.textContent=p.doneCr;
+      // sello de hito: apartado completo (por conteo requerido)
+      var complete = p.doneCount>=reqCount && reqCount>0;
+      ap.classList.toggle('is-complete', complete);
+      var cBlk=ap.querySelector('[data-prog="count"]');
+      if(cBlk) cBlk.classList.toggle('done', p.doneCount>0);
+    });
+  }
+
+  /* =====================================================================
+     LÓGICA DE PROGRESO POR SEMESTRE (para "próximo semestre" y sugerencias)
+     ===================================================================== */
+  function maxSemCompleted(){
+    // el semestre más alto cuyo conjunto de materias-con-sem está completo
+    var bySem={};
+    COURSES.forEach(function(c){
+      if(c.sem>0){ (bySem[c.sem]=bySem[c.sem]||[]).push(c); }
+    });
+    var max=0;
+    Object.keys(bySem).forEach(function(k){
+      var sem=parseInt(k,10);
+      var list=bySem[sem];
+      var allDone=list.every(function(c){ return getState(c.uid)==='cursada'; });
+      if(allDone && sem>max) max=sem;
+    });
+    return max; // 0 = ninguno completo
+  }
+  function approxSemester(){
+    // estimación de "en qué semestre voy" por créditos cursados sobre el promedio por semestre
+    var t=totals();
+    var perSem = TOTAL_CR/9; // 9 periodos en el mapa
+    if(perSem<=0) return 1;
+    var s=Math.floor(t.doneCr/perSem)+1;
+    if(s<1) s=1; if(s>9) s=9;
+    return s;
+  }
+
+  /* =====================================================================
+     RENDER · PRÓXIMO SEMESTRE
+     ===================================================================== */
+  function nextSemesterCourses(){
+    var done=maxSemCompleted();
+    var target=done+1;
+    // si el target ya está completo (raro) avanzar; tope 9
+    while(target<=9){
+      var list=COURSES.filter(function(c){ return c.sem===target && getState(c.uid)!=='cursada'; });
+      if(list.length) return {sem:target, list:list};
+      // si no quedan pendientes en ese sem, probar el siguiente
+      var any=COURSES.some(function(c){ return c.sem===target; });
+      if(any){ target++; continue; }
+      target++;
+    }
+    return {sem:0, list:[]};
+  }
+  function renderNext(){
+    var res=nextSemesterCourses();
+    var ttl=document.getElementById('next-ttl');
+    var meta=document.getElementById('next-meta');
+    var crEl=document.getElementById('next-cr');
+    var body=document.getElementById('next-body');
+    if(!res.list.length){
+      ttl.textContent=REGLAS.txt.proximoTitulo;
+      meta.textContent='·';
+      crEl.textContent='0 cr';
+      var doneAny=COURSES.some(function(c){ return getState(c.uid)==='cursada'; });
+      body.innerHTML='<div class="next-empty">'+esc(doneAny?REGLAS.txt.proximoFin:REGLAS.txt.proximoVacio)+'</div>';
+      return;
+    }
+    ttl.textContent='Semestre '+res.sem;
+    meta.textContent=matLabel(res.list.length)+' sugeridas del mapa';
+    var sumCr=res.list.reduce(function(a,c){return a+c.cr;},0);
+    crEl.textContent=sumCr+' cr';
+    var html='<div class="next-list">';
+    res.list.forEach(function(c){
+      var planned=getState(c.uid)==='planeada';
+      html += '<div class="next-row'+(planned?' is-planned':'')+'" role="button" tabindex="0" data-uid="'+esc(c.uid)+'" '+
+              'aria-pressed="'+planned+'" aria-label="'+esc(c.name)+', '+crLabel(c.cr)+'. '+(planned?'Planeada. Activa para quitar.':'Activa para marcar como planeada.')+'">';
+      html +=   '<span class="tick" aria-hidden="true"></span>';
+      html +=   '<span class="nm">'+esc(c.name)+'<small>'+crLabel(c.cr)+' · '+esc(c.area)+'</small></span>';
+      html += '</div>';
+    });
+    html += '</div>';
+    body.innerHTML=html;
+  }
+  /* clic/teclado en próximo semestre: alterna planeada <-> (estado previo o pendiente) */
+  function togglePlanned(id){
+    var cur=getState(id);
+    if(cur==='planeada') setState(id,'pendiente');
+    else setState(id,'planeada');
+    save();
+    syncCourseEl(id);   // refleja también en la malla
+    refreshAll();
+  }
+
+  /* =====================================================================
+     RENDER · SUGERENCIAS
+     ===================================================================== */
+  function renderSuggest(){
+    var box=document.getElementById('suggest-box');
+    var t=totals();
+    var html='';
+
+    // 1) próximo semestre (resumen breve, el detalle vive en la sección 02)
+    var res=nextSemesterCourses();
+    if(res.list.length){
+      var crN=res.list.reduce(function(a,c){return a+c.cr;},0);
+      html += '<div class="sug amber"><span class="tag">Próximo semestre</span>'+
+              '<h3>Semestre '+res.sem+' · '+matLabel(res.list.length)+' · '+crN+' cr</h3>'+
+              '<p>Estas son las materias del siguiente semestre del mapa que aún no cursas. Márcalas como planeadas en la sección de arriba para armar tu carga.</p><ul>'+
+              res.list.map(function(c){ return '<li>'+esc(c.name)+' <span class="cr">'+crLabel(c.cr)+'</span></li>'; }).join('')+
+              '</ul></div>';
+    } else {
+      var doneAny=COURSES.some(function(c){ return getState(c.uid)==='cursada'; });
+      html += '<div class="sug"><span class="tag">Próximo semestre</span><h3>'+esc(REGLAS.txt.proximoTitulo)+'</h3><p>'+
+              esc(doneAny?REGLAS.txt.proximoFin:REGLAS.txt.proximoVacio)+'</p></div>';
+    }
+
+    // 2) Servicio Social ≥ 132 créditos cursados
+    if(t.doneCr>=REGLAS.servicioSocialCreditos && stateOfName('Taller de Formación Social')!=='cursada'){
+      html += '<div class="sug"><span class="tag">Servicio Social</span><h3>'+esc(REGLAS.txt.servicioTitulo)+'</h3><p>'+
+              esc(REGLAS.txt.servicioCuerpo)+'</p></div>';
+    }
+
+    // 2b) TOEFL antes de PEF / Prácticas
+    var toefl=stateOfName('Examen TOEFL');               // cursada = acreditado, planeada = presentado
+    var pefActivo = ['Programa de Evaluación Final I','Programa de Evaluación Final II'].some(function(n){ var s=stateOfName(n); return s==='planeada'||s==='cursada'; });
+    var practActivo = (function(){ var s=stateOfName('Prácticas Profesionales'); return s==='planeada'||s==='cursada'; })();
+    if(pefActivo && toefl!=='cursada'){
+      html += '<div class="sug ink"><span class="tag">Requisito · TOEFL</span><h3>Acredita el TOEFL antes de PEF I</h3>'+
+              '<p>Necesitas el TOEFL acreditado con '+REGLAS.toeflPuntos+' puntos antes de llegar a Programa de Evaluación Final I. Márcalo como acreditado en la malla cuando lo tengas.</p></div>';
+    } else if(practActivo && toefl==='pendiente'){
+      html += '<div class="sug"><span class="tag">Requisito · TOEFL</span><h3>Presenta el TOEFL antes de Prácticas</h3>'+
+              '<p>Para inscribir Prácticas Profesionales (320 horas en una agencia o empresa de diseño) debes haber presentado al menos el TOEFL. Acredítalo con '+REGLAS.toeflPuntos+' puntos antes de PEF I.</p></div>';
+    }
+
+    // 2c) Secuencia de Estudios (12 cr): uno por semestre, en orden
+    var estudios = COURSES.filter(function(c){ return c.cr===12 && /^Estudio/.test(c.name); })
+                          .sort(function(a,b){ return (a.sem||0)-(b.sem||0); });
+    var estPlan = estudios.filter(function(c){ return getState(c.uid)==='planeada'; });
+    if(estPlan.length>=2){
+      html += '<div class="sug ink"><span class="tag">Plan · Estudios</span><h3>Solo un Estudio por semestre</h3>'+
+              '<p>Tienes '+estPlan.length+' materias Estudio (12 cr) planeadas. Solo puedes llevar un Estudio por semestre y van en orden; deja una y mueve las demás a semestres siguientes.</p></div>';
+    } else if(estPlan.length===1){
+      var idx=estudios.indexOf(estPlan[0]);
+      if(idx>0 && getState(estudios[idx-1].uid)!=='cursada'){
+        html += '<div class="sug ink"><span class="tag">Plan · Estudios</span><h3>Te falta el Estudio anterior</h3>'+
+                '<p>Para llevar "'+esc(estPlan[0].name)+'" primero debes haber cursado "'+esc(estudios[idx-1].name)+'". Los Estudios van en secuencia, uno por semestre.</p></div>';
+      }
+    }
+
+    // 3) Intercambio (por semestre estimado)
+    var sem=approxSemester();
+    if(sem>=REGLAS.intercambioSemMin && sem<=REGLAS.intercambioSemMax){
+      html += '<div class="sug"><span class="tag">Intercambio</span><h3>'+esc(REGLAS.txt.intercambioTitulo)+'</h3><p>'+
+              esc(REGLAS.txt.intercambioCuerpo.replace('%SEM%', sem))+'</p></div>';
+    }
+
+    // 4) Recta final (> 80%) · panel tinta
+    if(t.pct>80){
+      html += '<div class="sug ink"><span class="tag">Recta final</span><h3>'+esc(REGLAS.txt.titulacionTitulo)+'</h3><p>'+
+              esc(REGLAS.txt.titulacionCuerpo)+'</p></div>';
+    }
+
+    if(!html) html='<div class="sug empty">Aún no hay sugerencias. Marca tus materias cursadas para empezar.</div>';
+    box.innerHTML=html;
+  }
+
+  /* =====================================================================
+     REFRESH GLOBAL
+     ===================================================================== */
+  function refreshAll(){
+    refreshSummary();
+    refreshSectionProgress();
+    renderNext();
+    renderSuggest();
+  }
+
+  /* =====================================================================
+     EVENTOS
+     ===================================================================== */
+  function onActivate(e, getId, handler){
+    var t=e.target.closest('[data-uid]');
+    if(!t) return;
+    if(e.type==='click'){ handler(t.getAttribute('data-uid')); return; }
+    if(e.type==='keydown' && (e.key==='Enter' || e.key===' ' || e.key==='Spacebar')){
+      e.preventDefault();
+      handler(t.getAttribute('data-uid'));
+    }
+  }
+  function bindEvents(){
+    var malla=document.getElementById('malla');
+    malla.addEventListener('click', function(e){ onActivate(e, null, cycle); });
+    malla.addEventListener('keydown', function(e){ onActivate(e, null, cycle); });
+
+    var next=document.getElementById('next-body');
+    next.addEventListener('click', function(e){ onActivate(e, null, togglePlanned); });
+    next.addEventListener('keydown', function(e){ onActivate(e, null, togglePlanned); });
+
+    // identidad
+    var nom=document.getElementById('f-nombre'), mat=document.getElementById('f-matricula');
+    nom.value=state.nombre; mat.value=state.matricula;
+    nom.addEventListener('input', function(){ state.nombre=nom.value; save(); });
+    mat.addEventListener('input', function(){ state.matricula=mat.value; save(); });
+
+    // PDF
+    document.getElementById('btn-pdf').addEventListener('click', function(){ doPrint(); });
+
+    // reiniciar
+    document.getElementById('btn-reset').addEventListener('click', function(){
+      if(!confirm('¿Reiniciar tu avance? Se borrarán las materias marcadas, el nombre y la matrícula guardados en este navegador.')) return;
+      state={courses:{}, nombre:'', matricula:''};
+      try{ localStorage.removeItem(KEY); }catch(e){}
+      nom.value=''; mat.value='';
+      COURSES.forEach(function(c){ syncCourseEl(c.uid); });
+      refreshAll();
+    });
+  }
+
+  /* =====================================================================
+     PDF · construye bloques print-only y llama window.print()
+     Lista: datos, %/créditos, cursadas, planeadas (con cr exactos), sugerencias.
+     ===================================================================== */
+  function buildPrintExtra(){
+    var t=totals();
+    var host=document.getElementById('print-extra');
+    var cursadas=COURSES.filter(function(c){ return getState(c.uid)==='cursada'; });
+    var planeadas=COURSES.filter(function(c){ return getState(c.uid)==='planeada'; });
+
+    function liList(arr){
+      if(!arr.length) return '<li style="color:#777">· ninguna ·</li>';
+      return arr.map(function(c){
+        return '<li>'+esc(c.name)+' <span class="cr">'+crLabel(c.cr)+(c.sem>0?' · '+semLabel(c.sem):'')+'</span></li>';
+      }).join('');
+    }
+    var sugList=[];
+    var res=nextSemesterCourses();
+    if(res.list.length){
+      sugList.push('Próximo semestre (Sem '+res.sem+'): '+res.list.map(function(c){return c.name+' ('+c.cr+' cr)';}).join('; ')+'.');
+    }
+    if(t.pct>=REGLAS.servicioSocialPct) sugList.push(REGLAS.txt.servicioCuerpo.replace('%PCT%', t.pct+'%'));
+    var sem=approxSemester();
+    if(sem>=REGLAS.intercambioSemMin && sem<=REGLAS.intercambioSemMax) sugList.push(REGLAS.txt.intercambioCuerpo.replace('%SEM%', sem));
+    if(t.pct>80) sugList.push(REGLAS.txt.titulacionCuerpo);
+
+    var now=new Date();
+    var fecha=now.toLocaleDateString('es-MX',{year:'numeric',month:'long',day:'numeric'});
+
+    var html='';
+    html += '<div class="print-block">';
+    html +=   '<h2>Materias cursadas · '+cursadas.length+'</h2>';
+    html +=   '<ul class="print-list">'+liList(cursadas)+'</ul>';
+    html += '</div>';
+    html += '<div class="print-block">';
+    html +=   '<h2>Plan · próximo semestre · '+matLabel(planeadas.length)+' · '+t.planCr+' cr</h2>';
+    html +=   '<p style="font-family:var(--mono);font-size:9pt;color:#555;margin-bottom:5pt">Copia esta lista al sistema oficial de Trayecto.</p>';
+    html +=   '<ul class="print-list">'+liList(planeadas)+'</ul>';
+    html += '</div>';
+    if(sugList.length){
+      html += '<div class="print-block"><h2>Sugerencias</h2><ul class="print-sug">'+
+              sugList.map(function(s){ return '<li>'+esc(s)+'</li>'; }).join('')+'</ul></div>';
+    }
+    html += '<div class="print-foot">Mi Avance · Trayecto LDG · UDEM · '+
+            (state.nombre?('Alumno(a): '+esc(state.nombre)+' · '):'')+
+            (state.matricula?('Matrícula: '+esc(state.matricula)+' · '):'')+
+            'Avance '+t.pct+'% · '+t.doneCr+'/'+t.totalCr+' cr · Generado '+esc(fecha)+
+            ' · Créditos aproximados del Trayecto oficial; verifica con coordinación.</div>';
+    host.innerHTML=html;
+
+    // encabezado: inyectar nombre/matrícula como texto en el cajetín de identidad (solo print)
+    return t;
+  }
+  function doPrint(){
+    buildPrintExtra();
+    // sustituir inputs por texto plano visible en print (los inputs vacíos no imprimen bien)
+    var ident=document.querySelector('.sum-foot .ident');
+    var prev=ident.getAttribute('data-print-injected');
+    if(prev){ var old=document.getElementById('print-ident'); if(old) old.remove(); }
+    var pid=document.createElement('div');
+    pid.id='print-ident';
+    pid.className='print-only';
+    pid.style.cssText='font-family:var(--mono);font-size:9.5pt;line-height:1.6';
+    pid.innerHTML='<b>Alumno(a):</b> '+(state.nombre?esc(state.nombre):'____________________')+
+                  ' &nbsp; <b>Matrícula:</b> '+(state.matricula?esc(state.matricula):'____________');
+    ident.appendChild(pid);
+    ident.setAttribute('data-print-injected','1');
+    window.print();
+  }
+
+  /* =====================================================================
+     MOTION · 3 capas (DESIGN.md). Aquí solo el reveal genérico + barra.
+     ===================================================================== */
+  function initIO(){
+    var io=new IntersectionObserver(function(es){
+      es.forEach(function(e){ if(e.isIntersecting){ e.target.classList.add('in'); io.unobserve(e.target); } });
+    },{threshold:.1, rootMargin:'0px 0px -6% 0px'});
+    document.querySelectorAll('.rv').forEach(function(el){ if(reduce){ el.classList.add('in'); } else io.observe(el); });
+  }
+  function finalStateAll(){ document.querySelectorAll('.rv').forEach(function(el){ el.classList.add('in'); }); }
+
+  function buildGsap(coarse, splits){
+    var handled=[];
+    function mark(el){ if(el) handled.push(el); }
+    function settle(el){ return function(){ el.classList.add('in'); gsap.set(el,{clearProps:'all'}); }; }
+
+    // hero intro: cruz de registro + H1 por palabras
+    var title=document.querySelector('h1.title');
+    var eyebrow=document.querySelector('.hero .eyebrow');
+    var lede=document.querySelector('.hero .lede');
+    var tag=document.querySelector('.hero .tag');
+    [title,eyebrow,lede,tag].forEach(mark);
+
+    var intro=gsap.timeline();
+    intro.set('.ctrlbar .chips,.ctrlbar .reg',{autoAlpha:1},0)
+         .fromTo('.ctrlbar .reg circle',{drawSVG:'0%'},{drawSVG:'100%',duration:.55},.05)
+         .fromTo('.ctrlbar .reg path',{drawSVG:'0%'},{drawSVG:'100%',duration:.6},.2)
+         .from('.ctrlbar .chip',{autoAlpha:0,duration:.3,stagger:.07},.05)
+         .fromTo('.ctrlbar .leg',{autoAlpha:0},{autoAlpha:1,duration:.5},.3);
+    if(eyebrow) intro.fromTo(eyebrow,{autoAlpha:0,y:14},{autoAlpha:1,y:0,duration:.6,onComplete:settle(eyebrow)},.1);
+    if(title){
+      var sw=SplitText.create(title,{type:'words',mask:'words'});
+      splits.push(sw);
+      intro.set(title,{autoAlpha:1},.16)
+           .from(sw.words,{yPercent:112,duration:.85,stagger:.06,onComplete:function(){
+              try{ sw.revert(); }catch(e){}
+              title.classList.add('in'); gsap.set(title,{clearProps:'all'});
+            }},.16);
+    }
+    if(lede) intro.fromTo(lede,{autoAlpha:0,y:18},{autoAlpha:1,y:0,duration:.7,onComplete:settle(lede)},.62);
+    if(tag) intro.fromTo(tag,{autoAlpha:0,y:18},{autoAlpha:1,y:0,duration:.7,onComplete:settle(tag)},.72);
+
+    // h2 por líneas
+    document.querySelectorAll('.sec-head').forEach(function(head){
+      mark(head);
+      var h2=head.querySelector('h2'), chip=head.querySelector('.sec-no'), sp=null;
+      try{ sp=SplitText.create(h2,{type:'lines',mask:'lines'}); splits.push(sp); }catch(e){ sp=null; }
+      gsap.set(head,{autoAlpha:1});
+      var tl=gsap.timeline({scrollTrigger:{trigger:head,start:'top 86%',once:true},
+        onComplete:function(){
+          if(sp){ try{ sp.revert(); }catch(e){} }
+          head.classList.add('in'); gsap.set(head,{clearProps:'all'});
+          if(chip) gsap.set(chip,{clearProps:'all'});
+        }});
+      if(chip) tl.fromTo(chip,{autoAlpha:0,x:-12},{autoAlpha:1,x:0,duration:.5},0);
+      if(sp&&sp.lines.length) tl.from(sp.lines,{yPercent:112,duration:.85,stagger:.1},.08);
+      else if(h2) tl.fromTo(h2,{autoAlpha:0,y:18},{autoAlpha:1,y:0,duration:.7},.08);
+    });
+
+    // numerales fantasma
+    if(!coarse){
+      document.querySelectorAll('section .ghost').forEach(function(g){
+        gsap.fromTo(g,{y:60},{y:-60,ease:'none',
+          scrollTrigger:{trigger:g.parentElement,start:'top bottom',end:'bottom top',scrub:1.2}});
+      });
+    }
+
+    // resto de .rv genérico
+    document.querySelectorAll('.rv').forEach(function(el){
+      if(handled.indexOf(el)!==-1) return;
+      gsap.fromTo(el,{autoAlpha:0,y:26},{autoAlpha:1,y:0,duration:.8,
+        scrollTrigger:{trigger:el,start:'top 90%',once:true},
+        onComplete:settle(el)});
+    });
+  }
+
+  function initGsapLayer(){
+    gsap.registerPlugin(ScrollTrigger, SplitText, DrawSVGPlugin);
+    gsap.defaults({ease:'quint.out',overwrite:'auto'});
+    var root=document.documentElement, mm=gsap.matchMedia(), matched=false;
+    mm.add({
+      reduce:'(prefers-reduced-motion: reduce)',
+      motion:'(prefers-reduced-motion: no-preference)',
+      coarse:'(pointer: coarse)'
+    }, function(ctx){
+      matched=true;
+      if(ctx.conditions.reduce){ root.classList.remove('gsap'); finalStateAll(); return; }
+      root.classList.add('gsap');
+      var coarse=!!ctx.conditions.coarse, splits=[], dead=false;
+      var fontsReady=(document.fonts&&document.fonts.ready)?document.fonts.ready:Promise.resolve();
+      Promise.race([fontsReady,new Promise(function(r){ setTimeout(r,2000); })]).then(function(){
+        if(dead) return;
+        ctx.add(function(){
+          try{ buildGsap(coarse, splits); }
+          catch(err){ root.classList.remove('gsap'); finalStateAll(); }
+        });
+      });
+      return function(){ dead=true; for(var i=0;i<splits.length;i++){ try{ splits[i].revert(); }catch(e){} } splits.length=0; };
+    });
+    if(!matched){ root.classList.remove('gsap'); finalStateAll(); }
+  }
+
+  function initMotion(){
+    if(window.gsap&&window.ScrollTrigger&&window.SplitText&&window.DrawSVGPlugin){
+      try{ initGsapLayer(); }
+      catch(err){ document.documentElement.classList.remove('gsap'); initIO(); }
+    }else{ initIO(); }
+  }
+
+  /* ---- scroll progress ---- */
+  var prog=document.getElementById('prog');
+  function onScroll(){
+    var h=document.documentElement, sc=h.scrollTop||document.body.scrollTop;
+    var max=h.scrollHeight-h.clientHeight;
+    if(prog) prog.style.width=(max>0?(sc/max*100):0)+'%';
+  }
+
+  /* =====================================================================
+     ARRANQUE
+     ===================================================================== */
+  function start(){
+    load();
+    if(!storageOk) warnStorage();
+    renderMalla();
+    bindEvents();
+    refreshAll();
+    initMotion();
+    document.addEventListener('scroll', onScroll, {passive:true}); onScroll();
+    // recalcular barra al imprimir (Safari aplica @page tarde) y al volver
+    window.addEventListener('afterprint', function(){ refreshSummary(); });
+  }
+  if(document.readyState==='loading') document.addEventListener('DOMContentLoaded', start);
+  else start();
+})();
+</script>
+</body>
+</html>

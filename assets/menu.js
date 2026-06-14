@@ -17,7 +17,8 @@
     { n: '02', label: 'Proyectos',       href: 'index.html#gallery', key: 'proyectos' },
     { n: '03', label: 'Reconocimiento',  href: 'index.html#awards',  key: 'reconocimiento' },
     { n: '04', label: 'Trayectoria',     href: 'trayectoria.html',   key: 'trayectoria' },
-    { n: '05', label: 'Guía PEF',        href: 'pef.html',           key: 'pef' }
+    { n: '05', label: 'Guía PEF',        href: 'pef.html',           key: 'pef' },
+    { n: '06', label: 'Mi Avance',       href: 'avance.html',        key: 'avance' }
   ];
 
   function esc(s) {
