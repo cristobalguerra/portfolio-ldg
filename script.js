@@ -230,7 +230,7 @@ let theses = [
 
 // ---- STATE ----
 let activeCategory = 'all';
-let activeYear = 'all';
+let activePeriod = 'all';   // filtro por periodo/semestre (p. ej. "Primavera 2026")
 let currentPage = 0;
 function getItemsPerPage() {
   const w = window.innerWidth;
@@ -267,12 +267,14 @@ function escapeAttr(text) {
 }
 
 // Los links "compartir" de Drive son páginas HTML, no imágenes; un <img> no
-// puede pintarlos. Se convierten al endpoint de imagen de Drive al renderizar.
+// puede pintarlos. Se convierten al CDN de imágenes de Drive (lh3) al renderizar.
+// Se usa lh3.googleusercontent.com/d/<id> porque drive.google.com/thumbnail
+// se cuelga (timeout) al incrustarse desde otro dominio; lh3 sí carga.
 function normalizeThumbUrl(url) {
   if (!url) return url;
-  const m = String(url).match(/drive\.google\.com\/(?:file\/d\/([\w-]{20,})|open\?id=([\w-]{20,})|uc\?[^"' ]*id=([\w-]{20,}))/);
-  const id = m && (m[1] || m[2] || m[3]);
-  return id ? 'https://drive.google.com/thumbnail?id=' + id + '&sz=w1600' : url;
+  const m = String(url).match(/(?:drive\.google\.com\/(?:file\/d\/|open\?id=|uc\?[^"' ]*id=)|lh3\.googleusercontent\.com\/d\/)([\w-]{20,})/);
+  const id = m && m[1];
+  return id ? 'https://lh3.googleusercontent.com/d/' + id + '=w1600' : url;
 }
 
 // ---- DOM ELEMENTS ----
@@ -827,8 +829,8 @@ function syncBurgerExpanded() {}
 function getFilteredTheses() {
   return theses.filter(t => {
     const catMatch = activeCategory === 'all' || t.category === activeCategory;
-    const yearMatch = activeYear === 'all' || t.year === parseInt(activeYear);
-    return catMatch && yearMatch;
+    const periodMatch = activePeriod === 'all' || (t.semester || ('' + t.year)) === activePeriod;
+    return catMatch && periodMatch;
   });
 }
 
@@ -968,10 +970,32 @@ yearFilters.addEventListener('click', (e) => {
   if (!e.target.classList.contains('filter-btn')) return;
   yearFilters.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
   e.target.classList.add('active');
-  activeYear = e.target.dataset.year;
+  activePeriod = e.target.dataset.period;
   currentPage = 0;
   renderGallery();
 });
+
+// Construye los tags de periodo a partir de los semestres presentes en los
+// datos (estáticos + dinámicos de Firebase). Así "Primavera 2026" y futuros
+// periodos aparecen solos, sin editar el HTML.
+function periodSortKey(s) {
+  const y = (String(s).match(/(\d{4})/) || [0, 0])[1];
+  const season = /primavera/i.test(s) ? 1 : 0; // dentro del año, Primavera va después de Otoño
+  return Number(y) * 10 + season;
+}
+function buildPeriodFilters() {
+  if (!yearFilters) return;
+  const periods = [...new Set(theses.map(t => t.semester || ('' + t.year)).filter(Boolean))]
+    .sort((a, b) => periodSortKey(b) - periodSortKey(a)); // más reciente primero
+  if (activePeriod !== 'all' && periods.indexOf(activePeriod) === -1) activePeriod = 'all';
+  let html = '<button class="filter-btn' + (activePeriod === 'all' ? ' active' : '') + '" data-period="all">TODOS</button>';
+  periods.forEach(p => {
+    html += '<button class="filter-btn' + (activePeriod === p ? ' active' : '') +
+      '" data-period="' + escapeAttr(p) + '">' + escapeHtml(p.toUpperCase()) + '</button>';
+  });
+  yearFilters.innerHTML = html;
+}
+buildPeriodFilters();
 
 // ---- GALLERY ARROWS ----
 document.addEventListener('DOMContentLoaded', () => {
@@ -1858,6 +1882,7 @@ function initAdmin() {
     // Reload dynamic projects into theses array
     theses = theses.filter(t => typeof t.id !== 'string' || !t.id.startsWith('dyn_'));
     loadDynamicProjects();
+    buildPeriodFilters();
     renderGallery(false);
   });
 
