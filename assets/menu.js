@@ -1,11 +1,9 @@
 /* ============================================
-   MENÚ DE SITIO · componente compartido (index · trayectoria · pef)
-   Burbuja flotante fija arriba. Al pulsar, suelta una columna de píldoras
-   hacia abajo y desenfoca el fondo (scrim con blur). Las píldoras se vuelven
-   amarillas al pasar el cursor. Config por página vía window.SITE_MENU:
-     { current: 'inicio'|'proyectos'|'reconocimiento'|'trayectoria'|'pef',
-       sections: [ { href:'#id', label:'Texto' }, ... ]  // opcional }
-   Sin dependencias. Si hay ScrollSmoother, lo pausa al abrir.
+   MENÚ DE SITIO · burbuja glass (index · trayectoria · pef)
+   Burbuja flotante (LDG·UDEM + botón MENÚ/CERRAR) con relleno de vidrio
+   oscuro. Al pulsar suelta píldoras hacia abajo y desenfoca el fondo.
+   Grande arriba, se encoge al hacer scroll. Config por página vía
+   window.SITE_MENU = { current, sections }. Pausa ScrollSmoother al abrir.
    ============================================ */
 (function () {
   'use strict';
@@ -33,7 +31,6 @@
     return '<a class="site-pill' + cur + '" href="' + esc(l.href) + '"' + aria +
       '><span class="num">' + l.n + '</span>' + esc(l.label) + '</a>';
   }).join('');
-
   if (sections.length) {
     pillsHtml += '<span class="site-pills__sep">En esta página</span>';
     pillsHtml += sections.map(function (s) {
@@ -58,9 +55,8 @@
     host.innerHTML = html;
     document.body.insertBefore(host, document.body.firstChild);
 
-    // reservar el espacio de la burbuja flotante
     var smoothContent = document.getElementById('smooth-content');
-    var barH = getComputedStyle(document.documentElement).getPropertyValue('--site-bar-h').trim() || '76px';
+    var barH = getComputedStyle(document.documentElement).getPropertyValue('--site-bar-h').trim() || '84px';
     if (smoothContent) smoothContent.style.paddingTop = barH;
     else document.body.style.paddingTop = barH;
 
@@ -69,49 +65,46 @@
     var label = toggle.querySelector('.site-bar__toggle-label');
     var scrim = document.getElementById('siteScrim');
     var pills = document.getElementById('sitePills');
+    var barPx = parseInt(barH, 10) || 84;
 
     function getSmoother() {
       try { return (window.ScrollSmoother && ScrollSmoother.get) ? ScrollSmoother.get() : null; }
       catch (e) { return null; }
     }
-    function focusables() {
-      return document.querySelectorAll('#siteBar a[href], #siteBar button, #sitePills a[href]');
-    }
     function isOpen() { return pills.classList.contains('open'); }
 
-    // Stagger simétrico: al abrir cae de arriba a abajo; al cerrar se retira
-    // de abajo a arriba. transition-delay en formato de 4 valores para no
-    // retrasar los cambios de color del hover (background/color a 0s).
+    // ---- crecer/encoger según el scroll ----
+    function readScroll() {
+      var s = getSmoother();
+      if (s && s.scrollTop) return s.scrollTop();
+      return window.scrollY || document.documentElement.scrollTop || 0;
+    }
+    function onScroll() { bar.classList.toggle('is-compact', readScroll() > 60); }
+    window.addEventListener('scroll', onScroll, { passive: true });
+    onScroll();
+
+    // ---- menú completo (píldoras) ----
     function applyStagger(opening) {
-      var items = pills.children;
-      var n = items.length;
+      var items = pills.children, n = items.length;
       for (var i = 0; i < n; i++) {
         var idx = opening ? i : (n - 1 - i);
         var d = (0.04 + idx * 0.045).toFixed(3) + 's';
         items[i].style.transitionDelay = d + ', ' + d + ', 0s, 0s';
       }
     }
-
     function open() {
       applyStagger(true);
-      pills.classList.add('open');
-      scrim.classList.add('open');
-      bar.classList.add('is-open');
-      pills.setAttribute('aria-hidden', 'false');
-      toggle.setAttribute('aria-expanded', 'true');
+      pills.classList.add('open'); scrim.classList.add('open'); bar.classList.add('is-open');
+      pills.setAttribute('aria-hidden', 'false'); toggle.setAttribute('aria-expanded', 'true');
       label.textContent = 'Cerrar';
       document.documentElement.classList.add('site-menu-open');
       var s = getSmoother(); if (s) s.paused(true);
-      var first = pills.querySelector('.site-pill');
-      if (first) first.focus();
+      var first = pills.querySelector('.site-pill'); if (first) first.focus();
     }
     function close(returnFocus) {
       applyStagger(false);
-      pills.classList.remove('open');
-      scrim.classList.remove('open');
-      bar.classList.remove('is-open');
-      pills.setAttribute('aria-hidden', 'true');
-      toggle.setAttribute('aria-expanded', 'false');
+      pills.classList.remove('open'); scrim.classList.remove('open'); bar.classList.remove('is-open');
+      pills.setAttribute('aria-hidden', 'true'); toggle.setAttribute('aria-expanded', 'false');
       label.textContent = 'Menú';
       document.documentElement.classList.remove('site-menu-open');
       var s = getSmoother(); if (s) s.paused(false);
@@ -124,7 +117,7 @@
     document.addEventListener('keydown', function (e) {
       if (e.key === 'Escape' && isOpen()) { e.preventDefault(); close(); return; }
       if (e.key === 'Tab' && isOpen()) {
-        var f = focusables();
+        var f = document.querySelectorAll('#siteBar a[href], #siteBar button, #sitePills a[href]');
         if (!f.length) return;
         var first = f[0], last = f[f.length - 1];
         if (e.shiftKey && document.activeElement === first) { e.preventDefault(); last.focus(); }
@@ -146,7 +139,6 @@
         close(false);
         if (target) {
           var s = getSmoother();
-          var barPx = parseInt(barH, 10) || 76;
           if (s) { s.scrollTo(s.offset(target, 'top ' + (barPx + 8) + 'px'), true); }
           else { window.scrollTo({ top: target.getBoundingClientRect().top + window.scrollY - barPx - 8, behavior: 'smooth' }); }
           if (history.replaceState) history.replaceState(null, '', url.hash);

@@ -1,50 +1,59 @@
 /* ============================================
-   MENÚ DE SITIO · componente compartido (index · trayectoria · pef)
-   Burbuja flotante fija arriba. Al abrir, suelta una columna de píldoras
-   hacia abajo y desenfoca el fondo. Las píldoras se vuelven amarillas al
-   pasar el cursor (y la de la página actual queda amarilla).
-   Mismo markup/estilo/comportamiento en las 3 páginas (assets/menu.js).
+   MENÚ DE SITIO · burbuja glass (index · trayectoria · pef)
+   La burbuja (LDG·UDEM + botón MENÚ) suelta píldoras hacia abajo y desenfoca
+   el fondo. Relleno tipo vidrio oscuro. Grande arriba, se encoge al hacer
+   scroll para no estorbar. Inyectado por assets/menu.js.
    ============================================ */
 
-:root { --site-bar-h: 76px; }
+:root { --site-bar-h: 84px; }   /* espacio reservado (estado grande) */
 
-/* ---------- BURBUJA FLOTANTE (siempre visible) ---------- */
+/* ---------- BURBUJA GLASS (siempre visible) ---------- */
 .site-bar {
   position: fixed;
   top: clamp(10px, 1.6vw, 16px);
   left: 50%;
-  transform: translateX(-50%);
-  z-index: 1200;                 /* sobre el scrim y las píldoras */
+  z-index: 1200;
   display: inline-flex;
   align-items: center;
   gap: clamp(12px, 2vw, 22px);
   max-width: calc(100% - 24px);
-  padding: 7px 8px 7px 20px;
-  background: var(--paper, #F1ECDF);
-  border: 1.5px solid var(--ink, #1B1612);
+  padding: 9px 10px 9px 22px;
   border-radius: 999px;
-  box-shadow: 0 6px 22px rgba(27, 22, 18, .14), 0 1px 0 rgba(27,22,18,.05);
+  /* relleno glass oscuro (como la referencia de IG) */
+  background: rgba(22, 19, 16, .55);
+  -webkit-backdrop-filter: blur(22px) saturate(150%);
+  backdrop-filter: blur(22px) saturate(150%);
+  border: 1px solid rgba(255, 255, 255, .14);
+  box-shadow: 0 10px 34px rgba(0, 0, 0, .30), inset 0 1px 0 rgba(255,255,255,.10);
+  /* grande arriba; se encoge al hacer scroll (origen arriba-centro) */
+  transform: translateX(-50%) scale(1);
+  transform-origin: top center;
+  transition: transform .34s var(--ease, cubic-bezier(.22,1,.36,1));
 }
-.site-bar__brand { text-decoration: none; color: var(--ink, #1B1612); display: inline-flex; align-items: center; }
+.site-bar.is-compact { transform: translateX(-50%) scale(.74); }
+
+/* marca: texto claro sobre vidrio, chip amarillo */
+.site-bar__brand { text-decoration: none; display: inline-flex; align-items: center; }
 .site-bar__brand b {
-  font-family: var(--disp, "Anton", sans-serif); font-weight: 400; font-size: 1.08rem;
-  letter-spacing: .02em; text-transform: uppercase; display: inline-flex; align-items: center; gap: .4em; line-height: 1;
+  font-family: var(--disp, "Anton", sans-serif); font-weight: 400; font-size: 1.12rem;
+  letter-spacing: .02em; text-transform: uppercase; color: #fff;
+  display: inline-flex; align-items: center; gap: .4em; line-height: 1;
 }
 .site-bar__brand b span { background: var(--yellow, #FFE000); color: var(--ink, #1B1612); padding: .18em .34em .12em; font-size: .82em; }
 
-/* ---------- BOTÓN MENÚ / CERRAR ---------- */
+/* botón MENÚ / CERRAR: píldora clara que resalta sobre el vidrio */
 .site-bar__toggle {
   -webkit-appearance: none; appearance: none; cursor: pointer;
   display: inline-flex; align-items: center; gap: .6em;
-  padding: .6em 1em; border: none; border-radius: 999px;
-  background: var(--ink, #1B1612); color: var(--paper, #F1ECDF);
+  padding: .62em 1.05em; border: none; border-radius: 999px;
+  background: var(--paper, #F1ECDF); color: var(--ink, #1B1612);
   font-family: var(--mono, monospace); font-size: .72rem; letter-spacing: .14em; text-transform: uppercase; line-height: 1;
   transition: background .2s var(--ease, ease), color .2s var(--ease, ease);
 }
-.site-bar__toggle:hover { background: var(--verm, #B23818); }
-.site-bar__toggle:focus-visible { outline: 2px solid var(--verm, #B23818); outline-offset: 2px; }
+.site-bar__toggle:hover { background: var(--yellow, #FFE000); }
+.site-bar__toggle:focus-visible { outline: 2px solid #fff; outline-offset: 2px; }
 .site-bar__toggle-icon { position: relative; width: 16px; height: 10px; display: inline-block; flex-shrink: 0; }
-.site-bar__toggle-icon i { position: absolute; left: 0; right: 0; height: 2px; background: currentColor; transition: transform .3s var(--ease, ease), opacity .2s linear; }
+.site-bar__toggle-icon i { position: absolute; left: 0; right: 0; height: 2px; background: currentColor; transition: transform .3s var(--ease, ease); }
 .site-bar__toggle-icon i:nth-child(1) { top: 0; }
 .site-bar__toggle-icon i:nth-child(2) { bottom: 0; }
 .site-bar.is-open .site-bar__toggle-icon i:nth-child(1) { top: 50%; transform: translateY(-50%) rotate(45deg); }
@@ -66,7 +75,7 @@
   top: calc(var(--site-bar-h) + 2px);
   left: 50%;
   transform: translateX(-50%);
-  z-index: 1110;                 /* sobre el scrim, bajo la burbuja */
+  z-index: 1110;
   display: flex; flex-direction: column; align-items: center;
   gap: 9px;
   width: max-content; max-width: calc(100% - 24px);
@@ -86,28 +95,22 @@
   font-family: var(--disp, "Anton", sans-serif); font-weight: 400; text-transform: uppercase;
   font-size: clamp(1.25rem, 3.4vw, 1.85rem); line-height: 1; letter-spacing: .01em;
   box-shadow: 0 3px 12px rgba(27,22,18,.10);
-  /* estado inicial para el "drop" */
   opacity: 0; transform: translateY(-10px) scale(.96);
   transition: opacity .4s var(--ease, ease), transform .4s var(--ease, ease),
               background .18s var(--ease, ease), color .18s var(--ease, ease);
 }
 .site-pills.open .site-pill { opacity: 1; transform: none; }
-/* El stagger (apertura en cascada y cierre en cascada inversa) lo aplica
-   menu.js con transition-delay inline, para que abrir y cerrar sean simétricos. */
+/* el stagger simétrico (abrir/cerrar) lo aplica menu.js con transition-delay inline */
 
-/* cambian a amarillas al pasar el cursor / foco */
 .site-pill:hover, .site-pill:focus-visible {
   background: var(--yellow, #FFE000); color: var(--ink, #1B1612);
   outline: none; transform: translateY(-1px) scale(1.02);
 }
 .site-pill .num { font-family: var(--mono, monospace); font-size: .5em; font-weight: 500; letter-spacing: .1em; color: var(--verm, #B23818); }
 .site-pill:hover .num, .site-pill:focus-visible .num { color: var(--ink, #1B1612); }
-
-/* página actual: queda amarilla */
 .site-pill.is-current { background: var(--yellow, #FFE000); }
 .site-pill.is-current .num { color: var(--ink, #1B1612); }
 
-/* píldoras de sección (más pequeñas, mono) */
 .site-pill--sm {
   font-family: var(--mono, monospace); text-transform: uppercase;
   font-size: .72rem; letter-spacing: .08em; padding: .62em 1.1em;
@@ -126,6 +129,6 @@ html.site-menu-open, html.site-menu-open body { overflow: hidden; }
 
 /* ---------- reduced motion ---------- */
 @media (prefers-reduced-motion: reduce) {
-  .site-scrim, .site-pill, .site-bar__toggle, .site-bar__toggle-icon i, .site-pills__sep { transition: none !important; }
+  .site-bar, .site-scrim, .site-pill, .site-pills__sep, .site-bar__toggle, .site-bar__toggle-icon i { transition: none !important; }
   .site-pills.open .site-pill { transition-delay: 0s !important; }
 }
