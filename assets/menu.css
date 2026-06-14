@@ -1,11 +1,12 @@
 /* ============================================
-   MENÚ DE SITIO · burbuja glass (index · trayectoria · pef)
-   La burbuja (LDG·UDEM + botón MENÚ) suelta píldoras hacia abajo y desenfoca
-   el fondo. Relleno tipo vidrio oscuro. Grande arriba, se encoge al hacer
-   scroll para no estorbar. Inyectado por assets/menu.js.
+   MENÚ DE SITIO · burbuja glass monocromática (index · trayectoria · pef)
+   Burbuja flotante (LDG × UDEM + MENÚ) de vidrio oscuro, todo en blanco.
+   Al pulsar suelta píldoras (también glass, mismo look) y atenúa el fondo.
+   Tamaño 1.5 hasta arriba del todo; al hacer scroll baja a 1 y se queda
+   en 1 hasta volver al top. Inyectado por assets/menu.js.
    ============================================ */
 
-:root { --site-bar-h: 84px; }   /* espacio reservado (estado grande) */
+:root { --site-bar-h: 92px; }   /* espacio reservado para el estado grande (1.5) */
 
 /* ---------- BURBUJA GLASS (siempre visible) ---------- */
 .site-bar {
@@ -15,42 +16,44 @@
   z-index: 1200;
   display: inline-flex;
   align-items: center;
-  gap: clamp(12px, 2vw, 22px);
+  gap: clamp(12px, 2vw, 20px);
   max-width: calc(100% - 24px);
-  padding: 9px 10px 9px 22px;
+  padding: 7px 9px 7px 20px;
   border-radius: 999px;
-  /* relleno glass oscuro (como la referencia de IG) */
-  background: rgba(22, 19, 16, .55);
-  -webkit-backdrop-filter: blur(22px) saturate(150%);
-  backdrop-filter: blur(22px) saturate(150%);
-  border: 1px solid rgba(255, 255, 255, .14);
-  box-shadow: 0 10px 34px rgba(0, 0, 0, .30), inset 0 1px 0 rgba(255,255,255,.10);
-  /* grande arriba; se encoge al hacer scroll (origen arriba-centro) */
+  /* vidrio oscuro, menos desenfoque para ver algo del fondo */
+  background: rgba(22, 19, 16, .42);
+  -webkit-backdrop-filter: blur(9px) saturate(135%);
+  backdrop-filter: blur(9px) saturate(135%);
+  border: 1px solid rgba(255, 255, 255, .16);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, .26), inset 0 1px 0 rgba(255,255,255,.10);
+  /* escala según scroll: 1 por defecto; 1.5 solo arriba del todo */
   transform: translateX(-50%) scale(1);
   transform-origin: top center;
-  transition: transform .34s var(--ease, cubic-bezier(.22,1,.36,1));
+  transition: transform .4s var(--ease, cubic-bezier(.22,1,.36,1));
 }
-.site-bar.is-compact { transform: translateX(-50%) scale(.74); }
+.site-bar.is-top { transform: translateX(-50%) scale(1.5); }
 
-/* marca: texto claro sobre vidrio, chip amarillo */
+/* marca: LDG × UDEM, todo blanco, sin recuadro */
 .site-bar__brand { text-decoration: none; display: inline-flex; align-items: center; }
 .site-bar__brand b {
-  font-family: var(--disp, "Anton", sans-serif); font-weight: 400; font-size: 1.12rem;
-  letter-spacing: .02em; text-transform: uppercase; color: #fff;
-  display: inline-flex; align-items: center; gap: .4em; line-height: 1;
+  font-family: var(--disp, "Anton", sans-serif); font-weight: 400; font-size: 1.05rem;
+  letter-spacing: .03em; text-transform: uppercase; color: #fff;
+  display: inline-flex; align-items: center; gap: .34em; line-height: 1;
 }
-.site-bar__brand b span { background: var(--yellow, #FFE000); color: var(--ink, #1B1612); padding: .18em .34em .12em; font-size: .82em; }
+.site-bar__brand .x { font-size: .82em; opacity: .65; font-weight: 400; }
 
-/* botón MENÚ / CERRAR: píldora clara que resalta sobre el vidrio */
+/* botón MENÚ / CERRAR: también glass */
 .site-bar__toggle {
   -webkit-appearance: none; appearance: none; cursor: pointer;
   display: inline-flex; align-items: center; gap: .6em;
-  padding: .62em 1.05em; border: none; border-radius: 999px;
-  background: var(--paper, #F1ECDF); color: var(--ink, #1B1612);
+  padding: .62em 1.05em; border-radius: 999px;
+  background: rgba(255, 255, 255, .12);
+  border: 1px solid rgba(255, 255, 255, .28);
+  color: #fff;
   font-family: var(--mono, monospace); font-size: .72rem; letter-spacing: .14em; text-transform: uppercase; line-height: 1;
-  transition: background .2s var(--ease, ease), color .2s var(--ease, ease);
+  transition: background .2s var(--ease, ease), border-color .2s var(--ease, ease);
 }
-.site-bar__toggle:hover { background: var(--yellow, #FFE000); }
+.site-bar__toggle:hover { background: rgba(255, 255, 255, .22); border-color: rgba(255,255,255,.5); }
 .site-bar__toggle:focus-visible { outline: 2px solid #fff; outline-offset: 2px; }
 .site-bar__toggle-icon { position: relative; width: 16px; height: 10px; display: inline-block; flex-shrink: 0; }
 .site-bar__toggle-icon i { position: absolute; left: 0; right: 0; height: 2px; background: currentColor; transition: transform .3s var(--ease, ease); }
@@ -59,17 +62,17 @@
 .site-bar.is-open .site-bar__toggle-icon i:nth-child(1) { top: 50%; transform: translateY(-50%) rotate(45deg); }
 .site-bar.is-open .site-bar__toggle-icon i:nth-child(2) { bottom: auto; top: 50%; transform: translateY(-50%) rotate(-45deg); }
 
-/* ---------- SCRIM (fondo desenfocado) ---------- */
+/* ---------- SCRIM (fondo atenuado del menú) ---------- */
 .site-scrim {
   position: fixed; inset: 0; z-index: 1090;
-  background: rgba(241, 236, 223, .35);
-  -webkit-backdrop-filter: blur(10px); backdrop-filter: blur(10px);
+  background: rgba(22, 19, 16, .34);
+  -webkit-backdrop-filter: blur(7px); backdrop-filter: blur(7px);
   opacity: 0; visibility: hidden; pointer-events: none;
   transition: opacity .35s var(--ease, ease), visibility 0s linear .35s;
 }
 .site-scrim.open { opacity: 1; visibility: visible; pointer-events: auto; transition: opacity .35s var(--ease, ease); }
 
-/* ---------- COLUMNA DE PÍLDORAS QUE BAJAN ---------- */
+/* ---------- PÍLDORAS QUE BAJAN (mismo glass que la burbuja) ---------- */
 .site-pills {
   position: fixed;
   top: calc(var(--site-bar-h) + 2px);
@@ -90,36 +93,40 @@
   display: inline-flex; align-items: baseline; gap: .7em;
   text-decoration: none; white-space: nowrap;
   padding: .5em 1.4em;
-  border: 1.5px solid var(--ink, #1B1612); border-radius: 999px;
-  background: var(--paper, #F1ECDF); color: var(--ink, #1B1612);
+  border-radius: 999px;
+  /* mismo vidrio oscuro que la burbuja, todo blanco */
+  background: rgba(22, 19, 16, .5);
+  -webkit-backdrop-filter: blur(9px) saturate(135%);
+  backdrop-filter: blur(9px) saturate(135%);
+  border: 1px solid rgba(255, 255, 255, .18);
+  color: #fff;
   font-family: var(--disp, "Anton", sans-serif); font-weight: 400; text-transform: uppercase;
   font-size: clamp(1.25rem, 3.4vw, 1.85rem); line-height: 1; letter-spacing: .01em;
-  box-shadow: 0 3px 12px rgba(27,22,18,.10);
+  box-shadow: 0 6px 20px rgba(0,0,0,.22);
   opacity: 0; transform: translateY(-10px) scale(.96);
   transition: opacity .4s var(--ease, ease), transform .4s var(--ease, ease),
-              background .18s var(--ease, ease), color .18s var(--ease, ease);
+              background .18s var(--ease, ease), border-color .18s var(--ease, ease);
 }
 .site-pills.open .site-pill { opacity: 1; transform: none; }
 /* el stagger simétrico (abrir/cerrar) lo aplica menu.js con transition-delay inline */
 
 .site-pill:hover, .site-pill:focus-visible {
-  background: var(--yellow, #FFE000); color: var(--ink, #1B1612);
+  background: rgba(255, 255, 255, .16); border-color: rgba(255, 255, 255, .55);
   outline: none; transform: translateY(-1px) scale(1.02);
 }
-.site-pill .num { font-family: var(--mono, monospace); font-size: .5em; font-weight: 500; letter-spacing: .1em; color: var(--verm, #B23818); }
-.site-pill:hover .num, .site-pill:focus-visible .num { color: var(--ink, #1B1612); }
-.site-pill.is-current { background: var(--yellow, #FFE000); }
-.site-pill.is-current .num { color: var(--ink, #1B1612); }
+.site-pill .num { font-family: var(--mono, monospace); font-size: .5em; font-weight: 500; letter-spacing: .1em; color: rgba(255,255,255,.55); }
+.site-pill:hover .num, .site-pill:focus-visible .num { color: #fff; }
+.site-pill.is-current { background: rgba(255, 255, 255, .20); border-color: #fff; }
+.site-pill.is-current .num { color: #fff; }
 
 .site-pill--sm {
   font-family: var(--mono, monospace); text-transform: uppercase;
   font-size: .72rem; letter-spacing: .08em; padding: .62em 1.1em;
-  box-shadow: 0 2px 8px rgba(27,22,18,.08);
 }
 .site-pills__sep {
   margin-top: 6px; opacity: 0; transform: translateY(-10px) scale(.96);
   font-family: var(--mono, monospace); font-size: .62rem; letter-spacing: .18em; text-transform: uppercase;
-  color: var(--ink-soft, #5C564A);
+  color: rgba(255,255,255,.6);
   transition: opacity .4s var(--ease, ease), transform .4s var(--ease, ease);
 }
 .site-pills.open .site-pills__sep { opacity: .85; transform: none; }

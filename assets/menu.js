@@ -40,7 +40,7 @@
 
   var html =
     '<header class="site-bar" id="siteBar">' +
-      '<a class="site-bar__brand" href="index.html"><b>LDG <span>UDEM</span></b></a>' +
+      '<a class="site-bar__brand" href="index.html"><b>LDG <span class="x">&times;</span> UDEM</b></a>' +
       '<button class="site-bar__toggle" id="siteMenuToggle" type="button" aria-expanded="false" aria-controls="sitePills">' +
         '<span class="site-bar__toggle-label">Menú</span>' +
         '<span class="site-bar__toggle-icon" aria-hidden="true"><i></i><i></i></span>' +
@@ -73,15 +73,17 @@
     }
     function isOpen() { return pills.classList.contains('open'); }
 
-    // ---- crecer/encoger según el scroll ----
+    // ---- escala según scroll: 1.5 solo arriba del todo, 1 al bajar ----
     function readScroll() {
       var s = getSmoother();
       if (s && s.scrollTop) return s.scrollTop();
       return window.scrollY || document.documentElement.scrollTop || 0;
     }
-    function onScroll() { bar.classList.toggle('is-compact', readScroll() > 60); }
+    function onScroll() { bar.classList.toggle('is-top', readScroll() <= 4); }
     window.addEventListener('scroll', onScroll, { passive: true });
+    window.addEventListener('load', onScroll);
     onScroll();
+    setTimeout(onScroll, 400);   // re-chequeo por si ScrollSmoother arranca después
 
     // ---- menú completo (píldoras) ----
     function applyStagger(opening) {
