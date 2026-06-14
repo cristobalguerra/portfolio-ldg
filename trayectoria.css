@@ -276,7 +276,8 @@
   letter-spacing: -.01em;
   margin: 0;
 }
-.ts-h1 .ts-ln { display: block; overflow: hidden; }
+/* techo para los acentos sin recortarlos en la máscara de la animación */
+.ts-h1 .ts-ln { display: block; overflow: hidden; padding-top: .3em; margin-top: -.3em; }
 .ts-h1 .ts-ln i { display: block; font-style: normal; }
 .trayectoria-page.ts-js .ts-h1 .ts-ln i {
   transform: translateY(110%);

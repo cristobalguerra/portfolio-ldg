@@ -465,7 +465,9 @@ h1 {
   letter-spacing: -.01em;
 }
 
-h1 .ln { display: block; overflow: hidden; }
+/* padding-top + margin-top: deja techo para los acentos (Á, Ñ, Í…) sin que
+   la máscara de la animación los recorte; el margin negativo conserva el apilado */
+h1 .ln { display: block; overflow: hidden; padding-top: .3em; margin-top: -.3em; }
 h1 .ln i { display: block; font-style: normal; }
 
 h1 .hl {
