@@ -40,7 +40,7 @@
 
   var html =
     '<header class="site-bar" id="siteBar">' +
-      '<a class="site-bar__brand" href="index.html"><b>LDG <span class="x">&times;</span> UDEM</b></a>' +
+      '<a class="site-bar__brand" href="index.html"><b>LDG <span class="u">&times; UDEM</span></b></a>' +
       '<button class="site-bar__toggle" id="siteMenuToggle" type="button" aria-expanded="false" aria-controls="sitePills">' +
         '<span class="site-bar__toggle-label">Menú</span>' +
         '<span class="site-bar__toggle-icon" aria-hidden="true"><i></i><i></i></span>' +
@@ -74,16 +74,21 @@
     function isOpen() { return pills.classList.contains('open'); }
 
     // ---- escala según scroll: 1.5 solo arriba del todo, 1 al bajar ----
+    // Loop por frame: ScrollSmoother (index/trayectoria) no dispara el evento
+    // 'scroll' nativo, así que leemos la posición real (smoother o window) cada
+    // frame y solo tocamos la clase cuando cruza el umbral.
     function readScroll() {
       var s = getSmoother();
       if (s && s.scrollTop) return s.scrollTop();
       return window.scrollY || document.documentElement.scrollTop || 0;
     }
-    function onScroll() { bar.classList.toggle('is-top', readScroll() <= 4); }
-    window.addEventListener('scroll', onScroll, { passive: true });
-    window.addEventListener('load', onScroll);
-    onScroll();
-    setTimeout(onScroll, 400);   // re-chequeo por si ScrollSmoother arranca después
+    var wasTop = null;
+    function tick() {
+      var atTop = readScroll() <= 4;
+      if (atTop !== wasTop) { wasTop = atTop; bar.classList.toggle('is-top', atTop); }
+      requestAnimationFrame(tick);
+    }
+    requestAnimationFrame(tick);
 
     // ---- menú completo (píldoras) ----
     function applyStagger(opening) {

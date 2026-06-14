@@ -40,7 +40,7 @@
   letter-spacing: .03em; text-transform: uppercase; color: #fff;
   display: inline-flex; align-items: center; gap: .34em; line-height: 1;
 }
-.site-bar__brand .x { font-size: .82em; opacity: .65; font-weight: 400; }
+.site-bar__brand .u { font-family: var(--sans, system-ui, sans-serif); font-weight: 400; font-size: .66em; letter-spacing: .04em; }
 
 /* botón MENÚ / CERRAR: también glass */
 .site-bar__toggle {
