@@ -1,13 +1,6 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-label="LDG UDEM">
-  <defs><clipPath id="cir"><circle cx="32" cy="32" r="32"/></clipPath></defs>
   <circle cx="32" cy="32" r="32" fill="#1B1612"/>
-  <g clip-path="url(#cir)" font-family="'Arial Black','Helvetica Neue',Impact,sans-serif"
-     font-weight="900" font-size="46" text-anchor="middle">
-    <!-- sombra proyectada (extrusión) hacia abajo-derecha, dorado oscuro -->
-    <text x="33" y="49" fill="#6b5207">G</text>
-    <text x="34" y="50.5" fill="#5a4506">G</text>
-    <text x="35" y="52" fill="#473605">G</text>
-    <!-- G principal -->
-    <text x="32" y="47.5" fill="#FFE000">G</text>
-  </g>
+  <text x="32" y="47.5" text-anchor="middle"
+        font-family="'Arial Black','Helvetica Neue',Impact,sans-serif"
+        font-weight="900" font-size="46" fill="#FFE000">G</text>
 </svg>
