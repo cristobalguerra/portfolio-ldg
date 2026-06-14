@@ -126,50 +126,7 @@
 .trayectoria-page .ts-hl.in,
 .trayectoria-page [data-io].in .ts-hl { background-size: 100% .84em; }
 
-/* ============ topline ============ */
-.ts-topline {
-  position: sticky;
-  top: 0;
-  z-index: 50;
-  border-bottom: 2px solid var(--ink);
-  background: var(--paper);
-}
-.ts-topline__in {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  gap: 14px;
-  flex-wrap: wrap;
-  padding-top: 12px;
-  padding-bottom: 11px;
-}
-.ts-topline__brand {
-  font-family: var(--disp);
-  font-weight: 400;
-  font-size: 1.05rem;
-  letter-spacing: .02em;
-  text-transform: uppercase;
-}
-.ts-topline__chip {
-  background: var(--yellow);
-  padding: 4px 8px 3px;
-  font-weight: 400;
-}
-.ts-topline__doc { color: var(--ink-soft); font-weight: 500; }
-.ts-topline__back {
-  font-family: var(--mono);
-  font-size: var(--t-mono);
-  font-weight: 700;
-  letter-spacing: .14em;
-  text-transform: uppercase;
-  text-decoration: none;
-  border: 2px solid var(--ink);
-  background: var(--paper);
-  padding: 7px 13px 6px;
-  transition: background-color .2s var(--ease);
-}
-.ts-topline__back:hover { background: var(--yellow); }
-@media (max-width: 760px) { .ts-topline__doc { display: none; } }
+/* La barra de navegación es el componente compartido (assets/menu.css). */
 
 /* ============ hoja 01: portada ============ */
 .ts-sheet {

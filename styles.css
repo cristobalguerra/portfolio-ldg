@@ -148,214 +148,6 @@ select:focus-visible,
 ::-webkit-scrollbar-thumb { background: var(--line-2); }
 
 /* ============================================
-   TOPLINE · barra documento + navegación
-   ============================================ */
-.topline {
-  position: sticky;
-  top: 0;
-  z-index: 200; /* sobre el menú móvil: el burger sigue operable con el menú abierto */
-  border-bottom: 2px solid var(--ink);
-  background: var(--paper);
-  transition: transform .3s var(--ease);
-}
-
-.nav--hidden {
-  transform: translateY(-100%);
-}
-
-.topline .wrap {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  gap: 14px;
-  flex-wrap: wrap;
-  padding-top: 12px;
-  padding-bottom: 11px;
-}
-
-.topline__brand b {
-  font-family: var(--disp);
-  font-weight: 400;
-  font-size: 1.05rem;
-  letter-spacing: .02em;
-  text-transform: uppercase;
-}
-
-.topline .chip {
-  background: var(--yellow);
-  padding: 4px 8px 3px;
-  font-weight: 500;
-}
-
-.topline__nav {
-  display: flex;
-  align-items: center;
-  gap: clamp(12px, 2vw, 26px);
-}
-
-.topline__nav a {
-  font-family: var(--mono);
-  font-size: var(--t-mono);
-  font-weight: 500;
-  letter-spacing: .12em;
-  text-transform: uppercase;
-  color: var(--ink);
-  padding: 6px 2px;
-  background-image: linear-gradient(var(--yellow), var(--yellow));
-  background-repeat: no-repeat;
-  background-position: left bottom 4px;
-  background-size: 0% .5em;
-  transition: background-size .3s var(--ease);
-}
-
-.topline__nav a:hover {
-  background-size: 100% .5em;
-}
-
-.topline__doc {
-  font-weight: 500;
-  color: var(--ink-soft);
-}
-
-@media (max-width: 1100px) {
-  .topline__doc { display: none; }
-}
-
-/* Burger: solo móvil */
-.nav__burger {
-  display: none;
-  flex-direction: column;
-  gap: 5px;
-  padding: 10px;
-  z-index: 200;
-}
-
-.nav__burger span {
-  display: block;
-  width: 26px;
-  height: 2px;
-  background: var(--ink);
-  transition: transform .3s var(--ease), opacity .3s var(--ease);
-  transform-origin: center;
-}
-
-.nav__burger.active span:nth-child(1) {
-  transform: translateY(7px) rotate(45deg);
-}
-.nav__burger.active span:nth-child(2) {
-  opacity: 0;
-}
-.nav__burger.active span:nth-child(3) {
-  transform: translateY(-7px) rotate(-45deg);
-}
-
-@media (max-width: 860px) {
-  .topline__nav { display: none; }
-  .nav__burger { display: flex; }
-}
-
-/* Botón PEF TALKS del nav (oculto; la lógica se conserva) */
-.nav__pef-btn {
-  font-family: var(--mono);
-  font-size: var(--t-mono);
-  letter-spacing: .12em;
-  text-transform: uppercase;
-  padding: 8px 18px;
-  background: var(--yellow);
-  color: var(--ink);
-  border: 2px solid var(--ink);
-}
-
-/* ============================================
-   MENÚ MÓVIL (hoja completa de papel)
-   ============================================ */
-.menu {
-  position: fixed;
-  inset: 0;
-  z-index: 150;
-  background: var(--paper);
-  display: flex;
-  align-items: center;
-  opacity: 0;
-  visibility: hidden;
-  transition: opacity .4s var(--ease), visibility .4s;
-  pointer-events: none;
-  border-bottom: 2px solid var(--ink);
-}
-
-.menu::before {
-  content: "";
-  position: absolute;
-  inset: 0;
-  pointer-events: none;
-  background-image:
-    linear-gradient(var(--line) 1px, transparent 1px),
-    linear-gradient(90deg, var(--line) 1px, transparent 1px);
-  background-size: 56px 56px;
-  opacity: .5;
-}
-
-.menu.open {
-  opacity: 1;
-  visibility: visible;
-  pointer-events: auto;
-}
-
-.menu__inner {
-  width: 100%;
-  padding: clamp(72px, 12vh, 120px) var(--gut) var(--space-lg);
-  display: flex;
-  justify-content: space-between;
-  align-items: flex-end;
-  gap: var(--space-md);
-  position: relative;
-  z-index: 1;
-}
-
-.menu__links {
-  display: flex;
-  flex-direction: column;
-  gap: 6px;
-}
-
-.menu__link {
-  font-family: var(--disp);
-  font-weight: 400;
-  font-size: clamp(2rem, 7vw, 4.4rem);
-  text-transform: uppercase;
-  color: var(--ink);
-  line-height: 1.04;
-  display: flex;
-  align-items: baseline;
-  gap: var(--space-sm);
-  background-image: linear-gradient(var(--yellow), var(--yellow));
-  background-repeat: no-repeat;
-  background-position: left bottom;
-  background-size: 0% .5em;
-  transition: background-size .35s var(--ease);
-}
-
-.menu__link::before {
-  content: attr(data-index);
-  font-family: var(--mono);
-  font-size: var(--t-mono);
-  color: var(--verm);
-  font-weight: 700;
-  letter-spacing: .14em;
-}
-
-.menu__link:hover {
-  background-size: 100% .5em;
-}
-
-.menu__info {
-  display: flex;
-  flex-direction: column;
-  gap: var(--space-xs);
-  text-align: right;
-}
-
-/* ============================================
    HOJA 01 · PORTADA DE LÁMINA
    ============================================ */
 .sheet {
@@ -645,7 +437,7 @@ section {
   padding: clamp(72px, 10vh, 120px) 0 0;
 }
 
-/* Deep-links: que el topline sticky no tape el inicio de cada hoja */
+/* Deep-links: que la barra fija no tape el inicio de cada hoja */
 section,
 .sheet {
   scroll-margin-top: 64px;
@@ -3003,11 +2795,6 @@ select.pef-register__input option {
    RESPONSIVE · MÓVIL
    ============================================ */
 @media (max-width: 600px) {
-  .topline .wrap {
-    padding-top: 8px;
-    padding-bottom: 8px;
-  }
-
   .pef-gate__panel {
     padding: var(--space-md) var(--space-sm);
     width: 95%;
@@ -3260,17 +3047,6 @@ html.ts-gsap h1 .hl {
   transition: none;
 }
 
-/* ScrollSmoother activo (html.ts-smooth, solo pointer fine):
-   el topline sale del flujo (fixed) y el primer bloque compensa su alto */
+/* ScrollSmoother activo (html.ts-smooth, solo pointer fine).
+   El espacio de la barra fija lo reserva assets/menu.js con padding inline. */
 html.ts-smooth { scroll-behavior: auto; }
-
-html.ts-smooth .topline {
-  position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-}
-
-html.ts-smooth #smooth-content {
-  padding-top: var(--topline-h, 52px);
-}

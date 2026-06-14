@@ -278,9 +278,7 @@ function normalizeThumbUrl(url) {
 }
 
 // ---- DOM ELEMENTS ----
-const navBurger = document.getElementById('navBurger');
-const menu = document.getElementById('menu');
-const menuLinks = document.querySelectorAll('.menu__link');
+// La barra/menú son el componente compartido (assets/menu.js).
 const galleryGrid = document.getElementById('galleryGrid');
 const categoryFilters = document.getElementById('categoryFilters');
 const yearFilters = document.getElementById('yearFilters');
@@ -446,7 +444,7 @@ function buildMesaGsap(ctx) {
 
     // Al abrir cualquier modal/gate/menú: smoother.paused(true); al cerrar: false
     const overlayIds = ['pefGate', 'pefTalks', 'pefTable', 'pefAdminGate', 'pefRegister',
-      'pefFeedback', 'menu', 'modal', 'adminPanel', 'adminProjectForm',
+      'pefFeedback', 'modal', 'adminPanel', 'adminProjectForm',
       'adminAwardForm', 'adminGate', 'pdfViewer'];
     const overlays = overlayIds.map((id) => document.getElementById(id)).filter(Boolean);
     const syncPaused = () => {
@@ -820,10 +818,7 @@ function initVideoLamina() {
 
 
 // ---- NAVIGATION ----
-// La barra y el menú son ahora el componente compartido (assets/menu.js).
-// El menú antiguo (#navBurger / #menu) se retiró; esta función queda como
-// no-op por si algún resto de código la invoca.
-function syncBurgerExpanded() {}
+// La barra y el menú son el componente compartido (assets/menu.js).
 
 // ---- RENDER GALLERY ----
 function getFilteredTheses() {
