@@ -328,3 +328,34 @@ textarea:focus-visible,[tabindex]:focus-visible,[role="button"]:focus-visible{
   .se-t1,.se-t2{transform:none}
   .se-meta{display:none}
 }
+
+/* ============================================================
+   EQUIPO ALTO DESEMPEÑO — CARRUSEL horizontal de retratos (cards
+   diseñadas con el nombre incrustado). Una sola fila → página corta.
+   Auto-avance + flechas + swipe en assets/equipo-carousel.js.
+   ============================================================ */
+.equipo-rail{position:relative;margin-top:26px}
+.equipo-track{display:flex;gap:14px;overflow-x:auto;scroll-snap-type:x mandatory;scroll-behavior:smooth;
+  padding:4px 2px 14px;scrollbar-width:none;-ms-overflow-style:none}
+.equipo-track::-webkit-scrollbar{display:none}
+.equipo-card{flex:0 0 auto;width:clamp(180px,42vw,228px);scroll-snap-align:start;
+  position:relative;margin:0;border-radius:14px;overflow:hidden;aspect-ratio:1;
+  background:var(--surface-2);border:1px solid var(--line);
+  transition:transform .4s var(--ease),border-color .3s var(--ease),box-shadow .3s var(--ease)}
+.equipo-card img{width:100%;height:100%;object-fit:cover;display:block}
+.equipo-card:hover{transform:translateY(-5px);border-color:var(--line-2);box-shadow:0 16px 40px rgba(0,0,0,.5)}
+/* mentora: anillo de acento sutil para distinguirla */
+.equipo-card.is-mentor{border-color:color-mix(in srgb,var(--accent) 55%,transparent);
+  box-shadow:0 0 0 1px color-mix(in srgb,var(--accent) 32%,transparent)}
+/* flechas */
+.equipo-nav{position:absolute;top:calc(50% - 7px);transform:translateY(-50%);z-index:5;
+  width:44px;height:44px;border-radius:50%;display:grid;place-items:center;cursor:pointer;
+  background:rgba(18,18,18,.72);-webkit-backdrop-filter:blur(10px);backdrop-filter:blur(10px);
+  border:1px solid var(--line-2);color:var(--ink);
+  transition:background .25s var(--ease),color .25s var(--ease),transform .25s var(--ease)}
+.equipo-nav svg{width:20px;height:20px}
+.equipo-nav.prev{left:-8px}
+.equipo-nav.next{right:-8px}
+.equipo-nav:hover{background:var(--accent);color:var(--on-accent);transform:translateY(-50%) scale(1.08)}
+.equipo-nav:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+@media (max-width:560px){ .equipo-nav{display:none} }   /* en móvil: swipe nativo */

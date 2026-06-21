@@ -10,13 +10,13 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Anton&family=Atkinson+Hyperlegible:ital,wght@0,400;0,700;1,400&family=JetBrains+Mono:wght@400;500&family=Spectral:ital,wght@1,300&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="assets/dark.css?v=20260620k">
+  <link rel="stylesheet" href="assets/dark.css?v=20260620m">
   <script>window.SITE_NAV = { current: 'inicio' };</script>
   <script defer src="assets/bg-noise.js?v=20260620e"></script>
   <script defer src="assets/dock-fun.js?v=20260620b"></script>
   <script defer src="assets/vendor/gsap/gsap.min.js"></script>
   <script defer src="assets/card-fan.js?v=20260620"></script>
-  <script defer src="assets/team-dir.js?v=20260620e"></script>
+  <script defer src="assets/equipo-carousel.js?v=20260620"></script>
   <script defer src="assets/footer.js?v=20260620f"></script>
   <script defer src="assets/scroll-expand.js?v=20260620b"></script>
 </head>
@@ -71,7 +71,7 @@
     <section class="section" id="equipo">
       <div class="wrap">
         <div class="sec-head"><span class="sec-no">02</span><h2>Equipo Alto Desempeño 2026</h2></div>
-        <p class="sec-sub">Alumnas y alumnos destacados del programa</p>
+        <p class="sec-sub">Generación de alto desempeño · mentora: Natalia Ceballos</p>
 
         <!-- iconos -->
         <svg width="0" height="0" style="position:absolute" aria-hidden="true">
@@ -81,56 +81,24 @@
           <symbol id="ic-x" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6 6 18M6 6l12 12"/></symbol>
         </svg>
 
-        <div class="teamdir">
-          <div class="teamdir-main">
-            <div class="teamdir-head">
-              <h3>Destacados <span class="teamdir-count">7</span></h3>
-            </div>
-            <div class="td-search">
-              <svg><use href="#ic-search"/></svg>
-              <input type="search" placeholder="Buscar integrante…" data-tdsearch="featured" aria-label="Buscar destacados">
-            </div>
-            <div class="td-list" data-tdlist="featured">
-              <div class="td-item" data-name="Eugenia Martínez-Abrego" data-role="branding"><div class="td-avatar"><img src="https://i.pravatar.cc/100?img=9" alt="" loading="lazy"><span class="td-star"></span></div><div class="td-info"><h5>Eugenia Martínez-Abrego</h5><p>A′ Design · 2025</p></div><span class="td-badge"><svg><use href="#ic-tag"/></svg>Branding</span></div>
-              <div class="td-item" data-name="María Andrade" data-role="identidad"><div class="td-avatar"><img src="https://i.pravatar.cc/100?img=20" alt="" loading="lazy"><span class="td-star"></span></div><div class="td-info"><h5>María Andrade</h5><p>A′ Design · 2025</p></div><span class="td-badge"><svg><use href="#ic-tag"/></svg>Identidad</span></div>
-              <div class="td-item" data-name="Valeria Marín" data-role="branding"><div class="td-avatar"><img src="https://i.pravatar.cc/100?img=47" alt="" loading="lazy"><span class="td-star"></span></div><div class="td-info"><h5>Valeria Marín</h5><p>A′ Design · 2025</p></div><span class="td-badge"><svg><use href="#ic-tag"/></svg>Branding</span></div>
-              <div class="td-item" data-name="Emilia Bermúdez" data-role="editorial"><div class="td-avatar"><img src="https://i.pravatar.cc/100?img=5" alt="" loading="lazy"></div><div class="td-info"><h5>Emilia Bermúdez</h5><p>PEF · Otoño 2025</p></div><span class="td-badge"><svg><use href="#ic-tag"/></svg>Editorial</span></div>
-            </div>
+        <div class="equipo-rail">
+          <button class="equipo-nav prev" type="button" aria-label="Anterior"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg></button>
+          <div class="equipo-track" data-equipo-track>
+            <figure class="equipo-card is-mentor"><img src="assets/equipo/natalia_ad.jpg" alt="Natalia Ceballos · Mentora" loading="lazy"></figure>
+            <figure class="equipo-card"><img src="assets/equipo/melisa.jpg" alt="Melisa Vargas" loading="lazy"></figure>
+            <figure class="equipo-card"><img src="assets/equipo/ale.jpg" alt="Ale Gamez" loading="lazy"></figure>
+            <figure class="equipo-card"><img src="assets/equipo/anava.jpg" alt="Anava Pérez" loading="lazy"></figure>
+            <figure class="equipo-card"><img src="assets/equipo/ana.jpg" alt="Ana Salas" loading="lazy"></figure>
+            <figure class="equipo-card"><img src="assets/equipo/sofia.jpg" alt="Sofía Jiménez" loading="lazy"></figure>
+            <figure class="equipo-card"><img src="assets/equipo/any.jpg" alt="Any Herrera" loading="lazy"></figure>
+            <figure class="equipo-card"><img src="assets/equipo/isela.jpg" alt="Isela Wu" loading="lazy"></figure>
+            <figure class="equipo-card"><img src="assets/equipo/luciana.jpg" alt="Luciana Mireles" loading="lazy"></figure>
+            <figure class="equipo-card"><img src="assets/equipo/isa.jpg" alt="Isa Galindo" loading="lazy"></figure>
+            <figure class="equipo-card"><img src="assets/equipo/anna.jpg" alt="Anna Ferrer" loading="lazy"></figure>
+            <figure class="equipo-card"><img src="assets/equipo/cati.jpg" alt="Cati Romero" loading="lazy"></figure>
+            <figure class="equipo-card"><img src="assets/equipo/natalia.jpg" alt="Natalia Nuñez" loading="lazy"></figure>
           </div>
-
-          <!-- cajón: directorio completo -->
-          <div class="teamdir-drawer">
-            <div class="teamdir-bar">
-              <div class="teamdir-bar-left">
-                <div class="teamdir-bar-icon"><svg><use href="#ic-users"/></svg></div>
-                <div><h4>Directorio del equipo</h4><p>7 integrantes</p></div>
-              </div>
-              <div class="teamdir-bar-right">
-                <div class="teamdir-avatars">
-                  <img src="https://i.pravatar.cc/100?img=9" alt="">
-                  <img src="https://i.pravatar.cc/100?img=20" alt="">
-                  <img src="https://i.pravatar.cc/100?img=47" alt="">
-                  <span class="more">+4</span>
-                </div>
-                <button class="teamdir-close" type="button" aria-label="Cerrar"><svg><use href="#ic-x"/></svg></button>
-              </div>
-            </div>
-            <div class="teamdir-drawer-body">
-              <div class="td-search">
-                <svg><use href="#ic-search"/></svg>
-                <input type="search" placeholder="Buscar en el directorio…" data-tdsearch="all" aria-label="Buscar en el directorio">
-              </div>
-              <div class="td-list" data-tdlist="all">
-                <div class="td-item" data-name="Emilia Bermúdez" data-role="editorial"><div class="td-avatar"><img src="https://i.pravatar.cc/100?img=5" alt="" loading="lazy"></div><div class="td-info"><h5>Emilia Bermúdez</h5><p>PEF · Otoño 2025</p></div><span class="td-badge"><svg><use href="#ic-tag"/></svg>Editorial</span></div>
-                <div class="td-item" data-name="Eugenia Martínez-Abrego" data-role="branding"><div class="td-avatar"><img src="https://i.pravatar.cc/100?img=9" alt="" loading="lazy"><span class="td-star"></span></div><div class="td-info"><h5>Eugenia Martínez-Abrego</h5><p>A′ Design · 2025</p></div><span class="td-badge"><svg><use href="#ic-tag"/></svg>Branding</span></div>
-                <div class="td-item" data-name="Angelina Avalos" data-role="editorial"><div class="td-avatar"><img src="https://i.pravatar.cc/100?img=16" alt="" loading="lazy"></div><div class="td-info"><h5>Angelina Avalos</h5><p>PEF · Otoño 2025</p></div><span class="td-badge"><svg><use href="#ic-tag"/></svg>Editorial</span></div>
-                <div class="td-item" data-name="María Andrade" data-role="identidad"><div class="td-avatar"><img src="https://i.pravatar.cc/100?img=20" alt="" loading="lazy"><span class="td-star"></span></div><div class="td-info"><h5>María Andrade</h5><p>A′ Design · 2025</p></div><span class="td-badge"><svg><use href="#ic-tag"/></svg>Identidad</span></div>
-                <div class="td-item" data-name="Sofía Peralta" data-role="packaging"><div class="td-avatar"><img src="https://i.pravatar.cc/100?img=32" alt="" loading="lazy"></div><div class="td-info"><h5>Sofía Peralta</h5><p>PEF · Otoño 2025</p></div><span class="td-badge"><svg><use href="#ic-tag"/></svg>Packaging</span></div>
-                <div class="td-item" data-name="Valeria Marín" data-role="branding"><div class="td-avatar"><img src="https://i.pravatar.cc/100?img=47" alt="" loading="lazy"><span class="td-star"></span></div><div class="td-info"><h5>Valeria Marín</h5><p>A′ Design · 2025</p></div><span class="td-badge"><svg><use href="#ic-tag"/></svg>Branding</span></div>
-                <div class="td-item" data-name="Paulina González" data-role="motion"><div class="td-avatar"><img src="https://i.pravatar.cc/100?img=25" alt="" loading="lazy"></div><div class="td-info"><h5>Paulina González</h5><p>PEF · Otoño 2025</p></div><span class="td-badge"><svg><use href="#ic-tag"/></svg>Motion</span></div>
-              </div>
-            </div>
-          </div>
+          <button class="equipo-nav next" type="button" aria-label="Siguiente"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg></button>
         </div>
       </div>
     </section>
