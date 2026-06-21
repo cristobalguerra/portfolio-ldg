@@ -4,3 +4,18 @@
 
 # Large PDF thesis files (host externally)
 proyectos/otono-2025/
+.gstack/
+
+# --- documentos privados de alumnos (NO publicar) ---
+proyectos/alumnos/
+# --- internos / planeación (NO publicar) ---
+.claude/
+PRD.md
+HANDOFF.md
+hanodd.md
+# --- páginas de prueba / experimentos (NO publicar) ---
+hero-preview.html
+dock-preview.html
+propuesta-oscura.html
+propuesta-scroll.html
+_hero-ref.html

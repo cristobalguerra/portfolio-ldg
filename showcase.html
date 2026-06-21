@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>LDG · UDEM · Showcase</title>
+  <meta name="description" content="Showcase del portafolio de la Licenciatura en Diseño Gráfico de la UDEM: video destacado, proyectos del programa y reconocimientos.">
+  <meta name="theme-color" content="#000000">
+  <link rel="icon" href="assets/favicon.svg?v=4" type="image/svg+xml">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Anton&family=Atkinson+Hyperlegible:ital,wght@0,400;0,700;1,400&family=JetBrains+Mono:wght@400;500&family=Spectral:ital,wght@1,300&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="assets/dark.css?v=20260620k">
+
+  <script>window.SITE_NAV = { current: 'showcase' };</script>
+
+  <!-- Firebase (solo lectura · ldgProjects/ldgAwards). Si no carga la red, showcase.js cae a los datos base. -->
+  <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-database-compat.js"></script>
+  <script>
+    if (typeof firebase !== 'undefined') {
+      firebase.initializeApp({
+        apiKey: "AIzaSyBfWefsqHW90aqHP9Mz6s8w91eIar_x6j8",
+        authDomain: "portfolioldg-3ca20.firebaseapp.com",
+        databaseURL: "https://portfolioldg-3ca20-default-rtdb.firebaseio.com",
+        projectId: "portfolioldg-3ca20",
+        storageBucket: "portfolioldg-3ca20.firebasestorage.app",
+        messagingSenderId: "563272567632",
+        appId: "1:563272567632:web:85e36244c8f00d5cdf7a55"
+      });
+      window.db = firebase.database();
+    }
+  </script>
+
+  <script defer src="assets/bg-noise.js?v=20260620e"></script>
+  <script defer src="assets/dock-fun.js?v=20260620b"></script>
+  <script defer src="assets/footer.js?v=20260620f"></script>
+  <script defer src="assets/showcase.js?v=20260620g"></script>
+
+  <style>
+  /* ===== BANNER VIDEO (Vimeo · facade poster→iframe) ===== */
+  .sc-banner{position:relative;width:100%;aspect-ratio:16/9;border-radius:18px;overflow:hidden;background:var(--surface-2);border:1px solid var(--line-2);margin-top:10px}
+  .sc-banner__poster{display:block;width:100%;height:100%;position:relative;text-decoration:none}
+  .sc-banner__poster img{width:100%;height:100%;object-fit:cover;filter:grayscale(.4) contrast(1.05);transition:filter .5s var(--ease),transform .6s var(--ease)}
+  .sc-banner__poster:hover img,.sc-banner__poster:focus-visible img{filter:grayscale(0);transform:scale(1.03)}
+  .sc-banner__poster::after{content:"";position:absolute;inset:0;background:linear-gradient(to top,rgba(0,0,0,.65),transparent 48%);pointer-events:none}
+  .sc-banner__play{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);width:74px;height:74px;display:grid;place-items:center;border-radius:50%;background:var(--accent);color:var(--on-accent);z-index:2;box-shadow:0 10px 44px rgba(168,85,247,.42);transition:transform .3s var(--ease)}
+  .sc-banner__poster:hover .sc-banner__play{transform:translate(-50%,-50%) scale(1.08)}
+  .sc-banner__play svg{width:30px;height:30px;margin-left:3px}
+  .sc-banner__cap{position:absolute;left:20px;bottom:18px;z-index:2;font-family:var(--mono);font-size:.7rem;letter-spacing:.06em;color:var(--ink);text-shadow:0 1px 6px rgba(0,0,0,.7)}
+  .sc-banner__video{width:100%;height:100%;border:0;display:block}
+
+  /* ===== subdivisor (Reconocimientos) ===== */
+  .sc-subhead{display:flex;align-items:center;gap:14px;margin:0 0 16px}
+  .sc-subhead span{font-family:var(--mono);font-size:var(--t-mono);letter-spacing:.16em;text-transform:uppercase;color:var(--ink-soft);white-space:nowrap}
+  .sc-subhead::after{content:"";flex:1;height:1px;background:var(--line)}
+
+  /* ===== RECONOCIMIENTOS (premios integrados) ===== */
+  .sc-awards{display:grid;grid-template-columns:repeat(auto-fill,minmax(320px,1fr));gap:16px;margin:0 0 40px}
+  .sc-award{display:flex;gap:14px;padding:15px;background:var(--surface);border:1px solid var(--line-2);border-radius:16px}
+  .sc-award__img{flex-shrink:0;width:88px;height:88px;border-radius:12px;overflow:hidden;background:var(--surface-2)}
+  .sc-award__img img{width:100%;height:100%;object-fit:cover;filter:grayscale(.2)}
+  .sc-award__body{min-width:0}
+  .sc-award__tags{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:7px}
+  .sc-award__tag{font-family:var(--mono);font-size:.52rem;letter-spacing:.1em;text-transform:uppercase;color:var(--ink-soft);border:1px solid var(--line-2);border-radius:20px;padding:3px 8px}
+  .sc-award__tag--accent{color:var(--accent);border-color:var(--accent)}
+  .sc-award__name{font-family:var(--sans);font-size:1.02rem;font-weight:700;letter-spacing:-.01em;line-height:1.1;margin-bottom:5px}
+  .sc-award__students{font-size:.78rem;color:var(--ink-soft);line-height:1.45}
+  .sc-award__advisor{font-family:var(--mono);font-size:.56rem;letter-spacing:.04em;color:var(--ink-soft);margin-top:5px}
+
+  /* ===== CONTROLES (buscador + chips) ===== */
+  .sc-controls{display:flex;flex-wrap:wrap;gap:14px;align-items:center;justify-content:space-between;margin-bottom:16px}
+  .sc-search{position:relative;flex:1 1 260px;max-width:420px}
+  .sc-search > svg{position:absolute;left:14px;top:50%;transform:translateY(-50%);width:16px;height:16px;color:var(--ink-soft);pointer-events:none}
+  .sc-search input{width:100%;height:46px;padding:0 16px 0 40px;background:var(--surface-2);border:1px solid var(--line);border-radius:14px;color:var(--ink);font-family:var(--sans);font-size:.92rem;outline:none;transition:border-color .2s var(--ease)}
+  .sc-search input:focus{border-color:var(--line-2)}
+  .sc-search input::placeholder{color:var(--ink-soft)}
+  .sc-chips{display:flex;flex-wrap:wrap;gap:8px}
+  .sc-chip{font-family:var(--mono);font-size:.58rem;letter-spacing:.1em;text-transform:uppercase;color:var(--ink-soft);background:transparent;border:1px solid var(--line-2);border-radius:20px;padding:8px 12px;cursor:pointer;transition:color .25s var(--ease),border-color .25s var(--ease),background .25s var(--ease)}
+  .sc-chip:hover{color:var(--ink);border-color:rgba(255,255,255,.35)}
+  .sc-chip.is-on{color:var(--on-accent);background:var(--accent);border-color:var(--accent)}
+  .sc-count{font-family:var(--mono);font-size:var(--t-mono);letter-spacing:.14em;text-transform:uppercase;color:var(--ink-soft);margin-bottom:22px}
+
+  /* ===== GRID DE PROYECTOS ===== */
+  .sc-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(248px,1fr));gap:clamp(14px,2vw,24px)}
+  .sc-card{position:relative;background:var(--surface);border:1px solid var(--line);border-radius:16px;overflow:hidden;cursor:pointer;
+    transition:border-color .3s var(--ease),transform .3s var(--ease),box-shadow .3s var(--ease)}
+  .sc-card:hover{border-color:var(--line-2);transform:translateY(-4px);box-shadow:0 18px 42px rgba(0,0,0,.5)}
+  .sc-card:focus-visible{outline:none;border-color:var(--accent);transform:translateY(-4px)}
+  .sc-card__media{position:relative;aspect-ratio:4/3;overflow:hidden;background:var(--surface-2)}
+  .sc-card__media img{width:100%;height:100%;object-fit:cover;filter:grayscale(.55) contrast(1.02);transition:filter .45s var(--ease),transform .6s var(--ease)}
+  .sc-card:hover .sc-card__media img{filter:grayscale(0);transform:scale(1.05)}
+  .sc-card__cat{position:absolute;left:10px;top:10px;font-family:var(--mono);font-size:.5rem;letter-spacing:.12em;color:var(--ink);background:rgba(0,0,0,.55);-webkit-backdrop-filter:blur(6px);backdrop-filter:blur(6px);border:1px solid var(--line-2);border-radius:20px;padding:4px 9px}
+  .sc-card__body{padding:14px 15px 15px}
+  .sc-card__title{font-family:var(--sans);font-size:.92rem;font-weight:700;letter-spacing:-.01em;line-height:1.25;margin-bottom:7px;
+    display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+  .sc-card__student{font-size:.76rem;color:var(--ink-soft);line-height:1.4;margin-bottom:14px;
+    display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+  .sc-card__foot{display:flex;align-items:center;justify-content:space-between;border-top:1px solid var(--line);padding-top:11px}
+  .sc-card__period{font-family:var(--mono);font-size:.55rem;letter-spacing:.06em;color:var(--ink-soft)}
+  .sc-card__open{font-family:var(--mono);font-size:.58rem;letter-spacing:.04em;color:var(--accent)}
+  .sc-empty{text-align:center;color:var(--ink-soft);font-family:var(--mono);font-size:.8rem;letter-spacing:.1em;text-transform:uppercase;padding:60px 0}
+
+  /* ===== MODAL DE FICHA ===== */
+  .sc-modal{position:fixed;inset:0;z-index:1400;display:none;align-items:center;justify-content:center;padding:clamp(16px,4vw,48px)}
+  .sc-modal.is-open{display:flex}
+  .sc-modal__backdrop{position:absolute;inset:0;background:rgba(0,0,0,.8);-webkit-backdrop-filter:blur(8px);backdrop-filter:blur(8px)}
+  .sc-modal__panel{position:relative;z-index:1;width:100%;max-width:880px;max-height:90vh;overflow-y:auto;background:var(--surface);border:1px solid var(--line-2);border-radius:22px;display:grid;grid-template-columns:1fr 1fr}
+  .sc-modal__close{position:absolute;right:14px;top:14px;z-index:3;width:38px;height:38px;display:grid;place-items:center;border-radius:50%;border:1px solid var(--line-2);background:rgba(0,0,0,.45);color:var(--ink);cursor:pointer;transition:color .25s var(--ease),border-color .25s var(--ease)}
+  .sc-modal__close:hover{color:var(--accent);border-color:var(--accent)}
+  .sc-modal__close svg{width:18px;height:18px}
+  .sc-modal__cover{background:var(--surface-2);overflow:hidden}
+  .sc-modal__cover img{width:100%;height:100%;object-fit:cover;min-height:260px;display:block}
+  .sc-modal__info{padding:clamp(22px,3vw,36px)}
+  .sc-modal__cat{font-family:var(--mono);font-size:.58rem;letter-spacing:.16em;text-transform:uppercase;color:var(--accent)}
+  .sc-modal__title{font-family:var(--disp);font-weight:400;text-transform:uppercase;font-size:clamp(1.3rem,2.6vw,1.9rem);line-height:1.06;letter-spacing:-.01em;margin:10px 0 18px}
+  .sc-modal__meta{display:flex;flex-direction:column;gap:12px;margin-bottom:18px}
+  .sc-modal__meta dt{font-family:var(--mono);font-size:.55rem;letter-spacing:.12em;text-transform:uppercase;color:var(--ink-soft);margin-bottom:3px}
+  .sc-modal__meta dd{font-size:.86rem;color:var(--ink);line-height:1.4}
+  .sc-modal__abstract{font-family:var(--serif);font-style:italic;font-size:.98rem;line-height:1.62;color:var(--ink-soft);margin-bottom:22px}
+  .sc-modal__dl{display:inline-flex;align-items:center;gap:8px;font-family:var(--mono);font-size:.62rem;letter-spacing:.1em;text-transform:uppercase;color:var(--on-accent);background:var(--accent);border-radius:12px;padding:12px 18px;text-decoration:none;transition:background .25s var(--ease),transform .25s var(--ease)}
+  .sc-modal__dl:hover{background:var(--accent-deep);transform:translateY(-2px)}
+  body.sc-modal-open{overflow:hidden}
+
+  @media (max-width:680px){
+    .sc-modal__panel{grid-template-columns:1fr;max-height:92vh}
+    .sc-modal__cover img{min-height:0;max-height:230px}
+    .sc-banner__play{width:60px;height:60px}
+    .sc-banner__play svg{width:24px;height:24px}
+  }
+  </style>
+</head>
+<body>
+
+  <!-- iconos -->
+  <svg width="0" height="0" style="position:absolute" aria-hidden="true">
+    <symbol id="ic-search" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></symbol>
+    <symbol id="ic-x" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6 6 18M6 6l12 12"/></symbol>
+    <symbol id="ic-play" viewBox="0 0 24 24"><path d="M8 5v14l11-7z" fill="currentColor"/></symbol>
+  </svg>
+
+  <main>
+    <!-- 01 · DESTACADO (video) -->
+    <section class="section" id="destacado">
+      <div class="wrap">
+        <div class="sec-head"><span class="sec-no">01</span><h2>Destacado</h2></div>
+        <p class="sec-sub">Biodiseño Gráfico · Sofía Porto · PEF Otoño 2025</p>
+
+        <div class="sc-banner" data-vimeo="1160882204">
+          <a class="sc-banner__poster" href="https://vimeo.com/1160882204" target="_blank" rel="noopener" aria-label="Reproducir video del proyecto Biodiseño">
+            <img src="proyectos/thumbnails/biodiseo.jpg" alt="Biodiseño Gráfico · Sofía Porto Iannuzzi">
+            <span class="sc-banner__play" aria-hidden="true"><svg><use href="#ic-play"/></svg></span>
+            <span class="sc-banner__cap">Biodiseño Gráfico · Sofía Porto Iannuzzi</span>
+          </a>
+        </div>
+      </div>
+    </section>
+
+    <!-- 02 · PROYECTOS (grid + buscador + premios) -->
+    <section class="section" id="proyectos">
+      <div class="wrap">
+        <div class="sec-head"><span class="sec-no">02</span><h2>Proyectos</h2></div>
+        <p class="sec-sub">Portafolio del programa · busca por nombre, alumno o categoría</p>
+
+        <!-- Reconocimientos (premios integrados) -->
+        <div class="sc-subhead" style="margin-top:34px"><span>Reconocimientos · A′ Design Award</span></div>
+        <div class="sc-awards" id="scAwards"></div>
+
+        <!-- controles -->
+        <div class="sc-controls">
+          <div class="sc-search">
+            <svg><use href="#ic-search"/></svg>
+            <input type="search" id="scSearch" placeholder="Buscar proyecto, alumno, tutor…" aria-label="Buscar proyectos">
+          </div>
+          <div class="sc-chips" id="scChips"></div>
+        </div>
+        <p class="sc-count" id="scCount" role="status" aria-live="polite" aria-atomic="true"></p>
+
+        <!-- grid -->
+        <div class="sc-grid" id="scGrid"></div>
+        <p class="sc-empty" id="scEmpty" hidden>Sin resultados para tu búsqueda.</p>
+      </div>
+    </section>
+  </main>
+
+  <!-- MODAL de ficha -->
+  <div class="sc-modal" id="scModal" aria-hidden="true" role="dialog" aria-modal="true" aria-labelledby="scmTitle">
+    <div class="sc-modal__backdrop" data-close></div>
+    <div class="sc-modal__panel" role="document">
+      <button class="sc-modal__close" data-close type="button" aria-label="Cerrar ficha"><svg><use href="#ic-x"/></svg></button>
+      <div class="sc-modal__cover" id="scmCover"></div>
+      <div class="sc-modal__info">
+        <span class="sc-modal__cat" id="scmCat"></span>
+        <h3 class="sc-modal__title" id="scmTitle"></h3>
+        <dl class="sc-modal__meta">
+          <div><dt>Estudiantes</dt><dd id="scmStudent"></dd></div>
+          <div><dt>Tutor</dt><dd id="scmTutor"></dd></div>
+          <div><dt>Periodo</dt><dd id="scmYear"></dd></div>
+        </dl>
+        <p class="sc-modal__abstract" id="scmAbstract"></p>
+        <a class="sc-modal__dl" id="scmDownload" target="_blank" rel="noopener">Descargar PDF ↓</a>
+      </div>
+    </div>
+  </div>
+
+  <!-- FOOTER común · inyectado por assets/footer.js -->
+
+</body>
+</html>

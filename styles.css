@@ -14,6 +14,7 @@
   --verm: #B23818;      /* vermilion: cotas, sellos, datos críticos (AA 4.5:1 sobre paper) */
   --line: rgba(27,22,18,.16);   /* retícula */
   --line-2: rgba(27,22,18,.34); /* divisiones de cajetín */
+  --ink-shadow: var(--ink);     /* color de las sombras duras (se neutraliza en tema oscuro) */
 
   --disp: "Anton", "Arial Narrow", sans-serif;             /* display, SIEMPRE weight 400 */
   --sans: "Atkinson Hyperlegible", system-ui, sans-serif;  /* prosa */
@@ -352,6 +353,116 @@ h1 .ln:nth-child(2) i { transition-delay: .1s; }
 @media (max-width: 860px) {
   .cota { grid-column: 1 / -1; }
   .lede { grid-column: 1 / -1; }
+  /* al envolver, deja sitio sobre la caja para la etiqueta del espécimen */
+  .claim { row-gap: 1.25em; }
+}
+
+/* ---- CLAIM TIPOGRÁFICO ----------------------------------------------------
+   "Una carrera [valiente]". La palabra rota entre las cuatro familias del
+   sistema; el marco se ajusta al ancho medido de cada fuente y el cursor
+   (caret bermellón) cabalga el borde derecho. Sin JS: especimen estático. */
+.claim {
+  grid-column: 1 / -1;
+  margin-top: 26px;
+  --claim-fs: clamp(1.55rem, 3.6vw, 2.9rem);
+  font-family: var(--sans);
+  font-size: var(--claim-fs);
+  font-weight: 400;
+  line-height: 1.1;
+  color: var(--ink);
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: .12em .42em;
+  /* altura reservada = el espécimen más alto; evita reflujo vertical al rotar */
+  min-height: 1.62em;
+}
+
+.claim-pre {
+  white-space: nowrap;
+  color: var(--ink-soft);
+}
+
+.fc {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+}
+
+.fc-frame {
+  position: relative;
+  display: inline-block;
+  box-sizing: border-box;
+  height: 1.5em;
+  padding: 0 .5em;
+  border: 1.5px solid var(--ink);
+  border-radius: 2px;
+  background: var(--paper-2);
+  width: 7ch;            /* semilla; el JS la sustituye con el ancho medido */
+  will-change: width;
+}
+
+/* etiqueta de espécimen: nombre de la familia activa, como pie de cota */
+.fc-tag {
+  position: absolute;
+  left: 0;
+  bottom: calc(100% + 5px);
+  font-family: var(--mono);
+  font-size: clamp(.6rem, .9vw, .72rem);
+  letter-spacing: .18em;
+  text-transform: uppercase;
+  white-space: nowrap;
+  color: var(--ink-soft);
+}
+
+.fc-word {
+  position: absolute;
+  left: .5em;
+  top: 50%;
+  transform: translateY(-50%);
+  line-height: 1;
+  white-space: nowrap;
+  color: var(--ink);
+  will-change: opacity, filter;
+}
+
+.fc-caret {
+  position: absolute;
+  right: .3em;
+  top: 50%;
+  transform: translateY(-50%);
+  width: .085em;
+  min-width: 2px;
+  height: .92em;
+  background: var(--verm);
+  animation: fc-blink 1.04s steps(1, end) infinite;
+}
+
+.fc-measure {
+  position: absolute;
+  left: 0;
+  top: 0;
+  visibility: hidden;
+  pointer-events: none;
+  white-space: nowrap;
+  line-height: 1;
+}
+
+@keyframes fc-blink {
+  0%, 49% { opacity: 1; }
+  50%, 100% { opacity: 0; }
+}
+
+/* movimiento reducido / sin JS: marco estático, cursor fijo sin parpadeo */
+.fc.is-static .fc-caret,
+html:not(.js) .fc-caret {
+  animation: none;
+  opacity: 1;
+}
+html:not(.js) .fc-frame { width: auto; }
+
+@media (prefers-reduced-motion: reduce) {
+  .fc-caret { animation: none; opacity: 1; }
 }
 
 /* ---- Cajetín técnico ---- */
@@ -1137,20 +1248,20 @@ h2 {
   display: inline-flex;
   align-items: center;
   gap: 14px;
-  box-shadow: 5px 5px 0 var(--ink);
+  box-shadow: 5px 5px 0 var(--ink-shadow);
   transition: transform .15s var(--ease), box-shadow .15s var(--ease);
 }
 
 .btn:hover,
 .modal__download:hover {
   transform: translate(-2px, -2px);
-  box-shadow: 7px 7px 0 var(--ink);
+  box-shadow: 7px 7px 0 var(--ink-shadow);
 }
 
 .btn:active,
 .modal__download:active {
   transform: translate(2px, 2px);
-  box-shadow: 1px 1px 0 var(--ink);
+  box-shadow: 1px 1px 0 var(--ink-shadow);
 }
 
 .btn .mono-arrow {
@@ -1417,7 +1528,7 @@ h2 {
   background: var(--yellow);
   color: var(--ink);
   border: 2px solid var(--ink);
-  box-shadow: 5px 5px 0 var(--ink);
+  box-shadow: 5px 5px 0 var(--ink-shadow);
   padding: 14px 22px;
   transition: transform .15s var(--ease), box-shadow .15s var(--ease);
 }
@@ -1426,7 +1537,7 @@ h2 {
 
 .lamina__poster:hover .lamina__play {
   transform: translate(calc(-50% - 2px), calc(-50% - 2px));
-  box-shadow: 7px 7px 0 var(--ink);
+  box-shadow: 7px 7px 0 var(--ink-shadow);
 }
 
 .lamina__video {
@@ -1730,25 +1841,25 @@ h2 {
   background: var(--yellow);
   color: var(--ink);
   border: 2px solid var(--ink);
-  box-shadow: 5px 5px 0 var(--ink);
+  box-shadow: 5px 5px 0 var(--ink-shadow);
   transition: transform .15s var(--ease), box-shadow .15s var(--ease);
   align-self: flex-start;
 }
 
 .pef-gate__submit:hover {
   transform: translate(-2px, -2px);
-  box-shadow: 7px 7px 0 var(--ink);
+  box-shadow: 7px 7px 0 var(--ink-shadow);
 }
 
 .pef-gate__submit:active {
   transform: translate(2px, 2px);
-  box-shadow: 1px 1px 0 var(--ink);
+  box-shadow: 1px 1px 0 var(--ink-shadow);
 }
 
 .pef-gate__submit:disabled {
   opacity: .5;
   transform: none;
-  box-shadow: 5px 5px 0 var(--ink);
+  box-shadow: 5px 5px 0 var(--ink-shadow);
 }
 
 .pef-gate__submit-arrow { font-family: var(--mono); font-weight: 700; }
@@ -3050,3 +3161,71 @@ html.ts-gsap h1 .hl {
 /* ScrollSmoother activo (html.ts-smooth, solo pointer fine).
    El espacio de la barra fija lo reserva assets/menu.js con padding inline. */
 html.ts-smooth { scroll-behavior: auto; }
+
+/* ===================================================================
+   TEMA OSCURO · monocromo puro  ·  opt-in vía <html data-theme="dark">
+   Solo invierte los tokens y arregla acoplamientos al color (sombras,
+   logos, chips CMYK, bandas .hl). NO toca el marcado ni los selectores
+   que usan GSAP / IntersectionObserver / menú / Firebase.
+   El crema sigue siendo el default exacto cuando no hay data-theme.
+   =================================================================== */
+[data-theme="dark"]{
+  --paper:      #000000;   /* negro puro (el shader necesita negro detrás) */
+  --paper-2:    #0E0E0E;   /* superficie de celdas/bloques */
+  --ink:        #EFEFEF;   /* texto */
+  --ink-soft:   #8E8E8E;   /* prosa secundaria, labels */
+  --line:       rgba(255,255,255,.08);
+  --line-2:     rgba(255,255,255,.18);
+  --yellow:     #EFEFEF;   /* monocromo: amarillo neutralizado */
+  --verm:       #BDBDBD;   /* monocromo: bermellón neutralizado a gris */
+  --ink-shadow: rgba(255,255,255,.14);  /* sombras duras → fantasma sutil, sin halo blanco */
+}
+/* sin retícula de fondo en oscuro (el usuario la quiere sin rayas) */
+[data-theme="dark"] body{ background-image:none; }
+/* logos institucionales: en oscuro van claros, sin invertir */
+[data-theme="dark"] .footer__institutional-logos{ filter:none; }
+/* chips CMYK del ruler → grises (monocromo puro) */
+[data-theme="dark"] .ruler .ink.c{ background:#5A5A5A; }
+[data-theme="dark"] .ruler .ink.m{ background:#7A7A7A; }
+/* banda .hl: ahora es crema → el texto dentro va oscuro (resaltado invertido legible) */
+[data-theme="dark"] .hl{ color:#0A0A0A; }
+[data-theme="dark"] ::selection{ color:#0A0A0A; }
+
+/* Rellenos de acento (amarillo/bermellón → ahora claros): su texto/icono va oscuro
+   para no quedar claro-sobre-claro. Cubre estados activos y hovers. */
+[data-theme="dark"] .sec-no,
+[data-theme="dark"] .data-note .src,
+[data-theme="dark"] .filter-btn.active,
+[data-theme="dark"] .thesis-card .fcat,
+[data-theme="dark"] .modal__download,
+[data-theme="dark"] .awards__tag--accent,
+[data-theme="dark"] .lamina__play,
+[data-theme="dark"] .pef-gate__submit,
+[data-theme="dark"] .pef-talks__card-feedback-btn,
+[data-theme="dark"] .pef-talks__add-btn,
+[data-theme="dark"] .pef-table__grid th,
+[data-theme="dark"] .pef-table__cell--si,
+[data-theme="dark"] .admin-panel__tab.active,
+[data-theme="dark"] .gallery__arrow:hover,
+[data-theme="dark"] .modal__close:hover,
+[data-theme="dark"] .cell--admin:hover,
+[data-theme="dark"] .pef-talks__card-edit-btn:hover,
+[data-theme="dark"] .pef-talks__card-delete-btn:hover,
+[data-theme="dark"] .pef-talks__card-poster-btn:hover,
+[data-theme="dark"] .pef-talks__table-btn:hover,
+[data-theme="dark"] .pef-register__file-clear:hover,
+[data-theme="dark"] .pdf-viewer__close:hover,
+[data-theme="dark"] .admin-panel__list-item-delete:hover{
+  color:#0A0A0A;
+}
+
+/* Toggle de tema (claro/oscuro): flotante, discreto, adapta a tokens */
+#themeToggle{
+  position:fixed; right:16px; bottom:16px; z-index:1300;
+  width:42px; height:42px; border-radius:50%;
+  border:1px solid var(--line-2); background:var(--paper-2); color:var(--ink);
+  font-size:19px; line-height:1; cursor:pointer; display:grid; place-items:center;
+  box-shadow:0 4px 14px rgba(0,0,0,.28); transition:transform .2s var(--ease);
+}
+#themeToggle:hover{ transform:scale(1.08); }
+#themeToggle:focus-visible{ outline:2px solid var(--ink); outline-offset:2px; }

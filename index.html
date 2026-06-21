@@ -3,751 +3,139 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Portfolio LDG · UDEM | Carpeta de revisión del programa</title>
-  <meta name="description" content="Carpeta de revisión de la Licenciatura en Diseño Gráfico de la Universidad de Monterrey: proyectos finales con ficha técnica, datos de empleabilidad con fuente oficial y reconocimiento internacional.">
+  <title>LDG · UDEM · Inicio</title>
+  <meta name="description" content="Licenciatura en Diseño Gráfico de la Universidad de Monterrey. Forma ideas, mensajes e identidades visuales con criterio.">
+  <meta name="theme-color" content="#000000">
   <link rel="icon" href="assets/favicon.svg?v=4" type="image/svg+xml">
-  <link rel="icon" href="assets/favicon-32.png?v=4" sizes="32x32" type="image/png">
-  <link rel="apple-touch-icon" href="assets/favicon-180.png?v=4">
-  <meta name="theme-color" content="#1B1612">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Anton&family=Atkinson+Hyperlegible:ital,wght@0,400;0,700;1,400&family=JetBrains+Mono:wght@400;500;700&family=Spectral:ital@1&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="styles.css?v=20260620">
-  <link rel="stylesheet" href="assets/menu.css?v=20260620">
-  <!-- Menú de sitio compartido (mismo componente en las 3 páginas) -->
-  <script>window.SITE_MENU = { current: 'inicio' };</script>
-  <script defer src="assets/menu.js?v=20260620"></script>
-  <!-- Capa 1 del contrato de motion: los estados ocultos se gatean con .js (sin JS, todo visible) -->
-  <script>document.documentElement.classList.add('js');</script>
-  <!-- GSAP 3.13 vendoreado (DESIGN.md · Motion: contrato v2). Solo los plugins que usa esta página. -->
+  <link href="https://fonts.googleapis.com/css2?family=Anton&family=Atkinson+Hyperlegible:ital,wght@0,400;0,700;1,400&family=JetBrains+Mono:wght@400;500&family=Spectral:ital,wght@1,300&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="assets/dark.css?v=20260620k">
+  <script>window.SITE_NAV = { current: 'inicio' };</script>
+  <script defer src="assets/bg-noise.js?v=20260620e"></script>
+  <script defer src="assets/dock-fun.js?v=20260620b"></script>
   <script defer src="assets/vendor/gsap/gsap.min.js"></script>
-  <script defer src="assets/vendor/gsap/ScrollTrigger.min.js"></script>
-  <script defer src="assets/vendor/gsap/ScrollSmoother.min.js"></script>
-  <script defer src="assets/vendor/gsap/SplitText.min.js"></script>
-  <script defer src="assets/vendor/gsap/DrawSVGPlugin.min.js"></script>
-  <script defer src="assets/vendor/gsap/Flip.min.js"></script>
-  <script defer src="assets/vendor/gsap/ScrambleTextPlugin.min.js"></script>
-  <!-- Firebase SDK -->
-  <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-database-compat.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-auth-compat.js"></script>
-  <script>
-    const firebaseConfig = {
-      apiKey: "AIzaSyBfWefsqHW90aqHP9Mz6s8w91eIar_x6j8",
-      authDomain: "portfolioldg-3ca20.firebaseapp.com",
-      databaseURL: "https://portfolioldg-3ca20-default-rtdb.firebaseio.com",
-      projectId: "portfolioldg-3ca20",
-      storageBucket: "portfolioldg-3ca20.firebasestorage.app",
-      messagingSenderId: "563272567632",
-      appId: "1:563272567632:web:85e36244c8f00d5cdf7a55"
-    };
-    firebase.initializeApp(firebaseConfig);
-    const db = firebase.database();
-  </script>
+  <script defer src="assets/card-fan.js?v=20260620"></script>
+  <script defer src="assets/team-dir.js?v=20260620e"></script>
+  <script defer src="assets/footer.js?v=20260620f"></script>
+  <script defer src="assets/scroll-expand.js?v=20260620b"></script>
 </head>
 <body>
 
-  <!-- La barra y el menú los inyecta assets/menu.js (componente compartido) -->
-  <noscript>
-    <nav aria-label="Navegación principal">
-      <a href="index.html">Inicio</a> · <a href="trayectoria.html">Trayectoria</a> · <a href="pef.html">Guía PEF</a>
-    </nav>
-  </noscript>
-  <!-- Disparador oculto de PEF TALKS (admin); el gate sigue operando desde JS -->
-  <button id="pefBtn" style="display:none;" aria-hidden="true" tabindex="-1">PEF TALKS</button>
+  <!-- HERO · scroll-expand (port fiel de ScrollExpandMedia · 21st.dev) -->
+  <header class="se" data-scroll-expand id="inicio">
+    <h1 class="sr-only">Diseño Gráfico × UDEM · Licenciatura en Diseño Gráfico de la Universidad de Monterrey</h1>
+    <div class="se-stage">
+      <div class="se-bg" style="background-image:url('assets/inicio-hero-bg.jpg')" aria-hidden="true"></div>
+      <div class="se-media">
+        <iframe src="https://player.vimeo.com/video/1160882204?background=1&autoplay=1&loop=1&muted=1&dnt=1"
+          title="Biodiseño Gráfico · gráfica regenerativa (Sofía Porto)"
+          allow="autoplay; fullscreen; picture-in-picture"
+          referrerpolicy="strict-origin-when-cross-origin" tabindex="-1" aria-hidden="true"></iframe>
+        <span class="se-veil" aria-hidden="true"></span>
+      </div>
+      <div class="se-titles"><h2 class="se-t1">Diseño Gráfico</h2><h2 class="se-t2">× UDEM</h2></div>
+      <div class="se-meta" aria-hidden="true"><span class="se-hint">Desplázate para expandir</span></div>
+    </div>
+  </header>
 
-  <!-- PEF TALKS ACCESS GATE -->
-  <div class="pef-gate" id="pefGate">
-    <div class="pef-gate__backdrop" id="pefGateBackdrop"></div>
-    <div class="pef-gate__panel">
-      <button class="pef-gate__close" id="pefGateClose">&times;</button>
-      <div class="pef-gate__content">
-        <span class="mono-sm">ACCESO RESTRINGIDO</span>
-        <h2 class="pef-gate__title">PEF TALKS</h2>
-        <p class="pef-gate__desc">Este espacio es exclusivo para la comunidad UDEM. Ingresa tu correo institucional para acceder.</p>
-        <form class="pef-gate__form" id="pefGateForm">
-          <div class="pef-gate__input-wrap">
-            <input type="email" class="pef-gate__input" id="pefEmail" placeholder="tu.nombre@udem.edu.mx" required autocomplete="email">
-            <div class="pef-gate__input-line"></div>
+  <main>
+    <!-- Vista previa de proyectos (card-fan) -->
+    <section class="section" id="proyectos">
+      <div class="wrap">
+        <div class="sec-head"><span class="sec-no">01</span><h2>Proyectos</h2></div>
+        <p class="sec-sub">Una probada del portafolio · ver todo en Showcase</p>
+
+        <div class="proy-fan-wrap">
+          <div class="proy-fan" data-card-fan aria-label="Vista previa de proyectos">
+            <a class="fan-card" href="showcase.html#p-1"><img src="proyectos/thumbnails/ellaz.jpg" alt="Deconstrucción de la Percepción · Emilia Bermúdez, Angelina Avalos, Sofía Peralta" loading="lazy"></a>
+            <a class="fan-card" href="showcase.html#p-8"><img src="proyectos/thumbnails/alteria.jpg" alt="Alteria · Mariángela Garza, Patricio Treviño, Marian Treviño" loading="lazy"></a>
+            <a class="fan-card" href="showcase.html#p-11"><img src="proyectos/thumbnails/nodus.jpg" alt="Nodus · Valeria Gómez, Jaqueline Casas, Sabrina Villaseñor" loading="lazy"></a>
+            <a class="fan-card" href="showcase.html#p-4"><img src="proyectos/thumbnails/tefaltabarrio_9.jpg" alt="Te Falta Barrio · Ana Lucía Maraboto, Frida de la Garza" loading="lazy"></a>
+            <a class="fan-card" href="showcase.html#p-16"><img src="proyectos/thumbnails/biodiseo.jpg" alt="Biodiseño Gráfico · Sofía Porto Iannuzzi" loading="lazy"></a>
+            <a class="fan-card" href="showcase.html#p-10"><img src="proyectos/thumbnails/antera.jpg" alt="Antera · Natalia Alcalá, Danna Chávez, Victoria Lizárraga, Sarai Marines" loading="lazy"></a>
+            <a class="fan-card" href="showcase.html#p-15"><img src="proyectos/thumbnails/verdad-en-juego.jpg" alt="Verdad en Juego · Fernanda Díaz, Miranda Siller, Eugenio Nocedal, Karina Del Prado" loading="lazy"></a>
+            <a class="fan-card" href="showcase.html#p-17"><img src="proyectos/thumbnails/habits.jpg" alt="Colección by Habits · Ana Cecilia Moreno, Ana Paula Guerra, Mariana Zambrano" loading="lazy"></a>
+            <a class="fan-card" href="showcase.html#p-13"><img src="proyectos/thumbnails/turnout.jpg" alt="Turnout · Alejandra Urteaga, Maadai Salazar" loading="lazy"></a>
           </div>
-          <span class="pef-gate__error" id="pefError"></span>
-          <button type="submit" class="pef-gate__submit">
-            <span>VERIFICAR ACCESO</span>
-            <span class="pef-gate__submit-arrow">&rarr;</span>
-          </button>
-        </form>
-        <span class="mono-sm pef-gate__hint">Solo correos @udem.edu y @udem.edu.mx</span>
-      </div>
-    </div>
-  </div>
-
-  <!-- PEF TALKS SECTION (hidden until authenticated) -->
-  <div class="pef-talks" id="pefTalks">
-    <div class="pef-talks__backdrop" id="pefTalksBackdrop"></div>
-    <div class="pef-talks__panel">
-      <div class="pef-talks__header">
-        <div>
-          <span class="mono-sm">ESPACIO EXCLUSIVO UDEM</span>
-          <h2 class="pef-talks__title">PEF TALKS</h2>
-        </div>
-        <div class="pef-talks__header-actions">
-          <button class="pef-talks__table-btn" id="pefTableBtn">TABLA</button>
-          <button class="pef-talks__add-btn" id="pefAddBtn">+ DAR DE ALTA PEF</button>
-          <button class="pef-talks__close" id="pefTalksClose">&times;</button>
-        </div>
-      </div>
-      <div class="pef-talks__body" id="pefTalksBody">
-        <div class="pef-talks__welcome">
-          <p class="pef-talks__welcome-text">Bienvenido al espacio exclusivo de PEF Talks. Aquí encontrarás los proyectos PEF dados de alta. Puedes dar feedback a cada proyecto o registrar uno nuevo.</p>
-        </div>
-        <div class="pef-talks__grid" id="pefProjectsGrid">
-          <!-- PEF projects injected by JS -->
-        </div>
-        <div class="pef-talks__empty" id="pefEmpty">
-          <span class="mono-sm">NO HAY PROYECTOS PEF REGISTRADOS AÚN</span>
-          <p>Sé el primero en dar de alta un proyecto PEF.</p>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <!-- PEF FEEDBACK TABLE -->
-  <div class="pef-table" id="pefTable">
-    <div class="pef-table__backdrop" id="pefTableBackdrop"></div>
-    <div class="pef-table__panel">
-      <div class="pef-table__header">
-        <div>
-          <span class="mono-sm">RESUMEN DE FEEDBACK</span>
-          <h2 class="pef-table__title">TABLA DE RESPUESTAS</h2>
-        </div>
-        <button class="pef-talks__close" id="pefTableClose">&times;</button>
-      </div>
-      <div class="pef-table__body" id="pefTableBody">
-        <!-- Table injected by JS -->
-      </div>
-    </div>
-  </div>
-
-  <!-- PEF ADMIN PASSWORD GATE -->
-  <div class="pef-admin-gate" id="pefAdminGate">
-    <div class="pef-admin-gate__backdrop" id="pefAdminGateBackdrop"></div>
-    <div class="pef-admin-gate__panel">
-      <button class="pef-gate__close" id="pefAdminGateClose">&times;</button>
-      <div class="pef-gate__content">
-        <span class="mono-sm">ACCESO ADMINISTRADOR</span>
-        <h2 class="pef-gate__title" style="font-size: clamp(2rem, 5vw, 3.5rem);">ADMIN PEF</h2>
-        <p class="pef-gate__desc">Inicia sesión con tu cuenta de administrador para continuar.</p>
-        <form class="pef-gate__form" id="pefAdminForm">
-          <div class="pef-gate__input-wrap">
-            <input type="email" class="pef-gate__input" id="pefAdminEmail" placeholder="Correo de administrador" autocomplete="username" required>
-            <div class="pef-gate__input-line"></div>
-          </div>
-          <div class="pef-gate__input-wrap">
-            <input type="password" class="pef-gate__input" id="pefAdminPass" placeholder="Contraseña" autocomplete="current-password" required>
-            <div class="pef-gate__input-line"></div>
-          </div>
-          <span class="pef-gate__error" id="pefAdminError"></span>
-          <button type="submit" class="pef-gate__submit">
-            <span>CONTINUAR</span>
-            <span class="pef-gate__submit-arrow">&rarr;</span>
-          </button>
-        </form>
-      </div>
-    </div>
-  </div>
-
-  <!-- PEF REGISTRATION FORM -->
-  <div class="pef-register" id="pefRegister">
-    <div class="pef-register__backdrop" id="pefRegisterBackdrop"></div>
-    <div class="pef-register__panel">
-      <div class="pef-register__header">
-        <div>
-          <span class="mono-sm">NUEVO PROYECTO</span>
-          <h2 class="pef-talks__title" style="font-size: clamp(2rem, 5vw, 4rem);">ALTA DE PEF</h2>
-        </div>
-        <button class="pef-talks__close" id="pefRegisterClose">&times;</button>
-      </div>
-      <form class="pef-register__form" id="pefRegisterForm">
-        <div class="pef-register__field">
-          <label class="mono-sm" for="pefProjName">NOMBRE DEL PROYECTO</label>
-          <input type="text" class="pef-register__input" id="pefProjName" placeholder="Ej: Rediseño de identidad para..." required>
-        </div>
-        <div class="pef-register__field">
-          <label class="mono-sm" for="pefProjMembers">NOMBRE DE LOS INTEGRANTES</label>
-          <input type="text" class="pef-register__input" id="pefProjMembers" placeholder="Ej: Ana López, Carlos Ruiz, María García" required>
-        </div>
-        <div class="pef-register__field">
-          <label class="mono-sm" for="pefProjSummary">RESUMEN DEL PROYECTO</label>
-          <textarea class="pef-register__textarea" id="pefProjSummary" placeholder="Describe brevemente de qué trata tu proyecto PEF..." required rows="3"></textarea>
-        </div>
-        <div class="pef-register__field">
-          <label class="mono-sm" for="pefProjProblem">PROBLEMÁTICA</label>
-          <textarea class="pef-register__textarea" id="pefProjProblem" placeholder="¿Cuál es la problemática que aborda tu proyecto..." required rows="3"></textarea>
-        </div>
-        <div class="pef-register__field">
-          <label class="mono-sm" for="pefProjEmail">CORREO INSTITUCIONAL PARA FEEDBACK</label>
-          <input type="email" class="pef-register__input" id="pefProjEmail" placeholder="tu.nombre@udem.edu.mx" required>
-        </div>
-        <div class="pef-register__field">
-          <label class="mono-sm" for="pefProjPoster">POSTER DEL PROYECTO (opcional)</label>
-          <div class="pef-register__file-wrap">
-            <input type="file" id="pefProjPoster" accept="image/*" class="pef-register__file-input">
-            <label for="pefProjPoster" class="pef-register__file-label" id="pefProjPosterLabel">Seleccionar imagen…</label>
-            <button type="button" class="pef-register__file-clear" id="pefProjPosterClear" style="display:none;">Quitar</button>
-          </div>
-          <div class="pef-register__file-preview" id="pefProjPosterPreview"></div>
-          <input type="hidden" id="pefProjPdf">
-        </div>
-        <span class="pef-gate__error" id="pefRegisterError"></span>
-        <button type="submit" class="pef-gate__submit" style="margin-top: var(--space-sm);">
-          <span>REGISTRAR PROYECTO</span>
-          <span class="pef-gate__submit-arrow">&rarr;</span>
-        </button>
-      </form>
-    </div>
-  </div>
-
-  <!-- PEF FEEDBACK FORM -->
-  <div class="pef-feedback" id="pefFeedback">
-    <div class="pef-feedback__backdrop" id="pefFeedbackBackdrop"></div>
-    <div class="pef-feedback__panel">
-      <div class="pef-feedback__header">
-        <div>
-          <span class="mono-sm">FEEDBACK PARA</span>
-          <h2 class="pef-talks__title" style="font-size: clamp(1.5rem, 4vw, 3rem);" id="pefFeedbackTitle"></h2>
-        </div>
-        <button class="pef-talks__close" id="pefFeedbackClose">&times;</button>
-      </div>
-      <form class="pef-register__form" id="pefFeedbackForm">
-        <div class="pef-register__field">
-          <label class="mono-sm" for="pefFbProfName">NOMBRE DEL PROFESOR</label>
-          <input type="text" class="pef-register__input" id="pefFbProfName" placeholder="Nombre completo" required>
-        </div>
-        <div class="pef-register__field">
-          <label class="mono-sm" for="pefFbText">FEEDBACK</label>
-          <textarea class="pef-register__textarea" id="pefFbText" placeholder="Escribe tu retroalimentación sobre el proyecto..." required rows="5"></textarea>
-        </div>
-        <div class="pef-register__field">
-          <label class="mono-sm">¿ESTÁS INTERESADO EN ASESORAR ESTE PROYECTO DE PEF?</label>
-          <div class="pef-feedback__radio-group">
-            <label class="pef-feedback__radio">
-              <input type="radio" name="pefInterest" value="si" required>
-              <span class="pef-feedback__radio-custom"></span>
-              <span>Sí</span>
-            </label>
-            <label class="pef-feedback__radio">
-              <input type="radio" name="pefInterest" value="no">
-              <span class="pef-feedback__radio-custom"></span>
-              <span>No</span>
-            </label>
-            <label class="pef-feedback__radio">
-              <input type="radio" name="pefInterest" value="sinodal">
-              <span class="pef-feedback__radio-custom"></span>
-              <span>Como sinodal</span>
-            </label>
+          <div class="fan-nav" hidden>
+            <button class="fan-arrow" data-fan-prev type="button" aria-label="Anterior"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg></button>
+            <div class="fan-dots"></div>
+            <button class="fan-arrow" data-fan-next type="button" aria-label="Siguiente"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg></button>
           </div>
         </div>
-        <input type="hidden" id="pefFbProjectId" value="">
-        <button type="submit" class="pef-gate__submit" style="margin-top: var(--space-sm);">
-          <span>ENVIAR FEEDBACK</span>
-          <span class="pef-gate__submit-arrow">&rarr;</span>
-        </button>
-      </form>
-    </div>
-  </div>
+      </div>
+    </section>
 
-  <!-- MENÚ MÓVIL (hoja completa) -->
-  <!-- Enlace oculto que abre PEF TALKS (admin); el menú visible lo inyecta menu.js -->
-  <a href="#" id="menuPefLink" style="display:none;" aria-hidden="true" tabindex="-1">PEF TALKS</a>
+    <!-- Equipo Alto Desempeño 2026 -->
+    <section class="section" id="equipo">
+      <div class="wrap">
+        <div class="sec-head"><span class="sec-no">02</span><h2>Equipo Alto Desempeño 2026</h2></div>
+        <p class="sec-sub">Alumnas y alumnos destacados del programa</p>
 
-  <!-- FLUJO DEL DOCUMENTO · ScrollSmoother envuelve SOLO el flujo;
-       topline, menú, modales, gates, toasts y visores viven fuera (fixed) -->
-  <div id="smooth-wrapper">
-  <div id="smooth-content">
-
-  <!-- HOJA 01 · PORTADA DE LÁMINA -->
-  <div class="sheet" id="hero">
-    <div class="sheet-in">
-      <div class="ruler" aria-hidden="true">
-        <span class="ink c"></span><span class="ink m"></span><span class="ink y"></span><span class="ink k"></span>
-        <svg class="reg" viewBox="0 0 14 14" focusable="false">
-          <circle cx="7" cy="7" r="4.4" fill="none" stroke="currentColor" stroke-width="1.2"/>
-          <path d="M7 .5v13M.5 7h13" fill="none" stroke="currentColor" stroke-width="1.2"/>
+        <!-- iconos -->
+        <svg width="0" height="0" style="position:absolute" aria-hidden="true">
+          <symbol id="ic-search" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></symbol>
+          <symbol id="ic-users" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></symbol>
+          <symbol id="ic-tag" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12.586 2.586A2 2 0 0 0 11.172 2H4a2 2 0 0 0-2 2v7.172a2 2 0 0 0 .586 1.414l8.704 8.704a2.426 2.426 0 0 0 3.42 0l6.58-6.58a2.426 2.426 0 0 0 0-3.42z"/><circle cx="7.5" cy="7.5" r=".5" fill="currentColor"/></symbol>
+          <symbol id="ic-x" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6 6 18M6 6l12 12"/></symbol>
         </svg>
-        <span class="leg">Formato 74×120 cm · 300 dpi<span class="leg-x"> · CMYK</span></span>
-      </div>
 
-      <div class="hero-body" data-io>
-        <p class="eyebrow">Lámina 01 · Licenciatura en Diseño Gráfico · UDEM</p>
-        <h1>
-          <span class="ln"><i>Proyectos de</i></span>
-          <span class="ln"><i><span class="hl">Diseño Gráfico</span></i></span>
-        </h1>
-
-        <div class="cota" data-io aria-hidden="true">
-          <i class="c-line"></i><i class="c-tick l"></i><i class="c-tick r"></i>
-          <span class="lbl">Formato 74×120 cm · 300 dpi</span>
-        </div>
-
-        <p class="lede">Esta es la carpeta de revisión del programa: <b>proyectos finales con ficha técnica, datos de empleabilidad con fuente oficial y reconocimiento internacional.</b></p>
-      </div>
-
-      <div class="cajetin">
-        <span class="rev-stamp stamp" data-io style="transition-delay:.5s">VoBo · 2026</span>
-        <div class="cell"><span class="k">Proyecto</span><span class="v">Portfolio institucional · Home</span></div>
-        <div class="cell"><span class="k">Institución</span><span class="v">Universidad de Monterrey</span></div>
-        <div class="cell"><span class="k">Programa</span><span class="v">LDG</span></div>
-        <div class="cell"><span class="k">Periodo</span><span class="v big">OT26</span></div>
-        <div class="cell"><span class="k">Fecha</span><span class="v">JUN 2026</span></div>
-        <div class="cell"><span class="k">Lámina</span><span class="v big">01</span></div>
-      </div>
-    </div>
-  </div>
-
-  <!-- HOJA 02 · DATOS DEL PROGRAMA (IMCO) -->
-  <section id="datos">
-    <div class="wrap">
-      <div class="sec-head rv" data-io>
-        <span class="sec-no">02</span>
-        <h2>Datos del programa</h2>
-      </div>
-      <p class="sec-sub rv d1" data-io>Empleabilidad de la disciplina · Producción del programa</p>
-      <div class="drawx" data-io style="margin-top:22px"></div>
-
-      <div class="data-grid">
-        <div class="data-margin"><span class="rot">Datos</span></div>
-        <div class="data-table">
-
-          <div class="data-row rv" data-io>
-            <span class="lab">Ingreso promedio mensual
-              <small>Egresados de la carrera a nivel nacional</small></span>
-            <span class="num">$<span data-count="18768" data-group="1">18,768</span> <span class="unit">MXN</span></span>
-            <span class="ref">IMCO · Compara Carreras 2025</span>
-          </div>
-          <div class="drawx thin" data-io></div>
-
-          <div class="data-row rv d1" data-io>
-            <span class="lab">Tasa de ocupación
-              <small>Egresados trabajando o buscando con éxito</small></span>
-            <span class="num"><span data-count="95.1" data-dec="1">95.1</span><span class="unit">%</span></span>
-            <span class="ref">IMCO · Compara Carreras 2025</span>
-          </div>
-          <div class="drawx thin" data-io></div>
-
-          <div class="data-row rv d2" data-io>
-            <span class="lab">Proyectos en esta carpeta
-              <small>Proyectos de Evaluación Final</small></span>
-            <span class="num"><span data-count="17">17</span> <span class="unit">PEF</span></span>
-            <span class="ref">LDG UDEM · Otoño 2025</span>
-          </div>
-          <div class="drawx" data-io></div>
-
-        </div>
-      </div>
-
-      <div class="data-note">
-        <div class="pad"></div>
-        <p class="rv d2" data-io>Ingreso y ocupación corresponden a la carrera <b>Diseño y Comunicación Gráfica y Editorial</b>, a nivel nacional, según el Instituto Mexicano para la Competitividad.
-          <br><a class="src" href="https://imco.org.mx/comparacarreras/" target="_blank" rel="noopener">Fuente: IMCO Compara Carreras 2025 · ENOE 2T2024-1T2025</a></p>
-      </div>
-    </div>
-  </section>
-
-  <!-- HOJA 03 · FICHAS DE PROYECTO (galería de tesis) -->
-  <section class="gallery" id="gallery">
-    <div class="wrap">
-      <div class="gallery__header">
-        <div class="sec-head rv" data-io>
-          <span class="sec-no">03</span>
-          <h2 class="gallery__title">Proyectos de Evaluación Final</h2>
-        </div>
-        <p class="sec-sub rv d1" data-io>Carpeta Otoño 2025 · cada ficha con tutor, abstracto y documento descargable</p>
-        <div class="drawx" data-io style="margin-top:22px"></div>
-
-        <div class="gallery__filters" id="filters">
-          <div class="gallery__filter-group">
-            <span class="mono-sm gallery__filter-label">CATEGORÍA</span>
-            <div class="gallery__filter-buttons" id="categoryFilters">
-              <button class="filter-btn active" data-filter="all">TODOS</button>
-              <button class="filter-btn" data-filter="branding">BRANDING</button>
-              <button class="filter-btn" data-filter="editorial">EDITORIAL</button>
-              <button class="filter-btn" data-filter="packaging">PACKAGING</button>
-              <button class="filter-btn" data-filter="motion">MOTION</button>
-              <button class="filter-btn" data-filter="uiux">UI/UX</button>
-              <button class="filter-btn" data-filter="identidad">IDENTIDAD</button>
+        <div class="teamdir">
+          <div class="teamdir-main">
+            <div class="teamdir-head">
+              <h3>Destacados <span class="teamdir-count">7</span></h3>
+            </div>
+            <div class="td-search">
+              <svg><use href="#ic-search"/></svg>
+              <input type="search" placeholder="Buscar integrante…" data-tdsearch="featured" aria-label="Buscar destacados">
+            </div>
+            <div class="td-list" data-tdlist="featured">
+              <div class="td-item" data-name="Eugenia Martínez-Abrego" data-role="branding"><div class="td-avatar"><img src="https://i.pravatar.cc/100?img=9" alt="" loading="lazy"><span class="td-star"></span></div><div class="td-info"><h5>Eugenia Martínez-Abrego</h5><p>A′ Design · 2025</p></div><span class="td-badge"><svg><use href="#ic-tag"/></svg>Branding</span></div>
+              <div class="td-item" data-name="María Andrade" data-role="identidad"><div class="td-avatar"><img src="https://i.pravatar.cc/100?img=20" alt="" loading="lazy"><span class="td-star"></span></div><div class="td-info"><h5>María Andrade</h5><p>A′ Design · 2025</p></div><span class="td-badge"><svg><use href="#ic-tag"/></svg>Identidad</span></div>
+              <div class="td-item" data-name="Valeria Marín" data-role="branding"><div class="td-avatar"><img src="https://i.pravatar.cc/100?img=47" alt="" loading="lazy"><span class="td-star"></span></div><div class="td-info"><h5>Valeria Marín</h5><p>A′ Design · 2025</p></div><span class="td-badge"><svg><use href="#ic-tag"/></svg>Branding</span></div>
+              <div class="td-item" data-name="Emilia Bermúdez" data-role="editorial"><div class="td-avatar"><img src="https://i.pravatar.cc/100?img=5" alt="" loading="lazy"></div><div class="td-info"><h5>Emilia Bermúdez</h5><p>PEF · Otoño 2025</p></div><span class="td-badge"><svg><use href="#ic-tag"/></svg>Editorial</span></div>
             </div>
           </div>
-          <div class="gallery__filter-group">
-            <span class="mono-sm gallery__filter-label">PERIODO</span>
-            <div class="gallery__filter-buttons" id="yearFilters">
-              <!-- Los tags de periodo los genera script.js (buildPeriodFilters) desde los datos -->
-              <button class="filter-btn active" data-period="all">TODOS</button>
+
+          <!-- cajón: directorio completo -->
+          <div class="teamdir-drawer">
+            <div class="teamdir-bar">
+              <div class="teamdir-bar-left">
+                <div class="teamdir-bar-icon"><svg><use href="#ic-users"/></svg></div>
+                <div><h4>Directorio del equipo</h4><p>7 integrantes</p></div>
+              </div>
+              <div class="teamdir-bar-right">
+                <div class="teamdir-avatars">
+                  <img src="https://i.pravatar.cc/100?img=9" alt="">
+                  <img src="https://i.pravatar.cc/100?img=20" alt="">
+                  <img src="https://i.pravatar.cc/100?img=47" alt="">
+                  <span class="more">+4</span>
+                </div>
+                <button class="teamdir-close" type="button" aria-label="Cerrar"><svg><use href="#ic-x"/></svg></button>
+              </div>
+            </div>
+            <div class="teamdir-drawer-body">
+              <div class="td-search">
+                <svg><use href="#ic-search"/></svg>
+                <input type="search" placeholder="Buscar en el directorio…" data-tdsearch="all" aria-label="Buscar en el directorio">
+              </div>
+              <div class="td-list" data-tdlist="all">
+                <div class="td-item" data-name="Emilia Bermúdez" data-role="editorial"><div class="td-avatar"><img src="https://i.pravatar.cc/100?img=5" alt="" loading="lazy"></div><div class="td-info"><h5>Emilia Bermúdez</h5><p>PEF · Otoño 2025</p></div><span class="td-badge"><svg><use href="#ic-tag"/></svg>Editorial</span></div>
+                <div class="td-item" data-name="Eugenia Martínez-Abrego" data-role="branding"><div class="td-avatar"><img src="https://i.pravatar.cc/100?img=9" alt="" loading="lazy"><span class="td-star"></span></div><div class="td-info"><h5>Eugenia Martínez-Abrego</h5><p>A′ Design · 2025</p></div><span class="td-badge"><svg><use href="#ic-tag"/></svg>Branding</span></div>
+                <div class="td-item" data-name="Angelina Avalos" data-role="editorial"><div class="td-avatar"><img src="https://i.pravatar.cc/100?img=16" alt="" loading="lazy"></div><div class="td-info"><h5>Angelina Avalos</h5><p>PEF · Otoño 2025</p></div><span class="td-badge"><svg><use href="#ic-tag"/></svg>Editorial</span></div>
+                <div class="td-item" data-name="María Andrade" data-role="identidad"><div class="td-avatar"><img src="https://i.pravatar.cc/100?img=20" alt="" loading="lazy"><span class="td-star"></span></div><div class="td-info"><h5>María Andrade</h5><p>A′ Design · 2025</p></div><span class="td-badge"><svg><use href="#ic-tag"/></svg>Identidad</span></div>
+                <div class="td-item" data-name="Sofía Peralta" data-role="packaging"><div class="td-avatar"><img src="https://i.pravatar.cc/100?img=32" alt="" loading="lazy"></div><div class="td-info"><h5>Sofía Peralta</h5><p>PEF · Otoño 2025</p></div><span class="td-badge"><svg><use href="#ic-tag"/></svg>Packaging</span></div>
+                <div class="td-item" data-name="Valeria Marín" data-role="branding"><div class="td-avatar"><img src="https://i.pravatar.cc/100?img=47" alt="" loading="lazy"><span class="td-star"></span></div><div class="td-info"><h5>Valeria Marín</h5><p>A′ Design · 2025</p></div><span class="td-badge"><svg><use href="#ic-tag"/></svg>Branding</span></div>
+                <div class="td-item" data-name="Paulina González" data-role="motion"><div class="td-avatar"><img src="https://i.pravatar.cc/100?img=25" alt="" loading="lazy"></div><div class="td-info"><h5>Paulina González</h5><p>PEF · Otoño 2025</p></div><span class="td-badge"><svg><use href="#ic-tag"/></svg>Motion</span></div>
+              </div>
             </div>
           </div>
         </div>
       </div>
+    </section>
+  </main>
 
-      <div class="gallery__slider">
-        <div class="gallery__grid" id="galleryGrid">
-          <!-- Fichas injected by JS -->
-        </div>
-      </div>
-
-      <div class="gallery__nav">
-        <div class="gallery__count">
-          <span class="mono-sm" id="projectCount">17 PROYECTOS</span>
-          <span class="mono-sm" id="pageIndicator">1 / 5</span>
-        </div>
-        <div class="gallery__arrows">
-          <button class="gallery__arrow gallery__arrow--prev" id="galleryPrev" aria-label="Anterior">
-            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
-          </button>
-          <button class="gallery__arrow gallery__arrow--next" id="galleryNext" aria-label="Siguiente">
-            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
-          </button>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- HOJA 04 · RECONOCIMIENTO (sello + vitrina) -->
-  <section class="awards" id="awards">
-    <div class="wrap">
-      <div class="sec-head rv" data-io>
-        <span class="sec-no">04</span>
-        <h2 class="awards__title">Reconocimiento</h2>
-      </div>
-      <p class="sec-sub rv d1" data-io>Verificación externa · competencia internacional</p>
-      <div class="drawx" data-io style="margin-top:22px"></div>
-
-      <div class="sello rv d1" data-io>
-        <div class="txt">
-          <p class="scene">Viernes de entregas en el taller del CRGS: láminas sobre la mesa, maquetas bajo luz de día, y un proyecto que salió de aquí con sello internacional.</p>
-          <h3>Roble &amp; Maca</h3>
-          <p><b>A' Design Award &amp; Competition, Bronce,</b> en la categoría de diseño gráfico. Un proyecto estudiantil del programa, evaluado por un jurado internacional con los mismos criterios que se aplican a estudios profesionales.</p>
-          <dl class="meta">
-            <dt>Alumnas</dt><dd>Eugenia Martínez-Abrego Sáenz · María Andrade Padilla · Paulina González Gracia · Valeria Marín Guzmán</dd>
-            <dt>Asesor</dt><dd>Sergio Trujillo</dd>
-          </dl>
-        </div>
-        <div class="vitrina">
-          <span class="zlbl mono">Vitrina · registro del proyecto</span>
-          <img src="proyectos/awards/roble-maca.jpg" alt="Roble &amp; Maca · proyecto galardonado con el A' Design Award &amp; Competition, Bronce" loading="lazy">
-          <div class="stamp" data-io>
-            <svg viewBox="0 0 240 240" role="img" aria-label="Sello: A' Design Award and Competition, Bronce">
-              <defs>
-                <path id="ringPath" d="M120,120 m-86,0 a86,86 0 1,1 172,0 a86,86 0 1,1 -172,0"/>
-              </defs>
-              <circle cx="120" cy="120" r="104" fill="none" stroke="#B23818" stroke-width="4"/>
-              <circle cx="120" cy="120" r="96" fill="none" stroke="#B23818" stroke-width="1.5"/>
-              <circle cx="120" cy="120" r="62" fill="none" stroke="#B23818" stroke-width="1.5"/>
-              <text font-size="13" letter-spacing="3.5">
-                <textPath href="#ringPath">A' DESIGN AWARD &amp; COMPETITION · 2025 ·</textPath>
-              </text>
-              <text x="120" y="113" text-anchor="middle" font-size="26" font-weight="700" letter-spacing="2">BRONCE</text>
-              <text x="120" y="138" text-anchor="middle" font-size="11" letter-spacing="2">DISEÑO GRÁFICO</text>
-            </svg>
-          </div>
-        </div>
-      </div>
-
-      <!-- Reconocimientos dinámicos (inyectados por JS desde Firebase) -->
-      <div class="awards__list"></div>
-    </div>
-  </section>
-
-  <!-- HOJA 05 · LÁMINA AUDIOVISUAL + CTA TRAYECTORIA -->
-  <section class="av" id="lamina">
-    <div class="wrap">
-      <div class="sec-head rv" data-io>
-        <span class="sec-no">05</span>
-        <h2>Lámina audiovisual</h2>
-      </div>
-      <p class="sec-sub rv d1" data-io>BioDiseño x Sofía Porto · PEF session · Otoño 2025</p>
-      <div class="drawx" data-io style="margin-top:22px"></div>
-
-      <figure class="lamina rv d1" data-io>
-        <div class="lamina__frame" id="videoLamina" data-speed="1.04">
-          <a class="lamina__poster" id="videoPoster" href="https://vimeo.com/1160882204" target="_blank" rel="noopener" aria-label="Reproducir video: BioDiseño x Sofía Porto · PEF session Otoño 2025">
-            <img src="proyectos/thumbnails/biodiseo.jpg" alt="" loading="lazy">
-            <span class="lamina__play"><span class="mono">Reproducir video &#9654;</span></span>
-          </a>
-        </div>
-        <figcaption class="lamina__cap mono">Lámina A/V · BioDiseño x Sofía Porto · PEFsession OT25 · Vimeo</figcaption>
-      </figure>
-
-      <div class="cta-row rv d2" data-io id="trayectoriaCta">
-        <a class="btn" href="trayectoria.html">Trayectoria profesional del LDG <span class="mono-arrow">&rarr;</span></a>
-        <span class="cta-note">Siguiente hoja: rutas reales del egresado<br>emprendedor · freelance · director creativo</span>
-      </div>
-    </div>
-  </section>
-
-  <!-- PIE · CAJETÍN EDITORIAL -->
-  <footer class="footer" id="footer">
-    <div class="wrap">
-      <div class="foot-cajetin">
-        <div class="cell cell--brand">
-          <span class="k">Proyecto</span>
-          <span class="v big">Portfolio LDG</span>
-          <span class="v soft">Repositorio de Proyectos de Evaluación Final · Licenciatura en Diseño Gráfico</span>
-        </div>
-        <div class="cell">
-          <span class="k">Navegación</span>
-          <a class="v" href="#hero">Inicio</a>
-          <a class="v" href="#gallery">Proyectos</a>
-          <a class="v" href="trayectoria.html">Trayectoria</a>
-          <a class="v" href="pef.html">Guía PEF</a>
-        </div>
-        <div class="cell">
-          <span class="k">Contacto</span>
-          <a class="v" href="mailto:ldg.crgs@udem.edu">ldg.crgs@udem.edu</a>
-          <a class="v" href="https://www.instagram.com/ldg_udem?igsh=MWZ0a210dzhmZmRyZQ%3D%3D&utm_source=qr" target="_blank" rel="noopener">Instagram</a>
-          <a class="v" href="https://crgs.udem.edu.mx/arte-arquitectura-y-diseno/academia/profesional/licenciatura-en-diseno-grafico" target="_blank" rel="noopener">Sitio oficial LDG</a>
-        </div>
-        <div class="cell cell--logos">
-          <span class="k">Instituciones</span>
-          <img src="logos-institucionales.svg" alt="UDEM · Escuela de Arte y Diseño · Centro Roberto Garza Sada" class="footer__institutional-logos">
-        </div>
-        <button class="cell cell--admin" id="adminBtn" type="button" title="Acceso administrador">
-          <span class="k">Acceso</span>
-          <span class="v">ADMIN</span>
-        </button>
-      </div>
-      <div class="foot-bar">
-        <span class="mono">&copy; 2026 <b>LDG · UDEM</b> · Centro Roberto Garza Sada</span>
-        <span class="mono">Mesa de Revisión · Lámina 01 · Todos los derechos reservados</span>
-      </div>
-    </div>
-  </footer>
-
-  </div><!-- /#smooth-content -->
-  </div><!-- /#smooth-wrapper -->
-
-  <!-- LÁMINA DE DETALLE (modal de proyecto) · fuera del wrapper: position fixed -->
-  <div class="modal" id="modal" role="dialog" aria-modal="true">
-    <div class="modal__backdrop" id="modalBackdrop"></div>
-    <div class="modal__content" id="modalContent">
-      <button class="modal__close" id="modalClose" aria-label="Cerrar proyecto">
-        <span>&times;</span>
-      </button>
-      <div class="modal__inner">
-        <p class="modal__doc mono">LÁMINA DE DETALLE · CARPETA DE REVISIÓN LDG</p>
-        <div class="modal__cover" id="modalCover"></div>
-        <div class="modal__info">
-          <h2 class="modal__title" id="modalTitle"></h2>
-          <div class="modal__cajetin">
-            <div class="cell"><span class="k">Categoría</span><span class="v" id="modalCategory"></span></div>
-            <div class="cell"><span class="k">Estudiante</span><span class="v" id="modalStudent"></span></div>
-            <div class="cell"><span class="k">Tutor</span><span class="v" id="modalTutor"></span></div>
-            <div class="cell"><span class="k">Semestre</span><span class="v" id="modalSemester"></span><span id="modalYear" hidden></span></div>
-          </div>
-          <div class="modal__abstract" id="modalAbstract"></div>
-          <div class="modal__gallery" id="modalGallery"></div>
-          <button class="modal__download" id="modalDownload">
-            <span>DESCARGAR PDF</span>
-            <span class="modal__download-arrow">&darr;</span>
-          </button>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <!-- ADMIN PANEL -->
-  <div class="admin-panel" id="adminPanel">
-    <div class="admin-panel__backdrop" id="adminPanelBackdrop"></div>
-    <div class="admin-panel__container">
-      <div class="admin-panel__header">
-        <div>
-          <span class="mono-sm">ADMINISTRADOR</span>
-          <h2 class="pef-talks__title" style="font-size: clamp(2rem, 5vw, 3.5rem);">GESTIONAR CONTENIDO</h2>
-        </div>
-        <div style="display:flex; align-items:center; gap: 1rem;">
-          <button class="mono-sm admin-panel__logout" id="adminLogoutBtn">CERRAR SESI&Oacute;N</button>
-          <button class="pef-talks__close" id="adminPanelClose">&times;</button>
-        </div>
-      </div>
-
-      <!-- Tab navigation -->
-      <div class="admin-panel__tabs">
-        <button class="admin-panel__tab active" data-tab="projects">PROYECTOS</button>
-        <button class="admin-panel__tab" data-tab="awards">RECONOCIMIENTOS</button>
-      </div>
-
-      <!-- Projects Tab -->
-      <div class="admin-panel__tab-content active" id="adminTabProjects">
-        <div class="admin-panel__list" id="adminProjectsList"></div>
-        <button class="pef-gate__submit" id="adminAddProject" style="margin-top: var(--space-sm);">
-          <span>+ AGREGAR PROYECTO</span>
-          <span class="pef-gate__submit-arrow">&rarr;</span>
-        </button>
-      </div>
-
-      <!-- Awards Tab -->
-      <div class="admin-panel__tab-content" id="adminTabAwards">
-        <div class="admin-panel__list" id="adminAwardsList"></div>
-        <button class="pef-gate__submit" id="adminAddAward" style="margin-top: var(--space-sm);">
-          <span>+ AGREGAR RECONOCIMIENTO</span>
-          <span class="pef-gate__submit-arrow">&rarr;</span>
-        </button>
-      </div>
-    </div>
-  </div>
-
-  <!-- ADMIN: Add Project Form -->
-  <div class="admin-form" id="adminProjectForm">
-    <div class="admin-form__backdrop" id="adminProjectFormBackdrop"></div>
-    <div class="pef-register__panel">
-      <div class="pef-register__header">
-        <div>
-          <span class="mono-sm">NUEVO</span>
-          <h2 class="pef-talks__title" style="font-size: clamp(2rem, 5vw, 3.5rem);">PROYECTO DE TESIS</h2>
-        </div>
-        <button class="pef-talks__close" id="adminProjectFormClose">&times;</button>
-      </div>
-      <form class="pef-register__form" id="adminProjectFormEl">
-        <div class="pef-register__field">
-          <label class="mono-sm" for="adminProjTitle">T&Iacute;TULO DEL PROYECTO</label>
-          <input type="text" class="pef-register__input" id="adminProjTitle" placeholder="Ej: Biodise&ntilde;o Gr&aacute;fico" required>
-        </div>
-        <div class="pef-register__field">
-          <label class="mono-sm" for="adminProjStudent">ESTUDIANTE(S)</label>
-          <input type="text" class="pef-register__input" id="adminProjStudent" placeholder="Ej: Ana L&oacute;pez, Carlos Ruiz" required>
-        </div>
-        <div class="pef-register__field">
-          <label class="mono-sm" for="adminProjTutor">TUTOR</label>
-          <input type="text" class="pef-register__input" id="adminProjTutor" placeholder="Nombre del tutor" required>
-        </div>
-        <div class="pef-register__field">
-          <label class="mono-sm" for="adminProjSemester">SEMESTRE</label>
-          <input type="text" class="pef-register__input" id="adminProjSemester" placeholder="Ej: Oto&ntilde;o 2025" required>
-        </div>
-        <div class="pef-register__field">
-          <label class="mono-sm" for="adminProjYear">A&Ntilde;O</label>
-          <input type="number" class="pef-register__input" id="adminProjYear" placeholder="2025" required>
-        </div>
-        <div class="pef-register__field">
-          <label class="mono-sm" for="adminProjCategory">CATEGOR&Iacute;A</label>
-          <select class="pef-register__input" id="adminProjCategory" required>
-            <option value="">Seleccionar...</option>
-            <option value="branding">BRANDING</option>
-            <option value="editorial">EDITORIAL</option>
-            <option value="packaging">PACKAGING</option>
-            <option value="motion">MOTION</option>
-            <option value="uiux">UI/UX</option>
-            <option value="identidad">IDENTIDAD</option>
-          </select>
-        </div>
-        <div class="pef-register__field">
-          <label class="mono-sm" for="adminProjThumbnail">URL DE THUMBNAIL (imagen)</label>
-          <input type="url" class="pef-register__input" id="adminProjThumbnail" placeholder="https://..." required>
-        </div>
-        <div class="pef-register__field">
-          <label class="mono-sm" for="adminProjPdf">URL DEL PDF (Google Drive)</label>
-          <input type="url" class="pef-register__input" id="adminProjPdf" placeholder="https://drive.google.com/..." required>
-        </div>
-        <div class="pef-register__field">
-          <label class="mono-sm" for="adminProjAbstract">ABSTRACT / RESUMEN</label>
-          <textarea class="pef-register__textarea" id="adminProjAbstract" placeholder="Describe el proyecto..." required rows="4"></textarea>
-        </div>
-        <span class="pef-gate__error" id="adminProjectError"></span>
-        <button type="submit" class="pef-gate__submit" style="margin-top: var(--space-sm);">
-          <span>REGISTRAR PROYECTO</span>
-          <span class="pef-gate__submit-arrow">&rarr;</span>
-        </button>
-      </form>
-    </div>
-  </div>
-
-  <!-- ADMIN: Add Award Form -->
-  <div class="admin-form" id="adminAwardForm">
-    <div class="admin-form__backdrop" id="adminAwardFormBackdrop"></div>
-    <div class="pef-register__panel">
-      <div class="pef-register__header">
-        <div>
-          <span class="mono-sm">NUEVO</span>
-          <h2 class="pef-talks__title" style="font-size: clamp(2rem, 5vw, 3.5rem);">RECONOCIMIENTO</h2>
-        </div>
-        <button class="pef-talks__close" id="adminAwardFormClose">&times;</button>
-      </div>
-      <form class="pef-register__form" id="adminAwardFormEl">
-        <div class="pef-register__field">
-          <label class="mono-sm" for="adminAwardName">NOMBRE DEL PROYECTO</label>
-          <input type="text" class="pef-register__input" id="adminAwardName" placeholder="Ej: Roble & Maca" required>
-        </div>
-        <div class="pef-register__field">
-          <label class="mono-sm" for="adminAwardPrize">PREMIO</label>
-          <input type="text" class="pef-register__input" id="adminAwardPrize" placeholder="Ej: A' Design Award & Competition" required>
-        </div>
-        <div class="pef-register__field">
-          <label class="mono-sm" for="adminAwardBadge">CATEGOR&Iacute;A DEL PREMIO</label>
-          <input type="text" class="pef-register__input" id="adminAwardBadge" placeholder="Ej: Bronce, Oro, Menci&oacute;n Honor&iacute;fica" required>
-        </div>
-        <div class="pef-register__field">
-          <label class="mono-sm" for="adminAwardStudents">ALUMNO(S)</label>
-          <input type="text" class="pef-register__input" id="adminAwardStudents" placeholder="Nombres completos" required>
-        </div>
-        <div class="pef-register__field">
-          <label class="mono-sm" for="adminAwardAdvisor">ASESOR</label>
-          <input type="text" class="pef-register__input" id="adminAwardAdvisor" placeholder="Nombre del asesor" required>
-        </div>
-        <div class="pef-register__field">
-          <label class="mono-sm" for="adminAwardImage">URL DE IMAGEN</label>
-          <input type="url" class="pef-register__input" id="adminAwardImage" placeholder="https://..." required>
-        </div>
-        <div class="pef-register__field">
-          <label class="mono-sm" for="adminAwardDesc">DESCRIPCI&Oacute;N</label>
-          <textarea class="pef-register__textarea" id="adminAwardDesc" placeholder="Describe el reconocimiento..." required rows="3"></textarea>
-        </div>
-        <span class="pef-gate__error" id="adminAwardError"></span>
-        <button type="submit" class="pef-gate__submit" style="margin-top: var(--space-sm);">
-          <span>REGISTRAR RECONOCIMIENTO</span>
-          <span class="pef-gate__submit-arrow">&rarr;</span>
-        </button>
-      </form>
-    </div>
-  </div>
-
-  <!-- ADMIN PASSWORD GATE -->
-  <div class="pef-admin-gate" id="adminGate">
-    <div class="pef-admin-gate__backdrop" id="adminGateBackdrop"></div>
-    <div class="pef-admin-gate__panel">
-      <button class="pef-gate__close" id="adminGateClose">&times;</button>
-      <div class="pef-gate__content">
-        <span class="mono-sm">ACCESO ADMINISTRADOR</span>
-        <h2 class="pef-gate__title" style="font-size: clamp(2rem, 5vw, 3.5rem);">ADMIN</h2>
-        <p class="pef-gate__desc">Inicia sesi&oacute;n con tu cuenta de administrador para gestionar proyectos y reconocimientos.</p>
-        <form class="pef-gate__form" id="adminGateForm">
-          <div class="pef-gate__input-wrap">
-            <input type="email" class="pef-gate__input" id="adminGateEmail" placeholder="Correo de administrador" autocomplete="username" required>
-            <div class="pef-gate__input-line"></div>
-          </div>
-          <div class="pef-gate__input-wrap">
-            <input type="password" class="pef-gate__input" id="adminGatePass" placeholder="Contrase&ntilde;a" autocomplete="current-password" required>
-            <div class="pef-gate__input-line"></div>
-          </div>
-          <span class="pef-gate__error" id="adminGateError"></span>
-          <button type="submit" class="pef-gate__submit">
-            <span>CONTINUAR</span>
-            <span class="pef-gate__submit-arrow">&rarr;</span>
-          </button>
-        </form>
-      </div>
-    </div>
-  </div>
-
-  <!-- POSTER IMAGE VIEWER -->
-  <div class="pdf-viewer" id="pdfViewer">
-    <div class="pdf-viewer__backdrop" id="pdfViewerBackdrop"></div>
-    <div class="pdf-viewer__panel">
-      <button class="pdf-viewer__close" id="pdfViewerClose" title="Cerrar">&times;</button>
-      <img class="pdf-viewer__img" id="pdfViewerImg" src="" alt="Poster del proyecto">
-    </div>
-  </div>
-
-  <!-- TOAST NOTIFICATION -->
-  <div class="pef-toast" id="pefToast"></div>
-
-  <script src="script.js?v=20260620" defer></script>
+  <!-- FOOTER común · inyectado por assets/footer.js -->
 </body>
 </html>

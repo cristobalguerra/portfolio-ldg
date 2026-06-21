@@ -7,33 +7,31 @@
 <link rel="icon" href="assets/favicon.svg?v=4" type="image/svg+xml">
 <link rel="icon" href="assets/favicon-32.png?v=4" sizes="32x32" type="image/png">
 <link rel="apple-touch-icon" href="assets/favicon-180.png?v=4">
-<meta name="theme-color" content="#1B1612">
+<meta name="theme-color" content="#000000">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Anton&family=Atkinson+Hyperlegible:wght@400;700&family=JetBrains+Mono:wght@300;400;500&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="styles.css?v=20260620">
-<link rel="stylesheet" href="assets/menu.css?v=20260620">
-<!-- Menú de sitio compartido (mismo componente en las páginas) -->
-<script>window.SITE_MENU = { current: 'avance', sections: [
-  { href: '#resumen', label: 'Resumen' },
-  { href: '#proximo', label: 'Próximo semestre' },
-  { href: '#sugerencias', label: 'Sugerencias' },
-  { href: '#malla', label: 'Malla completa' }
-] };</script>
-<script defer src="assets/menu.js?v=20260620"></script>
+<link href="https://fonts.googleapis.com/css2?family=Anton&family=Atkinson+Hyperlegible:ital,wght@0,400;0,700;1,400&family=JetBrains+Mono:wght@400;500&family=Spectral:ital,wght@1,300&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/dark.css?v=20260620k">
+<!-- Scaffold oscuro «Cuarto Oscuro» (reemplaza styles.css + menu.js del crema) -->
+<script>window.SITE_NAV = { current: 'avance' };</script>
+<script defer src="assets/bg-noise.js?v=20260620e"></script>
+<script defer src="assets/dock-fun.js?v=20260620b"></script>
+<script defer src="assets/footer.js?v=20260620f"></script>
 <script>document.documentElement.classList.add('js');</script>
 <style>
   :root{
-    --paper:#F1ECDF;        /* superficie papel crema */
-    --paper-2:#E7E1D0;      /* papel sombreado, celdas alternas */
-    --ink:#1B1612;          /* tinta casi-negra calida: texto y lineas de plano */
-    --ink-soft:#5C564A;     /* tinta secundaria */
-    --yellow:#FFE000;       /* marcador UDEM: bandas hl, chips, atencion */
-    --yellow-deep:#E9CE00;
-    --verm:#B23818;         /* vermilion: cotas, sellos, datos criticos (AA 5.13:1 sobre paper) */
-    --green:#3E6B3A;        /* tinta verde sobria para el estado CURSADA (check) */
-    --line:rgba(27,22,18,.16);   /* reticula */
-    --line-2:rgba(27,22,18,.34); /* divisiones de cajetin */
+    /* ── re-mapeo a «Cuarto Oscuro» (mismos nombres, valores oscuros) ── */
+    --paper:#000000;        /* fondo (antes papel crema) */
+    --paper-2:#141414;      /* superficie elevada (celdas, cajetín) */
+    --ink:#EFEFEF;          /* texto principal claro */
+    --ink-soft:#8E8E8E;     /* texto secundario */
+    --yellow:hsl(280 90% 75%);   /* acento morado (antes marcador UDEM) */
+    --yellow-deep:hsl(280 85% 62%);
+    --verm:hsl(280 90% 75%);     /* acento (antes vermilion: cotas/sellos) */
+    --warn:hsl(8 78% 66%);       /* coral de alerta/error, legible sobre negro (≈5:1) */
+    --green:hsl(145 48% 62%);    /* verde legible en oscuro: estado CURSADA */
+    --line:rgba(255,255,255,.08);   /* retícula tenue */
+    --line-2:rgba(255,255,255,.18); /* divisiones */
     /* Sistema tipografico del sitio (DESIGN.md) */
     --disp:"Anton", "Arial Narrow", sans-serif;
     --sans:"Atkinson Hyperlegible", system-ui, -apple-system, sans-serif;
@@ -126,8 +124,8 @@
   /* ---- sections ---- */
   section{position:relative;padding:84px 0 30px;z-index:1}
   .sec-head{display:flex;align-items:baseline;gap:20px;margin-bottom:30px;flex-wrap:wrap}
-  .sec-no{font-family:var(--mono);font-size:.74rem;letter-spacing:.18em;color:var(--ink-soft);font-weight:500;
-    background:var(--yellow);color:var(--ink);padding:5px 9px 4px;align-self:center}
+  .sec-no{font-family:var(--mono);font-size:.74rem;letter-spacing:.18em;font-weight:500;
+    background:var(--yellow);color:var(--on-accent);padding:5px 9px 4px;align-self:center}
   h2{font-family:var(--disp);font-weight:400;letter-spacing:-.01em;line-height:1;
     font-size:var(--t-h2);text-transform:uppercase}
   .sec-sub{font-family:var(--mono);font-size:.78rem;letter-spacing:.02em;color:var(--ink-soft);
@@ -252,7 +250,7 @@
   .ap-head{display:flex;align-items:center;gap:14px;padding:14px 20px;border-bottom:2px solid var(--ink);
     flex-wrap:wrap}
   .ap-head .ap-no{font-family:var(--mono);font-size:.72rem;letter-spacing:.14em;background:var(--yellow);
-    color:var(--ink);padding:4px 8px 3px;font-weight:500;flex-shrink:0}
+    color:var(--on-accent);padding:4px 8px 3px;font-weight:500;flex-shrink:0}
   .ap-head h3{font-family:var(--disp);font-weight:400;font-size:clamp(1.3rem,2.6vw,1.9rem);
     text-transform:uppercase;letter-spacing:-.01em;line-height:1;flex:1;min-width:0}
   .ap-head .ap-prog{display:flex;gap:18px;align-items:baseline;flex-wrap:wrap;margin-left:auto}
@@ -290,8 +288,8 @@
   .course .specs{font-family:var(--mono);font-size:var(--t-mono);letter-spacing:.04em;color:var(--ink-soft);
     margin-top:3px;display:flex;flex-wrap:wrap;gap:4px 12px}
   .course .specs .cr{color:var(--verm)}
-  .course[data-state="planeada"]{background:rgba(255,224,0,.14)}
-  .course[data-state="planeada"]:hover{background:rgba(255,224,0,.22)}
+  .course[data-state="planeada"]{background:color-mix(in srgb, var(--accent) 14%, transparent)}
+  .course[data-state="planeada"]:hover{background:color-mix(in srgb, var(--accent) 22%, transparent)}
   /* borde-relleno amarillo distintivo para PLANEADA (DESIGN.md: estilo DISTINTO) */
   .course[data-state="planeada"]{box-shadow:inset 3px 0 0 var(--yellow-deep)}
 
@@ -319,39 +317,9 @@
   }
 
   /* ---- footer (estructura compartida, paleta paper) ---- */
-  footer{background:var(--ink);color:var(--paper);margin-top:90px;
-    padding:72px var(--gut) 32px;position:relative;z-index:1;border-top:2px solid var(--yellow)}
-  .foot-top{display:grid;grid-template-columns:1.3fr 1fr 1fr 1fr;gap:40px;margin-bottom:56px}
-  .foot-brand .foot-logo{font-family:var(--disp);font-weight:400;font-size:clamp(2.6rem,5vw,4rem);
-    line-height:.92;color:var(--yellow);text-transform:uppercase;letter-spacing:-.01em;margin-bottom:14px}
-  .foot-brand .foot-tag{font-family:var(--mono);font-size:.72rem;letter-spacing:.1em;
-    line-height:1.7;color:rgba(242,238,227,.55);text-transform:uppercase}
-  .foot-col{display:flex;flex-direction:column;gap:7px}
-  .foot-col h4{font-family:var(--mono);font-size:var(--t-mono);letter-spacing:.16em;text-transform:uppercase;
-    color:var(--yellow);margin-bottom:8px}
-  .foot-col a,.foot-col span.line{font-family:var(--sans);font-size:.92rem;
-    color:rgba(242,238,227,.8);text-decoration:none;line-height:1.5;transition:color .25s,padding-left .25s}
-  .foot-col a:hover{color:var(--yellow);padding-left:7px}
-  .foot-bottom{display:flex;justify-content:space-between;align-items:center;gap:24px;
-    padding-top:26px;border-top:1px solid rgba(242,238,227,.14);flex-wrap:wrap}
-  .foot-bottom-left{display:flex;flex-direction:column;gap:5px;font-family:var(--mono);
-    font-size:var(--t-mono);letter-spacing:.1em;text-transform:uppercase;color:rgba(242,238,227,.55)}
-  .foot-logos{width:340px;max-width:60vw;height:auto;opacity:.55}
-  @media(max-width:860px){.foot-top{grid-template-columns:1fr 1fr}.foot-brand{grid-column:1/-1}}
-  @media(max-width:560px){.foot-top{grid-template-columns:1fr}}
-  .foot-cajetin{display:grid;grid-template-columns:2.2fr 1.6fr 1fr 1fr .8fr .7fr;
-    border-top:2px solid rgba(242,238,227,.7);margin-bottom:26px}
-  .foot-cajetin .cell{padding:12px 14px 13px;border-left:1px solid rgba(242,238,227,.25);min-width:0}
-  .foot-cajetin .cell:first-child{border-left:0}
-  .foot-cajetin .k{display:block;font-family:var(--mono);font-size:var(--t-mono);letter-spacing:.14em;
-    text-transform:uppercase;color:rgba(242,238,227,.55);margin-bottom:4px}
-  .foot-cajetin .v{display:block;font-family:var(--sans);font-weight:700;font-size:.92rem;line-height:1.3;
-    color:rgba(242,238,227,.9)}
-  .foot-cajetin .v.big{font-family:var(--disp);font-weight:400;font-size:1.5rem;letter-spacing:.01em;color:var(--yellow)}
-  @media(max-width:860px){.foot-cajetin{grid-template-columns:1fr 1fr}
-    .foot-cajetin .cell{border-left:0;border-top:1px solid rgba(242,238,227,.14)}
-    .foot-cajetin .cell:nth-child(2n){border-left:1px solid rgba(242,238,227,.25)}
-    .foot-cajetin .cell:nth-child(-n+2){border-top:0}}
+  /* footer crema RETIRADO — todas las páginas usan el .site-footer inyectado por
+     footer.js (estilos en dark.css). Antes había un footer/.foot-* propio aquí
+     que se filtraba al .site-footer y lo hacía verse distinto. */
 
   /* =========================================================
      IMPRESION · @media print (PDF limpio en papel, sin librerias)
@@ -361,10 +329,12 @@
   @media print{
     @page{margin:14mm}
     html{scroll-behavior:auto}
+    /* PDF en papel blanco: vuelve a tokens claros */
+    :root{--paper:#fff;--paper-2:#f3f3f1;--ink:#1B1612;--ink-soft:#555;--yellow:#6d28d9;--yellow-deep:#5b21b6;--verm:#B23818;--green:#2f6b34;--line:rgba(0,0,0,.14);--line-2:rgba(0,0,0,.28)}
     body{background:#fff;color:#1B1612;font-size:11pt;line-height:1.4;overflow:visible}
     body::before,body::after{display:none!important}
-    /* ocultar todo lo interactivo / decorativo */
-    #site-menu-root,.site-bar,.site-scrim,.site-pills,.progress,.ctrlbar,.ghost,
+    /* ocultar todo lo interactivo / decorativo (incl. chrome oscuro) */
+    #bgfx,.fdock,.site-footer,.progress,.ctrlbar,.ghost,
     .actions,.legend-states,.next-panel,#malla,.back-btn,footer,.hero .tag,
     .sum-foot input,.summary .sum-bar-wrap,.sec-sub{display:none!important}
     section{padding:0;margin:0 0 14pt;page-break-inside:avoid}
@@ -402,6 +372,27 @@
     .suggest{display:block}
     #sugerencias .suggest{display:none}
   }
+
+  /* ============================================================
+     OVERRIDES «Cuarto Oscuro» — neutralizan el chrome crema sobrante
+     (el color base ya lo voltea el re-mapeo de :root). Solo pantalla.
+     ============================================================ */
+  body{background:var(--paper)}                 /* = #000 ahora */
+  body::before,body::after{display:none}        /* retícula+grano crema → usa #bgfx */
+  .ctrlbar{display:none}                          /* barra CMYK de imprenta */
+  body > footer:not(.site-footer){display:none}   /* footer crema → lo inyecta footer.js */
+  /* paneles que invertían (tinta de fondo / papel de texto) → superficie oscura */
+  .sum-foot .planbox{background:var(--surface-2);color:var(--ink)}
+  .sum-foot .planbox .k{color:var(--ink-soft)}
+  .next-head{background:var(--surface-2);color:var(--ink);border-bottom:1px solid var(--line)}
+  .sug.ink{background:var(--surface-2);color:var(--ink);border-color:var(--line-2)}
+  /* hovers que invertían a tinta → acento */
+  .back-btn:hover{background:transparent;color:var(--accent);border-color:var(--accent)}
+  .btn.ghost-btn:hover{background:transparent;color:var(--accent)}
+  /* botones letterpress (sombra dura) → estilo oscuro */
+  .btn{box-shadow:none;border:1px solid var(--line-2);border-radius:12px}
+  .btn:hover{transform:none;border-color:var(--accent);color:var(--accent)}
+  @media (max-width:560px){ .ghost{display:none} }   /* numerales gigantes: evitan overflow móvil */
 </style>
 <!-- GSAP 3.13 vendoreado · solo los plugins que usa esta pagina (sin ScrollSmoother:
      herramienta de seguimiento con scroll nativo) -->
@@ -415,7 +406,7 @@
 
 <noscript>
   <nav aria-label="Navegación principal">
-    <a href="index.html">Inicio</a> · <a href="trayectoria.html">Trayectoria</a> · <a href="pef.html">Guía PEF</a> · <a href="avance.html">Mi Avance</a>
+    <a href="index.html">Inicio</a> · <a href="trayecto.html">Trayectoria</a> · <a href="pef.html">Guía PEF</a> · <a href="avance.html">Mi Avance</a>
   </nav>
 </noscript>
 
@@ -537,48 +528,6 @@
 <!-- bloques que solo aparecen en impresion/PDF -->
 <div class="print-only" id="print-extra"></div>
 
-<footer>
-  <div class="foot-top">
-    <div class="foot-brand">
-      <div class="foot-logo">Portfolio / LDG</div>
-      <p class="foot-tag">Repositorio académico<br>de tesis de diseño gráfico</p>
-    </div>
-    <div class="foot-col">
-      <h4>Navegación</h4>
-      <a href="index.html">Inicio</a>
-      <a href="trayectoria.html">Trayectoria</a>
-      <a href="pef.html">Guía PEF</a>
-      <a href="avance.html" aria-current="page">Mi Avance</a>
-    </div>
-    <div class="foot-col">
-      <h4>Trayecto · LDG</h4>
-      <a href="mailto:ldg.crgs@udem.edu">Coordinación LDG</a>
-      <span class="line">Verifica créditos en tu Trayecto oficial.</span>
-      <span class="line">Tu avance se guarda solo en este navegador.</span>
-    </div>
-    <div class="foot-col">
-      <h4>Programa</h4>
-      <a href="mailto:ldg.crgs@udem.edu">ldg.crgs@udem.edu</a>
-      <a href="https://www.instagram.com/ldg_udem" target="_blank" rel="noopener">Instagram</a>
-      <a href="https://crgs.udem.edu.mx/arte-arquitectura-y-diseno/academia/profesional/licenciatura-en-diseno-grafico" target="_blank" rel="noopener">Sitio web</a>
-    </div>
-  </div>
-  <div class="foot-cajetin">
-    <div class="cell"><span class="k">Documento</span><span class="v">Mi Avance · Trayecto LDG</span></div>
-    <div class="cell"><span class="k">Programa</span><span class="v">Lic. en Diseño Gráfico</span></div>
-    <div class="cell"><span class="k">Sede</span><span class="v">CRGS · UDEM</span></div>
-    <div class="cell"><span class="k">Total cr.</span><span class="v big" id="foot-total">·</span></div>
-    <div class="cell"><span class="k">Rev.</span><span class="v">2026</span></div>
-    <div class="cell"><span class="k">Lámina</span><span class="v big">04</span></div>
-  </div>
-  <div class="foot-bottom">
-    <div class="foot-bottom-left">
-      <span>&copy; 2026 Portfolio LDG</span>
-      <span>Control de avance · Trayecto · Licenciatura en Diseño Gráfico</span>
-    </div>
-    <img src="logos-institucionales.svg" alt="UDEM" class="foot-logos">
-  </div>
-</footer>
 
 <script>
 (function(){
@@ -830,7 +779,8 @@
     var box=document.getElementById('summary-box');
     if(!box) return;
     var n=document.createElement('p');
-    n.style.cssText='font-family:var(--mono);font-size:.72rem;letter-spacing:.05em;color:var(--verm);margin-top:12px';
+    n.style.cssText='font-family:var(--mono);font-size:.72rem;letter-spacing:.05em;color:var(--warn);margin-top:12px';
+    n.setAttribute('role','alert');
     n.textContent='Aviso · este navegador no permite guardar; tu avance no se conservará al recargar.';
     box.insertAdjacentElement('afterend', n);
   }
@@ -1269,7 +1219,7 @@
     if(res.list.length){
       sugList.push('Próximo semestre (Sem '+res.sem+'): '+res.list.map(function(c){return c.name+' ('+c.cr+' cr)';}).join('; ')+'.');
     }
-    if(t.pct>=REGLAS.servicioSocialPct) sugList.push(REGLAS.txt.servicioCuerpo.replace('%PCT%', t.pct+'%'));
+    if(t.doneCr>=REGLAS.servicioSocialCreditos && stateOfName('Taller de Formación Social')!=='cursada') sugList.push(REGLAS.txt.servicioCuerpo);
     var sem=approxSemester();
     if(sem>=REGLAS.intercambioSemMin && sem<=REGLAS.intercambioSemMax) sugList.push(REGLAS.txt.intercambioCuerpo.replace('%SEM%', sem));
     if(t.pct>80) sugList.push(REGLAS.txt.titulacionCuerpo);

@@ -7,34 +7,29 @@
 <link rel="icon" href="assets/favicon.svg?v=4" type="image/svg+xml">
 <link rel="icon" href="assets/favicon-32.png?v=4" sizes="32x32" type="image/png">
 <link rel="apple-touch-icon" href="assets/favicon-180.png?v=4">
-<meta name="theme-color" content="#1B1612">
+<meta name="theme-color" content="#000000">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Anton&family=Atkinson+Hyperlegible:wght@400;700&family=JetBrains+Mono:wght@300;400;500&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="assets/menu.css?v=20260620">
-<!-- Menú de sitio compartido (mismo componente en las 3 páginas) -->
-<script>window.SITE_MENU = { current: 'pef', sections: [
-  { href: '#proceso', label: 'Proceso' },
-  { href: '#entregables', label: 'Entregables' },
-  { href: '#rubrica', label: 'Rúbrica' },
-  { href: '#calificacion', label: 'Calificación' },
-  { href: '#fechas', label: 'Titulación' },
-  { href: '#checklist', label: 'Checklist' },
-  { href: '#sobresaliente', label: 'Sobresaliente' }
-] };</script>
-<script defer src="assets/menu.js?v=20260620"></script>
+<link href="https://fonts.googleapis.com/css2?family=Anton&family=Atkinson+Hyperlegible:ital,wght@0,400;0,700;1,400&family=JetBrains+Mono:wght@400;500&family=Spectral:ital,wght@1,300&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/dark.css?v=20260620k">
+<!-- Scaffold oscuro «Cuarto Oscuro» (reemplaza menu.js del crema) -->
+<script>window.SITE_NAV = { current: 'pef' };</script>
+<script defer src="assets/bg-noise.js?v=20260620e"></script>
+<script defer src="assets/dock-fun.js?v=20260620b"></script>
+<script defer src="assets/footer.js?v=20260620f"></script>
 <script>document.documentElement.classList.add('js');</script>
 <style>
   :root{
-    --paper:#F1ECDF;        /* superficie papel crema */
-    --paper-2:#E7E1D0;      /* papel sombreado, celdas alternas */
-    --ink:#1B1612;          /* tinta casi-negra calida: texto y lineas de plano */
-    --ink-soft:#5C564A;     /* tinta secundaria */
-    --yellow:#FFE000;       /* marcador UDEM: bandas hl, chips, atencion */
-    --yellow-deep:#E9CE00;
-    --verm:#B23818;         /* vermilion: cotas, sellos, datos criticos (AA 5.13:1 sobre paper) */
-    --line:rgba(27,22,18,.16);   /* reticula */
-    --line-2:rgba(27,22,18,.34); /* divisiones de cajetin */
+    /* ── re-mapeo a «Cuarto Oscuro» (mismos nombres, valores oscuros) ── */
+    --paper:#000000;        /* fondo (antes papel crema) */
+    --paper-2:#141414;      /* superficie elevada (celdas, paneles) */
+    --ink:#EFEFEF;          /* texto principal claro */
+    --ink-soft:#8E8E8E;     /* texto secundario */
+    --yellow:hsl(280 90% 75%);   /* acento morado (antes marcador UDEM) */
+    --yellow-deep:hsl(280 85% 62%);
+    --verm:hsl(280 90% 75%);     /* acento (antes vermilion: cotas/sellos) */
+    --line:rgba(255,255,255,.08);   /* retícula tenue */
+    --line-2:rgba(255,255,255,.18); /* divisiones */
     /* Sistema tipografico del sitio (DESIGN.md) */
     --disp:"Anton", "Arial Narrow", sans-serif;
     --sans:"Atkinson Hyperlegible", system-ui, -apple-system, sans-serif;
@@ -274,7 +269,7 @@
   .check-progress{display:flex;align-items:center;gap:16px;padding:16px 22px;border-bottom:2px solid var(--ink);
     background:var(--ink);color:var(--paper)}
   .check-progress .pcount{font-family:var(--disp);font-weight:400;font-size:1.6rem;line-height:1;letter-spacing:-.01em;color:var(--yellow)}
-  .check-progress .ptrack{flex:1;height:8px;background:rgba(242,238,227,.18);overflow:hidden}
+  .check-progress .ptrack{flex:1;height:8px;background:rgba(255,255,255,.14);overflow:hidden}
   .check-progress .pfill{height:100%;width:100%;background:var(--yellow);transform:scaleX(0);transform-origin:left;transition:transform .35s var(--ease)}
   .check-progress .plabel{font-family:var(--mono);font-size:.72rem;letter-spacing:.14em;text-transform:uppercase;opacity:.7}
   .check-progress .ckreset{font-family:var(--mono);font-size:.72rem;letter-spacing:.12em;text-transform:uppercase;
@@ -317,7 +312,7 @@
   @media(max-width:680px){.qlist{grid-template-columns:1fr}}
   .sessions{margin-top:34px;background:var(--ink);color:var(--paper);padding:34px 36px;border-top:4px solid var(--yellow)}
   .sessions h3{font-family:var(--sans);font-weight:700;text-transform:uppercase;font-size:1.35rem;color:var(--yellow);margin-bottom:14px;letter-spacing:0}
-  .sessions p{font-size:1rem;line-height:1.6;color:rgba(242,238,227,.85);max-width:68ch;margin-bottom:10px}
+  .sessions p{font-size:1rem;line-height:1.6;color:var(--ink);max-width:68ch;margin-bottom:10px}
   .sessions p:last-child{margin-bottom:0}
   .cta-row{margin-top:36px;display:flex;align-items:center;gap:24px;flex-wrap:wrap}
   .btn{font-family:var(--sans);font-weight:700;font-size:1rem;text-transform:uppercase;letter-spacing:.01em;
@@ -346,13 +341,13 @@
     border-top:4px solid var(--yellow)}
   .alert h3{font-family:var(--sans);font-weight:700;text-transform:uppercase;font-size:1.35rem;letter-spacing:0;
     margin-bottom:10px;color:var(--yellow)}
-  .alert p{font-size:1rem;max-width:64ch;color:rgba(242,238,227,.85);line-height:1.6}
+  .alert p{font-size:1rem;max-width:64ch;color:var(--ink);line-height:1.6}
   .alert b{color:var(--paper)}
 
   /* sello vermilion para momentos criticos (patron canonico .rev-stamp) */
   .rev-stamp{position:absolute;z-index:3;border:3px solid var(--verm);color:var(--verm);
     padding:9px 16px 8px;font-family:var(--mono);font-size:.8rem;font-weight:700;letter-spacing:.18em;
-    text-transform:uppercase;background:rgba(241,236,223,.85);white-space:nowrap;
+    text-transform:uppercase;background:rgba(20,20,20,.92);white-space:nowrap;
     transform:rotate(-6deg);
     transition:opacity .3s var(--ease) .45s,transform .42s var(--ease) .45s}
   .js .rev-stamp:not(.in){opacity:0;transform:scale(1.15) rotate(-6deg)}
@@ -365,42 +360,9 @@
   .alert .rev-stamp{top:-18px;right:clamp(12px,4vw,40px)}
   @media(max-width:560px){.rev-stamp{font-size:var(--t-mono);padding:7px 12px 6px;letter-spacing:.14em}}
 
-  /* ---- footer (shared structure with portfolio, PEF palette) ---- */
-  footer{background:var(--ink);color:var(--paper);margin-top:90px;
-    padding:72px var(--gut) 32px;position:relative;z-index:1;
-    border-top:2px solid var(--yellow)}
-  .foot-top{display:grid;grid-template-columns:1.3fr 1fr 1fr 1fr;gap:40px;margin-bottom:56px}
-  .foot-brand .foot-logo{font-family:var(--disp);font-weight:400;font-size:clamp(2.6rem,5vw,4rem);
-    line-height:.92;color:var(--yellow);text-transform:uppercase;letter-spacing:-.01em;margin-bottom:14px}
-  .foot-brand .foot-tag{font-family:var(--mono);font-size:.72rem;letter-spacing:.1em;
-    line-height:1.7;color:rgba(242,238,227,.55);text-transform:uppercase}
-  .foot-col{display:flex;flex-direction:column;gap:7px}
-  .foot-col h4{font-family:var(--mono);font-size:var(--t-mono);letter-spacing:.16em;text-transform:uppercase;
-    color:var(--yellow);margin-bottom:8px}
-  .foot-col a,.foot-col span.line{font-family:var(--sans);font-size:.92rem;
-    color:rgba(242,238,227,.8);text-decoration:none;line-height:1.5;transition:color .25s,padding-left .25s}
-  .foot-col a:hover{color:var(--yellow);padding-left:7px}
-  .foot-bottom{display:flex;justify-content:space-between;align-items:center;gap:24px;
-    padding-top:26px;border-top:1px solid rgba(242,238,227,.14);flex-wrap:wrap}
-  .foot-bottom-left{display:flex;flex-direction:column;gap:5px;font-family:var(--mono);
-    font-size:var(--t-mono);letter-spacing:.1em;text-transform:uppercase;color:rgba(242,238,227,.55)}
-  .foot-logos{width:340px;max-width:60vw;height:auto;opacity:.55}
-  @media(max-width:860px){.foot-top{grid-template-columns:1fr 1fr}.foot-brand{grid-column:1/-1}}
-  @media(max-width:560px){.foot-top{grid-template-columns:1fr}}
-  /* cajetin tecnico del documento (patron canonico .cajetin, version tinta) */
-  .foot-cajetin{display:grid;grid-template-columns:2.2fr 1.6fr 1fr 1fr .8fr .7fr;
-    border-top:2px solid rgba(242,238,227,.7);margin-bottom:26px}
-  .foot-cajetin .cell{padding:12px 14px 13px;border-left:1px solid rgba(242,238,227,.25);min-width:0}
-  .foot-cajetin .cell:first-child{border-left:0}
-  .foot-cajetin .k{display:block;font-family:var(--mono);font-size:var(--t-mono);letter-spacing:.14em;
-    text-transform:uppercase;color:rgba(242,238,227,.55);margin-bottom:4px}
-  .foot-cajetin .v{display:block;font-family:var(--sans);font-weight:700;font-size:.92rem;line-height:1.3;
-    color:rgba(242,238,227,.9)}
-  .foot-cajetin .v.big{font-family:var(--disp);font-weight:400;font-size:1.5rem;letter-spacing:.01em;color:var(--yellow)}
-  @media(max-width:860px){.foot-cajetin{grid-template-columns:1fr 1fr}
-    .foot-cajetin .cell{border-left:0;border-top:1px solid rgba(242,238,227,.14)}
-    .foot-cajetin .cell:nth-child(2n){border-left:1px solid rgba(242,238,227,.25)}
-    .foot-cajetin .cell:nth-child(-n+2){border-top:0}}
+  /* footer crema RETIRADO — todas las páginas usan el .site-footer inyectado por
+     footer.js (estilos en dark.css). Antes había un footer/.foot-* propio aquí
+     que se filtraba al .site-footer y lo hacía verse distinto. */
 
   /* ---- reveal · 3 capas (DESIGN.md · Motion contrato v2) ----
      capa 1 · html sin .js (sin JS): todo visible, sin estados ocultos
@@ -425,6 +387,30 @@
     .deliv .d .inner{opacity:1!important;transform:none!important}
     .rev-stamp{opacity:1!important;transform:rotate(-6deg)!important}
   }
+
+  /* ============================================================
+     OVERRIDES «Cuarto Oscuro» — neutralizan el chrome crema sobrante
+     (el color base ya lo voltea el re-mapeo de :root)
+     ============================================================ */
+  body{background:var(--paper)}
+  body::before,body::after{display:none}        /* retícula+grano crema → usa #bgfx */
+  .ctrlbar{display:none}                          /* barra CMYK de imprenta */
+  body > footer:not(.site-footer){display:none}   /* footer crema → footer.js */
+  /* paneles que invertían (tinta de fondo / papel de texto) → superficie oscura */
+  .panel > div:first-child{background:var(--surface-2);color:var(--ink);border-right:1px solid var(--line-2)}
+  .check-progress{background:var(--surface-2);color:var(--ink);border-bottom:1px solid var(--line-2)}
+  .check-progress button{color:var(--ink);border-color:var(--line-2)}
+  .sessions{background:var(--surface-2);color:var(--ink)}
+  .alert{background:var(--surface-2);color:var(--ink)}
+  .alert b{color:var(--ink)}
+  /* relleno de barras de rúbrica → acento */
+  .rubric .bar i{background:var(--accent)}
+  /* hover que invertía a tinta → acento */
+  .back-btn:hover{background:transparent;color:var(--accent);border-color:var(--accent)}
+  /* botones letterpress (sombra dura) → estilo oscuro */
+  .btn{box-shadow:none;border:1px solid var(--line-2);border-radius:12px}
+  .btn:hover{transform:none;border-color:var(--accent);color:var(--accent)}
+  @media (max-width:560px){ .ghost{display:none} }   /* numerales gigantes: evitan overflow móvil */
 </style>
 <!-- GSAP 3.13 vendoreado · solo los plugins que usa esta página (sin ScrollSmoother:
      guía de consulta con checklist/anclas/scrollspy; el scroll nativo es el correcto) -->
@@ -439,7 +425,7 @@
 <!-- La barra y el menú (con las secciones de esta página) los inyecta assets/menu.js -->
 <noscript>
   <nav aria-label="Navegación principal">
-    <a href="index.html">Inicio</a> · <a href="trayectoria.html">Trayectoria</a> · <a href="pef.html">Guía PEF</a>
+    <a href="index.html">Inicio</a> · <a href="trayecto.html">Trayectoria</a> · <a href="pef.html">Guía PEF</a>
   </nav>
 </noscript>
 
@@ -767,8 +753,8 @@
 
     <div class="sessions rv d1">
       <h3>Reconocimiento y PEF Sessions</h3>
-      <p>Los proyectos seleccionados reciben reconocimiento oficial y diploma del programa. Además, cada uno se considera para un <b style="color:var(--paper)">video documental</b> que registra el proceso, los hallazgos, la propuesta final y el valor del proyecto desde la voz de sus autores, asesor y comunidad.</p>
-      <p>Estos videos forman <b style="color:var(--paper)">PEF Sessions</b>, la serie documental del programa que visibiliza los Proyectos de Evaluación Final más destacados y el impacto del diseño gráfico en contextos académicos, sociales, culturales, institucionales y profesionales.</p>
+      <p>Los proyectos seleccionados reciben reconocimiento oficial y diploma del programa. Además, cada uno se considera para un <b style="color:var(--yellow)">video documental</b> que registra el proceso, los hallazgos, la propuesta final y el valor del proyecto desde la voz de sus autores, asesor y comunidad.</p>
+      <p>Estos videos forman <b style="color:var(--yellow)">PEF Sessions</b>, la serie documental del programa que visibiliza los Proyectos de Evaluación Final más destacados y el impacto del diseño gráfico en contextos académicos, sociales, culturales, institucionales y profesionales.</p>
     </div>
 
     <div class="cta-row rv d2">
@@ -783,49 +769,6 @@
   <a class="back-btn" href="#">↑ Volver arriba</a>
 </div>
 
-<footer>
-  <div class="foot-top">
-    <div class="foot-brand">
-      <div class="foot-logo">Portfolio / LDG</div>
-      <p class="foot-tag">Repositorio académico<br>de tesis de diseño gráfico</p>
-    </div>
-    <div class="foot-col">
-      <h4>Navegación</h4>
-      <a href="index.html">Inicio</a>
-      <a href="trayectoria.html">Trayectoria</a>
-      <a href="pef.html" aria-current="page">Guía PEF</a>
-      <a href="index.html#gallery">Proyectos</a>
-    </div>
-    <div class="foot-col">
-      <h4>PEF · OT26</h4>
-      <a href="tel:8182151020">CIAA · 81 8215 1020</a>
-      <a href="mailto:ciaa@udem.edu.mx">ciaa@udem.edu.mx</a>
-      <a href="mailto:elena.degasperin@udem.edu">Titulación</a>
-      <span class="line">Verifica TOEFL y Servicio Social.</span>
-    </div>
-    <div class="foot-col">
-      <h4>Programa</h4>
-      <a href="mailto:ldg.crgs@udem.edu">ldg.crgs@udem.edu</a>
-      <a href="https://www.instagram.com/ldg_udem" target="_blank" rel="noopener">Instagram</a>
-      <a href="https://crgs.udem.edu.mx/arte-arquitectura-y-diseno/academia/profesional/licenciatura-en-diseno-grafico" target="_blank" rel="noopener">Sitio web</a>
-    </div>
-  </div>
-  <div class="foot-cajetin">
-    <div class="cell"><span class="k">Documento</span><span class="v">Guía PEF · Otoño 2026</span></div>
-    <div class="cell"><span class="k">Programa</span><span class="v">Lic. en Diseño Gráfico</span></div>
-    <div class="cell"><span class="k">Sede</span><span class="v">CRGS · UDEM</span></div>
-    <div class="cell"><span class="k">Formato</span><span class="v big">74×120</span></div>
-    <div class="cell"><span class="k">Rev.</span><span class="v">OT26</span></div>
-    <div class="cell"><span class="k">Lámina</span><span class="v big">03</span></div>
-  </div>
-  <div class="foot-bottom">
-    <div class="foot-bottom-left">
-      <span>&copy; 2026 Portfolio LDG</span>
-      <span>Proyecto de Evaluación Final · Diseño Gráfico · OT26</span>
-    </div>
-    <img src="logos-institucionales.svg" alt="UDEM" class="foot-logos">
-  </div>
-</footer>
 
 <script>
 (function(){
