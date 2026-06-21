@@ -15,10 +15,12 @@
   <script defer src="assets/bg-noise.js?v=20260620e"></script>
   <script defer src="assets/dock-fun.js?v=20260620b"></script>
   <script defer src="assets/vendor/gsap/gsap.min.js"></script>
-  <script defer src="assets/card-fan.js?v=20260620"></script>
+  <script defer src="assets/card-fan.js?v=20260620b"></script>
   <script defer src="assets/equipo-carousel.js?v=20260620"></script>
   <script defer src="assets/footer.js?v=20260620f"></script>
   <script defer src="assets/scroll-expand.js?v=20260620b"></script>
+  <script defer src="https://player.vimeo.com/api/player.js"></script>
+  <script defer src="assets/hero-video.js?v=20260620"></script>
 </head>
 <body>
 
@@ -28,7 +30,7 @@
     <div class="se-stage">
       <div class="se-bg" style="background-image:url('assets/inicio-hero-bg.jpg')" aria-hidden="true"></div>
       <div class="se-media">
-        <iframe src="https://player.vimeo.com/video/1160882204?background=1&autoplay=1&loop=1&muted=1&dnt=1"
+        <iframe id="heVideo" src="https://player.vimeo.com/video/1160882204?background=1&autoplay=1&loop=1&muted=1&dnt=1#t=2s"
           title="Biodiseño Gráfico · gráfica regenerativa (Sofía Porto)"
           allow="autoplay; fullscreen; picture-in-picture"
           referrerpolicy="strict-origin-when-cross-origin" tabindex="-1" aria-hidden="true"></iframe>
@@ -43,8 +45,8 @@
     <!-- Vista previa de proyectos (card-fan) -->
     <section class="section" id="proyectos">
       <div class="wrap">
-        <div class="sec-head"><span class="sec-no">01</span><h2>Proyectos</h2></div>
-        <p class="sec-sub">Una probada del portafolio · ver todo en Showcase</p>
+        <div class="sec-head"><span class="sec-no">01</span><h2>Showcase</h2></div>
+        <p class="sec-sub">Una probada del portafolio · toca un proyecto para abrirlo</p>
 
         <div class="proy-fan-wrap">
           <div class="proy-fan" data-card-fan aria-label="Vista previa de proyectos">

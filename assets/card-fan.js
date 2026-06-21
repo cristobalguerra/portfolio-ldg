@@ -77,19 +77,23 @@
           } else if (!was) {
             const ex = dir === 'right' ? 40 : -40;
             G.set(card, { xPercent: -50, yPercent: -50, x: ex + 'rem', y: (c.y * hM) + 'rem', rotation: dir === 'right' ? 30 : -30, scale: 0.5, opacity: 0 });
-            G.to(card, Object.assign({}, target, { duration: 0.6, ease: 'power2.out', onComplete: onDone }));
+            G.to(card, Object.assign({}, target, { duration: 0.6, ease: 'power2.out', overwrite: true, onComplete: onDone }));
           } else {
-            G.to(card, Object.assign({}, target, { duration: 0.5, ease: 'power2.out', onComplete: onDone }));
+            G.to(card, Object.assign({}, target, { duration: 0.5, ease: 'power2.out', overwrite: 'auto', onComplete: onDone }));
           }
         } else if (was) {
           const ex = dir === 'right' ? -40 : 40;
-          if (G && !reduce) G.to(card, { xPercent: -50, yPercent: -50, x: ex + 'rem', opacity: 0, scale: 0.5, rotation: dir === 'right' ? -30 : 30, duration: 0.4, ease: 'power2.in', zIndex: 0 });
+          if (G && !reduce) G.to(card, { xPercent: -50, yPercent: -50, x: ex + 'rem', opacity: 0, scale: 0.5, rotation: dir === 'right' ? -30 : 30, duration: 0.4, ease: 'power2.in', overwrite: true, zIndex: 0 });
           else card.style.opacity = '0';
-        } else if (first) {
+        } else {
+          /* cualquier otra carta fuera de vista: garantizar OCULTA (evita cartas varadas al paginar) */
           if (G && !reduce) G.set(card, { xPercent: -50, yPercent: -50, opacity: 0, scale: 0.3, x: 0, y: 0, zIndex: 0 });
           else card.style.opacity = '0';
         }
       });
+      // red de seguridad: garantiza que el candado isAnimating se libere
+      // aunque algún onComplete no dispare (evita que se "trabe" al avanzar)
+      if (G && !reduce) setTimeout(function () { isAnimating = false; if (first) hasEntered = true; }, first ? 1700 : 760);
       prevVisible = new Set(vmap.keys());
       hoverCleanup = wireHover(vmap, cfg, mult, hM);
       updateDots();
