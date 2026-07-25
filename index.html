@@ -159,15 +159,17 @@ a{color:inherit;text-decoration:none}
 .hero h1 .rot{
   position:relative;display:block;height:1.7em;
   font-size:.75em; /* «experiencias» (12 letras) ≈ ancho de «Diseñamos» */
-  filter:url(#threshold);
   padding:.35em 0;margin:-.35em 0; /* aire para que el blur no se recorte en el borde del filtro */
 }
+/* el umbral gooey se activa por JS solo donde filter:url() funciona
+   (WebKit móvil/Safari lo rompe y dejaba la palabra invisible) */
+.hero h1 .rot.thresh{filter:url(#threshold)}
 .hero h1 .rot .gt{
   position:absolute;left:0;right:0;top:50%;transform:translateY(-50%);
   user-select:none;white-space:nowrap;
 }
 .hero h1 .rot .gt1{opacity:0} /* sin JS solo se ve una palabra (gt2) */
-@media (prefers-reduced-motion:reduce){.hero h1 .rot{filter:none}}
+@media (prefers-reduced-motion:reduce){.hero h1 .rot.thresh{filter:none}}
 .hero .hint{
   position:absolute;bottom:34px;left:50%;transform:translateX(-50%);
   font-size:10.5px;letter-spacing:.3em;text-transform:uppercase;color:var(--ink-soft);
@@ -463,6 +465,14 @@ footer nav a:hover{color:var(--ink)}
   var g2 = document.querySelector('#gooey .gt2');
   if(g1 && g2){
     var WORDS = ['marcas','interfaces','experiencias','contenido','historias','sistemas','futuros','comunidades'];
+    /* WebKit (iOS y Safari) no aplica filter:url() sobre HTML y deja la palabra
+       invisible: el umbral solo se activa fuera de ellos; allí cae a disolvencia */
+    var rotEl = document.getElementById('gooey');
+    var ua = navigator.userAgent;
+    var gooeyOK = !(/iP(hone|ad|od)/.test(ua)
+      || (/Macintosh/.test(ua) && navigator.maxTouchPoints > 1)
+      || (/AppleWebKit/.test(ua) && !/Chrome|CriOS|FxiOS|Edg|OPR/.test(ua)));
+    if(gooeyOK && !mReduce){ rotEl.classList.add('thresh'); }
     if(mReduce){
       g1.style.opacity = '0';
       g2.style.opacity = '1';
@@ -475,15 +485,24 @@ footer nav a:hover{color:var(--ink)}
       g1.textContent = WORDS[idx];
       g2.textContent = WORDS[(idx + 1) % WORDS.length];
       var setMorphFx = function(f){
-        g2.style.filter = 'blur(' + Math.min(8 / f - 8, 100) + 'px)';
-        g2.style.opacity = (Math.pow(f, .4) * 100) + '%';
-        f = 1 - f;
-        g1.style.filter = 'blur(' + Math.min(8 / f - 8, 100) + 'px)';
-        g1.style.opacity = (Math.pow(f, .4) * 100) + '%';
+        if(gooeyOK){
+          g2.style.filter = 'blur(' + Math.min(8 / f - 8, 100) + 'px)';
+          g2.style.opacity = (Math.pow(f, .4) * 100) + '%';
+          f = 1 - f;
+          g1.style.filter = 'blur(' + Math.min(8 / f - 8, 100) + 'px)';
+          g1.style.opacity = (Math.pow(f, .4) * 100) + '%';
+        }else{
+          /* disolvencia suave: sin umbral, solo cruce de opacidad y blur ligero */
+          g2.style.filter = 'blur(' + ((1 - f) * 3) + 'px)';
+          g2.style.opacity = (Math.pow(f, .6) * 100) + '%';
+          g1.style.filter = 'blur(' + (f * 3) + 'px)';
+          g1.style.opacity = (Math.pow(1 - f, .6) * 100) + '%';
+        }
       };
       var animate = function(now){
         if(mqReduce.matches){
           /* el usuario activó "reducir movimiento" en vivo: detener y dejar estado estático */
+          rotEl.classList.remove('thresh');
           g1.style.filter = ''; g1.style.opacity = '';
           g2.style.filter = ''; g2.style.opacity = '';
           g2.textContent = WORDS[0];
