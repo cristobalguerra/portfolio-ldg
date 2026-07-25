@@ -1,170 +1,676 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>LDG · UDEM · Trayecto</title>
-  <meta name="description" content="Una carrera, seis destinos: las trayectorias reales de los egresados de la Licenciatura en Diseño Gráfico de la UDEM.">
-  <meta name="theme-color" content="#000000">
-  <link rel="icon" href="assets/favicon.svg?v=4" type="image/svg+xml">
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Anton&family=Atkinson+Hyperlegible:ital,wght@0,400;0,700;1,400&family=JetBrains+Mono:wght@400;500&family=Spectral:ital,wght@1,300&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="assets/dark.css?v=20260620m">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#0E0E0E">
+<title>LDG · UDEM · Trayecto</title>
+<link rel="icon" href="assets/favicon.svg?v=4" type="image/svg+xml">
+<link rel="icon" href="assets/favicon-32.png?v=4" sizes="32x32" type="image/png">
+<link rel="apple-touch-icon" href="assets/favicon-180.png?v=4">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo:ital,wdth,wght@0,62..125,100..900;1,62..125,100..900&display=swap" rel="stylesheet">
+<style>
+/* ============ PROPUESTA «LIMPIA» · Trayecto del egresado ============
+   Misma mano que propuesta-limpia.html: grotesca editorial mínima,
+   una sola familia (Archivo variable), negro plano, aire, acento quirúrgico. */
 
-  <script>window.SITE_NAV = { current: 'trayecto' };</script>
-  <script defer src="assets/bg-noise.js?v=20260620e"></script>
-  <script defer src="assets/dock-fun.js?v=20260620b"></script>
-  <script defer src="assets/footer.js?v=20260620f"></script>
-  <script defer src="assets/trayecto.js?v=20260620"></script>
+:root{
+  --bg:#0E0E0E;
+  --ink:#F2F2F0;
+  --ink-soft:#9C9C98;
+  --ink-dim:#5C5C58;
+  --line:rgba(255,255,255,.12);
+  --accent:hsl(280 85% 76%);
+  --max:1200px;
+  --pad:clamp(20px,4vw,56px);
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html{overflow-x:clip;scroll-behavior:smooth}
+@media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}}
+body{
+  background:var(--bg);color:var(--ink);
+  font-family:'Archivo',system-ui,sans-serif;
+  font-size:17px;line-height:1.55;
+  -webkit-font-smoothing:antialiased;
+}
+::selection{background:var(--accent);color:#0E0E0E}
+:focus-visible{outline:2px solid var(--accent);outline-offset:3px}
+img{max-width:100%;display:block}
+a{color:inherit;text-decoration:none}
 
-  <style>
-  /* ===== HERO ===== */
-  .tr-hero{padding:clamp(120px,20vh,200px) 0 clamp(40px,7vh,80px)}
-  .tr-eyebrow{font-family:var(--mono);font-size:var(--t-mono);letter-spacing:.2em;text-transform:uppercase;color:var(--ink-soft);margin-bottom:22px}
-  .tr-title{font-family:var(--disp);font-weight:400;text-transform:uppercase;font-size:clamp(2.6rem,8vw,6rem);line-height:.98;letter-spacing:-.01em;max-width:14ch}
-  .tr-title em{font-style:normal;color:var(--accent)}
-  .tr-lede{margin-top:24px;max-width:54ch;font-size:clamp(1rem,1.6vw,1.18rem);color:var(--ink-soft);line-height:1.6}
-  .tr-cota{display:flex;gap:22px;margin-top:30px;flex-wrap:wrap}
-  .tr-cota span{font-family:var(--mono);font-size:.7rem;letter-spacing:.12em;text-transform:uppercase;color:var(--ink-soft);border:1px solid var(--line-2);border-radius:20px;padding:8px 14px}
-  .tr-cota b{color:var(--ink);font-weight:500}
-  .tr-actions{margin-top:30px}
-  .tr-print{display:inline-flex;align-items:center;gap:9px;font-family:var(--mono);font-size:.62rem;letter-spacing:.1em;text-transform:uppercase;color:var(--ink);background:transparent;border:1px solid var(--line-2);border-radius:12px;padding:12px 18px;cursor:pointer;transition:color .25s var(--ease),border-color .25s var(--ease)}
-  .tr-print:hover{color:var(--accent);border-color:var(--accent)}
+/* ---------- utilidades tipográficas ---------- */
+.display{
+  font-weight:800;font-stretch:118%;
+  text-transform:uppercase;letter-spacing:-.01em;line-height:.94;
+  text-wrap:balance;
+}
+.label{
+  font-size:11px;font-weight:600;letter-spacing:.18em;
+  text-transform:uppercase;color:var(--ink-soft);
+}
+.wrap{max-width:var(--max);margin:0 auto;padding-inline:var(--pad)}
 
-  /* ===== POSTURA ===== */
-  .tr-postura{border-top:1px solid var(--line);border-bottom:1px solid var(--line);padding:clamp(48px,8vh,90px) 0}
-  .tr-postura p{font-family:var(--serif);font-style:italic;font-size:clamp(1.4rem,3.2vw,2.4rem);line-height:1.3;color:var(--ink);max-width:24ch}
-  .tr-postura .sub{font-family:var(--sans);font-style:normal;font-size:clamp(.95rem,1.4vw,1.05rem);color:var(--ink-soft);max-width:56ch;margin-top:20px;line-height:1.6}
+/* ---------- reveal ---------- */
+.rv{opacity:0;transform:translateY(26px);transition:opacity .7s ease,transform .7s ease}
+.rv.in{opacity:1;transform:none}
+@media (prefers-reduced-motion:reduce){.rv{opacity:1;transform:none;transition:none}}
 
-  /* ===== ACORDEÓN DE CAMINOS ===== */
-  .tr-list{border-top:1px solid var(--line-2)}
-  .tr-item{border-bottom:1px solid var(--line-2)}
-  .tr-head{width:100%;display:grid;grid-template-columns:auto 1fr auto auto auto;align-items:center;gap:18px;
-    padding:26px 4px;background:transparent;border:0;cursor:pointer;text-align:left;color:var(--ink);transition:color .25s var(--ease)}
-  .tr-head:hover{color:var(--accent)}
-  .tr-num{font-family:var(--mono);font-size:.72rem;letter-spacing:.1em;color:var(--ink-soft)}
-  .tr-headmain{min-width:0}
-  .tr-path{display:block;font-family:var(--disp);font-weight:400;text-transform:uppercase;font-size:clamp(1.4rem,3.4vw,2.4rem);line-height:1.02;letter-spacing:-.01em;overflow-wrap:anywhere}
-  .tr-who{display:block;font-family:var(--mono);font-size:.62rem;letter-spacing:.04em;color:var(--ink-soft);margin-top:7px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-  .tr-chip{font-family:var(--mono);font-size:.54rem;letter-spacing:.12em;text-transform:uppercase;color:var(--ink-soft);border:1px solid var(--line-2);border-radius:20px;padding:5px 10px;white-space:nowrap}
-  .tr-years{font-family:var(--mono);font-size:.66rem;letter-spacing:.06em;color:var(--ink-soft);white-space:nowrap}
-  .tr-chevron{color:var(--ink-soft);transition:transform .35s var(--ease),color .25s var(--ease)}
-  .tr-chevron svg{width:22px;height:22px;display:block}
-  .tr-head:hover .tr-chevron{color:var(--accent)}
-  .tr-item.is-open .tr-chevron{transform:rotate(180deg);color:var(--accent)}
-  .tr-item.is-open .tr-path{color:var(--accent)}
-
-  .tr-panel{display:none;padding:0 4px 36px}
-  .tr-item.is-open .tr-panel{display:block;animation:trIn .4s var(--ease)}
-  @keyframes trIn{from{opacity:0;transform:translateY(-8px)}to{opacity:1;transform:none}}
-  .tr-panel__grid{display:grid;grid-template-columns:minmax(0,300px) 1fr;gap:clamp(24px,4vw,48px);align-items:start}
-  .tr-photo{border-radius:16px;overflow:hidden;background:var(--surface-2);border:1px solid var(--line);aspect-ratio:4/5}
-  .tr-photo img{width:100%;height:100%;object-fit:cover;filter:grayscale(.5) contrast(1.03);transition:filter .5s var(--ease)}
-  .tr-item.is-open .tr-photo:hover img{filter:grayscale(0)}
-  .tr-detail{min-width:0}
-  .tr-name{font-family:var(--sans);font-weight:700;font-size:clamp(1.3rem,2.6vw,1.8rem);letter-spacing:-.01em;line-height:1.1}
-  .tr-role{color:var(--ink-soft);font-size:.95rem;margin-top:6px;line-height:1.45}
-  .tr-links{display:flex;flex-wrap:wrap;gap:10px;margin-top:16px}
-  .tr-links a{font-family:var(--mono);font-size:.58rem;letter-spacing:.06em;text-transform:uppercase;color:var(--ink);border:1px solid var(--line-2);border-radius:20px;padding:7px 12px;text-decoration:none;transition:color .25s var(--ease),border-color .25s var(--ease)}
-  .tr-links a:hover{color:var(--accent);border-color:var(--accent)}
-  .tr-block{margin-top:22px}
-  .tr-block__label{display:block;font-family:var(--mono);font-size:.56rem;letter-spacing:.14em;text-transform:uppercase;color:var(--ink-soft);margin-bottom:9px}
-  .tr-block p{font-size:.92rem;line-height:1.6;color:var(--ink);max-width:62ch}
-  .tr-block p + p{margin-top:10px}
-  .tr-skills{display:flex;flex-wrap:wrap;gap:8px}
-  .tr-skills span{font-family:var(--mono);font-size:.58rem;letter-spacing:.04em;color:var(--ink-soft);background:var(--surface-2);border:1px solid var(--line);border-radius:8px;padding:7px 11px}
-  .tr-stats{display:flex;gap:36px;margin-top:24px;border-top:1px solid var(--line);padding-top:18px}
-  .tr-stats dt{font-family:var(--mono);font-size:.54rem;letter-spacing:.12em;text-transform:uppercase;color:var(--ink-soft);margin-bottom:4px}
-  .tr-stats dd{font-family:var(--mono);font-size:.9rem;color:var(--ink)}
-
-  /* ===== CIERRE ===== */
-  .tr-cierre{text-align:center;padding:clamp(56px,10vh,120px) 0}
-  .tr-cierre h2{font-family:var(--disp);font-weight:400;text-transform:uppercase;font-size:clamp(2rem,5vw,3.6rem);line-height:1.02;letter-spacing:-.01em}
-  .tr-cierre p{max-width:50ch;margin:18px auto 0;color:var(--ink-soft);font-size:clamp(1rem,1.5vw,1.12rem);line-height:1.6}
-  .tr-strip{display:flex;flex-wrap:wrap;justify-content:center;gap:10px;margin-top:32px}
-  .tr-strip span{font-family:var(--mono);font-size:.58rem;letter-spacing:.1em;text-transform:uppercase;color:var(--ink-soft);border:1px solid var(--line-2);border-radius:20px;padding:8px 14px}
-
-  @media (max-width:680px){
-    .tr-head{grid-template-columns:auto 1fr auto;gap:12px;padding:20px 2px}
-    .tr-head .tr-years,.tr-head .tr-chip{display:none}
-    .tr-who{white-space:normal}
-    .tr-panel__grid{grid-template-columns:1fr}
-    .tr-photo{max-width:280px;aspect-ratio:4/5}
-    .tr-stats{gap:24px}
+/* ---------- nav ---------- */
+.nav{
+  position:fixed;inset:0 0 auto 0;z-index:10;
+  display:flex;align-items:center;justify-content:space-between;
+  padding:22px var(--pad);
+  background:transparent;border-bottom:1px solid transparent;
+  transition:background .3s ease,border-color .3s ease,padding .3s ease;
+}
+.nav.scrolled{
+  background:rgba(14,14,14,.96);border-color:var(--line);padding-block:14px;
+}
+.nav .brand{font-weight:800;font-stretch:118%;font-size:17px;letter-spacing:.01em}
+.nav .brand{display:inline-flex;align-items:center;gap:.14em}
+/* flecha de marca: celda cuadrada de 1em (alto del logotipo), gira al hover */
+.nav .brand .b-arrow{width:1em;height:1em;display:grid;place-items:center;color:var(--accent);flex:none}
+.nav .brand .b-arrow svg{width:100%;height:100%;display:block;transition:transform .35s cubic-bezier(.2,.6,.2,1)}
+.nav .brand:hover .b-arrow svg,.nav .brand:focus-visible .b-arrow svg{transform:rotate(-90deg)}
+@media (prefers-reduced-motion:reduce){.nav .brand .b-arrow svg{transition:none}}
+/* botón de menú móvil (oculto en escritorio) */
+.menu-btn{
+  display:none;align-items:center;gap:9px;
+  background:none;border:1px solid var(--line);border-radius:99px;
+  color:var(--ink);font:inherit;font-size:10px;font-weight:700;
+  letter-spacing:.18em;text-transform:uppercase;padding:9px 14px;cursor:pointer;
+}
+.menu-btn .tick{
+  width:7px;height:7px;border-right:1.6px solid var(--accent);border-bottom:1.6px solid var(--accent);
+  transform:rotate(45deg) translateY(-1px);transition:transform .3s ease;
+}
+.nav.open .menu-btn .tick{transform:rotate(225deg) translateY(1px)}
+@media (prefers-reduced-motion:reduce){.menu-btn .tick{transition:none}}
+/* ---------- banda clara: apartados documentales sobre papel ---------- */
+.band-light{
+  --bg:#F4F3EF;
+  --ink:#141414;
+  --ink-soft:#57564F;
+  --ink-dim:#75746E;
+  --line:rgba(0,0,0,.14);
+  --line-2:rgba(0,0,0,.3);
+  --paper:#F4F3EF;
+  --paper-2:#EAE8E1;
+  --accent:hsl(280 60% 42%);
+  --yellow:hsl(280 60% 42%);
+  --yellow-deep:hsl(280 65% 36%);
+  --verm:hsl(280 60% 42%);
+  --on-accent:#F4F3EF;
+  --warn:hsl(8 70% 40%);
+  --green:hsl(145 60% 27%);
+  background:var(--bg);color:var(--ink);
+}
+.band-light ::selection{background:hsl(280 60% 42%);color:#F4F3EF}
+.nav ul{display:flex;gap:clamp(14px,2.5vw,34px);list-style:none}
+.nav ul a{
+  font-size:11.5px;font-weight:600;letter-spacing:.14em;text-transform:uppercase;
+  padding-bottom:3px;border-bottom:1px solid transparent;transition:border-color .2s;
+}
+.nav ul a:hover{border-color:var(--ink)}
+.nav ul a[aria-current="page"]{border-color:var(--ink)}
+@media(max-width:720px){
+  .nav{padding-inline:16px}
+  .nav.open{background:rgba(14,14,14,.98);border-color:var(--line)}
+  .nav .brand{font-size:14px}
+  .menu-btn{display:inline-flex}
+  .nav > nav{
+    position:absolute;top:100%;left:0;right:0;display:none;
+    background:rgba(14,14,14,.98);border-bottom:1px solid var(--line);
   }
-
-  /* ===== IMPRESIÓN: guía en CLARO (PRD §6) ===== */
-  @media print{
-    :root{
-      --bg:#ffffff; --surface:#ffffff; --surface-2:#f3f3f1;
-      --ink:#111111; --ink-soft:#555555;
-      --line:rgba(0,0,0,.12); --line-2:rgba(0,0,0,.24);
-      --accent:#6d28d9; --accent-deep:#5b21b6;
-    }
-    html,body{background:#fff !important;color:#111 !important}
-    #bgfx,.dock,.site-footer,.tr-actions,.tr-chevron{display:none !important}
-    .tr-panel{display:block !important;animation:none !important}
-    .tr-photo img{filter:none !important}
-    .tr-item{break-inside:avoid}
-    a{color:#111 !important}
+  .nav.open > nav{display:block}
+  .nav ul{display:block;padding:4px 16px 14px}
+  .nav ul a{
+    display:block;font-size:13px;letter-spacing:.16em;
+    padding:15px 2px;border-bottom:0;border-top:1px solid var(--line);
   }
-  </style>
+  .nav ul li:first-child a{border-top:0}
+  .nav ul a[aria-current="page"]{color:var(--accent)}
+}
+
+/* ---------- cabecera de página ---------- */
+.page-head{padding-block:clamp(150px,22vh,190px) clamp(44px,7vh,72px)}
+.page-head .label{display:block;margin-bottom:20px}
+.page-head h1{font-size:clamp(44px,9vw,96px)}
+.page-head .lede{
+  margin-top:24px;max-width:56ch;color:var(--ink-soft);
+  font-size:clamp(16px,1.6vw,18.5px);line-height:1.6;
+}
+.print-btn{
+  display:inline-flex;align-items:center;gap:10px;margin-top:34px;
+  background:none;border:1px solid var(--line);border-radius:99px;
+  color:var(--ink);font:inherit;font-size:11px;font-weight:600;
+  letter-spacing:.18em;text-transform:uppercase;
+  padding:12px 22px;cursor:pointer;
+  transition:color .2s,border-color .2s;
+}
+.print-btn:hover{color:var(--accent);border-color:var(--accent)}
+.print-btn svg{width:14px;height:14px;flex:none}
+
+/* ---------- secciones ---------- */
+section{padding-block:clamp(60px,9vh,110px)}
+.sec-head{display:flex;align-items:center;gap:18px;margin-bottom:clamp(36px,6vh,64px)}
+.sec-head::after{content:"";flex:1;height:1px;background:var(--line)}
+
+/* ---------- acordeón de caminos ---------- */
+#caminos{padding-top:0}
+.tr-list{border-bottom:1px solid var(--line)}
+.tr-item{border-top:1px solid var(--line);scroll-margin-top:96px}
+.tr-h{margin:0}
+.tr-head{
+  width:100%;display:grid;grid-template-columns:auto 1fr auto auto;
+  align-items:center;gap:clamp(16px,3vw,36px);
+  padding:clamp(24px,4.5vh,36px) 0;
+  background:none;border:0;color:inherit;font:inherit;text-align:left;cursor:pointer;
+}
+.tr-name{display:block;font-size:clamp(22px,3.6vw,40px);transition:color .25s}
+.tr-role{display:block;margin-top:9px;max-width:64ch}
+.tr-meta{white-space:nowrap;color:var(--ink-dim)}
+.tr-plus{
+  width:34px;height:34px;display:grid;place-items:center;
+  border:1px solid var(--line);border-radius:50%;color:var(--ink-soft);
+  transition:transform .35s cubic-bezier(.2,.6,.2,1),color .25s,border-color .25s;
+}
+.tr-plus svg{width:14px;height:14px;display:block}
+.tr-head:hover .tr-plus{color:var(--accent);border-color:var(--accent)}
+.tr-item.is-open .tr-plus{transform:rotate(45deg);color:var(--accent);border-color:var(--accent)}
+@media (prefers-reduced-motion:reduce){.tr-plus{transition:none}}
+
+/* panel: alto animado con grid-template-rows */
+.tr-panel{display:grid;grid-template-rows:0fr;transition:grid-template-rows .55s cubic-bezier(.2,.6,.2,1)}
+.tr-in{overflow:hidden;min-height:0;visibility:hidden;transition:visibility 0s .55s}
+.tr-item.is-open .tr-panel{grid-template-rows:1fr}
+.tr-item.is-open .tr-in{visibility:visible;transition-delay:0s}
+@media (prefers-reduced-motion:reduce){.tr-panel,.tr-in{transition:none}}
+
+.tr-grid{
+  display:grid;grid-template-columns:minmax(0,340px) 1fr;
+  gap:clamp(28px,5vw,72px);align-items:start;
+  padding:8px 0 clamp(44px,7vh,68px);
+}
+.tr-photo{overflow:hidden;background:#161616}
+.tr-photo img{
+  width:100%;aspect-ratio:4/5;object-fit:cover;
+  filter:grayscale(1) contrast(1.04);transition:filter .4s ease;
+}
+.tr-photo:hover img{filter:grayscale(0)}
+@media (prefers-reduced-motion:reduce){.tr-photo img{transition:none}}
+
+.tr-detail{min-width:0}
+.tr-kicker{display:block;margin-bottom:4px}
+.tr-kicker b{color:var(--accent);font-weight:600}
+.tr-block{margin-top:30px}
+.tr-block .label{display:block;margin-bottom:13px}
+.tr-block p{color:var(--ink-soft);font-size:15.5px;line-height:1.65;max-width:62ch}
+.tr-block p+p{margin-top:12px}
+.tr-skills{display:flex;flex-wrap:wrap;gap:10px}
+.tr-skills span{
+  font-size:12px;font-weight:600;letter-spacing:.04em;color:var(--ink);
+  border:1px solid var(--line);border-radius:99px;padding:8px 15px;
+}
+.tr-stats{
+  display:flex;flex-wrap:wrap;gap:24px clamp(32px,6vw,64px);
+  margin-top:34px;padding-top:22px;border-top:1px solid var(--line);
+}
+.tr-stats dt{margin-bottom:8px}
+.tr-stats dd{
+  font-weight:800;font-stretch:118%;text-transform:uppercase;
+  font-size:clamp(17px,2.2vw,23px);letter-spacing:-.01em;line-height:1;
+}
+.tr-links{display:flex;flex-wrap:wrap;gap:14px 26px;margin-top:32px}
+.tr-links a{
+  font-size:11.5px;font-weight:700;letter-spacing:.18em;text-transform:uppercase;
+  border-bottom:1px solid var(--ink);padding-bottom:4px;
+  transition:color .2s,border-color .2s;
+}
+.tr-links a:hover{color:var(--accent);border-color:var(--accent)}
+
+/* ---------- cierre ---------- */
+.cierre p.big{
+  font-size:clamp(20px,2.9vw,33px);line-height:1.32;font-weight:420;
+  color:var(--ink-soft);max-width:30ch;letter-spacing:-.01em;
+}
+.cierre p.big em{font-style:italic;font-weight:640;color:var(--ink)}
+.cierre .go{margin-top:30px}
+.cierre .go a{
+  font-size:12px;font-weight:700;letter-spacing:.2em;text-transform:uppercase;
+  border-bottom:1px solid var(--ink);padding-bottom:5px;
+  transition:color .2s,border-color .2s;
+}
+.cierre .go a:hover{color:var(--accent);border-color:var(--accent)}
+
+/* ---------- footer ---------- */
+footer{
+  border-top:1px solid var(--line);
+  display:flex;flex-wrap:wrap;gap:14px 34px;align-items:center;justify-content:space-between;
+  padding:26px var(--pad);font-size:12px;color:var(--ink-soft);
+}
+footer nav{display:flex;flex-wrap:wrap;gap:20px}
+footer nav a{letter-spacing:.1em;text-transform:uppercase;font-size:11px;font-weight:600}
+footer nav a:hover{color:var(--ink)}
+
+/* ---------- móvil ---------- */
+@media(max-width:720px){
+  .tr-head{grid-template-columns:auto 1fr auto;gap:14px}
+  .tr-meta{display:none}
+  .tr-grid{grid-template-columns:1fr;gap:26px}
+  .tr-photo{max-width:320px}
+}
+
+/* ---------- impresión: guía en claro ---------- */
+@media print{
+  :root{
+    --bg:#ffffff;
+    --ink:#111111;
+    --ink-soft:#555555;
+    --ink-dim:#777777;
+    --line:rgba(0,0,0,.16);
+    --accent:#6d28d9;
+  }
+  html,body{background:#fff !important;color:#111 !important}
+  .nav,footer,.print-btn,.tr-plus,.cierre{display:none !important}
+  .rv{opacity:1 !important;transform:none !important;transition:none !important}
+  .page-head{padding-block:34px 30px}
+  .page-head h1{font-size:52px}
+  section{padding-block:24px}
+  .tr-head{padding:20px 0;cursor:default}
+  .tr-panel{grid-template-rows:1fr !important;transition:none !important}
+  .tr-in{visibility:visible !important}
+  .tr-grid{grid-template-columns:200px 1fr;gap:28px;padding-bottom:30px}
+  .tr-photo img{filter:none !important}
+  .tr-item{break-inside:avoid;page-break-inside:avoid}
+  .tr-block p{max-width:none}
+  a{color:inherit !important}
+}
+</style>
 </head>
 <body>
 
-  <main>
-    <!-- HERO -->
-    <header class="section tr-hero" id="trayecto">
-      <div class="wrap">
-        <p class="tr-eyebrow">Guía para alumnos · padres · dirección · 2026</p>
-        <h1 class="tr-title">Una carrera, <em>seis destinos</em>.</h1>
-        <p class="tr-lede">Seis caminos reales que recorren nuestros egresados al terminar la Licenciatura en Diseño Gráfico de la Universidad de Monterrey: de freelance a fundador de estudio, de motion a dirección creativa.</p>
-        <div class="tr-cota">
-          <span><b>06</b> caminos</span>
-          <span><b>01</b> licenciatura</span>
-          <span><b>1 → 10+</b> años</span>
+<header class="nav">
+  <a class="brand" href="index.html">LDG·UDEM<span class="b-arrow" aria-hidden="true"><svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="square" focusable="false"><path d="M2 2l8 8"/><path d="M10 4.6V10H4.6"/></svg></span></a>
+  <button class="menu-btn" type="button" aria-expanded="false" aria-controls="site-menu">Menú<span class="tick" aria-hidden="true"></span></button>
+  <nav id="site-menu" aria-label="Principal">
+    <ul>
+      <li><a href="showcase.html">Showcase</a></li>
+      <li><a href="trayecto.html" aria-current="page">Trayecto</a></li>
+      <li><a href="avance.html">Mi Avance</a></li>
+      <li><a href="pef.html">Guía PEF</a></li>
+    </ul>
+  </nav>
+</header>
+
+<!-- CABECERA -->
+<header class="page-head wrap">
+  <p class="label rv">Trayecto del egresado</p>
+  <h1 class="display rv">Seis caminos</h1>
+  <p class="lede rv">Un mismo título, destinos muy distintos. Seis egresados reales muestran su camino, ordenados por los años que les tomó llegar: del primer año como freelance a más de una década en dirección creativa.</p>
+  <button class="print-btn rv" type="button" data-print>
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="6 9 6 2 18 2 18 9"/><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><rect x="6" y="14" width="12" height="8"/></svg>
+    Imprimir guía
+  </button>
+</header>
+
+<!-- SEIS CAMINOS -->
+<section class="wrap" id="caminos">
+  <div class="sec-head rv"><span class="label">Seis egresados · ordenados por años para llegar</span></div>
+
+  <div class="tr-list rv" id="trList">
+
+    <!-- 01 · Freelance -->
+    <article class="tr-item" id="freelance">
+      <h2 class="tr-h">
+        <button class="tr-head" type="button" id="h-freelance" aria-expanded="false" aria-controls="p-freelance">
+          <span class="tr-main">
+            <span class="tr-name display">Paulina González</span>
+            <span class="tr-role label">Directora creativa &amp; fundadora de House of Archives.</span>
+          </span>
+          <span class="tr-meta label">Freelance · 1 año</span>
+          <span class="tr-plus" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg></span>
+        </button>
+      </h2>
+      <div class="tr-panel" id="p-freelance" role="region" aria-labelledby="h-freelance">
+        <div class="tr-in">
+          <div class="tr-grid">
+            <figure class="tr-photo"><img src="proyectos/alumnos/paulina-gonzalez.jpg" alt="Paulina González" loading="lazy"></figure>
+            <div class="tr-detail">
+              <span class="tr-kicker label"><b>Camino 01</b> · Freelance con grandes marcas</span>
+              <div class="tr-block">
+                <span class="label">Perfil</span>
+                <p>Egresada de Diseño Gráfico UDEM con tesis reconocida por el A′ Design Award &amp; Competition en Italia. Desde Monterrey dirige House of Archives, su agencia enfocada en storytelling y en construir conceptos creativos. La creación de video la acompaña desde los 12 años y hoy define su práctica profesional.</p>
+              </div>
+              <div class="tr-block">
+                <span class="label">Habilidades clave</span>
+                <div class="tr-skills"><span>Storytelling visual</span><span>Dirección creativa</span><span>Video y audiovisual</span><span>Identidad y narrativa</span></div>
+              </div>
+              <div class="tr-block">
+                <span class="label">Clientes y colaboraciones</span>
+                <p>Zone · Xile Chile · Sico · Boru · Endless Luxe</p>
+              </div>
+              <dl class="tr-stats">
+                <div><dt class="label">Años para llegar</dt><dd>1 año</dd></div>
+                <div><dt class="label">Modalidad</dt><dd>Freelance</dd></div>
+              </dl>
+              <div class="tr-links">
+                <a href="https://www.linkedin.com/in/paulina-gonz%C3%A1lez-9448002b0/" target="_blank" rel="noopener">LinkedIn ↗</a>
+                <a href="https://instagram.com/houseof_archives" target="_blank" rel="noopener">House of Archives ↗</a>
+              </div>
+            </div>
+          </div>
         </div>
-        <div class="tr-actions">
-          <button class="tr-print" type="button" data-print>
-            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 6 2 18 2 18 9"/><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><rect x="6" y="14" width="12" height="8"/></svg>
-            Imprimir guía
-          </button>
+      </div>
+    </article>
+
+    <!-- 02 · Motion -->
+    <article class="tr-item" id="motion">
+      <h2 class="tr-h">
+        <button class="tr-head" type="button" id="h-motion" aria-expanded="false" aria-controls="p-motion">
+          <span class="tr-main">
+            <span class="tr-name display">Marbella</span>
+            <span class="tr-role label">Diseñadora gráfica, ilustradora y muralista. Basada en Barcelona.</span>
+          </span>
+          <span class="tr-meta label">Motion · 3 años</span>
+          <span class="tr-plus" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg></span>
+        </button>
+      </h2>
+      <div class="tr-panel" id="p-motion" role="region" aria-labelledby="h-motion">
+        <div class="tr-in">
+          <div class="tr-grid">
+            <figure class="tr-photo"><img src="proyectos/alumnos/marbella.jpg" alt="Marbella" loading="lazy"></figure>
+            <div class="tr-detail">
+              <span class="tr-kicker label"><b>Camino 02</b> · Motion designer</span>
+              <div class="tr-block">
+                <span class="label">Perfil</span>
+                <p>Diseñadora gráfica, ilustradora y muralista egresada de la UDEM. Desde Barcelona desarrolla proyectos internacionales con una estética maximalista y mirada femenina, entre la ilustración de mujeres y el muralismo, animando sus propias piezas.</p>
+                <p>Recientemente su trayectoria fue destacada por la revista Players of Life.</p>
+              </div>
+              <div class="tr-block">
+                <span class="label">Habilidades clave</span>
+                <div class="tr-skills"><span>Ilustración</span><span>Motion y animación</span><span>Muralismo</span><span>Dirección de arte</span></div>
+              </div>
+              <div class="tr-block">
+                <span class="label">Clientes y colaboraciones</span>
+                <p>Shake Shack · Tecate Pa’l Norte · Innvictus · Sally Beauty · Mercedes-Benz · Campari · Randy’s Donuts</p>
+              </div>
+              <dl class="tr-stats">
+                <div><dt class="label">Años para llegar</dt><dd>3 años</dd></div>
+                <div><dt class="label">Base</dt><dd>Barcelona</dd></div>
+              </dl>
+            </div>
+          </div>
         </div>
       </div>
-    </header>
+    </article>
 
-    <!-- POSTURA -->
-    <section class="tr-postura">
-      <div class="wrap">
-        <p>El diseño gráfico hoy no es una sola profesión.</p>
-        <p class="sub">Es dirección creativa, emprendimiento, consultoría independiente e innovación corporativa. La LDG no forma un solo perfil: forma diseñadores capaces de moverse entre la creación visual, la estrategia, la dirección y la gestión de proyectos.</p>
-      </div>
-    </section>
-
-    <!-- SEIS CAMINOS -->
-    <section class="section" id="caminos">
-      <div class="wrap">
-        <div class="sec-head"><span class="sec-no">01</span><h2>¿Hacia dónde van?</h2></div>
-        <p class="sec-sub">Seis egresados · ordenados por años para llegar</p>
-        <div class="tr-list" id="trList" style="margin-top:30px"><!-- caminos inyectados por trayecto.js --></div>
-      </div>
-    </section>
-
-    <!-- CIERRE -->
-    <section class="tr-cierre">
-      <div class="wrap">
-        <h2>Una carrera · seis destinos</h2>
-        <p>Un mismo título, seis modalidades reales de ejercicio profesional: del trabajo independiente a la dirección creativa y la fundación de estudio.</p>
-        <div class="tr-strip">
-          <span>Freelance</span><span>Motion</span><span>Fundador de estudio</span>
-          <span>In-house</span><span>Dirección creativa</span><span>Estratega de marca</span>
+    <!-- 03 · Fundador -->
+    <article class="tr-item" id="fundador">
+      <h2 class="tr-h">
+        <button class="tr-head" type="button" id="h-fundador" aria-expanded="false" aria-controls="p-fundador">
+          <span class="tr-main">
+            <span class="tr-name display">Paola Rhon</span>
+            <span class="tr-role label">Founder &amp; Creative Director en Better Projects.</span>
+          </span>
+          <span class="tr-meta label">Fundadora · 5 años</span>
+          <span class="tr-plus" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg></span>
+        </button>
+      </h2>
+      <div class="tr-panel" id="p-fundador" role="region" aria-labelledby="h-fundador">
+        <div class="tr-in">
+          <div class="tr-grid">
+            <figure class="tr-photo"><img src="proyectos/alumnos/paola-rhon.jpg" alt="Paola Rhon" loading="lazy"></figure>
+            <div class="tr-detail">
+              <span class="tr-kicker label"><b>Camino 03</b> · Fundadora de estudio</span>
+              <div class="tr-block">
+                <span class="label">Perfil</span>
+                <p>Fundadora de Better Projects, estudio creativo especializado en branding, experiencia y estrategia. También dirige BTTR School. Egresada UDEM con reconocimiento PEF Sobresaliente.</p>
+              </div>
+              <div class="tr-block">
+                <span class="label">Habilidades clave</span>
+                <div class="tr-skills"><span>Branding e identidad</span><span>Dirección creativa</span><span>Estrategia de marca</span><span>Liderazgo de equipo</span></div>
+              </div>
+              <dl class="tr-stats">
+                <div><dt class="label">Años para llegar</dt><dd>5 años</dd></div>
+                <div><dt class="label">Equipo</dt><dd>2–10</dd></div>
+              </dl>
+              <div class="tr-links">
+                <a href="https://www.linkedin.com/in/paolarhon/" target="_blank" rel="noopener">LinkedIn ↗</a>
+                <a href="https://bttrprojects.com/" target="_blank" rel="noopener">Better Projects ↗</a>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
-    </section>
-  </main>
+    </article>
 
-  <!-- FOOTER común · inyectado por assets/footer.js -->
+    <!-- 04 · In-house -->
+    <article class="tr-item" id="in-house">
+      <h2 class="tr-h">
+        <button class="tr-head" type="button" id="h-in-house" aria-expanded="false" aria-controls="p-in-house">
+          <span class="tr-main">
+            <span class="tr-name display">Frida Medrano</span>
+            <span class="tr-role label">Art Director en Kettle, trabajando onsite para Apple.</span>
+          </span>
+          <span class="tr-meta label">In-house · 7+ años</span>
+          <span class="tr-plus" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg></span>
+        </button>
+      </h2>
+      <div class="tr-panel" id="p-in-house" role="region" aria-labelledby="h-in-house">
+        <div class="tr-in">
+          <div class="tr-grid">
+            <figure class="tr-photo"><img src="proyectos/alumnos/frida-medrano.jpg" alt="Frida Medrano" loading="lazy"></figure>
+            <div class="tr-detail">
+              <span class="tr-kicker label"><b>Camino 04</b> · Diseñador in-house</span>
+              <div class="tr-block">
+                <span class="label">Perfil</span>
+                <p>Diseñadora mexicana egresada de Diseño Gráfico por la UDEM. Art Director en Kettle, agencia digital con sede en San Francisco, colaborando onsite para Apple. Ha trabajado en proyectos de tipografía como Kalnia y Jabin, y ha presentado en ATypI, TypeLab, TypeCon, IxDA, Letrástica y Design Matters. Recibió el SOTA Catalyst Award en 2018. Antes de Kettle trabajó en Anagrama como diseñadora de branding.</p>
+              </div>
+              <div class="tr-block">
+                <span class="label">Habilidades clave</span>
+                <div class="tr-skills"><span>Dirección de arte</span><span>Diseño de producto digital</span><span>Tipografía y sistemas visuales</span><span>Interacción y UX</span><span>Diseño para tecnología</span><span>Equipos globales</span></div>
+              </div>
+              <div class="tr-block">
+                <span class="label">Clientes y colaboraciones</span>
+                <p>Kettle · Apple · Anagrama</p>
+              </div>
+              <dl class="tr-stats">
+                <div><dt class="label">Años para llegar</dt><dd>7+ años</dd></div>
+                <div><dt class="label">Modalidad</dt><dd>In-house / tech</dd></div>
+              </dl>
+            </div>
+          </div>
+        </div>
+      </div>
+    </article>
 
+    <!-- 05 · Dirección creativa -->
+    <article class="tr-item" id="direccion-creativa">
+      <h2 class="tr-h">
+        <button class="tr-head" type="button" id="h-direccion-creativa" aria-expanded="false" aria-controls="p-direccion-creativa">
+          <span class="tr-main">
+            <span class="tr-name display">Sebastián Padilla</span>
+            <span class="tr-role label">Director creativo, cofundador de Anagrama y realizador cinematográfico.</span>
+          </span>
+          <span class="tr-meta label">Dir. creativa · 10+ años</span>
+          <span class="tr-plus" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg></span>
+        </button>
+      </h2>
+      <div class="tr-panel" id="p-direccion-creativa" role="region" aria-labelledby="h-direccion-creativa">
+        <div class="tr-in">
+          <div class="tr-grid">
+            <figure class="tr-photo"><img src="proyectos/alumnos/sebastian-padilla.jpg" alt="Sebastián Padilla" loading="lazy"></figure>
+            <div class="tr-detail">
+              <span class="tr-kicker label"><b>Camino 05</b> · Dirección creativa</span>
+              <div class="tr-block">
+                <span class="label">Perfil</span>
+                <p>Cofundador y director creativo de Anagrama, estudio mexicano reconocido internacionalmente por su trabajo en branding, arquitectura e interacción digital. Ha desarrollado además proyectos cinematográficos como Después del Incendio y Muerte al Verano.</p>
+              </div>
+              <div class="tr-block">
+                <span class="label">Habilidades clave</span>
+                <div class="tr-skills"><span>Dirección de arte</span><span>Branding e identidad</span><span>Narrativa visual</span><span>Dirección creativa</span><span>Conceptualización cultural</span><span>Gestión de equipos</span></div>
+              </div>
+              <div class="tr-block">
+                <span class="label">Clientes y colaboraciones</span>
+                <p>Anagrama</p>
+              </div>
+              <dl class="tr-stats">
+                <div><dt class="label">Años para llegar</dt><dd>10+ años</dd></div>
+                <div><dt class="label">Modalidad</dt><dd>Fundador / realizador</dd></div>
+              </dl>
+              <div class="tr-links">
+                <a href="https://anagrama.com/" target="_blank" rel="noopener">Anagrama ↗</a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </article>
+
+    <!-- 06 · Estratega -->
+    <article class="tr-item" id="estratega">
+      <h2 class="tr-h">
+        <button class="tr-head" type="button" id="h-estratega" aria-expanded="false" aria-controls="p-estratega">
+          <span class="tr-main">
+            <span class="tr-name display">Vicky González</span>
+            <span class="tr-role label">Founder &amp; Creative Director de WORKROOM.</span>
+          </span>
+          <span class="tr-meta label">Estratega · 10+ años</span>
+          <span class="tr-plus" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg></span>
+        </button>
+      </h2>
+      <div class="tr-panel" id="p-estratega" role="region" aria-labelledby="h-estratega">
+        <div class="tr-in">
+          <div class="tr-grid">
+            <figure class="tr-photo"><img src="proyectos/alumnos/vicky-gonzalez.jpg" alt="Vicky González" loading="lazy"></figure>
+            <div class="tr-detail">
+              <span class="tr-kicker label"><b>Camino 06</b> · Estratega de marca</span>
+              <div class="tr-block">
+                <span class="label">Perfil</span>
+                <p>Fundadora y directora creativa de WORKROOM, estudio especializado en branding y estrategia de marca con sede en Monterrey. Antes de fundar WORKROOM, desarrolló experiencia como consultora independiente.</p>
+              </div>
+              <div class="tr-block">
+                <span class="label">Habilidades clave</span>
+                <div class="tr-skills"><span>Estrategia de marca</span><span>Dirección creativa</span><span>Branding e identidad</span><span>Posicionamiento</span><span>Gestión de clientes</span><span>Liderazgo creativo</span></div>
+              </div>
+              <dl class="tr-stats">
+                <div><dt class="label">Años para llegar</dt><dd>10+ años</dd></div>
+                <div><dt class="label">Modalidad</dt><dd>Fundadora / estratega</dd></div>
+              </dl>
+            </div>
+          </div>
+        </div>
+      </div>
+    </article>
+
+  </div>
+</section>
+
+<!-- CIERRE -->
+<section class="cierre band-light">
+<div class="wrap">
+  <div class="sec-head rv"><span class="label">Siguiente paso</span></div>
+  <p class="big rv">Todos estos caminos arrancaron en el mismo punto: <em>una práctica profesional durante la carrera.</em></p>
+  <p class="go rv"><a href="mailto:ldg.crgs@udem.edu?subject=Pr%C3%A1cticas%20profesionales">Pregunta por prácticas</a></p>
+</div>
+</section>
+
+<footer>
+  <span>© <span id="yy">2026</span> Diseño Gráfico · UDEM</span>
+  <nav aria-label="Pie">
+    <a href="showcase.html">Showcase</a>
+    <a href="trayecto.html">Trayecto</a>
+    <a href="avance.html">Mi Avance</a>
+    <a href="pef.html">Guía PEF</a>
+  </nav>
+  <span>Monterrey, MX</span>
+</footer>
+
+<script>
+(function(){
+  document.getElementById('yy').textContent = new Date().getFullYear();
+
+  /* nav sólido al hacer scroll */
+  var nav = document.querySelector('.nav');
+  var onScroll = function(){ nav.classList.toggle('scrolled', window.scrollY > 40); };
+  addEventListener('scroll', onScroll, {passive:true});
+  onScroll();
+
+  var mReduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  /* acordeón single-open */
+  var items = Array.prototype.slice.call(document.querySelectorAll('.tr-item'));
+
+  function setOpen(item, open){
+    var btn = item.querySelector('.tr-head');
+    item.classList.toggle('is-open', open);
+    if(btn) btn.setAttribute('aria-expanded', open ? 'true' : 'false');
+  }
+  function toggle(item){
+    var willOpen = !item.classList.contains('is-open');
+    items.forEach(function(it){ setOpen(it, false); });
+    if(willOpen){
+      setOpen(item, true);
+      if(item.id && history.replaceState) history.replaceState(null, '', '#' + item.id);
+    } else if(history.replaceState){
+      history.replaceState(null, '', location.pathname + location.search);
+    }
+  }
+  items.forEach(function(item){
+    var head = item.querySelector('.tr-head');
+    if(head) head.addEventListener('click', function(){ toggle(item); });
+  });
+
+  /* deep-link: #id abre ese camino (carga + hashchange) */
+  function openFromHash(){
+    var id = (location.hash || '').replace('#','');
+    if(!id) return;
+    var item = document.getElementById(id);
+    if(item && item.classList.contains('tr-item')){
+      items.forEach(function(it){ setOpen(it, false); });
+      setOpen(item, true);
+      item.scrollIntoView({ behavior: mReduce ? 'auto' : 'smooth', block:'start' });
+    }
+  }
+  openFromHash();
+  addEventListener('hashchange', openFromHash);
+
+  /* imprimir guía (sale en claro vía @media print) */
+  Array.prototype.forEach.call(document.querySelectorAll('[data-print]'), function(b){
+    b.addEventListener('click', function(){ window.print(); });
+  });
+
+  /* reveal al hacer scroll */
+  var rvs = document.querySelectorAll('.rv');
+  if(mReduce || !('IntersectionObserver' in window)){
+    rvs.forEach(function(el){ el.classList.add('in'); });
+    return;
+  }
+  var io = new IntersectionObserver(function(entries){
+    entries.forEach(function(e){
+      if(e.isIntersecting){ e.target.classList.add('in'); io.unobserve(e.target); }
+    });
+  }, {threshold:.12, rootMargin:'0px 0px -8% 0px'});
+  rvs.forEach(function(el){ io.observe(el); });
+})();
+</script>
+<script>
+(function(){
+  var bar = document.querySelector('.nav');
+  var btn = document.querySelector('.menu-btn');
+  if(!bar || !btn) return;
+  var close = function(){ bar.classList.remove('open'); btn.setAttribute('aria-expanded','false'); };
+  btn.addEventListener('click', function(){
+    var open = bar.classList.toggle('open');
+    btn.setAttribute('aria-expanded', open ? 'true' : 'false');
+  });
+  document.addEventListener('click', function(e){ if(bar.classList.contains('open') && !bar.contains(e.target)) close(); });
+  document.addEventListener('keydown', function(e){ if(e.key === 'Escape') close(); });
+  addEventListener('resize', close);
+})();
+</script>
 </body>
 </html>

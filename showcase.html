@@ -1,209 +1,669 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>LDG · UDEM · Showcase</title>
-  <meta name="description" content="Showcase del portafolio de la Licenciatura en Diseño Gráfico de la UDEM: video destacado, proyectos del programa y reconocimientos.">
-  <meta name="theme-color" content="#000000">
-  <link rel="icon" href="assets/favicon.svg?v=4" type="image/svg+xml">
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Anton&family=Atkinson+Hyperlegible:ital,wght@0,400;0,700;1,400&family=JetBrains+Mono:wght@400;500&family=Spectral:ital,wght@1,300&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="assets/dark.css?v=20260620m">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#0E0E0E">
+<title>LDG · UDEM · Showcase</title>
+<link rel="icon" href="assets/favicon.svg?v=4" type="image/svg+xml">
+<link rel="icon" href="assets/favicon-32.png?v=4" sizes="32x32" type="image/png">
+<link rel="apple-touch-icon" href="assets/favicon-180.png?v=4">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo:ital,wdth,wght@0,62..125,100..900;1,62..125,100..900&display=swap" rel="stylesheet">
 
-  <script>window.SITE_NAV = { current: 'showcase' };</script>
-
-  <!-- Firebase (solo lectura · ldgProjects/ldgAwards). Si no carga la red, showcase.js cae a los datos base. -->
-  <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-database-compat.js"></script>
-  <script>
-    if (typeof firebase !== 'undefined') {
-      firebase.initializeApp({
-        apiKey: "AIzaSyBfWefsqHW90aqHP9Mz6s8w91eIar_x6j8",
-        authDomain: "portfolioldg-3ca20.firebaseapp.com",
-        databaseURL: "https://portfolioldg-3ca20-default-rtdb.firebaseio.com",
-        projectId: "portfolioldg-3ca20",
-        storageBucket: "portfolioldg-3ca20.firebasestorage.app",
-        messagingSenderId: "563272567632",
-        appId: "1:563272567632:web:85e36244c8f00d5cdf7a55"
-      });
-      window.db = firebase.database();
-    }
-  </script>
-
-  <script defer src="assets/bg-noise.js?v=20260620e"></script>
-  <script defer src="assets/dock-fun.js?v=20260620b"></script>
-  <script defer src="assets/footer.js?v=20260620f"></script>
-  <script defer src="assets/showcase.js?v=20260620g"></script>
-
-  <style>
-  /* ===== BANNER VIDEO (Vimeo · facade poster→iframe) ===== */
-  .sc-banner{position:relative;width:100%;aspect-ratio:16/9;border-radius:18px;overflow:hidden;background:var(--surface-2);border:1px solid var(--line-2);margin-top:10px}
-  .sc-banner__poster{display:block;width:100%;height:100%;position:relative;text-decoration:none}
-  .sc-banner__poster img{width:100%;height:100%;object-fit:cover;filter:grayscale(.4) contrast(1.05);transition:filter .5s var(--ease),transform .6s var(--ease)}
-  .sc-banner__poster:hover img,.sc-banner__poster:focus-visible img{filter:grayscale(0);transform:scale(1.03)}
-  .sc-banner__poster::after{content:"";position:absolute;inset:0;background:linear-gradient(to top,rgba(0,0,0,.65),transparent 48%);pointer-events:none}
-  .sc-banner__play{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);width:74px;height:74px;display:grid;place-items:center;border-radius:50%;background:var(--accent);color:var(--on-accent);z-index:2;box-shadow:0 10px 44px rgba(168,85,247,.42);transition:transform .3s var(--ease)}
-  .sc-banner__poster:hover .sc-banner__play{transform:translate(-50%,-50%) scale(1.08)}
-  .sc-banner__play svg{width:30px;height:30px;margin-left:3px}
-  .sc-banner__cap{position:absolute;left:20px;bottom:18px;z-index:2;font-family:var(--mono);font-size:.7rem;letter-spacing:.06em;color:var(--ink);text-shadow:0 1px 6px rgba(0,0,0,.7)}
-  .sc-banner__video{width:100%;height:100%;border:0;display:block}
-
-  /* ===== subdivisor (Reconocimientos) ===== */
-  .sc-subhead{display:flex;align-items:center;gap:14px;margin:0 0 16px}
-  .sc-subhead span{font-family:var(--mono);font-size:var(--t-mono);letter-spacing:.16em;text-transform:uppercase;color:var(--ink-soft);white-space:nowrap}
-  .sc-subhead::after{content:"";flex:1;height:1px;background:var(--line)}
-
-  /* ===== RECONOCIMIENTOS (premios integrados) ===== */
-  .sc-awards{display:grid;grid-template-columns:repeat(auto-fill,minmax(320px,1fr));gap:16px;margin:0 0 40px}
-  .sc-award{display:flex;gap:14px;padding:15px;background:var(--surface);border:1px solid var(--line-2);border-radius:16px}
-  .sc-award__img{flex-shrink:0;width:88px;height:88px;border-radius:12px;overflow:hidden;background:var(--surface-2)}
-  .sc-award__img img{width:100%;height:100%;object-fit:cover;filter:grayscale(.2)}
-  .sc-award__body{min-width:0}
-  .sc-award__tags{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:7px}
-  .sc-award__tag{font-family:var(--mono);font-size:.52rem;letter-spacing:.1em;text-transform:uppercase;color:var(--ink-soft);border:1px solid var(--line-2);border-radius:20px;padding:3px 8px}
-  .sc-award__tag--accent{color:var(--accent);border-color:var(--accent)}
-  .sc-award__name{font-family:var(--sans);font-size:1.02rem;font-weight:700;letter-spacing:-.01em;line-height:1.1;margin-bottom:5px}
-  .sc-award__students{font-size:.78rem;color:var(--ink-soft);line-height:1.45}
-  .sc-award__advisor{font-family:var(--mono);font-size:.56rem;letter-spacing:.04em;color:var(--ink-soft);margin-top:5px}
-
-  /* ===== CONTROLES (buscador + chips) ===== */
-  .sc-controls{display:flex;flex-wrap:wrap;gap:14px;align-items:center;justify-content:space-between;margin-bottom:16px}
-  .sc-search{position:relative;flex:1 1 260px;max-width:420px}
-  .sc-search > svg{position:absolute;left:14px;top:50%;transform:translateY(-50%);width:16px;height:16px;color:var(--ink-soft);pointer-events:none}
-  .sc-search input{width:100%;height:46px;padding:0 16px 0 40px;background:var(--surface-2);border:1px solid var(--line);border-radius:14px;color:var(--ink);font-family:var(--sans);font-size:.92rem;outline:none;transition:border-color .2s var(--ease)}
-  .sc-search input:focus{border-color:var(--line-2)}
-  .sc-search input::placeholder{color:var(--ink-soft)}
-  .sc-chips{display:flex;flex-wrap:wrap;gap:8px}
-  .sc-chip{font-family:var(--mono);font-size:.58rem;letter-spacing:.1em;text-transform:uppercase;color:var(--ink-soft);background:transparent;border:1px solid var(--line-2);border-radius:20px;padding:8px 12px;cursor:pointer;transition:color .25s var(--ease),border-color .25s var(--ease),background .25s var(--ease)}
-  .sc-chip:hover{color:var(--ink);border-color:rgba(255,255,255,.35)}
-  .sc-chip.is-on{color:var(--on-accent);background:var(--accent);border-color:var(--accent)}
-  .sc-count{font-family:var(--mono);font-size:var(--t-mono);letter-spacing:.14em;text-transform:uppercase;color:var(--ink-soft);margin-bottom:22px}
-
-  /* ===== GRID DE PROYECTOS ===== */
-  .sc-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(248px,1fr));gap:clamp(14px,2vw,24px)}
-  .sc-card{position:relative;background:var(--surface);border:1px solid var(--line);border-radius:16px;overflow:hidden;cursor:pointer;
-    transition:border-color .3s var(--ease),transform .3s var(--ease),box-shadow .3s var(--ease)}
-  .sc-card:hover{border-color:var(--line-2);transform:translateY(-4px);box-shadow:0 18px 42px rgba(0,0,0,.5)}
-  .sc-card:focus-visible{outline:none;border-color:var(--accent);transform:translateY(-4px)}
-  .sc-card__media{position:relative;aspect-ratio:4/3;overflow:hidden;background:var(--surface-2)}
-  .sc-card__media img{width:100%;height:100%;object-fit:cover;filter:grayscale(.55) contrast(1.02);transition:filter .45s var(--ease),transform .6s var(--ease)}
-  .sc-card:hover .sc-card__media img{filter:grayscale(0);transform:scale(1.05)}
-  .sc-card__cat{position:absolute;left:10px;top:10px;font-family:var(--mono);font-size:.5rem;letter-spacing:.12em;color:var(--ink);background:rgba(0,0,0,.55);-webkit-backdrop-filter:blur(6px);backdrop-filter:blur(6px);border:1px solid var(--line-2);border-radius:20px;padding:4px 9px}
-  .sc-card__body{padding:14px 15px 15px}
-  .sc-card__title{font-family:var(--sans);font-size:.92rem;font-weight:700;letter-spacing:-.01em;line-height:1.25;margin-bottom:7px;
-    display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
-  .sc-card__student{font-size:.76rem;color:var(--ink-soft);line-height:1.4;margin-bottom:14px;
-    display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
-  .sc-card__foot{display:flex;align-items:center;justify-content:space-between;border-top:1px solid var(--line);padding-top:11px}
-  .sc-card__period{font-family:var(--mono);font-size:.55rem;letter-spacing:.06em;color:var(--ink-soft)}
-  .sc-card__open{font-family:var(--mono);font-size:.58rem;letter-spacing:.04em;color:var(--accent)}
-  .sc-empty{text-align:center;color:var(--ink-soft);font-family:var(--mono);font-size:.8rem;letter-spacing:.1em;text-transform:uppercase;padding:60px 0}
-
-  /* ===== MODAL DE FICHA ===== */
-  .sc-modal{position:fixed;inset:0;z-index:1400;display:none;align-items:center;justify-content:center;padding:clamp(16px,4vw,48px)}
-  .sc-modal.is-open{display:flex}
-  .sc-modal__backdrop{position:absolute;inset:0;background:rgba(0,0,0,.8);-webkit-backdrop-filter:blur(8px);backdrop-filter:blur(8px)}
-  .sc-modal__panel{position:relative;z-index:1;width:100%;max-width:880px;max-height:90vh;overflow-y:auto;background:var(--surface);border:1px solid var(--line-2);border-radius:22px;display:grid;grid-template-columns:1fr 1fr}
-  .sc-modal__close{position:absolute;right:14px;top:14px;z-index:3;width:38px;height:38px;display:grid;place-items:center;border-radius:50%;border:1px solid var(--line-2);background:rgba(0,0,0,.45);color:var(--ink);cursor:pointer;transition:color .25s var(--ease),border-color .25s var(--ease)}
-  .sc-modal__close:hover{color:var(--accent);border-color:var(--accent)}
-  .sc-modal__close svg{width:18px;height:18px}
-  .sc-modal__cover{background:var(--surface-2);overflow:hidden}
-  .sc-modal__cover img{width:100%;height:100%;object-fit:cover;min-height:260px;display:block}
-  .sc-modal__info{padding:clamp(22px,3vw,36px)}
-  .sc-modal__cat{font-family:var(--mono);font-size:.58rem;letter-spacing:.16em;text-transform:uppercase;color:var(--accent)}
-  .sc-modal__title{font-family:var(--disp);font-weight:400;text-transform:uppercase;font-size:clamp(1.3rem,2.6vw,1.9rem);line-height:1.06;letter-spacing:-.01em;margin:10px 0 18px}
-  .sc-modal__meta{display:flex;flex-direction:column;gap:12px;margin-bottom:18px}
-  .sc-modal__meta dt{font-family:var(--mono);font-size:.55rem;letter-spacing:.12em;text-transform:uppercase;color:var(--ink-soft);margin-bottom:3px}
-  .sc-modal__meta dd{font-size:.86rem;color:var(--ink);line-height:1.4}
-  .sc-modal__abstract{font-family:var(--serif);font-style:italic;font-size:.98rem;line-height:1.62;color:var(--ink-soft);margin-bottom:22px}
-  .sc-modal__dl{display:inline-flex;align-items:center;gap:8px;font-family:var(--mono);font-size:.62rem;letter-spacing:.1em;text-transform:uppercase;color:var(--on-accent);background:var(--accent);border-radius:12px;padding:12px 18px;text-decoration:none;transition:background .25s var(--ease),transform .25s var(--ease)}
-  .sc-modal__dl:hover{background:var(--accent-deep);transform:translateY(-2px)}
-  body.sc-modal-open{overflow:hidden}
-
-  @media (max-width:680px){
-    .sc-modal__panel{grid-template-columns:1fr;max-height:92vh}
-    .sc-modal__cover img{min-height:0;max-height:230px}
-    .sc-banner__play{width:60px;height:60px}
-    .sc-banner__play svg{width:24px;height:24px}
+<!-- Firebase (solo lectura · ldgProjects/ldgAwards). Si no carga la red, el script cae a los 17 proyectos base. -->
+<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-database-compat.js"></script>
+<script>
+  if (typeof firebase !== 'undefined') {
+    firebase.initializeApp({
+      apiKey: "AIzaSyBfWefsqHW90aqHP9Mz6s8w91eIar_x6j8",
+      authDomain: "portfolioldg-3ca20.firebaseapp.com",
+      databaseURL: "https://portfolioldg-3ca20-default-rtdb.firebaseio.com",
+      projectId: "portfolioldg-3ca20",
+      storageBucket: "portfolioldg-3ca20.firebasestorage.app",
+      messagingSenderId: "563272567632",
+      appId: "1:563272567632:web:85e36244c8f00d5cdf7a55"
+    });
+    window.db = firebase.database();
   }
-  </style>
+</script>
+
+<style>
+/* ============ PROPUESTA «LIMPIA» · SHOWCASE — catálogo de tesis ============
+   Misma mano que propuesta-limpia.html: grotesca editorial mínima,
+   una sola familia (Archivo variable), negro plano, aire, acento quirúrgico. */
+
+:root{
+  --bg:#0E0E0E;
+  --ink:#F2F2F0;
+  --ink-soft:#9C9C98;
+  --ink-dim:#7A7A76;
+  --line:rgba(255,255,255,.12);
+  --accent:hsl(280 85% 76%);
+  --max:1200px;
+  --pad:clamp(20px,4vw,56px);
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html{overflow-x:clip;scroll-behavior:smooth}
+@media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}}
+body{
+  background:var(--bg);color:var(--ink);
+  font-family:'Archivo',system-ui,sans-serif;
+  font-size:17px;line-height:1.55;
+  -webkit-font-smoothing:antialiased;
+}
+::selection{background:var(--accent);color:#0E0E0E}
+:focus-visible{outline:2px solid var(--accent);outline-offset:3px}
+img{max-width:100%;display:block}
+a{color:inherit;text-decoration:none}
+
+/* ---------- utilidades tipográficas ---------- */
+.display{
+  font-weight:800;font-stretch:118%;
+  text-transform:uppercase;letter-spacing:-.01em;line-height:.94;
+  text-wrap:balance;
+}
+.label{
+  font-size:11px;font-weight:600;letter-spacing:.18em;
+  text-transform:uppercase;color:var(--ink-soft);
+}
+.wrap{max-width:var(--max);margin:0 auto;padding-inline:var(--pad)}
+
+/* ---------- reveal ---------- */
+.rv{opacity:0;transform:translateY(26px);transition:opacity .7s ease,transform .7s ease}
+.rv.in{opacity:1;transform:none}
+@media (prefers-reduced-motion:reduce){.rv{opacity:1;transform:none;transition:none}}
+
+/* ---------- nav ---------- */
+.nav{
+  position:fixed;inset:0 0 auto 0;z-index:10;
+  display:flex;align-items:center;justify-content:space-between;
+  padding:22px var(--pad);
+  background:transparent;border-bottom:1px solid transparent;
+  transition:background .3s ease,border-color .3s ease,padding .3s ease;
+}
+.nav.scrolled{
+  background:rgba(14,14,14,.96);border-color:var(--line);padding-block:14px;
+}
+.nav .brand{font-weight:800;font-stretch:118%;font-size:17px;letter-spacing:.01em}
+.nav .brand{display:inline-flex;align-items:center;gap:.14em}
+/* flecha de marca: celda cuadrada de 1em (alto del logotipo), gira al hover */
+.nav .brand .b-arrow{width:1em;height:1em;display:grid;place-items:center;color:var(--accent);flex:none}
+.nav .brand .b-arrow svg{width:100%;height:100%;display:block;transition:transform .35s cubic-bezier(.2,.6,.2,1)}
+.nav .brand:hover .b-arrow svg,.nav .brand:focus-visible .b-arrow svg{transform:rotate(-90deg)}
+@media (prefers-reduced-motion:reduce){.nav .brand .b-arrow svg{transition:none}}
+/* botón de menú móvil (oculto en escritorio) */
+.menu-btn{
+  display:none;align-items:center;gap:9px;
+  background:none;border:1px solid var(--line);border-radius:99px;
+  color:var(--ink);font:inherit;font-size:10px;font-weight:700;
+  letter-spacing:.18em;text-transform:uppercase;padding:9px 14px;cursor:pointer;
+}
+.menu-btn .tick{
+  width:7px;height:7px;border-right:1.6px solid var(--accent);border-bottom:1.6px solid var(--accent);
+  transform:rotate(45deg) translateY(-1px);transition:transform .3s ease;
+}
+.nav.open .menu-btn .tick{transform:rotate(225deg) translateY(1px)}
+@media (prefers-reduced-motion:reduce){.menu-btn .tick{transition:none}}
+/* ---------- banda clara: apartados documentales sobre papel ---------- */
+.band-light{
+  --bg:#F4F3EF;
+  --ink:#141414;
+  --ink-soft:#57564F;
+  --ink-dim:#75746E;
+  --line:rgba(0,0,0,.14);
+  --line-2:rgba(0,0,0,.3);
+  --paper:#F4F3EF;
+  --paper-2:#EAE8E1;
+  --accent:hsl(280 60% 42%);
+  --yellow:hsl(280 60% 42%);
+  --yellow-deep:hsl(280 65% 36%);
+  --verm:hsl(280 60% 42%);
+  --on-accent:#F4F3EF;
+  --warn:hsl(8 70% 40%);
+  --green:hsl(145 60% 27%);
+  background:var(--bg);color:var(--ink);
+}
+.band-light ::selection{background:hsl(280 60% 42%);color:#F4F3EF}
+.nav ul{display:flex;gap:clamp(14px,2.5vw,34px);list-style:none}
+.nav ul a{
+  font-size:11.5px;font-weight:600;letter-spacing:.14em;text-transform:uppercase;
+  padding-bottom:3px;border-bottom:1px solid transparent;transition:border-color .2s;
+}
+.nav ul a:hover{border-color:var(--ink)}
+.nav ul a[aria-current="page"]{border-color:var(--ink)}
+@media(max-width:720px){
+  .nav{padding-inline:16px}
+  .nav.open{background:rgba(14,14,14,.98);border-color:var(--line)}
+  .nav .brand{font-size:14px}
+  .menu-btn{display:inline-flex}
+  .nav > nav{
+    position:absolute;top:100%;left:0;right:0;display:none;
+    background:rgba(14,14,14,.98);border-bottom:1px solid var(--line);
+  }
+  .nav.open > nav{display:block}
+  .nav ul{display:block;padding:4px 16px 14px}
+  .nav ul a{
+    display:block;font-size:13px;letter-spacing:.16em;
+    padding:15px 2px;border-bottom:0;border-top:1px solid var(--line);
+  }
+  .nav ul li:first-child a{border-top:0}
+  .nav ul a[aria-current="page"]{color:var(--accent)}
+}
+
+/* ---------- cabecera de página (sin hero) ---------- */
+.page-head{padding-top:clamp(140px,20vh,180px)}
+.page-head h1{font-size:clamp(44px,8vw,96px);margin-top:16px}
+.page-head .lede{
+  font-size:16px;color:var(--ink-soft);max-width:54ch;margin-top:24px;
+}
+
+/* ---------- secciones ---------- */
+section{padding-block:clamp(60px,9vh,110px)}
+.sec-head{display:flex;align-items:center;gap:18px;margin-bottom:clamp(36px,6vh,64px)}
+.sec-head::after{content:"";flex:1;height:1px;background:var(--line)}
+
+/* ---------- controles: buscador + chips + conteo ---------- */
+.controls{
+  display:flex;flex-wrap:wrap;gap:22px 40px;align-items:flex-end;
+  margin-bottom:14px;
+}
+.ctl-search{flex:1 1 280px;max-width:420px}
+.ctl-search input{
+  width:100%;background:transparent;border:0;border-bottom:1px solid var(--line);
+  padding:11px 2px;color:var(--ink);font-family:inherit;font-size:15px;
+  border-radius:0;transition:border-color .2s;
+}
+.ctl-search input::placeholder{color:var(--ink-dim)}
+.ctl-search input:focus{outline:none;border-bottom-color:var(--accent)}
+.ctl-search input::-webkit-search-cancel-button{filter:grayscale(1)}
+.chips{display:flex;flex-wrap:wrap;gap:8px}
+.chip{
+  font-family:inherit;font-size:11px;font-weight:600;letter-spacing:.14em;
+  text-transform:uppercase;color:var(--ink-soft);
+  background:transparent;border:1px solid var(--line);border-radius:99px;
+  padding:8px 15px;cursor:pointer;
+  transition:color .2s,border-color .2s,background .2s;
+}
+.chip:hover{color:var(--ink);border-color:var(--ink-soft)}
+.chip[aria-pressed="true"]{color:var(--bg);background:var(--ink);border-color:var(--ink)}
+.count{
+  font-size:11px;font-weight:600;letter-spacing:.14em;text-transform:uppercase;
+  color:var(--ink-dim);margin-bottom:clamp(40px,6vh,64px);
+}
+@media(max-width:720px){
+  .ctl-search{flex-basis:100%;max-width:none}
+}
+
+/* ---------- grid de proyectos: retícula editorial modular ----------
+   12 columnas en escritorio (tarjeta = 4 cols, 3 por fila), 1 en móvil.
+   Proporción fija 4:5, gutters y márgenes amplios. */
+#catalogo{--pad:clamp(28px,7vw,110px)}
+.works{
+  display:grid;grid-template-columns:repeat(12,1fr);
+  gap:clamp(56px,9vh,96px) clamp(24px,3vw,48px);
+  align-items:start;
+}
+.work{grid-column:span 12}
+.work .ph{overflow:hidden;background:#161616}
+.work img{
+  width:100%;aspect-ratio:4/5;object-fit:cover;
+  transition:transform .6s cubic-bezier(.2,.6,.2,1);
+}
+.work:hover img{transform:scale(1.03)}
+.work figcaption{
+  display:flex;gap:14px;align-items:baseline;
+  padding-top:14px;border-top:1px solid var(--line);margin-top:14px;
+}
+.work h3{
+  font-size:15.5px;font-weight:650;letter-spacing:.01em;line-height:1.3;
+  border-bottom:1px solid transparent;display:inline;transition:border-color .2s;
+}
+.work:hover h3{border-color:var(--ink)}
+.work .who{display:block;font-size:13px;color:var(--ink-soft);margin-top:5px}
+@media(min-width:761px){
+  .work{grid-column:span 4}
+}
+.empty{color:var(--ink-soft);font-size:15px}
+.empty button{
+  font-family:inherit;font-size:12px;font-weight:700;letter-spacing:.2em;
+  text-transform:uppercase;color:var(--ink);background:none;border:0;cursor:pointer;
+  border-bottom:1px solid var(--ink);padding:0 0 4px;margin-left:14px;
+  transition:color .2s,border-color .2s;
+}
+.empty button:hover{color:var(--accent);border-color:var(--accent)}
+
+/* ---------- reconocimientos ---------- */
+.awards{display:grid;grid-template-columns:repeat(auto-fill,minmax(min(400px,100%),1fr));gap:clamp(24px,3vw,48px)}
+.award{display:flex;gap:22px;border:1px solid var(--line);padding:clamp(18px,2.5vw,28px)}
+.award .aimg{flex:0 0 104px}
+.award .aimg img{
+  aspect-ratio:1;object-fit:cover;filter:grayscale(1) contrast(1.04);
+  transition:filter .4s ease;
+}
+.award:hover .aimg img{filter:grayscale(0)}
+@media (prefers-reduced-motion:reduce){.award .aimg img{transition:none}}
+.award .tags{display:flex;flex-wrap:wrap;gap:6px 14px;margin-bottom:10px}
+.award .tags .label{font-size:10px}
+.award .tags .badge{color:var(--accent)}
+.award h3{font-size:clamp(19px,2.2vw,24px)}
+.award .students{font-size:13px;color:var(--ink-soft);margin-top:9px;line-height:1.5}
+.award .advisor{font-size:11px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:var(--ink-dim);margin-top:9px}
+@media(max-width:720px){
+  .award{flex-direction:column}
+  .award .aimg{flex-basis:auto}
+  .award .aimg img{aspect-ratio:16/9;width:100%}
+}
+
+/* ---------- modal de ficha ---------- */
+.modal{position:fixed;inset:0;z-index:40;display:none;padding:var(--pad)}
+.modal.is-open{display:flex}
+.modal-backdrop{position:absolute;inset:0;background:rgba(10,10,10,.78);backdrop-filter:blur(3px)}
+.modal-panel{
+  position:relative;margin:auto;width:min(940px,100%);
+  max-height:min(700px,88svh);
+  background:#141414;border:1px solid var(--line);
+  display:grid;grid-template-columns:minmax(0,4fr) minmax(0,6fr);
+  overflow:hidden;
+  animation:mfade .35s ease both;
+}
+@keyframes mfade{from{opacity:0;transform:translateY(18px)}to{opacity:1;transform:none}}
+@media (prefers-reduced-motion:reduce){.modal-panel{animation:none}}
+.modal-media{min-height:0;background:#161616}
+.modal-media img{width:100%;height:100%;object-fit:cover}
+.modal-body{padding:clamp(24px,4vw,44px);overflow-y:auto;scrollbar-width:thin;scrollbar-color:var(--ink-dim) transparent}
+.modal-body .kicker{color:var(--accent);margin-bottom:14px}
+.modal-body h2{font-size:clamp(22px,2.8vw,32px)}
+.modal-meta{
+  display:grid;grid-template-columns:1fr 1fr;gap:16px 24px;
+  margin:24px 0;padding-block:20px;border-block:1px solid var(--line);
+}
+.modal-meta div:first-child{grid-column:1/-1}
+.modal-meta dt{font-size:10px;font-weight:600;letter-spacing:.18em;text-transform:uppercase;color:var(--ink-dim);margin-bottom:4px}
+.modal-meta dd{font-size:14px;line-height:1.45}
+.modal-abstract{font-size:14.5px;line-height:1.65;color:var(--ink-soft)}
+.modal-dl{
+  display:inline-block;margin-top:28px;
+  font-size:12px;font-weight:700;letter-spacing:.2em;text-transform:uppercase;
+  border-bottom:1px solid var(--ink);padding-bottom:5px;
+  transition:color .2s,border-color .2s;
+}
+.modal-dl:hover{color:var(--accent);border-color:var(--accent)}
+.modal-dl[hidden]{display:none}
+.modal-close{
+  position:absolute;top:14px;right:14px;z-index:2;
+  width:40px;height:40px;display:grid;place-items:center;
+  font-family:inherit;font-size:15px;line-height:1;color:var(--ink);
+  background:rgba(14,14,14,.82);border:1px solid var(--line);border-radius:50%;
+  cursor:pointer;transition:border-color .2s,color .2s;
+}
+.modal-close:hover{border-color:var(--ink)}
+body.sc-lock{overflow:hidden}
+@media(max-width:720px){
+  .modal{padding:16px}
+  .modal-panel{grid-template-columns:1fr;max-height:92svh;overflow-y:auto}
+  .modal-media img{aspect-ratio:16/10;height:auto}
+  .modal-body{overflow:visible}
+}
+
+/* ---------- footer ---------- */
+footer{
+  border-top:1px solid var(--line);
+  display:flex;flex-wrap:wrap;gap:14px 34px;align-items:center;justify-content:space-between;
+  padding:26px var(--pad);font-size:12px;color:var(--ink-soft);
+}
+footer nav{display:flex;flex-wrap:wrap;gap:20px}
+footer nav a{letter-spacing:.1em;text-transform:uppercase;font-size:11px;font-weight:600}
+footer nav a:hover{color:var(--ink)}
+</style>
 </head>
 <body>
 
-  <!-- iconos -->
-  <svg width="0" height="0" style="position:absolute" aria-hidden="true">
-    <symbol id="ic-search" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></symbol>
-    <symbol id="ic-x" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6 6 18M6 6l12 12"/></symbol>
-    <symbol id="ic-play" viewBox="0 0 24 24"><path d="M8 5v14l11-7z" fill="currentColor"/></symbol>
-  </svg>
+<header class="nav">
+  <a class="brand" href="index.html">LDG·UDEM<span class="b-arrow" aria-hidden="true"><svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="square" focusable="false"><path d="M2 2l8 8"/><path d="M10 4.6V10H4.6"/></svg></span></a>
+  <button class="menu-btn" type="button" aria-expanded="false" aria-controls="site-menu">Menú<span class="tick" aria-hidden="true"></span></button>
+  <nav id="site-menu" aria-label="Principal">
+    <ul>
+      <li><a href="showcase.html" aria-current="page">Showcase</a></li>
+      <li><a href="trayecto.html">Trayecto</a></li>
+      <li><a href="avance.html">Mi Avance</a></li>
+      <li><a href="pef.html">Guía PEF</a></li>
+    </ul>
+  </nav>
+</header>
 
-  <main>
-    <!-- 01 · DESTACADO (video) -->
-    <section class="section" id="destacado">
-      <div class="wrap">
-        <div class="sec-head"><span class="sec-no">01</span><h2>Destacado</h2></div>
-        <p class="sec-sub">Biodiseño Gráfico · Sofía Porto · PEF Otoño 2025</p>
+<!-- CABECERA -->
+<div class="page-head wrap">
+  <p class="label rv">Showcase · Otoño 2025</p>
+  <h1 class="display rv">Tesis de Diseño Gráfico</h1>
+  <p class="lede rv">Los proyectos del Programa de Evaluación Final. Cada tarjeta abre la ficha completa con su resumen y el PDF descargable.</p>
+</div>
 
-        <div class="sc-banner" data-vimeo="1160882204">
-          <a class="sc-banner__poster" href="https://vimeo.com/1160882204" target="_blank" rel="noopener" aria-label="Reproducir video del proyecto Biodiseño">
-            <img src="proyectos/thumbnails/biodiseo.jpg" alt="Biodiseño Gráfico · Sofía Porto Iannuzzi">
-            <span class="sc-banner__play" aria-hidden="true"><svg><use href="#ic-play"/></svg></span>
-            <span class="sc-banner__cap">Biodiseño Gráfico · Sofía Porto Iannuzzi</span>
-          </a>
-        </div>
-      </div>
-    </section>
+<!-- CATÁLOGO -->
+<section class="wrap" id="catalogo">
+  <div class="sec-head rv"><span class="label">Catálogo</span></div>
 
-    <!-- 02 · PROYECTOS (grid + buscador + premios) -->
-    <section class="section" id="proyectos">
-      <div class="wrap">
-        <div class="sec-head"><span class="sec-no">02</span><h2>Proyectos</h2></div>
-        <p class="sec-sub">Portafolio del programa · busca por nombre, alumno o categoría</p>
+  <div class="controls rv">
+    <div class="ctl-search">
+      <input id="scSearch" type="search" placeholder="Buscar por título, alumnas o tema" aria-label="Buscar proyectos por título, alumnas o tema">
+    </div>
+    <div class="chips" id="scChips" role="group" aria-label="Filtrar por categoría"></div>
+  </div>
+  <p class="count rv" id="scCount" aria-live="polite"></p>
 
-        <!-- Reconocimientos (premios integrados) -->
-        <div class="sc-subhead" style="margin-top:34px"><span>Reconocimientos · A′ Design Award</span></div>
-        <div class="sc-awards" id="scAwards"></div>
+  <div class="works" id="scGrid"></div>
+  <p class="empty" id="scEmpty" hidden>Sin resultados para esa combinación.<button type="button" id="scReset">Limpiar filtros</button></p>
+</section>
 
-        <!-- controles -->
-        <div class="sc-controls">
-          <div class="sc-search">
-            <svg><use href="#ic-search"/></svg>
-            <input type="search" id="scSearch" placeholder="Buscar proyecto, alumno, tutor…" aria-label="Buscar proyectos">
-          </div>
-          <div class="sc-chips" id="scChips"></div>
-        </div>
-        <p class="sc-count" id="scCount" role="status" aria-live="polite" aria-atomic="true"></p>
+<!-- RECONOCIMIENTOS -->
+<section id="reconocimientos" class="band-light">
+<div class="wrap">
+  <div class="sec-head rv"><span class="label">Reconocimientos</span></div>
+  <div class="awards rv" id="scAwards"></div>
+</div>
+</section>
 
-        <!-- grid -->
-        <div class="sc-grid" id="scGrid"></div>
-        <p class="sc-empty" id="scEmpty" hidden>Sin resultados para tu búsqueda.</p>
-      </div>
-    </section>
-  </main>
+<footer>
+  <span>© <span id="yy">2026</span> Diseño Gráfico · UDEM</span>
+  <nav aria-label="Pie">
+    <a href="showcase.html">Showcase</a>
+    <a href="trayecto.html">Trayecto</a>
+    <a href="avance.html">Mi Avance</a>
+    <a href="pef.html">Guía PEF</a>
+  </nav>
+  <span>Monterrey, MX</span>
+</footer>
 
-  <!-- MODAL de ficha -->
-  <div class="sc-modal" id="scModal" aria-hidden="true" role="dialog" aria-modal="true" aria-labelledby="scmTitle">
-    <div class="sc-modal__backdrop" data-close></div>
-    <div class="sc-modal__panel" role="document">
-      <button class="sc-modal__close" data-close type="button" aria-label="Cerrar ficha"><svg><use href="#ic-x"/></svg></button>
-      <div class="sc-modal__cover" id="scmCover"></div>
-      <div class="sc-modal__info">
-        <span class="sc-modal__cat" id="scmCat"></span>
-        <h3 class="sc-modal__title" id="scmTitle"></h3>
-        <dl class="sc-modal__meta">
-          <div><dt>Estudiantes</dt><dd id="scmStudent"></dd></div>
-          <div><dt>Tutor</dt><dd id="scmTutor"></dd></div>
-          <div><dt>Periodo</dt><dd id="scmYear"></dd></div>
-        </dl>
-        <p class="sc-modal__abstract" id="scmAbstract"></p>
-        <a class="sc-modal__dl" id="scmDownload" target="_blank" rel="noopener">Descargar PDF ↓</a>
-      </div>
+<!-- MODAL DE FICHA -->
+<div class="modal" id="scModal">
+  <div class="modal-backdrop" data-close></div>
+  <div class="modal-panel" role="dialog" aria-modal="true" aria-labelledby="mTitle">
+    <button class="modal-close" type="button" data-close aria-label="Cerrar ficha">✕</button>
+    <div class="modal-media"><img id="mImg" alt=""></div>
+    <div class="modal-body" role="region" aria-label="Ficha del proyecto" tabindex="0">
+      <p class="label kicker" id="mCat"></p>
+      <h2 class="display" id="mTitle"></h2>
+      <dl class="modal-meta">
+        <div><dt>Alumnas</dt><dd id="mStudent"></dd></div>
+        <div><dt>Tutor</dt><dd id="mTutor"></dd></div>
+        <div><dt>Semestre</dt><dd id="mSem"></dd></div>
+      </dl>
+      <p class="modal-abstract" id="mAbstract"></p>
+      <a class="modal-dl" id="mPdf" href="#" target="_blank" rel="noopener">Descargar PDF</a>
     </div>
   </div>
+</div>
 
-  <!-- FOOTER común · inyectado por assets/footer.js -->
+<script>
+(function(){
+  'use strict';
+  document.getElementById('yy').textContent = new Date().getFullYear();
 
+  /* nav sólido al hacer scroll */
+  var nav = document.querySelector('.nav');
+  var onScroll = function(){ nav.classList.toggle('scrolled', window.scrollY > 40); };
+  addEventListener('scroll', onScroll, {passive:true});
+  onScroll();
+
+  var mReduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  /* ---- helpers ---- */
+  var ESC = { '&':'&amp;', '<':'&lt;', '>':'&gt;', '"':'&quot;', "'":'&#39;' };
+  function escapeHtml(s){ return String(s==null?'':s).replace(/[&<>"']/g, function(c){ return ESC[c]; }); }
+  function normalizeThumbUrl(url){
+    if(!url) return '';
+    var m = String(url).match(/(?:drive\.google\.com\/(?:file\/d\/|open\?id=|uc\?[^"' ]*id=)|lh3\.googleusercontent\.com\/d\/)([\w-]{20,})/);
+    return m ? 'https://lh3.googleusercontent.com/d/' + m[1] + '=w1600' : url;
+  }
+  var CAT_LABELS = { branding:'Branding', editorial:'Editorial', packaging:'Packaging', motion:'Motion', uiux:'UI·UX', identidad:'Identidad' };
+  function catLabel(slug){ return CAT_LABELS[slug] || String(slug || '').toUpperCase(); }
+
+  /* ---- datos base: 17 proyectos Otoño 2025 (copiados de assets/showcase.js) ---- */
+  var BASE_PROJECTS = [
+    {id:1,title:"Deconstrucción de la Percepción y los Estándares de la Belleza Femenina",student:"Emilia Bermúdez, Angelina Avalos, Sofía Peralta",tutor:"Jessica Elizabeth Ochoa Zamarripa",year:2025,semester:"Otoño 2025",category:"editorial",thumbnail:"proyectos/thumbnails/ellaz.jpg",pdfUrl:"https://drive.google.com/uc?export=download&id=1KmmkDmmBlF4XjhRszk3_9JMo0ax7J_m5",abstract:"Este proyecto analiza cómo los estándares de belleza han sido impuestos a las mujeres, afectando su bienestar físico y emocional. Se explora cómo los elementos gráficos y la construcción visual de los medios han normalizado la idea de que la belleza debe alcanzarse a costo del sufrimiento."},
+    {id:2,title:"Del Interés a la Decisión: Comunicación para Estudiantes Interesados en Diseño Gráfico",student:"Valeria de la Garza, Carolina Lebrija, Milagros Martínez",tutor:"Diana Woolrich",year:2025,semester:"Otoño 2025",category:"branding",thumbnail:"proyectos/thumbnails/atraccin-creativa4.jpg",pdfUrl:"https://drive.google.com/uc?export=download&id=1MW86Alp7qqyM9sH8pbFrQQqwXECWALZJ",abstract:"Este proyecto busca incentivar la comunicación dirigida a estudiantes de preparatoria UDEM interesados en Diseño Gráfico. A través de una investigación sobre percepción, estigmas y el síndrome del impostor, se desarrolla una estrategia de comunicación visual que conecta con sus intereses y motivaciones."},
+    {id:3,title:"Las Habilidades de Gestión en los Diseñadores Gráficos",student:"Eva Schroeder, Bárbara Ghio, Yolanda Mazur, Andrea Criollos",tutor:"Daniel Almaguer",year:2025,semester:"Otoño 2025",category:"editorial",thumbnail:"proyectos/thumbnails/mediante.jpg",pdfUrl:"https://drive.google.com/uc?export=download&id=1xCpUfI6rhKQCDLPpivkyV9yUoSW65HJK",abstract:"Aborda las habilidades de gestión necesarias para los diseñadores gráficos en su práctica profesional. A través de la plataforma MEDIANTE, se investigan y proponen metodologías y herramientas que fortalezcan las capacidades administrativas y de gestión de proyectos en el ámbito del diseño gráfico."},
+    {id:4,title:"Te Falta Barrio: Estrategias de Información para el Barrio Antiguo de Monterrey",student:"Ana Lucía Maraboto, Frida de la Garza",tutor:"Julian Iñiguez Flores",year:2025,semester:"Otoño 2025",category:"uiux",thumbnail:"proyectos/thumbnails/tefaltabarrio_9.jpg",pdfUrl:"https://drive.google.com/uc?export=download&id=15Gt7Tu7FJsKemb_UIkl531jRGdYf2Wtj",abstract:"Desarrolla e implementa una estrategia de comunicación que mejora la experiencia de los usuarios al brindar información clara, accesible y atractiva sobre el Barrio Antiguo de Monterrey. Con metodología Human Centered Design se crearon herramientas digitales y físicas como una página web y un tótem con mapas seccionados."},
+    {id:5,title:"Kinua: Conciencia Psicoemocional en el Servicio de Nutrición",student:"Bárbara Rodríguez, Karen Peña, Ian Hernández",tutor:"Rolando Angulo Gálvez",year:2025,semester:"Otoño 2025",category:"uiux",thumbnail:"proyectos/thumbnails/kinua11.jpg",pdfUrl:"https://drive.google.com/uc?export=download&id=19SDuVjGiiMPDJeyGLldaJbPK289xDmZc",abstract:"Kinua es una herramienta digital que promueve la conciencia psicoemocional en el servicio de nutrición. Desarrolla una app móvil para pacientes y una plataforma web para nutriólogos que facilitan la comunicación, el seguimiento y la comprensión del proceso nutricional."},
+    {id:6,title:"Experiencia Mundialista 2026: Sistema Gráfico para Monterrey",student:"María Fernanda Adame Moreno",tutor:"Daniel Almaguer",year:2025,semester:"Otoño 2025",category:"branding",thumbnail:"proyectos/thumbnails/bendito_mockup-mb-t_shirt-01.jpg",pdfUrl:"https://drive.google.com/uc?export=download&id=15Ma9XCXcXQa6n5J_A06ZdXgC7rMCwJ87",abstract:"Sistema integrado de diseño gráfico para mejorar la experiencia de los visitantes internacionales de Monterrey durante el Mundial 2026. Abarca identidad, señalética, experiencia del usuario y comunicación de la ciudad, buscando mejorar la movilidad y el sentido de pertenencia de los turistas."},
+    {id:7,title:"Historias Detrás de la Mesa",student:"Ximena Díaz, Raquel Jaime, Roberta Maldonado, Rebeca Wolberg",tutor:"Fernando Rafael Mateos",year:2025,semester:"Otoño 2025",category:"branding",thumbnail:"proyectos/thumbnails/tulan.jpg",pdfUrl:"https://drive.google.com/uc?export=download&id=1T3vXuNdJ8AYi9Ysiw9xsyLyNZ4PDTkJN",abstract:"Aborda la falta de visibilidad y estrategias de comunicación de los pequeños negocios culinarios en San Pedro Garza García. A través de la agencia creativa Sobremesa y el proyecto social Sobrefondas, se diseñan propuestas de identidad visual, storytelling y contenido audiovisual."},
+    {id:8,title:"Alteria: Interacción Multisensorial, Tecnología y Sinestesia en el Diseño",student:"Mariángela Garza, Patricio Treviño, Marian Treviño",tutor:"Dr. Cristobal Guerra Tamez",year:2025,semester:"Otoño 2025",category:"motion",thumbnail:"proyectos/thumbnails/alteria.jpg",pdfUrl:"https://drive.google.com/uc?export=download&id=1johQRByvDnWGBPfdEfmRLwxwcRbBJJB_",abstract:"Alteria es un modelo de diseño multisensorial que articula sinestesia digital, correspondencias perceptuales, inmersión emocional y flujo corporal para expandir la experiencia del usuario en entornos interactivos. El 87% de los participantes reportó altos niveles de inmersión."},
+    {id:9,title:"Creando Espacios para Crear",student:"Fernanda Pequeño, Lorena Garza, Nahely Leal, Alda Camacho",tutor:"Fabio Spagnoli Herrera",year:2025,semester:"Otoño 2025",category:"branding",thumbnail:"proyectos/thumbnails/creando-espacios.jpg",pdfUrl:"https://drive.google.com/uc?export=download&id=16spSSW2oPhv3niiQ2x7z7O7eQLhM9Ou-",abstract:"Propuesta de emprendimiento orientada al diseño y conceptualización de un espacio creativo en Monterrey, acompañado de una identidad visual sólida, estrategia de comunicación y plataformas digitales que facilitan la colaboración interdisciplinaria entre creativos emergentes."},
+    {id:10,title:"Antera: El Lenguaje de las Flores como Herramienta de Comunicación",student:"Natalia Alcalá, Danna Chávez, Victoria Lizárraga, Sarai Marines",tutor:"Mariel García Hernández",year:2025,semester:"Otoño 2025",category:"editorial",thumbnail:"proyectos/thumbnails/antera.jpg",pdfUrl:"https://drive.google.com/uc?export=download&id=1zcUhV8oRgx-hXFxn_5odwqjmnbtoGbI6",abstract:"El lenguaje de las flores o floriografía ha sido una herramienta de comunicación simbólica durante siglos. Este proyecto recupera la floriografía, visibilizando su presencia e importancia dentro de la cultura mexicana y en la comunicación visual, a través de una antología visual."},
+    {id:11,title:"Nodus: Ecosistema de Cuidado en Oncología Infantil",student:"Valeria Gómez, Jaqueline Casas, Sabrina Villaseñor",tutor:"Marco Vinicio Garrido Félix",year:2025,semester:"Otoño 2025",category:"uiux",thumbnail:"proyectos/thumbnails/nodus.jpg",pdfUrl:"https://drive.google.com/uc?export=download&id=1UB1hNzdQIxnHd40hS3yJwaxU4ygY2YAW",abstract:"Nodus es un sistema integral de acompañamiento para mejorar la experiencia de cuidado de niños con cáncer y sus familias. A través de un pastillero inteligente, una app móvil y un brazalete lúdico, busca reducir la ansiedad, los errores en la medicación y el aislamiento emocional."},
+    {id:12,title:"Rave Pilates: Implementación de Diseño de Servicio",student:"Ana Gabriela Garza, Mariana Gómez, Mariana Guerra",tutor:"Carlos Delgado De Roble",year:2025,semester:"Otoño 2025",category:"uiux",thumbnail:"proyectos/thumbnails/rave.jpg",pdfUrl:"https://drive.google.com/uc?export=download&id=1_lAHQLSpzIJX7_ZGdjXJ1Z49i25inir3",abstract:"Rediseño integral de la página web de Rave Pilates y desarrollo de una app móvil que integra pilates y nutrición personalizada. Unifica reserva de clases, compra de paquetes y seguimiento de entrenamiento, junto con una guía nutricional inteligente potenciada por IA."},
+    {id:13,title:"Turnout: Conectando a la Generación Z",student:"Alejandra Urteaga, Maadai Salazar",tutor:"Natalia Ceballos Gutiérrez",year:2025,semester:"Otoño 2025",category:"branding",thumbnail:"proyectos/thumbnails/turnout.jpg",pdfUrl:"https://drive.google.com/uc?export=download&id=14QYLdsddVEncTWAyg9F3cbhXwySmcmRj",abstract:"Turnout es una plataforma para la Generación Z que fomenta la conexión, el bienestar y el autoconocimiento. Desarrolla una identidad de marca, estrategia de comunicación y herramientas digitales orientadas a crear experiencias significativas de reconexión personal y social."},
+    {id:14,title:"Diseño de Sistemas de Comunicación para Preparación y Respuesta ante Desastres",student:"Miranda Hernández, Luis Alberto Peña, Miguel Ángel Maldonado",tutor:"Hisa María Martínez Nimi",year:2025,semester:"Otoño 2025",category:"uiux",thumbnail:"proyectos/thumbnails/diseo-de-sistemas-de-comunicacion.jpg",pdfUrl:"https://drive.google.com/uc?export=download&id=1OGM6BzjpnoK-3lSCyK5LMU0fNlUwFDn9",abstract:"Demuestra que es posible diseñar sistemas de comunicación capaces de adaptarse a múltiples usuarios y contextos, superando barreras informativas y fortaleciendo la capacidad de respuesta en los momentos tempranos y más críticos de una emergencia."},
+    {id:15,title:"Verdad en Juego: Diseño Gráfico Aplicado al Fenómeno de las Cámaras de Eco",student:"Fernanda Díaz, Miranda Siller, Eugenio Nocedal, Karina Del Prado",tutor:"Jorge Cantú Sánchez",year:2025,semester:"Otoño 2025",category:"editorial",thumbnail:"proyectos/thumbnails/verdad-en-juego.jpg",pdfUrl:"https://drive.google.com/uc?export=download&id=1oWVlmCvdJfZfInP-uSjiEii7gZDflc99",abstract:"Estrategia visual y lúdica para sensibilizar a los jóvenes de la Generación Z sobre el impacto de las cámaras de eco y los algoritmos. Se diseñó «Twist & Tell», un juego de mesa que simula un feed de redes sociales y reta a distinguir entre información verídica y distorsionada."},
+    {id:16,title:"Biodiseño Gráfico: Co-creación con la Naturaleza para una Gráfica Regenerativa",student:"Sofía Porto Iannuzzi",tutor:"Iliana María Moreno Guzmán",year:2025,semester:"Otoño 2025",category:"packaging",thumbnail:"proyectos/thumbnails/biodiseo.jpg",pdfUrl:"https://drive.google.com/uc?export=download&id=1mV0ueQ1NaF3pHgTcbUT_reDx1tpwzYo0",abstract:"Explora el potencial del biodiseño como rama emergente para el desarrollo de materialidades y procesos dentro del diseño gráfico, enfocándose en la domesticación de raíces como técnica de co-creación con organismos vivos. Una práctica multiespecie y regenerativa."},
+    {id:17,title:"Colección by Habits",student:"Ana Cecilia Moreno, Ana Paula Guerra, Mariana Zambrano",tutor:"Sergio Trujillo Pérez",year:2025,semester:"Otoño 2025",category:"packaging",thumbnail:"proyectos/thumbnails/habits.jpg",pdfUrl:"https://drive.google.com/uc?export=download&id=1YqUcSRr6pX5j9f8vzDEzhqkTYEgevOoM",abstract:"Incentiva a los usuarios a diversificar la manera en que consumen proteína en polvo. Integra una página web, un recetario físico con 90 recetas y una estrategia de campaña basada en diseño centrado en el usuario y la teoría del hábito."}
+  ];
+
+  /* ---- premio base (A′ Design Award) ---- */
+  var BASE_AWARDS = [{
+    id:'base_roblemaca', name:'Roble & Maca', prize:"A′ Design Award & Competition",
+    badge:'Bronce · 2025',
+    students:'Eugenia Martínez-Abrego · María Andrade · Paulina González · Valeria Marín',
+    advisor:'Sergio Trujillo', image:'proyectos/awards/roble-maca.jpg',
+    description:'Diseño gráfico · jurado internacional'
+  }];
+
+  /* ---- estado ---- */
+  var projects = BASE_PROJECTS.slice();
+  var awards = BASE_AWARDS.slice();
+  var dynProjects = [], dynAwards = [];
+  var query = '', activeCat = 'all';
+
+  var $grid = document.getElementById('scGrid');
+  var $count = document.getElementById('scCount');
+  var $chips = document.getElementById('scChips');
+  var $search = document.getElementById('scSearch');
+  var $empty = document.getElementById('scEmpty');
+  var $reset = document.getElementById('scReset');
+  var $awards = document.getElementById('scAwards');
+
+  /* ---- filtrado: título + alumnas + abstract ---- */
+  function filtered(){
+    return projects.filter(function(p){
+      if(activeCat !== 'all' && p.category !== activeCat) return false;
+      if(!query) return true;
+      var hay = (p.title+' '+p.student+' '+(p.abstract||'')).toLowerCase();
+      return hay.indexOf(query) !== -1;
+    });
+  }
+
+  /* ---- render: chips ---- */
+  function renderChips(){
+    var cats = {};
+    projects.forEach(function(p){ if(p.category) cats[p.category]=true; });
+    var order = ['branding','editorial','packaging','motion','uiux','identidad'].filter(function(c){ return cats[c]; });
+    var html = '<button class="chip" data-cat="all" type="button" aria-pressed="'+(activeCat==='all')+'">Todo</button>';
+    order.forEach(function(c){
+      html += '<button class="chip" data-cat="'+c+'" type="button" aria-pressed="'+(activeCat===c)+'">'+escapeHtml(catLabel(c))+'</button>';
+    });
+    $chips.innerHTML = html;
+  }
+
+  /* ---- render: grid (mismo patrón .works del inicio) ---- */
+  function renderGrid(){
+    var list = filtered();
+    $count.textContent = list.length + (list.length===1 ? ' proyecto' : ' proyectos');
+    if(!list.length){ $grid.innerHTML=''; $empty.hidden=false; return; }
+    $empty.hidden = true;
+    $grid.innerHTML = list.map(function(p, i){
+      var thumb = normalizeThumbUrl(p.thumbnail);
+      return '<a class="work" href="#p-'+encodeURIComponent(String(p.id))+'" data-id="'+escapeHtml(String(p.id))+'" aria-label="Ver ficha: '+escapeHtml(p.title)+'">'
+        + '<figure><div class="ph"><img src="'+escapeHtml(thumb)+'" alt="" loading="lazy"></div>'
+        + '<figcaption><div><h3>'+escapeHtml(p.title)+'</h3>'
+        + '<span class="who">'+escapeHtml(p.student)+' · '+escapeHtml(catLabel(p.category))+'</span></div></figcaption></figure></a>';
+    }).join('');
+  }
+
+  /* ---- render: reconocimientos ---- */
+  function renderAwards(){
+    if(!awards.length){ $awards.innerHTML=''; return; }
+    $awards.innerHTML = awards.map(function(a){
+      return '<article class="award">'
+        + '<div class="aimg"><img src="'+escapeHtml(normalizeThumbUrl(a.image||''))+'" alt="'+escapeHtml(a.name||'')+'" loading="lazy"></div>'
+        + '<div class="abody">'
+        + '<div class="tags"><span class="label">'+escapeHtml(a.prize||'')+'</span>'
+        + (a.badge ? '<span class="label badge">'+escapeHtml(a.badge)+'</span>' : '') + '</div>'
+        + '<h3 class="display">'+escapeHtml(a.name||'')+'</h3>'
+        + (a.students ? '<p class="students">'+escapeHtml(a.students)+'</p>' : '')
+        + (a.advisor ? '<p class="advisor">Asesor · '+escapeHtml(a.advisor)+'</p>' : '')
+        + '</div></article>';
+    }).join('');
+  }
+
+  /* ---- modal (hash-driven: #p-<id> abre la ficha) ---- */
+  var modal = document.getElementById('scModal');
+  var panel = modal.querySelector('.modal-panel');
+  var modalOriginEl = null, openId = null;
+
+  function openModal(p){
+    document.getElementById('mImg').src = normalizeThumbUrl(p.thumbnail);
+    document.getElementById('mCat').textContent = catLabel(p.category);
+    document.getElementById('mTitle').textContent = p.title;
+    document.getElementById('mStudent').textContent = p.student;
+    document.getElementById('mTutor').textContent = p.tutor;
+    document.getElementById('mSem').textContent = p.semester || String(p.year);
+    document.getElementById('mAbstract').textContent = p.abstract || '';
+    var dl = document.getElementById('mPdf');
+    if(p.pdfUrl){ dl.href = p.pdfUrl; dl.hidden = false; } else { dl.hidden = true; }
+    openId = String(p.id);
+    modal.classList.add('is-open');
+    document.body.classList.add('sc-lock');
+    modal.querySelector('.modal-close').focus();
+  }
+  function closeModal(viaHash){
+    if(!modal.classList.contains('is-open')) return;
+    modal.classList.remove('is-open');
+    document.body.classList.remove('sc-lock');
+    /* regresa el foco a la tarjeta de origen; si se abrió por deep-link
+       o el grid se re-renderizó, cae a la tarjeta con el mismo id */
+    var target = modalOriginEl;
+    if(!target || !target.isConnected){
+      target = $grid.querySelector('.work[data-id="'+(openId||'')+'"]');
+    }
+    openId = null;
+    if(target && target.focus) target.focus();
+    modalOriginEl = null;
+    if(!viaHash && /^#p-/.test(location.hash)){
+      history.replaceState(null, '', location.pathname + location.search);
+    }
+  }
+  /* foco atrapado dentro del panel */
+  function trapTab(e){
+    if(e.key !== 'Tab' || !modal.classList.contains('is-open')) return;
+    var f = panel.querySelectorAll('a[href]:not([hidden]),button:not([disabled]),.modal-body[tabindex]');
+    if(!f.length) return;
+    var first = f[0], last = f[f.length-1];
+    if(e.shiftKey && document.activeElement === first){ e.preventDefault(); last.focus(); }
+    else if(!e.shiftKey && document.activeElement === last){ e.preventDefault(); first.focus(); }
+  }
+
+  modal.addEventListener('click', function(e){
+    if(e.target.hasAttribute('data-close')) closeModal(false);
+  });
+  document.addEventListener('keydown', function(e){
+    if(e.key === 'Escape' && modal.classList.contains('is-open')) closeModal(false);
+    else trapTab(e);
+  });
+
+  /* deep-link: al cargar y en hashchange (el inicio enlaza showcase.html#p-<id>) */
+  function openById(id, scroll){
+    var p = projects.filter(function(x){ return String(x.id) === String(id); })[0];
+    if(!p) return;
+    if(scroll){
+      var sec = document.getElementById('catalogo');
+      if(sec && sec.scrollIntoView) sec.scrollIntoView();
+    }
+    openModal(p);
+  }
+  function fromHash(initial){
+    var m = (location.hash || '').match(/^#p-(.+)$/);
+    if(m) openById(decodeURIComponent(m[1]), !!initial);
+    else closeModal(true); /* p. ej. botón atrás del navegador */
+  }
+  window.addEventListener('hashchange', function(){ fromHash(false); });
+
+  /* ---- eventos de controles ---- */
+  $search.addEventListener('input', function(){ query = this.value.toLowerCase().trim(); renderGrid(); });
+  $chips.addEventListener('click', function(e){
+    var btn = e.target.closest('.chip'); if(!btn) return;
+    activeCat = btn.getAttribute('data-cat');
+    renderChips(); renderGrid();
+    $chips.querySelector('.chip[data-cat="'+activeCat+'"]').focus();
+  });
+  $reset.addEventListener('click', function(){
+    query = ''; activeCat = 'all'; $search.value = '';
+    renderChips(); renderGrid(); $search.focus();
+  });
+  /* guarda la tarjeta de origen antes de que el hash abra el modal */
+  $grid.addEventListener('click', function(e){
+    var card = e.target.closest('.work');
+    if(card) modalOriginEl = card;
+  });
+
+  /* ---- Firebase: merge LIVE no-bloqueante (solo lectura) ---- */
+  function mapDynProject(r){
+    return { id:r.id, title:r.title, student:r.student, tutor:r.tutor,
+      year:parseInt(r.year,10)||r.year, semester:r.semester, category:r.category,
+      thumbnail:r.thumbnail, pdfUrl:r.pdfUrl, abstract:r.abstract };
+  }
+  function initFirebase(){
+    if(typeof firebase === 'undefined' || typeof window.db === 'undefined') return; /* SDK no disponible → solo base */
+    try{
+      db.ref('ldgProjects').on('value', function(snap){
+        var vp = snap.val() || [];
+        dynProjects = (Array.isArray(vp) ? vp : Object.values(vp)).filter(Boolean);
+        projects = BASE_PROJECTS.concat(dynProjects.map(mapDynProject));
+        renderChips(); renderGrid();
+      }, function(){ /* permiso/red: ignora, queda la base */ });
+      db.ref('ldgAwards').on('value', function(snap){
+        var va = snap.val() || [];
+        dynAwards = (Array.isArray(va) ? va : Object.values(va)).filter(Boolean);
+        awards = BASE_AWARDS.concat(dynAwards);
+        renderAwards();
+      }, function(){ /* idem */ });
+    }catch(e){ /* offline / sandbox: la base ya está renderizada */ }
+  }
+
+  /* ---- init ---- */
+  renderChips(); renderGrid(); renderAwards();
+  fromHash(true);
+  initFirebase();
+
+  /* reveal al hacer scroll */
+  var rvs = document.querySelectorAll('.rv');
+  if(mReduce || !('IntersectionObserver' in window)){
+    rvs.forEach(function(el){ el.classList.add('in'); });
+    return;
+  }
+  var io = new IntersectionObserver(function(entries){
+    entries.forEach(function(e){
+      if(e.isIntersecting){ e.target.classList.add('in'); io.unobserve(e.target); }
+    });
+  }, {threshold:.12, rootMargin:'0px 0px -8% 0px'});
+  rvs.forEach(function(el){ io.observe(el); });
+})();
+</script>
+<script>
+(function(){
+  var bar = document.querySelector('.nav');
+  var btn = document.querySelector('.menu-btn');
+  if(!bar || !btn) return;
+  var close = function(){ bar.classList.remove('open'); btn.setAttribute('aria-expanded','false'); };
+  btn.addEventListener('click', function(){
+    var open = bar.classList.toggle('open');
+    btn.setAttribute('aria-expanded', open ? 'true' : 'false');
+  });
+  document.addEventListener('click', function(e){ if(bar.classList.contains('open') && !bar.contains(e.target)) close(); });
+  document.addEventListener('keydown', function(e){ if(e.key === 'Escape') close(); });
+  addEventListener('resize', close);
+})();
+</script>
 </body>
 </html>

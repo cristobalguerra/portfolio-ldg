@@ -3,41 +3,42 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>Mi Avance · LDG UDEM</title>
+<title>LDG · UDEM · Mi Avance</title>
 <link rel="icon" href="assets/favicon.svg?v=4" type="image/svg+xml">
 <link rel="icon" href="assets/favicon-32.png?v=4" sizes="32x32" type="image/png">
 <link rel="apple-touch-icon" href="assets/favicon-180.png?v=4">
-<meta name="theme-color" content="#000000">
+<meta name="theme-color" content="#0E0E0E">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Anton&family=Atkinson+Hyperlegible:ital,wght@0,400;0,700;1,400&family=JetBrains+Mono:wght@400;500&family=Spectral:ital,wght@1,300&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="assets/dark.css?v=20260620m">
-<!-- Scaffold oscuro «Cuarto Oscuro» (reemplaza styles.css + menu.js del crema) -->
-<script>window.SITE_NAV = { current: 'avance' };</script>
-<script defer src="assets/bg-noise.js?v=20260620e"></script>
-<script defer src="assets/dock-fun.js?v=20260620b"></script>
-<script defer src="assets/footer.js?v=20260620f"></script>
+<link href="https://fonts.googleapis.com/css2?family=Archivo:ital,wdth,wght@0,62..125,100..900;1,62..125,100..900&display=swap" rel="stylesheet">
 <script>document.documentElement.classList.add('js');</script>
 <style>
   :root{
-    /* ── re-mapeo a «Cuarto Oscuro» (mismos nombres, valores oscuros) ── */
-    --paper:#000000;        /* fondo (antes papel crema) */
-    --paper-2:#141414;      /* superficie elevada (celdas, cajetín) */
-    --ink:#EFEFEF;          /* texto principal claro */
-    --ink-soft:#8E8E8E;     /* texto secundario */
-    --yellow:hsl(280 90% 75%);   /* acento morado (antes marcador UDEM) */
+    /* ── tokens «limpia» (propuesta-limpia.html) ── */
+    --bg:#0E0E0E;
+    --ink:#F2F2F0;
+    --ink-soft:#9C9C98;
+    --ink-dim:#5C5C58;
+    --line:rgba(255,255,255,.12);
+    --accent:hsl(280 85% 76%);
+    --max:1200px;
+    --pad:clamp(20px,4vw,56px);
+    /* ── re-mapeo de los tokens del original (mismos nombres, valores limpia) ── */
+    --paper:var(--bg);          /* fondo (antes papel crema) */
+    --paper-2:#161616;          /* superficie elevada (celdas, cajetín) */
+    --yellow:var(--accent);     /* acento morado (antes marcador UDEM) */
     --yellow-deep:hsl(280 85% 62%);
-    --verm:hsl(280 90% 75%);     /* acento (antes vermilion: cotas/sellos) */
-    --warn:hsl(8 78% 66%);       /* coral de alerta/error, legible sobre negro (≈5:1) */
-    --green:hsl(145 48% 62%);    /* verde legible en oscuro: estado CURSADA */
-    --line:rgba(255,255,255,.08);   /* retícula tenue */
-    --line-2:rgba(255,255,255,.18); /* divisiones */
-    /* Sistema tipografico del sitio (DESIGN.md) */
-    --disp:"Anton", "Arial Narrow", sans-serif;
-    --sans:"Atkinson Hyperlegible", system-ui, -apple-system, sans-serif;
-    --mono:"JetBrains Mono", "SFMono-Regular", ui-monospace, monospace;
+    --verm:var(--accent);       /* acento (antes vermilion: cotas/sellos) */
+    --on-accent:#0E0E0E;        /* texto sobre chips de acento */
+    --warn:hsl(8 78% 66%);      /* coral de alerta/error, legible sobre oscuro */
+    --green:hsl(145 48% 62%);   /* verde legible en oscuro: estado CURSADA */
+    --line-2:rgba(255,255,255,.22); /* divisiones */
+    /* Una sola familia: Archivo variable (los tres roles conservan su nombre) */
+    --disp:'Archivo', system-ui, sans-serif;
+    --sans:'Archivo', system-ui, sans-serif;
+    --mono:'Archivo', system-ui, sans-serif;
 
-    --t-hero:clamp(3.2rem, 9vw, 8rem);
+    --t-hero:clamp(2.75rem, 7.5vw, 6rem);
     --t-h2:clamp(2rem, 4.6vw, 3.4rem);
     --t-h3:clamp(1.15rem, 1.5vw, 1.35rem);
     --t-lede:clamp(1.05rem, 1.5vw, 1.32rem);
@@ -45,10 +46,11 @@
     --t-mono:.72rem;        /* piso absoluto de mono; nada menor */
 
     --ease:cubic-bezier(.22,1,.36,1);  /* ease-out-quint; unico easing del sitio */
-    --gut:clamp(18px,4.5vw,64px);
+    --gut:var(--pad);
   }
   *{box-sizing:border-box;margin:0;padding:0}
-  html{scroll-behavior:smooth;overflow-x:hidden}
+  html{scroll-behavior:smooth;overflow-x:clip}
+  @media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}}
   body{
     background:var(--paper);
     color:var(--ink);
@@ -59,28 +61,15 @@
     -webkit-font-smoothing:antialiased;
     overflow-x:hidden;
   }
-  /* reticula de plano, fija (DESIGN.md: grid 56px de --line, opacity .5) */
-  body::before{
-    content:"";position:fixed;inset:0;z-index:0;pointer-events:none;
-    background-image:
-      linear-gradient(var(--line) 1px,transparent 1px),
-      linear-gradient(90deg,var(--line) 1px,transparent 1px);
-    background-size:56px 56px;
-    opacity:.5;
-  }
-  body::after{
-    content:"";position:fixed;inset:0;z-index:9990;pointer-events:none;opacity:.05;
-    background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='3'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
-    mix-blend-mode:multiply;
-  }
-  ::selection{background:var(--yellow);color:var(--ink)}
+  /* fondo plano --bg (limpia): sin retícula ni grano */
+  ::selection{background:var(--accent);color:#0E0E0E}
+  :focus-visible{outline:2px solid var(--accent);outline-offset:3px}
   a{color:inherit}
-  .wrap{max-width:1180px;margin:0 auto;padding:0 var(--gut);position:relative;z-index:1}
+  .wrap{max-width:var(--max);margin:0 auto;padding:0 var(--gut);position:relative;z-index:1}
 
   /* ---- scroll progress ---- */
-  .progress{position:fixed;top:0;left:0;height:5px;width:0;background:var(--yellow);
-    z-index:1050;box-shadow:0 0 0 1px var(--ink) inset}
-  html.site-menu-open .progress{opacity:0}
+  .progress{position:fixed;top:0;left:0;height:2px;width:0;background:var(--accent);
+    z-index:1050}
 
   .back-btn{font-family:var(--mono);font-size:.78rem;letter-spacing:.1em;text-transform:uppercase;
     text-decoration:none;color:var(--ink);border:1.5px solid var(--ink);padding:10px 18px;line-height:1;
@@ -89,18 +78,6 @@
 
   /* ---- hero ---- */
   .hero{position:relative;padding:64px 0 40px;z-index:1}
-  .ctrlbar{display:flex;align-items:center;gap:14px;border-bottom:1px solid var(--line-2);
-    padding:8px 0 7px;margin-bottom:clamp(28px,5vh,46px)}
-  .ctrlbar .chips{display:flex;gap:5px}
-  .ctrlbar .chip{width:11px;height:11px;display:block;border:1px solid var(--line-2)}
-  .ctrlbar .ch-c{background:#00AEEF}
-  .ctrlbar .ch-m{background:#EC008C}
-  .ctrlbar .ch-y{background:var(--yellow)}
-  .ctrlbar .ch-k{background:var(--ink)}
-  .ctrlbar .reg{width:14px;height:14px;flex-shrink:0;color:var(--ink);display:block}
-  .ctrlbar .leg{font-family:var(--mono);font-size:var(--t-mono);letter-spacing:.12em;
-    text-transform:uppercase;color:var(--ink-soft);margin-left:auto;white-space:nowrap}
-  @media(max-width:560px){.ctrlbar .leg{letter-spacing:.04em}}
   .eyebrow{font-family:var(--mono);font-size:.74rem;letter-spacing:.22em;text-transform:uppercase;
     color:var(--ink-soft);display:flex;gap:12px;align-items:center;flex-wrap:wrap}
   .eyebrow::before{content:"";width:42px;height:2px;background:var(--ink)}
@@ -176,8 +153,8 @@
     display:flex;flex-direction:column;justify-content:center}
   .sum-foot .planbox .k{font-family:var(--mono);font-size:var(--t-mono);letter-spacing:.12em;text-transform:uppercase;color:var(--yellow);margin-bottom:6px}
   .sum-foot .planbox .v{font-family:var(--disp);font-weight:400;font-size:2.2rem;line-height:1;letter-spacing:-.01em}
-  .sum-foot .planbox .v small{font-family:var(--mono);font-size:.78rem;letter-spacing:.04em;color:rgba(242,238,227,.7)}
-  .sum-foot .planbox .vsub{font-family:var(--mono);font-size:var(--t-mono);letter-spacing:.06em;color:rgba(242,238,227,.7);margin-top:6px}
+  .sum-foot .planbox .v small{font-family:var(--mono);font-size:.78rem;letter-spacing:.04em;color:var(--ink-soft)}
+  .sum-foot .planbox .vsub{font-family:var(--mono);font-size:var(--t-mono);letter-spacing:.06em;color:var(--ink-soft);margin-top:6px}
   @media(max-width:680px){
     .sum-foot{grid-template-columns:1fr}
     .sum-foot .ident{border-right:0;border-bottom:2px solid var(--ink)}
@@ -215,12 +192,12 @@
   .sug.ink .tag{color:var(--yellow)}
   .sug h3{font-family:var(--sans);font-weight:700;font-size:1.08rem;line-height:1.25;margin-bottom:6px;text-transform:uppercase;letter-spacing:0}
   .sug p{font-size:.96rem;color:var(--ink-soft);line-height:1.5}
-  .sug.ink p{color:rgba(242,238,227,.85)}
+  .sug.ink p{color:var(--ink-soft)}
   .sug ul{list-style:none;margin-top:10px;display:flex;flex-wrap:wrap;gap:8px}
   .sug ul li{font-family:var(--mono);font-size:.74rem;letter-spacing:.03em;background:var(--paper);
     border:1px solid var(--line-2);padding:5px 10px;line-height:1.3;display:inline-flex;align-items:center;gap:8px}
   .sug ul li .cr{color:var(--verm);font-weight:500}
-  .sug.ink ul li{background:rgba(242,238,227,.1);border-color:rgba(242,238,227,.3);color:var(--paper)}
+  .sug.ink ul li{background:transparent;border-color:var(--line-2);color:var(--ink)}
   .sug.ink ul li .cr{color:var(--yellow)}
   .sug.empty{opacity:.7;font-family:var(--mono);font-size:.8rem}
 
@@ -229,7 +206,7 @@
   .next-head{background:var(--ink);color:var(--paper);padding:16px 22px;display:flex;
     justify-content:space-between;align-items:center;gap:16px;flex-wrap:wrap;border-bottom:2px solid var(--yellow)}
   .next-head .ttl{font-family:var(--sans);font-weight:700;text-transform:uppercase;font-size:1.1rem;letter-spacing:0}
-  .next-head .meta{font-family:var(--mono);font-size:.74rem;letter-spacing:.1em;text-transform:uppercase;color:rgba(242,238,227,.78)}
+  .next-head .meta{font-family:var(--mono);font-size:.74rem;letter-spacing:.1em;text-transform:uppercase;color:var(--ink-soft)}
   .next-head .cr{font-family:var(--disp);font-weight:400;font-size:1.7rem;line-height:1;color:var(--yellow);letter-spacing:-.01em}
   .next-list{display:grid;grid-template-columns:1fr 1fr;gap:0}
   @media(max-width:680px){.next-list{grid-template-columns:1fr}}
@@ -294,9 +271,9 @@
   .course[data-state="planeada"]{box-shadow:inset 3px 0 0 var(--yellow-deep)}
 
   /* sello de hito sobre apartado completado (patron .rev-stamp) */
-  .rev-stamp{position:absolute;z-index:3;border:3px solid var(--verm);color:var(--verm);
+  .rev-stamp{position:absolute;z-index:3;border:2px solid var(--verm);color:var(--verm);
     padding:7px 13px 6px;font-family:var(--mono);font-size:.72rem;font-weight:700;letter-spacing:.16em;
-    text-transform:uppercase;background:rgba(241,236,223,.9);white-space:nowrap;
+    text-transform:uppercase;background:rgba(14,14,14,.9);white-space:nowrap;
     transform:rotate(-6deg) scale(.6);opacity:0;pointer-events:none;
     transition:opacity .35s var(--ease),transform .42s var(--ease);top:-16px;right:clamp(10px,3vw,28px)}
   .apartado.is-complete .rev-stamp{opacity:1;transform:rotate(-6deg) scale(1)}
@@ -311,15 +288,12 @@
     *{animation:none!important;transition:none!important}
     .rv{opacity:1!important;transform:none!important}
     .sum-bar i{transition:none}
-    .ctrlbar > *{opacity:1!important}
     .rev-stamp{transition:none}
     .apartado.is-complete .rev-stamp{transform:rotate(-6deg)!important}
   }
 
-  /* ---- footer (estructura compartida, paleta paper) ---- */
-  /* footer crema RETIRADO — todas las páginas usan el .site-footer inyectado por
-     footer.js (estilos en dark.css). Antes había un footer/.foot-* propio aquí
-     que se filtraba al .site-footer y lo hacía verse distinto. */
+  /* ---- footer ---- */
+  /* Un solo footer: el de una línea del sistema limpia (estilos al final del bloque). */
 
   /* =========================================================
      IMPRESION · @media print (PDF limpio en papel, sin librerias)
@@ -330,12 +304,12 @@
     @page{margin:14mm}
     html{scroll-behavior:auto}
     /* PDF en papel blanco: vuelve a tokens claros */
-    :root{--paper:#fff;--paper-2:#f3f3f1;--ink:#1B1612;--ink-soft:#555;--yellow:#6d28d9;--yellow-deep:#5b21b6;--verm:#B23818;--green:#2f6b34;--line:rgba(0,0,0,.14);--line-2:rgba(0,0,0,.28)}
+    :root{--paper:#fff;--paper-2:#f3f3f1;--ink:#1B1612;--ink-soft:#555;--yellow:#6d28d9;--yellow-deep:#5b21b6;--verm:#B23818;--green:#2f6b34;--line:rgba(0,0,0,.14);--line-2:rgba(0,0,0,.28);--accent:#6d28d9}
     body{background:#fff;color:#1B1612;font-size:11pt;line-height:1.4;overflow:visible}
     body::before,body::after{display:none!important}
-    /* ocultar todo lo interactivo / decorativo (incl. chrome oscuro) */
-    #bgfx,.fdock,.site-footer,.progress,.ctrlbar,.ghost,
-    .actions,.legend-states,.next-panel,#malla,.back-btn,footer,.hero .tag,
+    /* ocultar todo lo interactivo / decorativo (incl. nav y footer limpia) */
+    .nav,.progress,.ghost,
+    .actions,.legend-states,.next-panel,#sec-malla,.back-btn,footer,.hero .tag,
     .sum-foot input,.summary .sum-bar-wrap,.sec-sub{display:none!important}
     section{padding:0;margin:0 0 14pt;page-break-inside:avoid}
     .hero{padding:0 0 8pt}
@@ -374,50 +348,190 @@
   }
 
   /* ============================================================
-     OVERRIDES «Cuarto Oscuro» — neutralizan el chrome crema sobrante
-     (el color base ya lo voltea el re-mapeo de :root). Solo pantalla.
+     OVERRIDES «limpia» · re-tematización sobre el CSS original.
+     Tipografía Archivo, hairlines, acento morado en microdetalles.
+     Solo pantalla; la lógica JS y sus ids/clases quedan intactas.
      ============================================================ */
-  body{background:var(--paper)}                 /* = #000 ahora */
-  body::before,body::after{display:none}        /* retícula+grano crema → usa #bgfx */
-  .ctrlbar{display:none}                          /* barra CMYK de imprenta */
-  body > footer:not(.site-footer){display:none}   /* footer crema → lo inyecta footer.js */
+  /* utilidades limpia */
+  .display{font-weight:800;font-stretch:118%;text-transform:uppercase;letter-spacing:-.01em;line-height:.94;text-wrap:balance}
+  .label{font-size:11px;font-weight:600;letter-spacing:.18em;text-transform:uppercase;color:var(--ink-soft)}
+
+  /* display: Archivo 800 estirada (antes Anton 400) */
+  h1.title,.hero-meta .tag,h2,.ghost,.summary .cell .v,.sum-bar-head .big,
+  .sum-foot .planbox .v,.next-head .cr,.ap-head h3,.ap-head .ap-prog .blk b{
+    font-weight:800;font-stretch:118%;letter-spacing:-.01em}
+  h1.title{line-height:.96;font-size:clamp(44px,7.5vw,96px)}
+  /* «mono» → Archivo 600 espaciada (rol de etiqueta) */
+  .eyebrow,.summary .cell .k,.summary .cell .vsub,.sum-bar-head .lab,
+  .sum-foot label,.sum-foot .planbox .k,.sum-foot .planbox .vsub,.legend-states .li,
+  .sug .tag,.next-head .meta,.next-row .nm small,.sec-no,.ap-no,.grp-title,.ap-rule,
+  .ap-head .ap-prog .blk,.course .specs,.back-btn,.rev-stamp{font-weight:600}
+  .course .box .mk-p,.next-row.is-planned .tick::after,.legend-states .swatch.s-planeada::after{font-weight:700}
+
+  /* cabecera de página compacta bajo la nav fija */
+  .hero{padding:180px 0 44px}
+  h1.title .y{background:none;padding:0;color:var(--accent)}   /* marcador → palabra en acento */
+  .eyebrow::before{background:var(--accent);height:1px}
+
+  /* cotas: de trazo 2px tinta a hairline limpia */
+  .hero-meta{border-top:1px solid var(--line-2)}
+  .summary,.next-panel,.apartado{border:1px solid var(--line-2)}
+  .summary .sum-top,.sum-foot,.ap-head{border-color:var(--line-2);border-width:1px}
+  .sum-foot .ident{border-right-color:var(--line-2)}
+  .sum-bar{border:1px solid var(--line-2)}
+  .sum-bar i{box-shadow:none}
+  .sum-foot input[type=text]{border-bottom:1px solid var(--line-2)}
+  .sum-foot input[type=text]:focus-visible{border-bottom-color:var(--accent)}
+  .back-btn{border:1px solid var(--line-2)}
+  .course .box,.next-row .tick,.legend-states .swatch{border-color:var(--ink-soft)}
+  .legend-states .swatch.s-cursada{border-color:var(--green)}
+
+  /* estado PLANEADA: texto oscuro sobre acento */
+  .course[data-state="planeada"] .box{border-color:var(--accent);box-shadow:none}
+  .course[data-state="planeada"] .box .mk-p{color:#0E0E0E}
+  .legend-states .swatch.s-planeada{border-color:var(--accent);box-shadow:none}
+  .legend-states .swatch.s-planeada::after{color:#0E0E0E}
+  .next-row.is-planned .tick{border-color:var(--accent)}
+  .next-row.is-planned .tick::after{color:#0E0E0E}
+  .course[data-state="planeada"]{box-shadow:inset 2px 0 0 var(--accent)}
+
   /* paneles que invertían (tinta de fondo / papel de texto) → superficie oscura */
-  .sum-foot .planbox{background:var(--surface-2);color:var(--ink)}
+  .sum-foot .planbox{background:var(--paper-2);color:var(--ink)}
   .sum-foot .planbox .k{color:var(--ink-soft)}
-  .next-head{background:var(--surface-2);color:var(--ink);border-bottom:1px solid var(--line)}
-  .sug.ink{background:var(--surface-2);color:var(--ink);border-color:var(--line-2)}
+  .next-head{background:var(--paper-2);color:var(--ink);border-bottom:1px solid var(--line-2)}
+  .sug.ink{background:var(--paper-2);color:var(--ink);border-color:var(--line-2)}
+  .sug.ink ul li .cr{color:var(--accent)}
+  .sug.amber{border-color:var(--line-2);box-shadow:inset 0 2px 0 var(--accent)}
+
   /* hovers que invertían a tinta → acento */
   .back-btn:hover{background:transparent;color:var(--accent);border-color:var(--accent)}
   .btn.ghost-btn:hover{background:transparent;color:var(--accent)}
-  /* botones letterpress (sombra dura) → estilo oscuro */
-  .btn{box-shadow:none;border:1px solid var(--line-2);border-radius:12px}
-  .btn:hover{transform:none;border-color:var(--accent);color:var(--accent)}
+  /* botones letterpress (sombra dura) → botón limpia */
+  .btn{background:transparent;color:var(--ink);border:1px solid var(--line-2);box-shadow:none;
+    font-size:12px;font-weight:700;letter-spacing:.18em}
+  .btn:hover,.btn:active{transform:none;box-shadow:none}
+  .btn:hover{border-color:var(--accent);color:var(--accent)}
+  .btn:focus-visible{outline:2px solid var(--accent);outline-offset:3px}
   @media (max-width:560px){ .ghost{display:none} }   /* numerales gigantes: evitan overflow móvil */
+  @media (max-width:720px){ .hero{padding-top:150px} }
+  @media (max-width:680px){ .sum-foot .ident{border-bottom:1px solid var(--line-2)} }
+
+  /* ---------- nav fija (limpia) ---------- */
+  .nav{
+    position:fixed;inset:0 0 auto 0;z-index:1100;
+    display:flex;align-items:center;justify-content:space-between;
+    padding:22px var(--pad);
+    background:transparent;border-bottom:1px solid transparent;
+    transition:background .3s ease,border-color .3s ease,padding .3s ease;
+  }
+  .nav.scrolled{
+    background:rgba(14,14,14,.96);border-color:var(--line);padding-block:14px;
+  }
+  .nav a{text-decoration:none}
+  .nav .brand{font-weight:800;font-stretch:118%;font-size:17px;letter-spacing:.01em}
+  .nav .brand{display:inline-flex;align-items:center;gap:.14em}
+/* flecha de marca: celda cuadrada de 1em (alto del logotipo), gira al hover */
+.nav .brand .b-arrow{width:1em;height:1em;display:grid;place-items:center;color:var(--accent);flex:none}
+.nav .brand .b-arrow svg{width:100%;height:100%;display:block;transition:transform .35s cubic-bezier(.2,.6,.2,1)}
+.nav .brand:hover .b-arrow svg,.nav .brand:focus-visible .b-arrow svg{transform:rotate(-90deg)}
+@media (prefers-reduced-motion:reduce){.nav .brand .b-arrow svg{transition:none}}
+/* botón de menú móvil (oculto en escritorio) */
+.menu-btn{
+  display:none;align-items:center;gap:9px;
+  background:none;border:1px solid var(--line);border-radius:99px;
+  color:var(--ink);font:inherit;font-size:10px;font-weight:700;
+  letter-spacing:.18em;text-transform:uppercase;padding:9px 14px;cursor:pointer;
+}
+.menu-btn .tick{
+  width:7px;height:7px;border-right:1.6px solid var(--accent);border-bottom:1.6px solid var(--accent);
+  transform:rotate(45deg) translateY(-1px);transition:transform .3s ease;
+}
+.nav.open .menu-btn .tick{transform:rotate(225deg) translateY(1px)}
+@media (prefers-reduced-motion:reduce){.menu-btn .tick{transition:none}}
+/* ---------- banda clara: apartados documentales sobre papel ---------- */
+.band-light{
+  --bg:#F4F3EF;
+  --ink:#141414;
+  --ink-soft:#57564F;
+  --ink-dim:#75746E;
+  --line:rgba(0,0,0,.14);
+  --line-2:rgba(0,0,0,.3);
+  --paper:#F4F3EF;
+  --paper-2:#EAE8E1;
+  --accent:hsl(280 60% 42%);
+  --yellow:hsl(280 60% 42%);
+  --yellow-deep:hsl(280 65% 36%);
+  --verm:hsl(280 60% 42%);
+  --on-accent:#F4F3EF;
+  --warn:hsl(8 70% 40%);
+  --green:hsl(145 60% 27%);
+  background:var(--bg);color:var(--ink);
+}
+.band-light ::selection{background:hsl(280 60% 42%);color:#F4F3EF}
+  .nav ul{display:flex;gap:clamp(14px,2.5vw,34px);list-style:none}
+  .nav ul a{
+    font-size:11.5px;font-weight:600;letter-spacing:.14em;text-transform:uppercase;
+    padding-bottom:3px;border-bottom:1px solid transparent;transition:border-color .2s;
+  }
+  .nav ul a:hover{border-color:var(--ink)}
+  .nav ul a[aria-current="page"]{border-color:var(--ink)}
+  @media(max-width:720px){
+  .nav{padding-inline:16px}
+  .nav.open{background:rgba(14,14,14,.98);border-color:var(--line)}
+  .nav .brand{font-size:14px}
+  .menu-btn{display:inline-flex}
+  .nav > nav{
+    position:absolute;top:100%;left:0;right:0;display:none;
+    background:rgba(14,14,14,.98);border-bottom:1px solid var(--line);
+  }
+  .nav.open > nav{display:block}
+  .nav ul{display:block;padding:4px 16px 14px}
+  .nav ul a{
+    display:block;font-size:13px;letter-spacing:.16em;
+    padding:15px 2px;border-bottom:0;border-top:1px solid var(--line);
+  }
+  .nav ul li:first-child a{border-top:0}
+  .nav ul a[aria-current="page"]{color:var(--accent)}
+}
+
+  /* ---------- footer de una línea (limpia) ---------- */
+  footer{
+    border-top:1px solid var(--line);
+    display:flex;flex-wrap:wrap;gap:14px 34px;align-items:center;justify-content:space-between;
+    padding:26px var(--pad);font-size:12px;color:var(--ink-soft);
+    position:relative;z-index:1;margin-top:80px;
+  }
+  footer a{text-decoration:none}
+  footer nav{display:flex;flex-wrap:wrap;gap:20px}
+  footer nav a{letter-spacing:.1em;text-transform:uppercase;font-size:11px;font-weight:600}
+  footer nav a:hover{color:var(--ink)}
 </style>
-<!-- GSAP 3.13 vendoreado · solo los plugins que usa esta pagina (sin ScrollSmoother:
-     herramienta de seguimiento con scroll nativo) -->
-<script defer src="assets/vendor/gsap/gsap.min.js"></script>
-<script defer src="assets/vendor/gsap/ScrollTrigger.min.js"></script>
-<script defer src="assets/vendor/gsap/SplitText.min.js"></script>
-<script defer src="assets/vendor/gsap/DrawSVGPlugin.min.js"></script>
 </head>
 <body>
 <div class="progress" id="prog"></div>
 
+<header class="nav">
+  <a class="brand" href="index.html">LDG·UDEM<span class="b-arrow" aria-hidden="true"><svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="square" focusable="false"><path d="M2 2l8 8"/><path d="M10 4.6V10H4.6"/></svg></span></a>
+  <button class="menu-btn" type="button" aria-expanded="false" aria-controls="site-menu">Menú<span class="tick" aria-hidden="true"></span></button>
+  <nav id="site-menu" aria-label="Principal">
+    <ul>
+      <li><a href="showcase.html">Showcase</a></li>
+      <li><a href="trayecto.html">Trayecto</a></li>
+      <li><a href="avance.html" aria-current="page">Mi Avance</a></li>
+      <li><a href="pef.html">Guía PEF</a></li>
+    </ul>
+  </nav>
+</header>
+
 <noscript>
   <nav aria-label="Navegación principal">
-    <a href="index.html">Inicio</a> · <a href="trayecto.html">Trayectoria</a> · <a href="pef.html">Guía PEF</a> · <a href="avance.html">Mi Avance</a>
+    <a href="index.html">Inicio</a> · <a href="showcase.html">Showcase</a> · <a href="trayecto.html">Trayecto</a> · · <a href="avance.html">Mi Avance</a> · <a href="pef.html">Guía PEF</a>
   </nav>
 </noscript>
 
 <!-- HERO -->
 <div class="hero">
   <div class="wrap">
-    <div class="ctrlbar" aria-hidden="true">
-      <span class="chips"><i class="chip ch-c"></i><i class="chip ch-m"></i><i class="chip ch-y"></i><i class="chip ch-k"></i></span>
-      <svg class="reg" viewBox="0 0 14 14" focusable="false"><circle cx="7" cy="7" r="4.4" fill="none" stroke="currentColor" stroke-width="1.2"/><path d="M7 .5v13M.5 7h13" fill="none" stroke="currentColor" stroke-width="1.2"/></svg>
-      <span class="leg">Trayecto LDG · Control de avance</span>
-    </div>
     <div class="eyebrow rv">UDEM · Licenciatura en Diseño Gráfico · Trayecto del alumno</div>
     <h1 class="title rv d1">Mi <span class="y">avance</span><br>en la malla</h1>
     <div class="hero-meta">
@@ -428,10 +542,9 @@
 </div>
 
 <!-- 01 RESUMEN -->
-<section id="resumen">
-  <span class="ghost">01</span>
+<section id="resumen" class="band-light">
   <div class="wrap">
-    <div class="sec-head rv"><span class="sec-no">01 / RESUMEN</span><h2>Tu avance de carrera</h2></div>
+    <div class="sec-head rv"><span class="sec-no">RESUMEN</span><h2>Tu avance de carrera</h2></div>
     <div class="summary rv d1" id="summary-box">
       <div class="sum-top">
         <div class="cell"><span class="k">Avance de carrera</span><span class="v" id="m-pct">0<small>%</small></span><span class="vsub" id="m-pct-sub">0 de 0 créditos</span></div>
@@ -483,10 +596,9 @@
 </section>
 
 <!-- 02 PROXIMO SEMESTRE -->
-<section id="proximo">
-  <span class="ghost">02</span>
+<section id="proximo" class="band-light">
   <div class="wrap">
-    <div class="sec-head rv"><span class="sec-no">02 / PLAN</span><h2>Tu próximo semestre</h2></div>
+    <div class="sec-head rv"><span class="sec-no">PLAN</span><h2>Tu próximo semestre</h2></div>
     <p class="sec-sub rv">Materias del siguiente semestre del mapa que aún no has cursado, según el semestre más alto que ya tengas completo. Marca con un clic las que pienses inscribir: se cuentan como planeadas arriba.</p>
     <div class="next-panel rv d1" id="next-panel">
       <div class="next-head">
@@ -503,19 +615,17 @@
 
 <!-- 03 SUGERENCIAS -->
 <section id="sugerencias">
-  <span class="ghost">03</span>
   <div class="wrap">
-    <div class="sec-head rv"><span class="sec-no">03 / GUÍA</span><h2>Sugerencias para ti</h2></div>
+    <div class="sec-head rv"><span class="sec-no">GUÍA</span><h2>Sugerencias para ti</h2></div>
     <p class="sec-sub rv">Recomendaciones automáticas según tu avance. Son orientativas: confirma siempre con tu Trayecto oficial y con coordinación.</p>
     <div class="suggest rv d1" id="suggest-box"></div>
   </div>
 </section>
 
 <!-- 04 MALLA COMPLETA -->
-<section id="malla">
-  <span class="ghost">04</span>
+<section id="sec-malla">
   <div class="wrap">
-    <div class="sec-head rv"><span class="sec-no">04 / MALLA</span><h2>Malla completa</h2></div>
+    <div class="sec-head rv"><span class="sec-no">MALLA</span><h2>Malla completa</h2></div>
     <p class="sec-sub rv">Agrupada por los apartados del Trayecto UDEM. Cada apartado muestra cuántas materias y créditos exige y cuántos llevas. Para los apartados de "elige N", se cuenta cuántas opciones marcaste.</p>
     <div class="malla" id="malla"></div>
   </div>
@@ -524,6 +634,17 @@
 <div class="wrap" style="margin-top:80px;text-align:center">
   <a class="back-btn" href="#">↑ Volver arriba</a>
 </div>
+
+<footer>
+  <span>© <span id="yy">2026</span> Diseño Gráfico · UDEM</span>
+  <nav aria-label="Pie">
+    <a href="showcase.html">Showcase</a>
+    <a href="trayecto.html">Trayecto</a>
+    <a href="avance.html">Mi Avance</a>
+    <a href="pef.html">Guía PEF</a>
+  </nav>
+  <span>Monterrey, MX</span>
+</footer>
 
 <!-- bloques que solo aparecen en impresion/PDF -->
 <div class="print-only" id="print-extra"></div>
@@ -968,7 +1089,6 @@
     // planeado
     document.getElementById('m-plan-cr').innerHTML=t.planCr+'<small> cr</small>';
     document.getElementById('m-plan-n').textContent=t.planCount+(t.planCount===1?' materia marcada como planeada':' materias marcadas como planeadas');
-    var foot=document.getElementById('foot-total'); if(foot) foot.textContent=t.totalCr;
   }
 
   function refreshSectionProgress(){
@@ -1277,105 +1397,7 @@
     },{threshold:.1, rootMargin:'0px 0px -6% 0px'});
     document.querySelectorAll('.rv').forEach(function(el){ if(reduce){ el.classList.add('in'); } else io.observe(el); });
   }
-  function finalStateAll(){ document.querySelectorAll('.rv').forEach(function(el){ el.classList.add('in'); }); }
-
-  function buildGsap(coarse, splits){
-    var handled=[];
-    function mark(el){ if(el) handled.push(el); }
-    function settle(el){ return function(){ el.classList.add('in'); gsap.set(el,{clearProps:'all'}); }; }
-
-    // hero intro: cruz de registro + H1 por palabras
-    var title=document.querySelector('h1.title');
-    var eyebrow=document.querySelector('.hero .eyebrow');
-    var lede=document.querySelector('.hero .lede');
-    var tag=document.querySelector('.hero .tag');
-    [title,eyebrow,lede,tag].forEach(mark);
-
-    var intro=gsap.timeline();
-    intro.set('.ctrlbar .chips,.ctrlbar .reg',{autoAlpha:1},0)
-         .fromTo('.ctrlbar .reg circle',{drawSVG:'0%'},{drawSVG:'100%',duration:.55},.05)
-         .fromTo('.ctrlbar .reg path',{drawSVG:'0%'},{drawSVG:'100%',duration:.6},.2)
-         .from('.ctrlbar .chip',{autoAlpha:0,duration:.3,stagger:.07},.05)
-         .fromTo('.ctrlbar .leg',{autoAlpha:0},{autoAlpha:1,duration:.5},.3);
-    if(eyebrow) intro.fromTo(eyebrow,{autoAlpha:0,y:14},{autoAlpha:1,y:0,duration:.6,onComplete:settle(eyebrow)},.1);
-    if(title){
-      var sw=SplitText.create(title,{type:'words',mask:'words'});
-      splits.push(sw);
-      intro.set(title,{autoAlpha:1},.16)
-           .from(sw.words,{yPercent:112,duration:.85,stagger:.06,onComplete:function(){
-              try{ sw.revert(); }catch(e){}
-              title.classList.add('in'); gsap.set(title,{clearProps:'all'});
-            }},.16);
-    }
-    if(lede) intro.fromTo(lede,{autoAlpha:0,y:18},{autoAlpha:1,y:0,duration:.7,onComplete:settle(lede)},.62);
-    if(tag) intro.fromTo(tag,{autoAlpha:0,y:18},{autoAlpha:1,y:0,duration:.7,onComplete:settle(tag)},.72);
-
-    // h2 por líneas
-    document.querySelectorAll('.sec-head').forEach(function(head){
-      mark(head);
-      var h2=head.querySelector('h2'), chip=head.querySelector('.sec-no'), sp=null;
-      try{ sp=SplitText.create(h2,{type:'lines',mask:'lines'}); splits.push(sp); }catch(e){ sp=null; }
-      gsap.set(head,{autoAlpha:1});
-      var tl=gsap.timeline({scrollTrigger:{trigger:head,start:'top 86%',once:true},
-        onComplete:function(){
-          if(sp){ try{ sp.revert(); }catch(e){} }
-          head.classList.add('in'); gsap.set(head,{clearProps:'all'});
-          if(chip) gsap.set(chip,{clearProps:'all'});
-        }});
-      if(chip) tl.fromTo(chip,{autoAlpha:0,x:-12},{autoAlpha:1,x:0,duration:.5},0);
-      if(sp&&sp.lines.length) tl.from(sp.lines,{yPercent:112,duration:.85,stagger:.1},.08);
-      else if(h2) tl.fromTo(h2,{autoAlpha:0,y:18},{autoAlpha:1,y:0,duration:.7},.08);
-    });
-
-    // numerales fantasma
-    if(!coarse){
-      document.querySelectorAll('section .ghost').forEach(function(g){
-        gsap.fromTo(g,{y:60},{y:-60,ease:'none',
-          scrollTrigger:{trigger:g.parentElement,start:'top bottom',end:'bottom top',scrub:1.2}});
-      });
-    }
-
-    // resto de .rv genérico
-    document.querySelectorAll('.rv').forEach(function(el){
-      if(handled.indexOf(el)!==-1) return;
-      gsap.fromTo(el,{autoAlpha:0,y:26},{autoAlpha:1,y:0,duration:.8,
-        scrollTrigger:{trigger:el,start:'top 90%',once:true},
-        onComplete:settle(el)});
-    });
-  }
-
-  function initGsapLayer(){
-    gsap.registerPlugin(ScrollTrigger, SplitText, DrawSVGPlugin);
-    gsap.defaults({ease:'quint.out',overwrite:'auto'});
-    var root=document.documentElement, mm=gsap.matchMedia(), matched=false;
-    mm.add({
-      reduce:'(prefers-reduced-motion: reduce)',
-      motion:'(prefers-reduced-motion: no-preference)',
-      coarse:'(pointer: coarse)'
-    }, function(ctx){
-      matched=true;
-      if(ctx.conditions.reduce){ root.classList.remove('gsap'); finalStateAll(); return; }
-      root.classList.add('gsap');
-      var coarse=!!ctx.conditions.coarse, splits=[], dead=false;
-      var fontsReady=(document.fonts&&document.fonts.ready)?document.fonts.ready:Promise.resolve();
-      Promise.race([fontsReady,new Promise(function(r){ setTimeout(r,2000); })]).then(function(){
-        if(dead) return;
-        ctx.add(function(){
-          try{ buildGsap(coarse, splits); }
-          catch(err){ root.classList.remove('gsap'); finalStateAll(); }
-        });
-      });
-      return function(){ dead=true; for(var i=0;i<splits.length;i++){ try{ splits[i].revert(); }catch(e){} } splits.length=0; };
-    });
-    if(!matched){ root.classList.remove('gsap'); finalStateAll(); }
-  }
-
-  function initMotion(){
-    if(window.gsap&&window.ScrollTrigger&&window.SplitText&&window.DrawSVGPlugin){
-      try{ initGsapLayer(); }
-      catch(err){ document.documentElement.classList.remove('gsap'); initIO(); }
-    }else{ initIO(); }
-  }
+  function initMotion(){ initIO(); }
 
   /* ---- scroll progress ---- */
   var prog=document.getElementById('prog');
@@ -1401,6 +1423,31 @@
   }
   if(document.readyState==='loading') document.addEventListener('DOMContentLoaded', start);
   else start();
+})();
+</script>
+<script>
+(function(){
+  /* chrome limpia: año del pie + nav sólida al hacer scroll (mismo JS que propuesta-limpia.html) */
+  document.getElementById('yy').textContent = new Date().getFullYear();
+  var nav = document.querySelector('.nav');
+  var onScroll = function(){ nav.classList.toggle('scrolled', window.scrollY > 40); };
+  addEventListener('scroll', onScroll, {passive:true});
+  onScroll();
+})();
+</script>
+<script>
+(function(){
+  var bar = document.querySelector('.nav');
+  var btn = document.querySelector('.menu-btn');
+  if(!bar || !btn) return;
+  var close = function(){ bar.classList.remove('open'); btn.setAttribute('aria-expanded','false'); };
+  btn.addEventListener('click', function(){
+    var open = bar.classList.toggle('open');
+    btn.setAttribute('aria-expanded', open ? 'true' : 'false');
+  });
+  document.addEventListener('click', function(e){ if(bar.classList.contains('open') && !bar.contains(e.target)) close(); });
+  document.addEventListener('keydown', function(e){ if(e.key === 'Escape') close(); });
+  addEventListener('resize', close);
 })();
 </script>
 </body>

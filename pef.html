@@ -3,40 +3,41 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>PEF · Proyecto de Evaluación Final · Otoño 2026 · LDG UDEM</title>
+<title>LDG · UDEM · Guía PEF</title>
 <link rel="icon" href="assets/favicon.svg?v=4" type="image/svg+xml">
 <link rel="icon" href="assets/favicon-32.png?v=4" sizes="32x32" type="image/png">
 <link rel="apple-touch-icon" href="assets/favicon-180.png?v=4">
-<meta name="theme-color" content="#000000">
+<meta name="theme-color" content="#0E0E0E">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Anton&family=Atkinson+Hyperlegible:ital,wght@0,400;0,700;1,400&family=JetBrains+Mono:wght@400;500&family=Spectral:ital,wght@1,300&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="assets/dark.css?v=20260620m">
-<!-- Scaffold oscuro «Cuarto Oscuro» (reemplaza menu.js del crema) -->
-<script>window.SITE_NAV = { current: 'pef' };</script>
-<script defer src="assets/bg-noise.js?v=20260620e"></script>
-<script defer src="assets/dock-fun.js?v=20260620b"></script>
-<script defer src="assets/footer.js?v=20260620f"></script>
+<link href="https://fonts.googleapis.com/css2?family=Archivo:ital,wdth,wght@0,62..125,100..900;1,62..125,100..900&display=swap" rel="stylesheet">
 <script>document.documentElement.classList.add('js');</script>
 <style>
   :root{
-    /* ── re-mapeo a «Cuarto Oscuro» (mismos nombres, valores oscuros) ── */
-    --paper:#000000;        /* fondo (antes papel crema) */
-    --paper-2:#141414;      /* superficie elevada (celdas, paneles) */
-    --ink:#EFEFEF;          /* texto principal claro */
-    --ink-soft:#8E8E8E;     /* texto secundario */
-    --yellow:hsl(280 90% 75%);   /* acento morado (antes marcador UDEM) */
+    /* ── tokens «limpia» (propuesta-limpia.html) ── */
+    --bg:#0E0E0E;
+    --ink:#F2F2F0;
+    --ink-soft:#9C9C98;
+    --ink-dim:#5C5C58;
+    --line:rgba(255,255,255,.12);
+    --accent:hsl(280 85% 76%);
+    --max:1200px;
+    --pad:clamp(20px,4vw,56px);
+    /* ── re-mapeo de los tokens del original (mismos nombres, valores limpia) ── */
+    --paper:var(--bg);          /* fondo (antes papel crema) */
+    --paper-2:#161616;          /* superficie elevada (celdas, paneles) */
+    --yellow:var(--accent);     /* acento morado (antes marcador UDEM) */
     --yellow-deep:hsl(280 85% 62%);
-    --verm:hsl(280 90% 75%);     /* acento (antes vermilion: cotas/sellos) */
-    --line:rgba(255,255,255,.08);   /* retícula tenue */
-    --line-2:rgba(255,255,255,.18); /* divisiones */
-    /* Sistema tipografico del sitio (DESIGN.md) */
-    --disp:"Anton", "Arial Narrow", sans-serif;
-    --sans:"Atkinson Hyperlegible", system-ui, -apple-system, sans-serif;
-    --mono:"JetBrains Mono", "SFMono-Regular", ui-monospace, monospace;
+    --verm:var(--accent);       /* acento (antes vermilion: cotas/sellos) */
+    --on-accent:#0E0E0E;        /* texto sobre chips de acento */
+    --line-2:rgba(255,255,255,.22); /* divisiones */
+    /* Una sola familia: Archivo variable (los tres roles conservan su nombre) */
+    --disp:'Archivo', system-ui, sans-serif;
+    --sans:'Archivo', system-ui, sans-serif;
+    --mono:'Archivo', system-ui, sans-serif;
 
-    /* modular type scale (≈1.45 ratio) */
-    --t-hero:clamp(3.2rem, 9vw, 8rem);
+    /* modular type scale (cabecera compacta de subpágina limpia) */
+    --t-hero:clamp(40px, 8.5vw, 96px);
     --t-h2:clamp(2rem, 4.6vw, 3.4rem);
     --t-h3:clamp(1.15rem, 1.5vw, 1.35rem);
     --t-lede:clamp(1.05rem, 1.5vw, 1.32rem);
@@ -47,7 +48,8 @@
     --gut:clamp(18px,4.5vw,64px);
   }
   *{box-sizing:border-box;margin:0;padding:0}
-  html{scroll-behavior:smooth}
+  html{overflow-x:clip;scroll-behavior:smooth}
+  @media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}}
   body{
     background:var(--paper);
     color:var(--ink);
@@ -58,78 +60,37 @@
     -webkit-font-smoothing:antialiased;
     overflow-x:hidden;
   }
-  /* reticula de plano, fija (DESIGN.md: grid 56px de --line, opacity .5) */
-  body::before{
-    content:"";position:fixed;inset:0;z-index:0;pointer-events:none;
-    background-image:
-      linear-gradient(var(--line) 1px,transparent 1px),
-      linear-gradient(90deg,var(--line) 1px,transparent 1px);
-    background-size:56px 56px;
-    opacity:.5;
-  }
-  body::after{
-    content:"";position:fixed;inset:0;z-index:9990;pointer-events:none;opacity:.05;
-    background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='3'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
-    mix-blend-mode:multiply;
-  }
-  ::selection{background:var(--yellow);color:var(--ink)}
+  ::selection{background:var(--accent);color:#0E0E0E}
+  :focus-visible{outline:2px solid var(--accent);outline-offset:3px}
   a{color:inherit}
-  .wrap{max-width:1180px;margin:0 auto;padding:0 var(--gut);position:relative;z-index:1}
+  .wrap{max-width:var(--max);margin:0 auto;padding:0 var(--gut);position:relative;z-index:1}
 
-  /* ---- scroll progress ---- */
-  .progress{position:fixed;top:0;left:0;height:5px;width:0;background:var(--yellow);
-    z-index:1050;box-shadow:0 0 0 1px var(--ink) inset}
-  html.site-menu-open .progress{opacity:0}
+  /* ---- scroll progress (se queda: acento morado) ---- */
+  .progress{position:fixed;top:0;left:0;height:3px;width:0;background:var(--accent);z-index:1050}
 
-  /* Barra y menú del sitio: componente compartido (assets/menu.css).
-     Aquí solo queda .back-btn, que usa el enlace "Volver arriba" al pie. */
-  .back-btn{font-family:var(--mono);font-size:.78rem;letter-spacing:.1em;text-transform:uppercase;
-    text-decoration:none;color:var(--ink);border:1.5px solid var(--ink);padding:10px 18px;line-height:1;
-    transition:background .2s,color .2s;white-space:nowrap}
-  .back-btn:hover{background:var(--ink);color:var(--paper)}
+  /* .back-btn: enlace "Volver arriba" al pie */
+  .back-btn{font-family:var(--mono);font-size:.78rem;font-weight:600;letter-spacing:.1em;text-transform:uppercase;
+    text-decoration:none;color:var(--ink);border:1px solid var(--line-2);padding:10px 18px;line-height:1;
+    transition:border-color .2s,color .2s;white-space:nowrap}
+  .back-btn:hover{border-color:var(--accent);color:var(--accent)}
 
-  /* ---- hero ---- */
-  .hero{position:relative;padding:64px 0 40px;z-index:1}
-  /* barra de control de imprenta, bajo la barra (patron canonico DESIGN.md:
-     chips de proceso CMYK + cruz de registro + leyenda mono; el cian/magenta
-     SOLO viven dentro de este artefacto) */
-  .ctrlbar{display:flex;align-items:center;gap:14px;border-bottom:1px solid var(--line-2);
-    padding:8px 0 7px;margin-bottom:clamp(28px,5vh,46px)}
-  .ctrlbar .chips{display:flex;gap:5px}
-  .ctrlbar .chip{width:11px;height:11px;display:block;border:1px solid var(--line-2)}
-  .ctrlbar .ch-c{background:#00AEEF}
-  .ctrlbar .ch-m{background:#EC008C}
-  .ctrlbar .ch-y{background:var(--yellow)}
-  .ctrlbar .ch-k{background:var(--ink)}
-  .ctrlbar .reg{width:14px;height:14px;flex-shrink:0;color:var(--ink);display:block}
-  .ctrlbar .leg{font-family:var(--mono);font-size:var(--t-mono);letter-spacing:.12em;
-    text-transform:uppercase;color:var(--ink-soft);margin-left:auto;white-space:nowrap}
-  @media(max-width:560px){.ctrlbar .leg{letter-spacing:.04em}}
-  .eyebrow{font-family:var(--mono);font-size:.74rem;letter-spacing:.22em;text-transform:uppercase;
+  /* ---- hero: cabecera tipográfica compacta (sin gooey ni 100svh) ---- */
+  .hero{position:relative;padding:180px 0 40px;z-index:1}
+  .eyebrow{font-size:11px;font-weight:600;letter-spacing:.18em;text-transform:uppercase;
     color:var(--ink-soft);display:flex;gap:12px;align-items:center;flex-wrap:wrap}
-  .eyebrow::before{content:"";width:42px;height:2px;background:var(--ink)}
-  h1.title{font-family:var(--disp);font-weight:400;line-height:1.14;letter-spacing:-.01em;
-    font-size:var(--t-hero);margin:.16em 0 .1em;text-transform:uppercase}
-  /* yellow highlight = band anchored to the BOTTOM of the line, sized to the
-     cap height. Covers the glyphs, never the empty leading above (so it can't
-     overlap the line above). */
-  h1.title .y{
-    background-image:linear-gradient(var(--yellow),var(--yellow));
-    background-repeat:no-repeat;
-    background-position:left bottom;
-    background-size:100% .82em;
-    padding:0 .1em .04em;
-    -webkit-box-decoration-break:clone;box-decoration-break:clone}
+  h1.title{font-family:var(--disp);font-weight:800;font-stretch:118%;line-height:.98;letter-spacing:-.01em;
+    font-size:var(--t-hero);margin:.16em 0 .1em;text-transform:uppercase;text-wrap:balance}
+  /* sin banda de acento: titular monocromo, como el resto del sistema limpia */
   .hero-meta{display:flex;flex-wrap:wrap;gap:28px;align-items:flex-end;
-    border-top:2px solid var(--ink);margin-top:18px;padding-top:18px}
-  .hero-meta .lede{font-family:var(--sans);font-weight:500;font-size:var(--t-lede);max-width:48ch;line-height:1.5}
-  .hero-meta .tag{font-family:var(--disp);font-weight:400;font-size:clamp(2rem,4vw,3.2rem);
+    border-top:1px solid var(--line);margin-top:18px;padding-top:18px}
+  .hero-meta .lede{font-family:var(--sans);font-weight:400;font-size:var(--t-lede);max-width:48ch;line-height:1.5;color:var(--ink-soft)}
+  .hero-meta .tag{font-family:var(--disp);font-weight:800;font-stretch:118%;font-size:clamp(2rem,4vw,3.2rem);
     line-height:1;letter-spacing:-.01em;white-space:nowrap;text-transform:uppercase}
-  .hero-meta .tag small{display:block;font-family:var(--mono);font-size:var(--t-mono);font-weight:400;
+  .hero-meta .tag small{display:block;font-family:var(--mono);font-size:var(--t-mono);font-weight:600;
     letter-spacing:.14em;margin-top:8px;color:var(--ink-soft);text-transform:uppercase}
 
   /* deliverables strip · static index, no animation */
-  .strip{margin-top:46px;border-top:2px solid var(--ink);border-bottom:2px solid var(--ink);
+  .strip{margin-top:46px;border-top:1px solid var(--line-2);border-bottom:1px solid var(--line-2);
     display:grid;grid-template-columns:repeat(6,1fr)}
   .strip .it{padding:16px 18px;border-right:1px solid var(--line);display:flex;flex-direction:column;gap:6px}
   .strip .it:last-child{border-right:0}
@@ -139,122 +100,101 @@
     .strip .it{border-right:1px solid var(--line);border-bottom:1px solid var(--line)}
     .strip .it:nth-child(2n){border-right:0}}
 
-  /* ---- sections ---- */
+  /* ---- sections (patrón .sec-head limpia: label + hairline) ---- */
   section{position:relative;padding:96px 0 30px;z-index:1}
   .sec-head{display:flex;align-items:baseline;gap:20px;margin-bottom:42px;flex-wrap:wrap}
-  .sec-no{font-family:var(--mono);font-size:.74rem;letter-spacing:.18em;color:var(--ink-soft);font-weight:500;
-    background:var(--yellow);color:var(--ink);padding:5px 9px 4px;align-self:center}
-  h2{font-family:var(--disp);font-weight:400;letter-spacing:-.01em;line-height:1;
+  .sec-head::after{content:"";flex:1;height:1px;background:var(--line);align-self:center}
+  .sec-no{font-size:11px;letter-spacing:.18em;text-transform:uppercase;color:var(--ink-soft);font-weight:600;
+    align-self:center}
+  h2{font-family:var(--disp);font-weight:800;font-stretch:118%;letter-spacing:-.01em;line-height:.98;
     font-size:var(--t-h2);text-transform:uppercase}
-  .sec-sub{font-family:var(--mono);font-size:.78rem;letter-spacing:.02em;color:var(--ink-soft);
+  .sec-sub{font-size:.88rem;letter-spacing:.01em;color:var(--ink-soft);
     max-width:62ch;margin-top:-26px;margin-bottom:40px;line-height:1.55}
-  .ghost{position:absolute;right:-2vw;top:30px;font-family:var(--disp);font-weight:400;
+  .ghost{position:absolute;right:-2vw;top:30px;font-family:var(--disp);font-weight:800;font-stretch:118%;
     font-size:clamp(8rem,24vw,20rem);color:var(--ink);opacity:.04;line-height:.7;z-index:-1;pointer-events:none;letter-spacing:-.02em}
 
   /* ---- timeline ---- */
-  .timeline{display:grid;grid-template-columns:repeat(5,1fr);gap:0;position:relative;border-top:2px solid var(--ink)}
+  .timeline{display:grid;grid-template-columns:repeat(5,1fr);gap:0;position:relative;border-top:1px solid var(--line-2)}
   .stage{padding:24px 22px 30px;border-right:1px solid var(--line);position:relative;background:transparent;transition:background .3s}
   .stage:last-child{border-right:0}
   .stage:hover{background:var(--paper-2)}
   .stage .node{width:16px;height:16px;background:var(--paper);border:3px solid var(--ink);border-radius:50%;
     position:absolute;top:-9px;left:22px;transition:background .25s,transform .25s}
-  .stage:hover .node{background:var(--yellow);transform:scale(1.25)}
-  .stage .n{font-family:var(--mono);font-size:.72rem;letter-spacing:.2em;color:var(--ink-soft)}
+  .stage:hover .node{background:var(--accent);transform:scale(1.25)}
+  .stage .n{font-family:var(--mono);font-size:.72rem;font-weight:600;letter-spacing:.2em;color:var(--ink-soft)}
   .stage h3{font-family:var(--sans);font-weight:700;font-size:1.18rem;text-transform:uppercase;letter-spacing:0;margin:14px 0 8px;line-height:1.05}
   .stage .date{font-family:var(--mono);font-size:.74rem;color:var(--ink-soft);font-weight:500;margin-bottom:12px;line-height:1.45}
   .stage p{font-size:.92rem;line-height:1.45;color:var(--ink-soft)}
   @media(max-width:860px){.timeline{grid-template-columns:1fr;border-top:0}
-    .stage{border-right:0;border-top:2px solid var(--ink)}.stage .node{left:0;top:-9px}}
+    .stage{border-right:0;border-top:1px solid var(--line-2)}.stage .node{left:0;top:-9px}}
 
   /* ---- deliverables: fichas con ensamblaje marco-primero (patron canonico .ficha) ---- */
-  .deliv{display:grid;grid-template-columns:repeat(12,1fr);gap:clamp(26px,4vh,48px) 18px}
-  .deliv .d{position:relative;padding:clamp(20px,2.6vw,30px) clamp(18px,2.4vw,28px) clamp(18px,2.2vw,26px)}
-  .deliv .d:nth-child(1){grid-column:1/7}
-  .deliv .d:nth-child(2){grid-column:7/13}
-  .deliv .d:nth-child(3){grid-column:1/8}
-  .deliv .d:nth-child(4){grid-column:8/13}
-  .deliv .d:nth-child(5){grid-column:1/6}
-  .deliv .d:nth-child(6){grid-column:6/13}
-  @media(max-width:680px){.deliv .d:nth-child(n){grid-column:1/-1}}
-  /* marco que se traza: 4 bordes en secuencia, como delineante.
-     Estados ocultos gateados por .js (sin JS, todo visible); la capa GSAP
-     (html.gsap) apaga estas transiciones y dibuja el marco con scrub. */
-  .deliv .d .frame{position:absolute;inset:0;pointer-events:none}
-  .deliv .d .frame i{position:absolute;background:var(--ink);display:block}
-  .deliv .d .f-t{top:0;left:0;right:0;height:2px;transform-origin:left;
-    transition:transform .32s var(--ease)}
-  .deliv .d .f-r{top:0;right:0;bottom:0;width:2px;transform-origin:top;
-    transition:transform .32s var(--ease) .28s}
-  .deliv .d .f-b{bottom:0;left:0;right:0;height:2px;transform-origin:right;
-    transition:transform .32s var(--ease) .56s}
-  .deliv .d .f-l{top:0;left:0;bottom:0;width:2px;transform-origin:bottom;
-    transition:transform .32s var(--ease) .84s}
-  .js .deliv .d:not(.in) .f-t,.js .deliv .d:not(.in) .f-b{transform:scaleX(0)}
-  .js .deliv .d:not(.in) .f-r,.js .deliv .d:not(.in) .f-l{transform:scaleY(0)}
-  /* marcas de esquina */
-  .deliv .d .corner{position:absolute;width:10px;height:10px;border:0 solid var(--verm);
-    transition:opacity .3s var(--ease) 1.15s}
-  .js .deliv .d:not(.in) .corner{opacity:0}
-  .deliv .d .c-tl{top:-5px;left:-5px;border-top-width:2px;border-left-width:2px}
-  .deliv .d .c-br{bottom:-5px;right:-5px;border-bottom-width:2px;border-right-width:2px}
-  .deliv .d .inner{transition:opacity .6s var(--ease) .75s,transform .6s var(--ease) .75s}
-  .js .deliv .d:not(.in) .inner{opacity:0;transform:translateY(10px)}
-  .deliv .d .num{font-family:var(--disp);font-weight:400;font-size:2.5rem;line-height:1;letter-spacing:-.02em}
-  .deliv .d h3{font-family:var(--sans);font-weight:700;text-transform:uppercase;font-size:1.22rem;
-    letter-spacing:0;margin:8px 0 8px;line-height:1.1}
-  .deliv .d p{font-size:.96rem;color:var(--ink-soft);max-width:40ch}
-  .deliv .d .spec{font-family:var(--mono);font-size:.78rem;letter-spacing:.05em;margin-top:14px;
-    color:var(--ink);background:var(--paper-2);display:inline-block;padding:5px 10px}
+  /* entregables: listado editorial, filas con hairline */
+  .deliv-list{list-style:none;margin:0;padding:0}
+  .dl-row{display:grid;grid-template-columns:64px minmax(0,1fr) auto;gap:10px 24px;
+    align-items:baseline;padding:clamp(22px,3.4vh,30px) 0;border-top:1px solid var(--line)}
+  .dl-row:last-child{border-bottom:1px solid var(--line)}
+  .dl-num{font-size:12px;font-weight:600;letter-spacing:.12em;color:var(--ink-soft)}
+  .dl-row h3{font-family:var(--disp);font-weight:800;font-stretch:118%;text-transform:uppercase;
+    font-size:clamp(19px,2.4vw,26px);line-height:1.05;letter-spacing:-.005em}
+  .dl-row p{font-size:.96rem;color:var(--ink-soft);max-width:54ch;margin-top:7px}
+  .dl-spec{font-family:var(--mono);font-size:.74rem;letter-spacing:.06em;color:var(--ink-soft);
+    text-align:right;white-space:nowrap}
+  @media(max-width:680px){
+    .dl-row{grid-template-columns:44px minmax(0,1fr)}
+    .dl-spec{grid-column:2;text-align:left;white-space:normal}
+  }
 
   /* ---- rubric ---- */
-  .rubric{border-top:2px solid var(--ink)}
+  .rubric{border-top:1px solid var(--line-2)}
   .row{display:grid;grid-template-columns:minmax(0,1.1fr) 3fr auto;gap:18px;align-items:center;
     padding:16px 0;border-bottom:1px solid var(--line);transition:padding .25s}
   .row .crit{font-family:var(--sans);font-weight:700;font-size:1.05rem;text-transform:uppercase;letter-spacing:0;line-height:1.15}
   .rubric .bar{height:12px;background:var(--paper-2);position:relative;overflow:hidden}
-  .rubric .bar i{position:absolute;left:0;top:0;bottom:0;width:0;background:var(--ink);
+  .rubric .bar i{position:absolute;left:0;top:0;bottom:0;width:0;background:var(--accent);
     transform:scaleX(0);transform-origin:left;transition:transform 1.1s var(--ease)}
-  .row .pct{font-family:var(--disp);font-weight:400;font-size:1.6rem;letter-spacing:-.02em;min-width:64px;text-align:right}
+  .row .pct{font-family:var(--disp);font-weight:800;font-stretch:118%;font-size:1.6rem;letter-spacing:-.02em;min-width:64px;text-align:right}
   .row .guide{grid-column:1/-1;font-size:.86rem;color:var(--ink-soft);margin-top:4px;line-height:1.45;max-width:70ch}
   .row:hover{background:var(--paper-2)}
   @media(max-width:680px){.row{grid-template-columns:1fr auto}.row .bar{grid-column:1/-1;order:3}}
 
-  .panel{display:grid;grid-template-columns:1fr 1fr;gap:0;border:2px solid var(--ink);margin-top:40px}
+  .panel{display:grid;grid-template-columns:1fr 1fr;gap:0;border:1px solid var(--line-2);margin-top:40px}
   .panel>div{padding:26px 28px}
-  .panel>div:first-child{border-right:2px solid var(--ink);background:var(--ink);color:var(--paper)}
+  .panel>div:first-child{border-right:1px solid var(--line-2);background:var(--paper-2);color:var(--ink)}
   .panel .evals{display:flex;gap:26px;margin-top:18px}
-  .panel .evals b{font-family:var(--disp);font-weight:400;font-size:2.3rem;display:block;letter-spacing:-.02em}
-  .panel .evals span{font-family:var(--mono);font-size:var(--t-mono);letter-spacing:.14em;text-transform:uppercase;opacity:.7}
-  .panel .yellowdot{color:var(--yellow)}
-  @media(max-width:680px){.panel{grid-template-columns:1fr}.panel>div:first-child{border-right:0;border-bottom:2px solid var(--ink)}}
+  .panel .evals b{font-family:var(--disp);font-weight:800;font-stretch:118%;font-size:2.3rem;display:block;letter-spacing:-.02em}
+  .panel .evals span{font-family:var(--mono);font-size:var(--t-mono);font-weight:600;letter-spacing:.14em;text-transform:uppercase;opacity:.7}
+  .panel .yellowdot{color:var(--accent)}
+  @media(max-width:680px){.panel{grid-template-columns:1fr}.panel>div:first-child{border-right:0;border-bottom:1px solid var(--line-2)}}
 
   /* ---- grade bars ---- */
   .stack{margin-top:8px}
-  .stack .lab{font-family:var(--mono);font-size:.72rem;letter-spacing:.14em;text-transform:uppercase;color:var(--ink-soft);margin:26px 0 10px}
+  .stack .lab{font-family:var(--mono);font-size:.72rem;font-weight:600;letter-spacing:.14em;text-transform:uppercase;color:var(--ink-soft);margin:26px 0 10px}
   /* proportional meter: color only, no text inside; breakdown lives in legend */
-  .meter{display:flex;height:16px;border:2px solid var(--ink)}
-  .meter .seg{display:block;border-right:2px solid var(--ink)}
+  .meter{display:flex;height:16px;border:1px solid var(--line-2)}
+  .meter .seg{display:block;border-right:2px solid var(--paper)}
   .meter .seg:last-child{border-right:0}
   .legend{list-style:none;display:flex;flex-wrap:wrap;gap:12px 32px;margin:14px 0 8px}
   .legend li{display:flex;align-items:baseline;gap:10px;font-family:var(--sans);font-size:.96rem}
-  .legend .dot{width:13px;height:13px;flex-shrink:0;align-self:center;border:1px solid var(--ink)}
+  .legend .dot{width:13px;height:13px;flex-shrink:0;align-self:center;border:1px solid var(--line-2)}
   .legend b{font-weight:700}
   .legend .sub{font-family:var(--mono);font-size:.72rem;letter-spacing:.04em;color:var(--ink-soft)}
-  .seg-y{background:var(--yellow)}
+  /* rampa gris→acento (los tonos crema originales no viven en el negro) */
+  .seg-y{background:var(--accent)}
   .seg-ink{background:var(--ink)}
-  .seg-3{background:#B8B09A}
-  .seg-pa{background:var(--paper-2)}.seg-pb{background:#D6CFBC}.seg-pc{background:var(--yellow)}
+  .seg-3{background:var(--ink-dim)}
+  .seg-pa{background:#242424}.seg-pb{background:var(--ink-dim)}.seg-pc{background:var(--accent)}
 
   /* ---- columns (roles) ---- */
-  .cols{display:grid;grid-template-columns:repeat(3,1fr);gap:0;border:2px solid var(--ink)}
-  .cols .c{padding:26px 24px;border-right:2px solid var(--ink)}
+  .cols{display:grid;grid-template-columns:repeat(3,1fr);gap:0;border:1px solid var(--line-2)}
+  .cols .c{padding:26px 24px;border-right:1px solid var(--line-2)}
   .cols .c:last-child{border-right:0}
   .cols .c h3{font-family:var(--sans);font-weight:700;text-transform:uppercase;font-size:1.2rem;
-    letter-spacing:0;margin-bottom:16px;padding-bottom:10px;border-bottom:3px solid var(--yellow);display:inline-block}
+    letter-spacing:0;margin-bottom:16px;padding-bottom:10px;border-bottom:2px solid var(--accent);display:inline-block}
   .cols .c ul{list-style:none}
   .cols .c li{font-size:.94rem;color:var(--ink-soft);padding:7px 0 7px 18px;position:relative;line-height:1.4}
-  .cols .c li::before{content:"";position:absolute;left:0;top:14px;width:7px;height:7px;background:var(--ink)}
-  @media(max-width:760px){.cols{grid-template-columns:1fr}.cols .c{border-right:0;border-bottom:2px solid var(--ink)}.cols .c:last-child{border-bottom:0}}
+  .cols .c li::before{content:"";position:absolute;left:0;top:14px;width:7px;height:7px;background:var(--ink-dim)}
+  @media(max-width:760px){.cols{grid-template-columns:1fr}.cols .c{border-right:0;border-bottom:1px solid var(--line-2)}.cols .c:last-child{border-bottom:0}}
 
   /* ---- two-col content ---- */
   .duo{display:grid;grid-template-columns:1.15fr .85fr;gap:48px;align-items:start}
@@ -265,17 +205,17 @@
     font-family:var(--mono);font-size:.74rem;color:var(--ink-soft);font-weight:500}
 
   /* ---- checklist ---- */
-  .check{border:2px solid var(--ink)}
-  .check-progress{display:flex;align-items:center;gap:16px;padding:16px 22px;border-bottom:2px solid var(--ink);
-    background:var(--ink);color:var(--paper)}
-  .check-progress .pcount{font-family:var(--disp);font-weight:400;font-size:1.6rem;line-height:1;letter-spacing:-.01em;color:var(--yellow)}
+  .check{border:1px solid var(--line-2)}
+  .check-progress{display:flex;align-items:center;gap:16px;padding:16px 22px;border-bottom:1px solid var(--line-2);
+    background:var(--paper-2);color:var(--ink)}
+  .check-progress .pcount{font-family:var(--disp);font-weight:800;font-stretch:118%;font-size:1.6rem;line-height:1;letter-spacing:-.01em;color:var(--accent)}
   .check-progress .ptrack{flex:1;height:8px;background:rgba(255,255,255,.14);overflow:hidden}
-  .check-progress .pfill{height:100%;width:100%;background:var(--yellow);transform:scaleX(0);transform-origin:left;transition:transform .35s var(--ease)}
-  .check-progress .plabel{font-family:var(--mono);font-size:.72rem;letter-spacing:.14em;text-transform:uppercase;opacity:.7}
-  .check-progress .ckreset{font-family:var(--mono);font-size:.72rem;letter-spacing:.12em;text-transform:uppercase;
-    background:transparent;color:var(--paper);border:1px solid rgba(242,238,227,.4);padding:6px 10px;line-height:1;cursor:pointer;
+  .check-progress .pfill{height:100%;width:100%;background:var(--accent);transform:scaleX(0);transform-origin:left;transition:transform .35s var(--ease)}
+  .check-progress .plabel{font-family:var(--mono);font-size:.72rem;font-weight:600;letter-spacing:.14em;text-transform:uppercase;opacity:.7}
+  .check-progress .ckreset{font-family:var(--mono);font-size:.72rem;font-weight:600;letter-spacing:.12em;text-transform:uppercase;
+    background:transparent;color:var(--ink);border:1px solid var(--line-2);padding:6px 10px;line-height:1;cursor:pointer;
     transition:border-color .2s,color .2s}
-  .check-progress .ckreset:hover{border-color:var(--yellow);color:var(--yellow)}
+  .check-progress .ckreset:hover{border-color:var(--accent);color:var(--accent)}
   .check-warn{font-family:var(--mono);font-size:.72rem;letter-spacing:.05em;color:var(--ink-soft);margin-top:10px}
   .check-group{border-top:1px solid var(--line)}
   .check-group:first-of-type{border-top:0}
@@ -286,12 +226,12 @@
   .check-gtitle + .check-item{border-top:0}
   .check-item:hover{background:var(--paper-2)}
   .check-item input{position:absolute;opacity:0;width:0;height:0}
-  .check-item input:focus-visible ~ .check-box{outline:2.5px solid var(--ink);outline-offset:2px}
+  .check-item input:focus-visible ~ .check-box{outline:2px solid var(--accent);outline-offset:2px}
   .check-box{flex-shrink:0;width:22px;height:22px;border:2px solid var(--ink);margin-top:2px;
     display:grid;place-items:center;transition:background .15s}
-  .check-box::after{content:"";width:6px;height:11px;border:solid var(--ink);border-width:0 2.5px 2.5px 0;
+  .check-box::after{content:"";width:6px;height:11px;border:solid var(--on-accent);border-width:0 2.5px 2.5px 0;
     transform:rotate(45deg) translateY(-1px);opacity:0;transition:opacity .15s}
-  .check-item input:checked ~ .check-box{background:var(--yellow)}
+  .check-item input:checked ~ .check-box{background:var(--accent);border-color:var(--accent)}
   .check-item input:checked ~ .check-box::after{opacity:1}
   .check-text b{font-family:var(--sans);font-weight:700;font-size:1rem;line-height:1.3;display:block;transition:color .2s}
   .check-text .spec{font-family:var(--mono);font-size:var(--t-mono);letter-spacing:.04em;color:var(--ink-soft);margin-top:3px;display:block}
@@ -302,7 +242,7 @@
   .prose p{font-size:1.05rem;line-height:1.6;color:var(--ink-soft);margin-bottom:14px}
   .prose p b{color:var(--ink);font-weight:700}
   .subh{font-family:var(--sans);font-weight:700;text-transform:uppercase;font-size:1.05rem;letter-spacing:0;
-    display:inline-block;border-bottom:3px solid var(--yellow);padding-bottom:6px;margin:40px 0 16px}
+    display:inline-block;border-bottom:2px solid var(--accent);padding-bottom:6px;margin:40px 0 16px}
   .qlist{counter-reset:q;list-style:none;display:grid;grid-template-columns:1fr 1fr;gap:0 36px;
     border-top:1px solid var(--line)}
   .qlist li{counter-increment:q;display:flex;gap:13px;padding:13px 0;border-bottom:1px solid var(--line);
@@ -310,17 +250,16 @@
   .qlist li::before{content:counter(q,decimal-leading-zero);font-family:var(--mono);font-size:.72rem;
     color:var(--ink-soft);font-weight:500;flex-shrink:0;padding-top:3px}
   @media(max-width:680px){.qlist{grid-template-columns:1fr}}
-  .sessions{margin-top:34px;background:var(--ink);color:var(--paper);padding:34px 36px;border-top:4px solid var(--yellow)}
-  .sessions h3{font-family:var(--sans);font-weight:700;text-transform:uppercase;font-size:1.35rem;color:var(--yellow);margin-bottom:14px;letter-spacing:0}
-  .sessions p{font-size:1rem;line-height:1.6;color:var(--ink);max-width:68ch;margin-bottom:10px}
+  .sessions{margin-top:34px;background:var(--paper-2);color:var(--ink);padding:34px 36px;border-top:2px solid var(--accent)}
+  .sessions h3{font-family:var(--sans);font-weight:700;text-transform:uppercase;font-size:1.35rem;color:var(--accent);margin-bottom:14px;letter-spacing:0}
+  .sessions p{font-size:1rem;line-height:1.6;color:var(--ink-soft);max-width:68ch;margin-bottom:10px}
   .sessions p:last-child{margin-bottom:0}
   .cta-row{margin-top:36px;display:flex;align-items:center;gap:24px;flex-wrap:wrap}
-  .btn{font-family:var(--sans);font-weight:700;font-size:1rem;text-transform:uppercase;letter-spacing:.01em;
-    background:var(--yellow);color:var(--ink);border:2px solid var(--ink);padding:16px 26px;text-decoration:none;
-    display:inline-flex;align-items:center;gap:12px;box-shadow:5px 5px 0 var(--ink);
-    transition:transform .15s var(--ease),box-shadow .15s var(--ease)}
-  .btn:hover{transform:translate(-2px,-2px);box-shadow:7px 7px 0 var(--ink)}
-  .btn:active{transform:translate(2px,2px);box-shadow:1px 1px 0 var(--ink)}
+  .btn{font-family:var(--sans);font-weight:700;font-size:12px;text-transform:uppercase;letter-spacing:.16em;
+    background:transparent;color:var(--ink);border:1px solid var(--ink);padding:16px 26px;text-decoration:none;
+    display:inline-flex;align-items:center;gap:12px;
+    transition:border-color .2s,color .2s}
+  .btn:hover{border-color:var(--accent);color:var(--accent)}
   .cta-note{font-family:var(--mono);font-size:.74rem;letter-spacing:.05em;color:var(--ink-soft);max-width:32ch;line-height:1.55}
 
   /* ---- callouts ---- */
@@ -331,114 +270,148 @@
   .note p{font-size:.96rem;color:var(--ink-soft)}
 
   /* ---- titulación ---- */
-  .titul{border:2px solid var(--ink);position:relative}
+  .titul{border:1px solid var(--line-2);position:relative}
   .titul .t{display:flex;justify-content:space-between;gap:20px;padding:15px 22px;border-bottom:1px solid var(--line);align-items:center}
   .titul .t:last-child{border-bottom:0}
   .titul .t span{font-size:.98rem}
   .titul .t b{font-family:var(--mono);font-weight:500;font-size:.82rem;letter-spacing:.06em;color:var(--ink);white-space:nowrap}
-  /* aviso critico · panel tinta con acento amarillo */
-  .alert{margin-top:46px;background:var(--ink);color:var(--paper);padding:30px 32px;position:relative;
-    border-top:4px solid var(--yellow)}
+  /* aviso critico · superficie elevada con acento morado */
+  .alert{margin-top:46px;background:var(--paper-2);color:var(--ink);padding:30px 32px;position:relative;
+    border-top:2px solid var(--accent)}
   .alert h3{font-family:var(--sans);font-weight:700;text-transform:uppercase;font-size:1.35rem;letter-spacing:0;
-    margin-bottom:10px;color:var(--yellow)}
-  .alert p{font-size:1rem;max-width:64ch;color:var(--ink);line-height:1.6}
-  .alert b{color:var(--paper)}
+    margin-bottom:10px;color:var(--accent)}
+  .alert p{font-size:1rem;max-width:64ch;color:var(--ink-soft);line-height:1.6}
+  .alert b{color:var(--ink)}
 
-  /* sello vermilion para momentos criticos (patron canonico .rev-stamp) */
-  .rev-stamp{position:absolute;z-index:3;border:3px solid var(--verm);color:var(--verm);
-    padding:9px 16px 8px;font-family:var(--mono);font-size:.8rem;font-weight:700;letter-spacing:.18em;
-    text-transform:uppercase;background:rgba(20,20,20,.92);white-space:nowrap;
-    transform:rotate(-6deg);
-    transition:opacity .3s var(--ease) .45s,transform .42s var(--ease) .45s}
-  .js .rev-stamp:not(.in){opacity:0;transform:scale(1.15) rotate(-6deg)}
-  .rev-stamp.in{opacity:1;transform:scale(1) rotate(-6deg)}
-  /* aro exterior del sello: segundo trazo del estampado; la capa GSAP lo dibuja con DrawSVG */
-  .rev-stamp .ring{position:absolute;left:-7px;top:-7px;width:calc(100% + 14px);height:calc(100% + 14px);
-    pointer-events:none;display:block;overflow:visible}
-  .rev-stamp .ring rect{fill:none;stroke:currentColor;stroke-width:1.5;vector-effect:non-scaling-stroke}
-  .titul .rev-stamp{top:-28px;right:clamp(8px,3vw,34px)}
-  .alert .rev-stamp{top:-18px;right:clamp(12px,4vw,40px)}
-  @media(max-width:560px){.rev-stamp{font-size:var(--t-mono);padding:7px 12px 6px;letter-spacing:.14em}}
-
-  /* footer crema RETIRADO — todas las páginas usan el .site-footer inyectado por
-     footer.js (estilos en dark.css). Antes había un footer/.foot-* propio aquí
-     que se filtraba al .site-footer y lo hacía verse distinto. */
-
-  /* ---- reveal · 3 capas (DESIGN.md · Motion contrato v2) ----
+  /* ---- reveal · 2 capas ----
      capa 1 · html sin .js (sin JS): todo visible, sin estados ocultos
-     capa 2 · .js + módulo IO: .in dispara las transiciones CSS de siempre
-     capa 3 · html.gsap: transiciones CSS apagadas; GSAP anima inline */
+     capa 2 · .js + módulo IO: .in dispara las transiciones CSS */
   .rv{transition:opacity .8s var(--ease),transform .8s var(--ease)}
   .js .rv:not(.in){opacity:0;transform:translateY(26px)}
   .rv.in{opacity:1;transform:none}
   .rv.d1{transition-delay:.08s}.rv.d2{transition-delay:.16s}.rv.d3{transition-delay:.24s}.rv.d4{transition-delay:.32s}
-  .gsap .rv,.gsap .rv.d1,.gsap .rv.d2,.gsap .rv.d3,.gsap .rv.d4,
-  .gsap .deliv .d .frame i,.gsap .deliv .d .corner,.gsap .deliv .d .inner,
-  .gsap .rev-stamp{transition:none}
-  /* la capa GSAP esconde la barra de control hasta el intro (el timeline la restituye) */
-  .gsap .ctrlbar > *{opacity:0}
   /* reduced motion: TODO en estado final (marcos trazados, sellos estampados, barras pintadas) */
   @media(prefers-reduced-motion:reduce){
     *{animation:none!important;transition:none!important}
     .rv{opacity:1!important;transform:none!important}.rubric .bar i{transition:none}
-    .ctrlbar > *{opacity:1!important}
     .deliv .d .frame i{transform:none!important}
     .deliv .d .corner{opacity:1!important}
     .deliv .d .inner{opacity:1!important;transform:none!important}
-    .rev-stamp{opacity:1!important;transform:rotate(-6deg)!important}
   }
+  @media (max-width:560px){ .ghost{display:none} }   /* numerales gigantes: evitan overflow móvil */
 
   /* ============================================================
-     OVERRIDES «Cuarto Oscuro» — neutralizan el chrome crema sobrante
-     (el color base ya lo voltea el re-mapeo de :root)
+     BLOQUE «LIMPIA» — nav fija + footer de una línea + utilidades
+     (copiado de propuesta-limpia.html)
      ============================================================ */
-  body{background:var(--paper)}
-  body::before,body::after{display:none}        /* retícula+grano crema → usa #bgfx */
-  .ctrlbar{display:none}                          /* barra CMYK de imprenta */
-  body > footer:not(.site-footer){display:none}   /* footer crema → footer.js */
-  /* paneles que invertían (tinta de fondo / papel de texto) → superficie oscura */
-  .panel > div:first-child{background:var(--surface-2);color:var(--ink);border-right:1px solid var(--line-2)}
-  .check-progress{background:var(--surface-2);color:var(--ink);border-bottom:1px solid var(--line-2)}
-  .check-progress button{color:var(--ink);border-color:var(--line-2)}
-  .sessions{background:var(--surface-2);color:var(--ink)}
-  .alert{background:var(--surface-2);color:var(--ink)}
-  .alert b{color:var(--ink)}
-  /* relleno de barras de rúbrica → acento */
-  .rubric .bar i{background:var(--accent)}
-  /* hover que invertía a tinta → acento */
-  .back-btn:hover{background:transparent;color:var(--accent);border-color:var(--accent)}
-  /* botones letterpress (sombra dura) → estilo oscuro */
-  .btn{box-shadow:none;border:1px solid var(--line-2);border-radius:12px}
-  .btn:hover{transform:none;border-color:var(--accent);color:var(--accent)}
-  @media (max-width:560px){ .ghost{display:none} }   /* numerales gigantes: evitan overflow móvil */
+  .display{font-weight:800;font-stretch:118%;text-transform:uppercase;letter-spacing:-.01em;line-height:.94;text-wrap:balance}
+  .label{font-size:11px;font-weight:600;letter-spacing:.18em;text-transform:uppercase;color:var(--ink-soft)}
+  .nav{
+    position:fixed;inset:0 0 auto 0;z-index:10;
+    display:flex;align-items:center;justify-content:space-between;
+    padding:22px var(--pad);
+    background:transparent;border-bottom:1px solid transparent;
+    transition:background .3s ease,border-color .3s ease,padding .3s ease;
+  }
+  .nav.scrolled{background:rgba(14,14,14,.96);border-color:var(--line);padding-block:14px}
+  .nav a{text-decoration:none}
+  .nav .brand{font-weight:800;font-stretch:118%;font-size:17px;letter-spacing:.01em}
+  .nav .brand{display:inline-flex;align-items:center;gap:.14em}
+/* flecha de marca: celda cuadrada de 1em (alto del logotipo), gira al hover */
+.nav .brand .b-arrow{width:1em;height:1em;display:grid;place-items:center;color:var(--accent);flex:none}
+.nav .brand .b-arrow svg{width:100%;height:100%;display:block;transition:transform .35s cubic-bezier(.2,.6,.2,1)}
+.nav .brand:hover .b-arrow svg,.nav .brand:focus-visible .b-arrow svg{transform:rotate(-90deg)}
+@media (prefers-reduced-motion:reduce){.nav .brand .b-arrow svg{transition:none}}
+/* botón de menú móvil (oculto en escritorio) */
+.menu-btn{
+  display:none;align-items:center;gap:9px;
+  background:none;border:1px solid var(--line);border-radius:99px;
+  color:var(--ink);font:inherit;font-size:10px;font-weight:700;
+  letter-spacing:.18em;text-transform:uppercase;padding:9px 14px;cursor:pointer;
+}
+.menu-btn .tick{
+  width:7px;height:7px;border-right:1.6px solid var(--accent);border-bottom:1.6px solid var(--accent);
+  transform:rotate(45deg) translateY(-1px);transition:transform .3s ease;
+}
+.nav.open .menu-btn .tick{transform:rotate(225deg) translateY(1px)}
+@media (prefers-reduced-motion:reduce){.menu-btn .tick{transition:none}}
+/* ---------- banda clara: apartados documentales sobre papel ---------- */
+.band-light{
+  --bg:#F4F3EF;
+  --ink:#141414;
+  --ink-soft:#57564F;
+  --ink-dim:#75746E;
+  --line:rgba(0,0,0,.14);
+  --line-2:rgba(0,0,0,.3);
+  --paper:#F4F3EF;
+  --paper-2:#EAE8E1;
+  --accent:hsl(280 60% 42%);
+  --yellow:hsl(280 60% 42%);
+  --yellow-deep:hsl(280 65% 36%);
+  --verm:hsl(280 60% 42%);
+  --on-accent:#F4F3EF;
+  --warn:hsl(8 70% 40%);
+  --green:hsl(145 60% 27%);
+  background:var(--bg);color:var(--ink);
+}
+.band-light ::selection{background:hsl(280 60% 42%);color:#F4F3EF}
+  .nav ul{display:flex;gap:clamp(14px,2.5vw,34px);list-style:none}
+  .nav ul a{
+    font-size:11.5px;font-weight:600;letter-spacing:.14em;text-transform:uppercase;
+    padding-bottom:3px;border-bottom:1px solid transparent;transition:border-color .2s;
+  }
+  .nav ul a:hover{border-color:var(--ink)}
+  .nav ul a[aria-current="page"]{border-color:var(--ink)}
+  @media(max-width:720px){
+  .nav{padding-inline:16px}
+  .nav.open{background:rgba(14,14,14,.98);border-color:var(--line)}
+  .nav .brand{font-size:14px}
+  .menu-btn{display:inline-flex}
+  .nav > nav{
+    position:absolute;top:100%;left:0;right:0;display:none;
+    background:rgba(14,14,14,.98);border-bottom:1px solid var(--line);
+  }
+  .nav.open > nav{display:block}
+  .nav ul{display:block;padding:4px 16px 14px}
+  .nav ul a{
+    display:block;font-size:13px;letter-spacing:.16em;
+    padding:15px 2px;border-bottom:0;border-top:1px solid var(--line);
+  }
+  .nav ul li:first-child a{border-top:0}
+  .nav ul a[aria-current="page"]{color:var(--accent)}
+}
+  footer.limpia{
+    border-top:1px solid var(--line);position:relative;z-index:1;margin-top:60px;
+    display:flex;flex-wrap:wrap;gap:14px 34px;align-items:center;justify-content:space-between;
+    padding:26px var(--pad);font-size:12px;color:var(--ink-soft);
+  }
+  footer.limpia a{text-decoration:none}
+  footer.limpia nav{display:flex;flex-wrap:wrap;gap:20px}
+  footer.limpia nav a{letter-spacing:.1em;text-transform:uppercase;font-size:11px;font-weight:600}
+  footer.limpia nav a:hover{color:var(--ink)}
 </style>
-<!-- GSAP 3.13 vendoreado · solo los plugins que usa esta página (sin ScrollSmoother:
-     guía de consulta con checklist/anclas/scrollspy; el scroll nativo es el correcto) -->
-<script defer src="assets/vendor/gsap/gsap.min.js"></script>
-<script defer src="assets/vendor/gsap/ScrollTrigger.min.js"></script>
-<script defer src="assets/vendor/gsap/SplitText.min.js"></script>
-<script defer src="assets/vendor/gsap/DrawSVGPlugin.min.js"></script>
 </head>
 <body>
 <div class="progress" id="prog"></div>
 
-<!-- La barra y el menú (con las secciones de esta página) los inyecta assets/menu.js -->
-<noscript>
-  <nav aria-label="Navegación principal">
-    <a href="index.html">Inicio</a> · <a href="trayecto.html">Trayectoria</a> · <a href="pef.html">Guía PEF</a>
+<header class="nav">
+  <a class="brand" href="index.html">LDG·UDEM<span class="b-arrow" aria-hidden="true"><svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="square" focusable="false"><path d="M2 2l8 8"/><path d="M10 4.6V10H4.6"/></svg></span></a>
+  <button class="menu-btn" type="button" aria-expanded="false" aria-controls="site-menu">Menú<span class="tick" aria-hidden="true"></span></button>
+  <nav id="site-menu" aria-label="Principal">
+    <ul>
+      <li><a href="showcase.html">Showcase</a></li>
+      <li><a href="trayecto.html">Trayecto</a></li>
+      <li><a href="avance.html">Mi Avance</a></li>
+      <li><a href="pef.html" aria-current="page">Guía PEF</a></li>
+    </ul>
   </nav>
-</noscript>
+</header>
 
-<!-- HERO -->
+<!-- HERO · cabecera tipográfica compacta -->
 <div class="hero">
   <div class="wrap">
-    <div class="ctrlbar" aria-hidden="true">
-      <span class="chips"><i class="chip ch-c"></i><i class="chip ch-m"></i><i class="chip ch-y"></i><i class="chip ch-k"></i></span>
-      <svg class="reg" viewBox="0 0 14 14" focusable="false"><circle cx="7" cy="7" r="4.4" fill="none" stroke="currentColor" stroke-width="1.2"/><path d="M7 .5v13M.5 7h13" fill="none" stroke="currentColor" stroke-width="1.2"/></svg>
-      <span class="leg">CMYK · Marcas de registro</span>
-    </div>
     <div class="eyebrow rv">UDEM · Escuela de Arte y Diseño · Centro Roberto Garza Sada</div>
-    <h1 class="title rv d1">Proyecto<br>de <span class="y">Evaluación</span><br>Final</h1>
+    <h1 class="title rv d1">Proyecto<br>de Evaluación<br>Final</h1>
     <div class="hero-meta">
       <p class="lede rv d2">Todo lo que tu equipo necesita para desarrollar, defender y entregar el PEF: el proceso, los entregables, la rúbrica y las fechas, en un solo lugar.</p>
       <div class="tag rv d3">Otoño&nbsp;2026<small>Licenciatura en Diseño Gráfico</small></div>
@@ -456,9 +429,8 @@
 
 <!-- 01 PROCESO -->
 <section id="proceso">
-  <span class="ghost">01</span>
   <div class="wrap">
-    <div class="sec-head rv"><span class="sec-no">01 / EL PROCESO</span><h2>Mapa del semestre</h2></div>
+    <div class="sec-head rv"><span class="sec-no">EL PROCESO</span><h2>Mapa del semestre</h2></div>
     <p class="sec-sub rv">Cinco etapas. Las fechas son del calendario Otoño 2026 (sujeto a cambios). El detalle vive en el Dossier, que <a href="mailto:ldg.crgs@udem.edu?subject=Solicitud%20Dossier%20PEF%20OT26">se solicita por correo a la coordinación</a>.</p>
     <div class="timeline rv d1">
       <div class="stage"><span class="node"></span><div class="n">ETAPA 01</div><h3>Arranque</h3><div class="date">Inicio · 03 ago</div><p>Define la primera sesión con tu asesor para revisar avances de PEF 1.</p></div>
@@ -472,50 +444,24 @@
 
 <!-- 02 ENTREGABLES -->
 <section id="entregables">
-  <span class="ghost">02</span>
   <div class="wrap">
-    <div class="sec-head rv"><span class="sec-no">02 / LA CARPETA</span><h2>Seis entregables</h2></div>
+    <div class="sec-head rv"><span class="sec-no">LA CARPETA</span><h2>Seis entregables</h2></div>
     <p class="sec-sub rv">Cada archivo sube en su subcarpeta numerada de Drive, con el formato indicado. La liga de la carpeta <a href="mailto:ldg.crgs@udem.edu?subject=Acceso%20carpeta%20Drive%20PEF%20OT26">se solicita a la coordinación</a>.</p>
-    <div class="deliv">
-      <article class="d frame-io">
-        <span class="frame" aria-hidden="true"><i class="f-t"></i><i class="f-r"></i><i class="f-b"></i><i class="f-l"></i></span>
-        <i class="corner c-tl" aria-hidden="true"></i><i class="corner c-br" aria-hidden="true"></i>
-        <div class="inner"><div class="num">01</div><h3>Documentos oficiales</h3><p>Portada, carta de cesión de derechos y declaración académica.</p><div class="spec">PDF</div></div>
-      </article>
-      <article class="d frame-io">
-        <span class="frame" aria-hidden="true"><i class="f-t"></i><i class="f-r"></i><i class="f-b"></i><i class="f-l"></i></span>
-        <i class="corner c-tl" aria-hidden="true"></i><i class="corner c-br" aria-hidden="true"></i>
-        <div class="inner"><div class="num">02</div><h3>Ficha técnica</h3><p>En español y en inglés. Resumen ejecutivo: problema, objetivo y solución (máx. 1050 caracteres).</p><div class="spec">PDF · ES + EN</div></div>
-      </article>
-      <article class="d frame-io">
-        <span class="frame" aria-hidden="true"><i class="f-t"></i><i class="f-r"></i><i class="f-b"></i><i class="f-l"></i></span>
-        <i class="corner c-tl" aria-hidden="true"></i><i class="corner c-br" aria-hidden="true"></i>
-        <div class="inner"><div class="num">03</div><h3>Memoria académica</h3><p>Documento editorial con el rigor de una tesis. Formato libre acordado con el asesor.</p><div class="spec">PDF · + ejemplar impreso</div></div>
-      </article>
-      <article class="d frame-io">
-        <span class="frame" aria-hidden="true"><i class="f-t"></i><i class="f-r"></i><i class="f-b"></i><i class="f-l"></i></span>
-        <i class="corner c-tl" aria-hidden="true"></i><i class="corner c-br" aria-hidden="true"></i>
-        <div class="inner"><div class="num">04</div><h3>Fotografías</h3><p>7–8 generales y de detalle, 1 de autor(es) y 1 libre. Horizontales y verticales.</p><div class="spec">mín. 10 · JPG/PNG · 3000px · 300dpi</div></div>
-      </article>
-      <article class="d frame-io">
-        <span class="frame" aria-hidden="true"><i class="f-t"></i><i class="f-r"></i><i class="f-b"></i><i class="f-l"></i></span>
-        <i class="corner c-tl" aria-hidden="true"></i><i class="corner c-br" aria-hidden="true"></i>
-        <div class="inner"><div class="num">05</div><h3>Videos</h3><p>1 comercial (30–45 s) + 1 libre (hasta 90 s con proceso). Audio libre o con licencia.</p><div class="spec">mín. 2 · MP4 · 1080p · H.264</div></div>
-      </article>
-      <article class="d frame-io">
-        <span class="frame" aria-hidden="true"><i class="f-t"></i><i class="f-r"></i><i class="f-b"></i><i class="f-l"></i></span>
-        <i class="corner c-tl" aria-hidden="true"></i><i class="corner c-br" aria-hidden="true"></i>
-        <div class="inner"><div class="num">06</div><h3>Pósters</h3><p>Uno académico (proceso) y uno comercial (difusión). Listos para impresión.</p><div class="spec">2 · PDF · 74×120 cm · 300dpi</div></div>
-      </article>
-    </div>
+    <ol class="deliv-list">
+      <li class="dl-row rv"><span class="dl-num">01</span><div><h3>Documentos oficiales</h3><p>Portada, carta de cesión de derechos y declaración académica.</p></div><span class="dl-spec">PDF</span></li>
+      <li class="dl-row rv"><span class="dl-num">02</span><div><h3>Ficha técnica</h3><p>En español y en inglés. Resumen ejecutivo: problema, objetivo y solución (máx. 1050 caracteres).</p></div><span class="dl-spec">PDF · ES + EN</span></li>
+      <li class="dl-row rv"><span class="dl-num">03</span><div><h3>Memoria académica</h3><p>Documento editorial con el rigor de una tesis. Formato libre acordado con el asesor.</p></div><span class="dl-spec">PDF · + ejemplar impreso</span></li>
+      <li class="dl-row rv"><span class="dl-num">04</span><div><h3>Fotografías</h3><p>7–8 generales y de detalle, 1 de autor(es) y 1 libre. Horizontales y verticales.</p></div><span class="dl-spec">mín. 10 · JPG/PNG · 3000px · 300dpi</span></li>
+      <li class="dl-row rv"><span class="dl-num">05</span><div><h3>Videos</h3><p>1 comercial (30–45 s) + 1 libre (hasta 90 s con proceso). Audio libre o con licencia.</p></div><span class="dl-spec">mín. 2 · MP4 · 1080p · H.264</span></li>
+      <li class="dl-row rv"><span class="dl-num">06</span><div><h3>Pósters</h3><p>Uno académico (proceso) y uno comercial (difusión). Listos para impresión.</p></div><span class="dl-spec">2 · PDF · 74×120 cm · 300dpi</span></li>
+    </ol>
   </div>
 </section>
 
 <!-- 03 RÚBRICA -->
-<section id="rubrica">
-  <span class="ghost">03</span>
+<section id="rubrica" class="band-light">
   <div class="wrap">
-    <div class="sec-head rv"><span class="sec-no">03 / EVALUACIÓN</span><h2>Rúbrica · 100 pts</h2></div>
+    <div class="sec-head rv"><span class="sec-no">EVALUACIÓN</span><h2>Rúbrica · 100 pts</h2></div>
     <p class="sec-sub rv">Siete criterios, cada uno con su guía de evaluación.</p>
     <div class="rubric rv d1">
       <div class="row" data-w="10"><div class="crit">Concepto y objetivos</div><div class="bar"><i></i></div><div class="pct">10%</div><div class="guide">Propósito claro y pertinente; objetivos medibles.</div></div>
@@ -544,10 +490,9 @@
 </section>
 
 <!-- 04 CALIFICACIÓN -->
-<section id="calificacion">
-  <span class="ghost">04</span>
+<section id="calificacion" class="band-light">
   <div class="wrap">
-    <div class="sec-head rv"><span class="sec-no">04 / NOTA FINAL</span><h2>Cómo suma 100%</h2></div>
+    <div class="sec-head rv"><span class="sec-no">NOTA FINAL</span><h2>Cómo suma 100%</h2></div>
     <div class="stack rv d1">
       <div class="lab">Calificación final del curso</div>
       <div class="meter">
@@ -582,9 +527,8 @@
 
 <!-- 05 MEMORIA -->
 <section id="memoria">
-  <span class="ghost">05</span>
   <div class="wrap">
-    <div class="sec-head rv"><span class="sec-no">05 / DOCUMENTO</span><h2>La memoria académica</h2></div>
+    <div class="sec-head rv"><span class="sec-no">DOCUMENTO</span><h2>La memoria académica</h2></div>
     <div class="duo">
       <ol class="memoria rv d1">
         <li>Portada oficial Universidad de Monterrey</li>
@@ -614,9 +558,8 @@
 
 <!-- 06 ROLES -->
 <section id="roles">
-  <span class="ghost">06</span>
   <div class="wrap">
-    <div class="sec-head rv"><span class="sec-no">06 / EQUIPO</span><h2>Quién hace qué</h2></div>
+    <div class="sec-head rv"><span class="sec-no">EQUIPO</span><h2>Quién hace qué</h2></div>
     <div class="cols rv d1">
       <div class="c"><h3>Asesor</h3><ul>
         <li>Delimita el tema y valida objetivos y enfoque.</li>
@@ -640,13 +583,11 @@
 </section>
 
 <!-- 07 TITULACIÓN -->
-<section id="fechas">
-  <span class="ghost">07</span>
+<section id="fechas" class="band-light">
   <div class="wrap">
-    <div class="sec-head rv"><span class="sec-no">07 / TITULACIÓN</span><h2>Fechas que no se mueven</h2></div>
+    <div class="sec-head rv"><span class="sec-no">TITULACIÓN</span><h2>Fechas que no se mueven</h2></div>
     <p class="sec-sub rv">Nivel profesional · todas las licenciaturas excepto MCP y MCD.</p>
     <div class="titul rv d1">
-      <span class="rev-stamp" aria-hidden="true"><svg class="ring" viewBox="0 0 100 100" preserveAspectRatio="none" focusable="false"><rect x="1" y="1" width="98" height="98" vector-effect="non-scaling-stroke"/></svg>Fechas inamovibles</span>
       <div class="t"><span>Solicitud en línea de inicio del trámite de titulación</span><b>24 ago – 23 oct</b></div>
       <div class="t"><span>Documentación para conclusión de estudios (CURP, fotos, pago)</span><b>24 ago – 23 oct</b></div>
       <div class="t"><span>Solicitud de exámenes a capacidad</span><b>03 ago – 09 oct</b></div>
@@ -655,7 +596,6 @@
       <div class="t"><span>Fecha límite para entregar resultados TOEFL</span><b>20 nov</b></div>
     </div>
     <div class="alert rv d2">
-      <span class="rev-stamp" aria-hidden="true"><svg class="ring" viewBox="0 0 100 100" preserveAspectRatio="none" focusable="false"><rect x="1" y="1" width="98" height="98" vector-effect="non-scaling-stroke"/></svg>Sin esto no hay título</span>
       <h3>Sin esto no hay titulación</h3>
       <p>Para ser prospecto a graduar (PG) haz la solicitud en el portal de graduación (acceso desde tu Portal UDEM). Verifica con tiempo que el <b>TOEFL</b> y la <b>carta de Servicio Social</b> estén liberados en el sistema: si quedan pendientes, no podrás titularte. Vuelve a confirmarlo antes de la disertación.</p>
     </div>
@@ -664,9 +604,8 @@
 
 <!-- 08 CHECKLIST -->
 <section id="checklist">
-  <span class="ghost">08</span>
   <div class="wrap">
-    <div class="sec-head rv"><span class="sec-no">08 / CHECKLIST</span><h2>Antes de entregar</h2></div>
+    <div class="sec-head rv"><span class="sec-no">CHECKLIST</span><h2>Antes de entregar</h2></div>
     <p class="sec-sub rv">Marca cada punto conforme lo completes. Tu progreso se guarda en este navegador.</p>
     <div class="check rv d1" id="checklist-box">
       <div class="check-progress">
@@ -704,9 +643,8 @@
 
 <!-- 09 PEF SOBRESALIENTE -->
 <section id="sobresaliente">
-  <span class="ghost">09</span>
   <div class="wrap">
-    <div class="sec-head rv"><span class="sec-no">09 / DISTINCIÓN</span><h2>PEF Sobresaliente</h2></div>
+    <div class="sec-head rv"><span class="sec-no">DISTINCIÓN</span><h2>PEF Sobresaliente</h2></div>
     <div class="prose rv d1">
       <p>Distinción académica que el programa de Licenciatura en Diseño Gráfico otorga a los Proyectos de Evaluación Final que destacan por su calidad conceptual, rigor de proceso, pertinencia del tema, desarrollo visual y nivel de resolución profesional.</p>
       <p>Reconoce proyectos que no solo cumplen los requisitos del PEF, sino que evidencian una <b>aportación significativa desde el diseño gráfico</b> y representan de manera destacada el nivel académico y profesional del programa.</p>
@@ -769,13 +707,31 @@
   <a class="back-btn" href="#">↑ Volver arriba</a>
 </div>
 
+<footer class="limpia">
+  <span>© <span id="yy">2026</span> Diseño Gráfico · UDEM</span>
+  <nav aria-label="Pie">
+    <a href="showcase.html">Showcase</a>
+    <a href="trayecto.html">Trayecto</a>
+    <a href="avance.html">Mi Avance</a>
+    <a href="pef.html">Guía PEF</a>
+  </nav>
+  <span>Monterrey, MX</span>
+</footer>
+
+<script>
+/* bloque limpia: año del pie + nav sólida al hacer scroll (mismo JS de propuesta-limpia.html) */
+(function(){
+  document.getElementById('yy').textContent = new Date().getFullYear();
+  var nav = document.querySelector('.nav');
+  var onScroll = function(){ nav.classList.toggle('scrolled', window.scrollY > 40); };
+  addEventListener('scroll', onScroll, {passive:true});
+  onScroll();
+})();
+</script>
 
 <script>
 (function(){
   var reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-
-  // La barra y el menú (con las secciones de esta página) son el componente
-  // compartido assets/menu.js. Aquí solo queda la barra de progreso de scroll.
 
   // scroll progress
   var prog=document.getElementById('prog');
@@ -786,200 +742,42 @@
   }
   document.addEventListener('scroll',onScroll,{passive:true}); onScroll();
 
-  // ---- motion · 3 capas (DESIGN.md · Motion contrato v2) ----
+  // ---- motion · 2 capas (misma convención que propuesta-limpia.html) ----
   // capa 1 · sin JS: html sin .js → CSS muestra todo (no hay nada que hacer aquí)
-  // capa 2 · JS sin GSAP (carga fallida): módulo IO original como fallback
-  // capa 3 · GSAP presente: ScrollTrigger + SplitText + DrawSVG (sin ScrollSmoother:
-  //          esta guía vive del scroll nativo: checklist, anclas, scrollspy)
+  // capa 2 · JS: módulo IO añade .in al entrar en viewport
+  var hasIO=('IntersectionObserver' in window);
+
+  function finalStateAll(){ /* estado final directo, cero animación */
+    document.querySelectorAll('.rv,.frame-io').forEach(function(el){ el.classList.add('in'); });
+  }
+
   function initIO(){
+    if(!hasIO){ finalStateAll(); return; } /* guard del sistema: sin IO, todo visible */
     var io=new IntersectionObserver(function(es){
       es.forEach(function(e){ if(e.isIntersecting){ e.target.classList.add('in'); io.unobserve(e.target);} });
     },{threshold:.12, rootMargin:'0px 0px -8% 0px'});
-    document.querySelectorAll('.rv,.frame-io,.rev-stamp').forEach(function(el){ if(reduce){el.classList.add('in');} else io.observe(el); });
+    document.querySelectorAll('.rv,.frame-io').forEach(function(el){ if(reduce){el.classList.add('in');} else io.observe(el); });
   }
+  if(document.readyState==='loading') document.addEventListener('DOMContentLoaded',initIO);
+  else initIO();
 
-  function finalStateAll(){ /* estado final directo, cero animación */
-    document.querySelectorAll('.rv,.frame-io,.rev-stamp').forEach(function(el){ el.classList.add('in'); });
-  }
-
-  function buildGsap(coarse, splits){
-    var handled=[];
-    function mark(el){ if(el) handled.push(el); }
-    function settle(el){ /* deja el DOM como lo dejaría el fallback: .in, sin estilos inline */
-      return function(){ el.classList.add('in'); gsap.set(el,{clearProps:'all'}); };
-    }
-
-    // -- hero · intro una sola vez: cruz de registro (DrawSVG) + H1 por palabras --
-    var title=document.querySelector('h1.title');
-    var eyebrow=document.querySelector('.hero .eyebrow');
-    var lede=document.querySelector('.hero .lede');
-    var tag=document.querySelector('.hero .tag');
-    var strip=document.querySelector('.hero .strip');
-    [title,eyebrow,lede,tag,strip].forEach(mark);
-
-    var intro=gsap.timeline();
-    intro.set('.ctrlbar .chips,.ctrlbar .reg',{autoAlpha:1},0)
-         .fromTo('.ctrlbar .reg circle',{drawSVG:'0%'},{drawSVG:'100%',duration:.55},.05)
-         .fromTo('.ctrlbar .reg path',{drawSVG:'0%'},{drawSVG:'100%',duration:.6},.2)
-         .from('.ctrlbar .chip',{autoAlpha:0,duration:.3,stagger:.07},.05)
-         .fromTo('.ctrlbar .leg',{autoAlpha:0},{autoAlpha:1,duration:.5},.3);
-    if(eyebrow) intro.fromTo(eyebrow,{autoAlpha:0,y:14},{autoAlpha:1,y:0,duration:.6,onComplete:settle(eyebrow)},.1);
-    if(title){
-      var sw=SplitText.create(title,{type:'words',mask:'words'});
-      splits.push(sw);
-      intro.set(title,{autoAlpha:1},.16)
-           .from(sw.words,{yPercent:112,duration:.85,stagger:.06,onComplete:function(){
-              try{ sw.revert(); }catch(e){}
-              title.classList.add('in'); gsap.set(title,{clearProps:'all'});
-            }},.16);
-    }
-    if(lede) intro.fromTo(lede,{autoAlpha:0,y:18},{autoAlpha:1,y:0,duration:.7,onComplete:settle(lede)},.62);
-    if(tag) intro.fromTo(tag,{autoAlpha:0,y:18},{autoAlpha:1,y:0,duration:.7,onComplete:settle(tag)},.72);
-    if(strip){
-      var its=strip.querySelectorAll('.it');
-      intro.set(strip,{autoAlpha:1},.7)
-           .from(its,{autoAlpha:0,y:16,duration:.55,stagger:.06,onComplete:function(){
-              strip.classList.add('in'); gsap.set(strip,{clearProps:'all'}); gsap.set(its,{clearProps:'all'});
-            }},.78);
-    }
-
-    // -- h2 de sección · SplitText por líneas con mask, una vez al entrar --
-    document.querySelectorAll('.sec-head').forEach(function(head){
-      mark(head);
-      var h2=head.querySelector('h2'), chip=head.querySelector('.sec-no'), sp=null;
-      try{ sp=SplitText.create(h2,{type:'lines',mask:'lines'}); splits.push(sp); }catch(e){ sp=null; }
-      gsap.set(head,{autoAlpha:1});
-      var tl=gsap.timeline({scrollTrigger:{trigger:head,start:'top 86%',once:true},
-        onComplete:function(){
-          if(sp){ try{ sp.revert(); }catch(e){} }
-          head.classList.add('in'); gsap.set(head,{clearProps:'all'});
-          if(chip) gsap.set(chip,{clearProps:'all'});
-        }});
-      if(chip) tl.fromTo(chip,{autoAlpha:0,x:-12},{autoAlpha:1,x:0,duration:.5},0);
-      if(sp&&sp.lines.length) tl.from(sp.lines,{yPercent:112,duration:.85,stagger:.1},.08);
-      else if(h2) tl.fromTo(h2,{autoAlpha:0,y:18},{autoAlpha:1,y:0,duration:.7},.08);
-    });
-
-    // -- mapa del semestre · etapas en cascada --
-    var tgrid=document.querySelector('.timeline');
-    if(tgrid){
-      mark(tgrid);
-      var stages=tgrid.querySelectorAll('.stage');
-      gsap.set(tgrid,{autoAlpha:1});
-      gsap.from(stages,{autoAlpha:0,y:22,duration:.7,stagger:.09,
-        scrollTrigger:{trigger:tgrid,start:'top 85%',once:true},
-        onComplete:function(){ tgrid.classList.add('in'); gsap.set(tgrid,{clearProps:'all'}); gsap.set(stages,{clearProps:'all'}); }});
-    }
-
-    // -- fichas .deliv · marco trazado como delineante (scrub en fine; one-shot en coarse) --
-    document.querySelectorAll('.deliv .d').forEach(function(card){
-      var ft=card.querySelector('.f-t'),fr=card.querySelector('.f-r'),
-          fb=card.querySelector('.f-b'),fl=card.querySelector('.f-l'),
-          corners=card.querySelectorAll('.corner'),inner=card.querySelector('.inner');
-      if(!(ft&&fr&&fb&&fl&&inner)){ card.classList.add('in'); return; }
-      var cfg=coarse
-        ? {defaults:{ease:'quint.out'},scrollTrigger:{trigger:card,start:'top 85%',once:true},
-           onComplete:function(){
-             card.classList.add('in');
-             gsap.set(card.querySelectorAll('.frame i,.corner,.inner'),{clearProps:'all'});
-           }}
-        : {defaults:{ease:'none'},scrollTrigger:{trigger:card,start:'top 88%',end:'top 45%',scrub:1}};
-      var tl=gsap.timeline(cfg);
-      tl.fromTo(ft,{scaleX:0},{scaleX:1,transformOrigin:'left center',duration:.24},0)
-        .fromTo(fr,{scaleY:0},{scaleY:1,transformOrigin:'center top',duration:.18},.22)
-        .fromTo(fb,{scaleX:0},{scaleX:1,transformOrigin:'right center',duration:.24},.38)
-        .fromTo(fl,{scaleY:0},{scaleY:1,transformOrigin:'center bottom',duration:.18},.6)
-        .fromTo(corners,{autoAlpha:0},{autoAlpha:1,duration:.16,stagger:.05},.72)
-        .fromTo(inner,{autoAlpha:0,y:14},{autoAlpha:1,y:0,duration:.34},.5);
-    });
-
-    // -- sellos · estampado + aro trazado con DrawSVG --
-    document.querySelectorAll('.rev-stamp').forEach(function(stamp){
-      var ringR=stamp.querySelector('.ring rect');
-      var tl=gsap.timeline({scrollTrigger:{trigger:stamp.parentElement||stamp,start:'top 80%',once:true},
-        onComplete:function(){ stamp.classList.add('in'); gsap.set(stamp,{clearProps:'all'}); }});
-      tl.fromTo(stamp,{autoAlpha:0,scale:1.15,rotation:-6},{autoAlpha:1,scale:1,rotation:-6,duration:.5},0);
-      if(ringR) tl.fromTo(ringR,{drawSVG:'0%'},{drawSVG:'100%',duration:.6},.18);
-    });
-
-    // -- numerales fantasma · deriva sutil con scrub (solo pointer fine) --
-    if(!coarse){
-      document.querySelectorAll('section .ghost').forEach(function(g){
-        gsap.fromTo(g,{y:60},{y:-60,ease:'none',
-          scrollTrigger:{trigger:g.parentElement,start:'top bottom',end:'bottom top',scrub:1.2}});
-      });
-    }
-
-    // -- resto de .rv · reveal genérico one-shot --
-    document.querySelectorAll('.rv').forEach(function(el){
-      if(handled.indexOf(el)!==-1) return;
-      gsap.fromTo(el,{autoAlpha:0,y:26},{autoAlpha:1,y:0,duration:.8,
-        scrollTrigger:{trigger:el,start:'top 88%',once:true},
-        onComplete:settle(el)});
-    });
-  }
-
-  function initGsapLayer(){
-    gsap.registerPlugin(ScrollTrigger, SplitText, DrawSVGPlugin);
-    gsap.defaults({ease:'quint.out',overwrite:'auto'});
-    var root=document.documentElement, mm=gsap.matchMedia(), matched=false;
-    mm.add({
-      reduce:'(prefers-reduced-motion: reduce)',
-      motion:'(prefers-reduced-motion: no-preference)',
-      coarse:'(pointer: coarse)'
-    }, function(ctx){
-      matched=true;
-      if(ctx.conditions.reduce){ /* reduced motion: cero animación GSAP */
-        root.classList.remove('gsap');
-        finalStateAll();
-        return;
-      }
-      root.classList.add('gsap');
-      var coarse=!!ctx.conditions.coarse, splits=[], dead=false;
-      /* SplitText solo tras document.fonts.ready (tope de 2 s por robustez) */
-      var fontsReady=(document.fonts&&document.fonts.ready)?document.fonts.ready:Promise.resolve();
-      Promise.race([fontsReady,new Promise(function(r){ setTimeout(r,2000); })]).then(function(){
-        if(dead) return;
-        ctx.add(function(){
-          /* si la capa rica truena en su arranque asíncrono, nunca dejamos contenido oculto */
-          try{ buildGsap(coarse, splits); }
-          catch(err){ root.classList.remove('gsap'); finalStateAll(); }
-        });
-      });
-      return function(){ /* cleanup al cambiar de media (los tweens los revierte el contexto) */
-        dead=true;
-        for(var i=0;i<splits.length;i++){ try{ splits[i].revert(); }catch(e){} }
-        splits.length=0;
-      };
-    });
-    if(!matched){ root.classList.remove('gsap'); finalStateAll(); }
-  }
-
-  function initMotion(){
-    if(window.gsap&&window.ScrollTrigger&&window.SplitText&&window.DrawSVGPlugin){
-      try{ initGsapLayer(); }
-      catch(err){ document.documentElement.classList.remove('gsap'); initIO(); }
-    }else{
-      initIO();
-    }
-  }
-  /* los vendors van con defer: deciden capa 2 vs 3 en DOMContentLoaded */
-  if(document.readyState==='loading') document.addEventListener('DOMContentLoaded',initMotion);
-  else initMotion();
-
-  // animate rubric bars when visible
+  // animate rubric bars when visible (sin IO: pintadas de inmediato)
   var rub=document.getElementById('rubrica');
-  var rio=new IntersectionObserver(function(es){
-    es.forEach(function(e){ if(e.isIntersecting){
-      document.querySelectorAll('#rubrica .row').forEach(function(r,i){
-        var w=r.getAttribute('data-w'), fill=r.querySelector('.bar i');
-        fill.style.width=(w*4)+'%'; /* final width up front; only transform animates */
-        setTimeout(function(){ fill.style.transform='scaleX(1)'; }, reduce?0:i*90);
-      });
-      rio.disconnect();
-    }});
-  },{threshold:.3});
-  if(rub) rio.observe(rub);
+  function paintBars(){
+    document.querySelectorAll('#rubrica .row').forEach(function(r,i){
+      var w=r.getAttribute('data-w'), fill=r.querySelector('.bar i');
+      fill.style.width=(w*4)+'%'; /* final width up front; only transform animates */
+      setTimeout(function(){ fill.style.transform='scaleX(1)'; }, (reduce||!hasIO)?0:i*90);
+    });
+  }
+  if(rub&&hasIO){
+    var rio=new IntersectionObserver(function(es){
+      es.forEach(function(e){ if(e.isIntersecting){ paintBars(); rio.disconnect(); }});
+    },{threshold:.3});
+    rio.observe(rub);
+  }else if(rub){
+    paintBars();
+  }
 
   // checklist · progress + persistence (localStorage)
   var ckBox=document.getElementById('checklist-box');
@@ -1062,6 +860,21 @@
     ].join('\r\n');
     pb.setAttribute('href','mailto:ldg.crgs@udem.edu?subject='+encodeURIComponent(subject)+'&body='+encodeURIComponent(body));
   }
+})();
+</script>
+<script>
+(function(){
+  var bar = document.querySelector('.nav');
+  var btn = document.querySelector('.menu-btn');
+  if(!bar || !btn) return;
+  var close = function(){ bar.classList.remove('open'); btn.setAttribute('aria-expanded','false'); };
+  btn.addEventListener('click', function(){
+    var open = bar.classList.toggle('open');
+    btn.setAttribute('aria-expanded', open ? 'true' : 'false');
+  });
+  document.addEventListener('click', function(e){ if(bar.classList.contains('open') && !bar.contains(e.target)) close(); });
+  document.addEventListener('keydown', function(e){ if(e.key === 'Escape') close(); });
+  addEventListener('resize', close);
 })();
 </script>
 </body>

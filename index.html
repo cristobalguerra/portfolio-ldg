@@ -1,111 +1,549 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>LDG · UDEM · Inicio</title>
-  <meta name="description" content="Licenciatura en Diseño Gráfico de la Universidad de Monterrey. Forma ideas, mensajes e identidades visuales con criterio.">
-  <meta name="theme-color" content="#000000">
-  <link rel="icon" href="assets/favicon.svg?v=4" type="image/svg+xml">
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Anton&family=Atkinson+Hyperlegible:ital,wght@0,400;0,700;1,400&family=JetBrains+Mono:wght@400;500&family=Spectral:ital,wght@1,300&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="assets/dark.css?v=20260620m">
-  <script>window.SITE_NAV = { current: 'inicio' };</script>
-  <script defer src="assets/bg-noise.js?v=20260620e"></script>
-  <script defer src="assets/dock-fun.js?v=20260620b"></script>
-  <script defer src="assets/vendor/gsap/gsap.min.js"></script>
-  <script defer src="assets/card-fan.js?v=20260620b"></script>
-  <script defer src="assets/equipo-carousel.js?v=20260620"></script>
-  <script defer src="assets/footer.js?v=20260620f"></script>
-  <script defer src="assets/scroll-expand.js?v=20260620b"></script>
-  <script defer src="https://player.vimeo.com/api/player.js"></script>
-  <script defer src="assets/hero-video.js?v=20260620"></script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#0E0E0E">
+<title>LDG · UDEM · Inicio</title>
+<link rel="icon" href="assets/favicon.svg?v=4" type="image/svg+xml">
+<link rel="icon" href="assets/favicon-32.png?v=4" sizes="32x32" type="image/png">
+<link rel="apple-touch-icon" href="assets/favicon-180.png?v=4">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo:ital,wdth,wght@0,62..125,100..900;1,62..125,100..900&display=swap" rel="stylesheet">
+<style>
+/* ============ PROPUESTA «LIMPIA» — prototipo scratch, no enlazado ============
+   Dirección: grotesca editorial mínima (ref. bttrprojects.com).
+   Una sola familia (Archivo variable), negro plano, aire, acento quirúrgico. */
+
+:root{
+  --bg:#0E0E0E;
+  --ink:#F2F2F0;
+  --ink-soft:#9C9C98;
+  --ink-dim:#7A7A76;
+  --line:rgba(255,255,255,.12);
+  --accent:hsl(280 85% 76%);
+  --max:1200px;
+  --pad:clamp(20px,4vw,56px);
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html{overflow-x:clip;scroll-behavior:smooth}
+@media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}}
+body{
+  background:var(--bg);color:var(--ink);
+  font-family:'Archivo',system-ui,sans-serif;
+  font-size:17px;line-height:1.55;
+  -webkit-font-smoothing:antialiased;
+}
+::selection{background:var(--accent);color:#0E0E0E}
+:focus-visible{outline:2px solid var(--accent);outline-offset:3px}
+img{max-width:100%;display:block}
+a{color:inherit;text-decoration:none}
+
+/* ---------- utilidades tipográficas ---------- */
+.display{
+  font-weight:800;font-stretch:118%;
+  text-transform:uppercase;letter-spacing:-.01em;line-height:.94;
+  text-wrap:balance;
+}
+.label{
+  font-size:11px;font-weight:600;letter-spacing:.18em;
+  text-transform:uppercase;color:var(--ink-soft);
+}
+.wrap{max-width:var(--max);margin:0 auto;padding-inline:var(--pad)}
+
+/* ---------- reveal ---------- */
+.rv{opacity:0;transform:translateY(26px);transition:opacity .7s ease,transform .7s ease}
+.rv.in{opacity:1;transform:none}
+@media (prefers-reduced-motion:reduce){.rv{opacity:1;transform:none;transition:none}}
+
+/* ---------- nav ---------- */
+.nav{
+  position:fixed;inset:0 0 auto 0;z-index:10;
+  display:flex;align-items:center;justify-content:space-between;
+  padding:22px var(--pad);
+  background:transparent;border-bottom:1px solid transparent;
+  transition:background .3s ease,border-color .3s ease,padding .3s ease;
+}
+.nav.scrolled{
+  background:rgba(14,14,14,.96);border-color:var(--line);padding-block:14px;
+}
+.nav .brand{font-weight:800;font-stretch:118%;font-size:17px;letter-spacing:.01em}
+.nav .brand{display:inline-flex;align-items:center;gap:.14em}
+/* flecha de marca: celda cuadrada de 1em (alto del logotipo), gira al hover */
+.nav .brand .b-arrow{width:1em;height:1em;display:grid;place-items:center;color:var(--accent);flex:none}
+.nav .brand .b-arrow svg{width:100%;height:100%;display:block;transition:transform .35s cubic-bezier(.2,.6,.2,1)}
+.nav .brand:hover .b-arrow svg,.nav .brand:focus-visible .b-arrow svg{transform:rotate(-90deg)}
+@media (prefers-reduced-motion:reduce){.nav .brand .b-arrow svg{transition:none}}
+/* botón de menú móvil (oculto en escritorio) */
+.menu-btn{
+  display:none;align-items:center;gap:9px;
+  background:none;border:1px solid var(--line);border-radius:99px;
+  color:var(--ink);font:inherit;font-size:10px;font-weight:700;
+  letter-spacing:.18em;text-transform:uppercase;padding:9px 14px;cursor:pointer;
+}
+.menu-btn .tick{
+  width:7px;height:7px;border-right:1.6px solid var(--accent);border-bottom:1.6px solid var(--accent);
+  transform:rotate(45deg) translateY(-1px);transition:transform .3s ease;
+}
+.nav.open .menu-btn .tick{transform:rotate(225deg) translateY(1px)}
+@media (prefers-reduced-motion:reduce){.menu-btn .tick{transition:none}}
+/* ---------- banda clara: apartados documentales sobre papel ---------- */
+.band-light{
+  --bg:#F4F3EF;
+  --ink:#141414;
+  --ink-soft:#57564F;
+  --ink-dim:#75746E;
+  --line:rgba(0,0,0,.14);
+  --line-2:rgba(0,0,0,.3);
+  --paper:#F4F3EF;
+  --paper-2:#EAE8E1;
+  --accent:hsl(280 60% 42%);
+  --yellow:hsl(280 60% 42%);
+  --yellow-deep:hsl(280 65% 36%);
+  --verm:hsl(280 60% 42%);
+  --on-accent:#F4F3EF;
+  --warn:hsl(8 70% 40%);
+  --green:hsl(145 60% 27%);
+  background:var(--bg);color:var(--ink);
+}
+.band-light ::selection{background:hsl(280 60% 42%);color:#F4F3EF}
+.nav ul{display:flex;gap:clamp(14px,2.5vw,34px);list-style:none}
+.nav ul a{
+  font-size:11.5px;font-weight:600;letter-spacing:.14em;text-transform:uppercase;
+  padding-bottom:3px;border-bottom:1px solid transparent;transition:border-color .2s;
+}
+.nav ul a:hover{border-color:var(--ink)}
+@media(max-width:720px){
+  .nav{padding-inline:16px}
+  .nav.open{background:rgba(14,14,14,.98);border-color:var(--line)}
+  .nav .brand{font-size:14px}
+  .menu-btn{display:inline-flex}
+  .nav > nav{
+    position:absolute;top:100%;left:0;right:0;display:none;
+    background:rgba(14,14,14,.98);border-bottom:1px solid var(--line);
+  }
+  .nav.open > nav{display:block}
+  .nav ul{display:block;padding:4px 16px 14px}
+  .nav ul a{
+    display:block;font-size:13px;letter-spacing:.16em;
+    padding:15px 2px;border-bottom:0;border-top:1px solid var(--line);
+  }
+  .nav ul li:first-child a{border-top:0}
+  .nav ul a[aria-current="page"]{color:var(--accent)}
+}
+
+/* ---------- hero ---------- */
+.hero{
+  position:relative;min-height:100svh;
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  text-align:center;padding:0 var(--pad);isolation:isolate;overflow:clip;
+}
+.hero-fx{position:absolute;inset:0;z-index:-1}
+.hero-fx::before{
+  content:"";position:absolute;inset:-20%;
+  background:
+    radial-gradient(42% 55% at 72% 24%,hsl(268 70% 30% / .55),transparent 70%),
+    radial-gradient(50% 60% at 22% 78%,hsl(258 60% 22% / .5),transparent 70%),
+    radial-gradient(38% 44% at 84% 82%,hsl(288 55% 26% / .35),transparent 70%),
+    #0E0E0E;
+}
+.hero-fx::after{
+  content:"";position:absolute;inset:0;opacity:.5;mix-blend-mode:soft-light;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='300'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+.hero .label{color:var(--ink);opacity:.75;margin-bottom:26px}
+.hero .inst{margin-bottom:0;margin-top:34px}
+.hero h1{font-size:clamp(44px,9.5vw,124px)}
+.gooey-defs{position:absolute;width:0;height:0}
+.hero h1 .rot{
+  position:relative;display:block;height:1.7em;
+  font-size:.75em; /* «experiencias» (12 letras) ≈ ancho de «Diseñamos» */
+  filter:url(#threshold);
+  padding:.35em 0;margin:-.35em 0; /* aire para que el blur no se recorte en el borde del filtro */
+}
+.hero h1 .rot .gt{
+  position:absolute;left:0;right:0;top:50%;transform:translateY(-50%);
+  user-select:none;white-space:nowrap;
+}
+.hero h1 .rot .gt1{opacity:0} /* sin JS solo se ve una palabra (gt2) */
+@media (prefers-reduced-motion:reduce){.hero h1 .rot{filter:none}}
+.hero .hint{
+  position:absolute;bottom:34px;left:50%;transform:translateX(-50%);
+  font-size:10.5px;letter-spacing:.3em;text-transform:uppercase;color:var(--ink-soft);
+}
+
+/* ---------- statement ---------- */
+.statement{padding:clamp(110px,16vh,180px) 0 clamp(70px,10vh,120px);text-align:center}
+.statement .pill{
+  display:inline-block;font-size:10.5px;font-weight:600;letter-spacing:.2em;
+  text-transform:uppercase;color:var(--ink);
+  border:1px solid var(--line);border-radius:99px;
+  padding:7px 16px;margin-bottom:30px;
+}
+.statement h2{font-size:clamp(30px,5.6vw,62px);max-width:19ch;margin-inline:auto}
+
+/* ---------- secciones ---------- */
+section{padding-block:clamp(60px,9vh,110px)}
+.sec-head{display:flex;align-items:center;gap:18px;margin-bottom:clamp(36px,6vh,64px)}
+.sec-head::after{content:"";flex:1;height:1px;background:var(--line)}
+
+/* ---------- grid de proyectos: retícula editorial modular ----------
+   12 columnas en escritorio (tarjeta = 4 cols, 3 por fila), 1 en móvil.
+   Proporción fija 4:5, gutters y márgenes amplios. */
+#proyectos{--pad:clamp(28px,7vw,110px)}
+.works{
+  display:grid;grid-template-columns:repeat(12,1fr);
+  gap:clamp(56px,9vh,96px) clamp(24px,3vw,48px);
+  align-items:start;
+}
+.work{grid-column:span 12}
+.work .ph{overflow:hidden;background:#161616}
+.work img{
+  width:100%;aspect-ratio:4/5;object-fit:cover;
+  transition:transform .6s cubic-bezier(.2,.6,.2,1);
+}
+.work:hover img{transform:scale(1.03)}
+.work figcaption{
+  display:flex;gap:14px;align-items:baseline;
+  padding-top:14px;border-top:1px solid var(--line);margin-top:14px;
+}
+.work h3{
+  font-size:15.5px;font-weight:650;letter-spacing:.01em;line-height:1.3;
+  border-bottom:1px solid transparent;display:inline;transition:border-color .2s;
+}
+.work:hover h3{border-color:var(--ink)}
+.work .who{display:block;font-size:13px;color:var(--ink-soft);margin-top:5px}
+@media(min-width:761px){
+  .work{grid-column:span 4}
+}
+.more{display:flex;justify-content:center;margin-top:clamp(56px,9vh,90px)}
+.more a,.cta a.mail{
+  font-size:12px;font-weight:700;letter-spacing:.2em;text-transform:uppercase;
+  border-bottom:1px solid var(--ink);padding-bottom:5px;transition:color .2s,border-color .2s;
+}
+.more a:hover,.cta a.mail:hover{color:var(--accent);border-color:var(--accent)}
+
+/* ---------- el programa ---------- */
+.about p{
+  font-size:clamp(24px,3.4vw,40px);line-height:1.28;font-weight:420;
+  color:var(--ink-soft);max-width:26ch;letter-spacing:-.01em;
+}
+.about p em{font-style:italic;font-weight:640;color:var(--ink)}
+
+/* ---------- rutas (3 páginas) ---------- */
+.rutas{border-block:1px solid var(--line);padding-block:clamp(56px,8vh,90px)}
+.rutas .cols{
+  display:grid;grid-template-columns:repeat(2,1fr);gap:clamp(24px,4vw,56px);
+  text-align:center;position:relative;
+}
+.ruta h3{font-size:clamp(21px,2.6vw,30px);margin-bottom:26px}
+.ruta .dot{position:relative;height:9px;margin-bottom:26px}
+.ruta .dot::before{
+  content:"";position:absolute;left:-50%;right:-50%;top:4px;height:1px;background:var(--line);
+}
+.ruta:first-child .dot::before{left:50%}
+.ruta:last-child .dot::before{right:50%}
+.ruta .dot::after{
+  content:"";position:absolute;left:50%;top:0;width:9px;height:9px;
+  transform:translateX(-50%);border-radius:50%;background:var(--ink);
+}
+.ruta p{font-size:14px;color:var(--ink-soft);max-width:30ch;margin:0 auto 18px}
+.ruta a{
+  font-size:11px;font-weight:700;letter-spacing:.18em;text-transform:uppercase;
+  border-bottom:1px solid var(--line);padding-bottom:3px;
+}
+.ruta a:hover{border-color:var(--accent);color:var(--accent)}
+@media(max-width:720px){
+  .rutas .cols{grid-template-columns:1fr;gap:48px}
+  .ruta .dot::before{display:none}
+}
+
+/* ---------- equipo ---------- */
+.equipo .sub{font-size:15px;color:var(--ink-soft);max-width:52ch;margin-top:-26px;margin-bottom:44px}
+.strip{
+  display:flex;gap:16px;overflow-x:auto;scroll-snap-type:x mandatory;
+  padding-bottom:16px;scrollbar-width:thin;scrollbar-color:var(--ink-dim) transparent;
+}
+.strip figure{flex:0 0 168px;scroll-snap-align:start}
+.strip img{
+  aspect-ratio:3/4;object-fit:cover;filter:grayscale(1) contrast(1.04);
+  transition:filter .4s ease;
+}
+.strip figure:hover img{filter:grayscale(0)}
+.strip figcaption{font-size:12.5px;font-weight:600;margin-top:10px}
+.strip .role{display:block;font-weight:400;font-size:11px;color:var(--accent);letter-spacing:.08em;text-transform:uppercase;margin-top:2px}
+@media (prefers-reduced-motion:reduce){.strip img{transition:none}}
+
+/* ---------- cta ---------- */
+.cta{text-align:left;padding-block:clamp(100px,16vh,170px)}
+.cta h2{font-size:clamp(34px,6.5vw,76px);max-width:16ch;margin:0 0 30px}
+.cta h2 span{color:var(--accent)}
+.cta-status{
+  display:flex;align-items:center;gap:10px;
+  font-size:12px;font-weight:600;letter-spacing:.16em;text-transform:uppercase;
+  color:var(--ink-soft);margin-bottom:30px;
+}
+.cta-status .dot{width:8px;height:8px;border-radius:50%;background:var(--accent);flex:none}
+.cta .visit{margin-bottom:20px}
+.cta a.plain{color:var(--ink-soft);font-size:15px;transition:color .2s}
+.cta a.plain:hover{color:var(--ink)}
+
+/* ---------- footer ---------- */
+footer{
+  border-top:1px solid var(--line);
+  display:flex;flex-wrap:wrap;gap:14px 34px;align-items:center;justify-content:space-between;
+  padding:26px var(--pad);font-size:12px;color:var(--ink-soft);
+}
+footer nav{display:flex;flex-wrap:wrap;gap:20px}
+footer nav a{letter-spacing:.1em;text-transform:uppercase;font-size:11px;font-weight:600}
+footer nav a:hover{color:var(--ink)}
+</style>
 </head>
 <body>
 
-  <!-- HERO · scroll-expand (port fiel de ScrollExpandMedia · 21st.dev) -->
-  <header class="se" data-scroll-expand id="inicio">
-    <h1 class="sr-only">Diseño Gráfico × UDEM · Licenciatura en Diseño Gráfico de la Universidad de Monterrey</h1>
-    <div class="se-stage">
-      <div class="se-bg" style="background-image:url('assets/inicio-hero-bg.jpg')" aria-hidden="true"></div>
-      <div class="se-media">
-        <iframe id="heVideo" src="https://player.vimeo.com/video/1160882204?background=1&autoplay=1&loop=1&muted=1&dnt=1#t=2s"
-          title="Biodiseño Gráfico · gráfica regenerativa (Sofía Porto)"
-          allow="autoplay; fullscreen; picture-in-picture"
-          referrerpolicy="strict-origin-when-cross-origin" tabindex="-1" aria-hidden="true"></iframe>
-        <span class="se-veil" aria-hidden="true"></span>
-      </div>
-      <div class="se-titles"><h2 class="se-t1">Diseño Gráfico</h2><h2 class="se-t2">× UDEM</h2></div>
-      <div class="se-meta" aria-hidden="true"><span class="se-hint">Desplázate para expandir</span></div>
+<header class="nav">
+  <a class="brand" href="index.html">LDG·UDEM<span class="b-arrow" aria-hidden="true"><svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="square" focusable="false"><path d="M2 2l8 8"/><path d="M10 4.6V10H4.6"/></svg></span></a>
+  <button class="menu-btn" type="button" aria-expanded="false" aria-controls="site-menu">Menú<span class="tick" aria-hidden="true"></span></button>
+  <nav id="site-menu" aria-label="Principal">
+    <ul>
+      <li><a href="showcase.html">Showcase</a></li>
+      <li><a href="trayecto.html">Trayecto</a></li>
+      <li><a href="avance.html">Mi Avance</a></li>
+      <li><a href="pef.html">Guía PEF</a></li>
+    </ul>
+  </nav>
+</header>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-fx" aria-hidden="true"></div>
+  <p class="label">Licenciatura en Diseño Gráfico</p>
+  <svg class="gooey-defs" aria-hidden="true" focusable="false">
+    <defs>
+      <filter id="threshold">
+        <feColorMatrix in="SourceGraphic" type="matrix"
+          values="1 0 0 0 0
+                  0 1 0 0 0
+                  0 0 1 0 0
+                  0 0 0 255 -140"/>
+      </filter>
+    </defs>
+  </svg>
+  <h1 class="display" aria-label="Diseñamos marcas, interfaces, experiencias, contenido, historias, sistemas, futuros y comunidades">
+    <span aria-hidden="true">Diseñamos</span>
+    <span class="rot" id="gooey" aria-hidden="true">
+      <span class="gt gt1">comunidades</span>
+      <span class="gt gt2">marcas</span>
+    </span>
+  </h1>
+  <p class="label inst">Universidad de Monterrey</p>
+  <p class="hint" aria-hidden="true">Desplázate</p>
+</section>
+
+<!-- STATEMENT -->
+<div class="statement wrap">
+  <p class="pill rv">Monterrey, MX · Otoño 2025</p>
+  <h2 class="display rv">Tesis y talento de Diseño Gráfico</h2>
+</div>
+
+<!-- PROYECTOS -->
+<section class="wrap" id="proyectos">
+  <div class="sec-head rv"><span class="label">Proyectos</span></div>
+  <div class="works">
+    <a class="work rv" href="showcase.html#p-16">
+      <figure><div class="ph"><img src="proyectos/thumbnails/biodiseo.jpg" alt="Biodiseño Gráfico — gráfica regenerativa co-creada con raíces vivas" loading="lazy"></div>
+      <figcaption><div><h3>Biodiseño Gráfico</h3><span class="who">Sofía Porto Iannuzzi · Packaging</span></div></figcaption></figure>
+    </a>
+    <a class="work rv" href="showcase.html#p-1">
+      <figure><div class="ph"><img src="proyectos/thumbnails/ellaz.jpg" alt="Deconstrucción de los estándares de la belleza femenina" loading="lazy"></div>
+      <figcaption><div><h3>Estándares de la Belleza Femenina</h3><span class="who">Emilia Bermúdez, Angelina Avalos, Sofía Peralta · Editorial</span></div></figcaption></figure>
+    </a>
+    <a class="work rv" href="showcase.html#p-8">
+      <figure><div class="ph"><img src="proyectos/thumbnails/alteria.jpg" alt="Alteria — interacción multisensorial y sinestesia" loading="lazy"></div>
+      <figcaption><div><h3>Alteria: Diseño Multisensorial</h3><span class="who">Mariángela Garza, Patricio Treviño, Marian Treviño · Motion</span></div></figcaption></figure>
+    </a>
+    <a class="work rv" href="showcase.html#p-4">
+      <figure><div class="ph"><img src="proyectos/thumbnails/tefaltabarrio_9.jpg" alt="Te Falta Barrio — estrategias de información para el Barrio Antiguo" loading="lazy"></div>
+      <figcaption><div><h3>Te Falta Barrio</h3><span class="who">Ana Lucía Maraboto, Frida de la Garza · UI·UX</span></div></figcaption></figure>
+    </a>
+    <a class="work rv" href="showcase.html#p-10">
+      <figure><div class="ph"><img src="proyectos/thumbnails/antera.jpg" alt="Antera — el lenguaje de las flores como comunicación" loading="lazy"></div>
+      <figcaption><div><h3>Antera: Floriografía Mexicana</h3><span class="who">Natalia Alcalá, Danna Chávez, Victoria Lizárraga, Sarai Marines · Editorial</span></div></figcaption></figure>
+    </a>
+    <a class="work rv" href="showcase.html#p-15">
+      <figure><div class="ph"><img src="proyectos/thumbnails/verdad-en-juego.jpg" alt="Verdad en Juego — cámaras de eco y desinformación" loading="lazy"></div>
+      <figcaption><div><h3>Verdad en Juego</h3><span class="who">Fernanda Díaz, Miranda Siller, Eugenio Nocedal, Karina Del Prado · Editorial</span></div></figcaption></figure>
+    </a>
+  </div>
+  <div class="more rv"><a href="showcase.html">Ver todo el showcase</a></div>
+</section>
+
+<!-- EL PROGRAMA -->
+<section class="about band-light">
+<div class="wrap">
+  <div class="sec-head rv"><span class="label">El programa</span></div>
+  <p class="rv">Cada tesis parte de una pregunta real y termina en un proyecto que alguien puede usar. <em>Aquí el diseño se investiga con rigor y se entrega con oficio.</em></p>
+</div>
+</section>
+
+<!-- RUTAS -->
+<section class="rutas band-light">
+  <div class="wrap cols">
+    <div class="ruta rv">
+      <h3 class="display">Showcase</h3>
+      <div class="dot" aria-hidden="true"></div>
+      <p>Las tesis del Programa de Evaluación Final: 17 proyectos con ficha, PDF y reconocimientos.</p>
+      <a href="showcase.html">Explorar</a>
     </div>
-  </header>
+    <div class="ruta rv">
+      <h3 class="display">Trayecto</h3>
+      <div class="dot" aria-hidden="true"></div>
+      <p>Seis caminos del egresado, contados por quienes ya los recorren: de freelance a dirección creativa.</p>
+      <a href="trayecto.html">Conocer</a>
+    </div>
+  </div>
+</section>
 
-  <main>
-    <!-- Vista previa de proyectos (card-fan) -->
-    <section class="section" id="proyectos">
-      <div class="wrap">
-        <div class="sec-head"><span class="sec-no">01</span><h2>Showcase</h2></div>
-        <p class="sec-sub">Una probada del portafolio · toca un proyecto para abrirlo</p>
+<!-- EQUIPO -->
+<section class="wrap equipo">
+  <div class="sec-head rv"><span class="label">Equipo Alto Desempeño 2026</span></div>
+  <p class="sub rv">Trece integrantes seleccionados por su trabajo, con Natalia Ceballos como mentora.</p>
+  <div class="strip rv" tabindex="0" aria-label="Integrantes del equipo">
+    <figure><img src="assets/equipo/natalia_ad.jpg" alt="Natalia Ceballos" loading="lazy"><figcaption>Natalia Ceballos<span class="role">Mentora</span></figcaption></figure>
+    <figure><img src="assets/equipo/melisa.jpg" alt="Melisa Vargas" loading="lazy"><figcaption>Melisa Vargas</figcaption></figure>
+    <figure><img src="assets/equipo/ale.jpg" alt="Ale Gamez" loading="lazy"><figcaption>Ale Gamez</figcaption></figure>
+    <figure><img src="assets/equipo/anava.jpg" alt="Anava Pérez" loading="lazy"><figcaption>Anava Pérez</figcaption></figure>
+    <figure><img src="assets/equipo/ana.jpg" alt="Ana Salas" loading="lazy"><figcaption>Ana Salas</figcaption></figure>
+    <figure><img src="assets/equipo/sofia.jpg" alt="Sofía Jiménez" loading="lazy"><figcaption>Sofía Jiménez</figcaption></figure>
+    <figure><img src="assets/equipo/any.jpg" alt="Any Herrera" loading="lazy"><figcaption>Any Herrera</figcaption></figure>
+    <figure><img src="assets/equipo/isela.jpg" alt="Isela Wu" loading="lazy"><figcaption>Isela Wu</figcaption></figure>
+    <figure><img src="assets/equipo/luciana.jpg" alt="Luciana Mireles" loading="lazy"><figcaption>Luciana Mireles</figcaption></figure>
+    <figure><img src="assets/equipo/isa.jpg" alt="Isa Galindo" loading="lazy"><figcaption>Isa Galindo</figcaption></figure>
+    <figure><img src="assets/equipo/anna.jpg" alt="Anna Ferrer" loading="lazy"><figcaption>Anna Ferrer</figcaption></figure>
+    <figure><img src="assets/equipo/cati.jpg" alt="Cati Romero" loading="lazy"><figcaption>Cati Romero</figcaption></figure>
+    <figure><img src="assets/equipo/natalia.jpg" alt="Natalia Nuñez" loading="lazy"><figcaption>Natalia Nuñez</figcaption></figure>
+  </div>
+</section>
 
-        <div class="proy-fan-wrap">
-          <div class="proy-fan" data-card-fan aria-label="Vista previa de proyectos">
-            <a class="fan-card" href="showcase.html#p-1"><img src="proyectos/thumbnails/ellaz.jpg" alt="Deconstrucción de la Percepción · Emilia Bermúdez, Angelina Avalos, Sofía Peralta" loading="lazy"></a>
-            <a class="fan-card" href="showcase.html#p-8"><img src="proyectos/thumbnails/alteria.jpg" alt="Alteria · Mariángela Garza, Patricio Treviño, Marian Treviño" loading="lazy"></a>
-            <a class="fan-card" href="showcase.html#p-11"><img src="proyectos/thumbnails/nodus.jpg" alt="Nodus · Valeria Gómez, Jaqueline Casas, Sabrina Villaseñor" loading="lazy"></a>
-            <a class="fan-card" href="showcase.html#p-4"><img src="proyectos/thumbnails/tefaltabarrio_9.jpg" alt="Te Falta Barrio · Ana Lucía Maraboto, Frida de la Garza" loading="lazy"></a>
-            <a class="fan-card" href="showcase.html#p-16"><img src="proyectos/thumbnails/biodiseo.jpg" alt="Biodiseño Gráfico · Sofía Porto Iannuzzi" loading="lazy"></a>
-            <a class="fan-card" href="showcase.html#p-10"><img src="proyectos/thumbnails/antera.jpg" alt="Antera · Natalia Alcalá, Danna Chávez, Victoria Lizárraga, Sarai Marines" loading="lazy"></a>
-            <a class="fan-card" href="showcase.html#p-15"><img src="proyectos/thumbnails/verdad-en-juego.jpg" alt="Verdad en Juego · Fernanda Díaz, Miranda Siller, Eugenio Nocedal, Karina Del Prado" loading="lazy"></a>
-            <a class="fan-card" href="showcase.html#p-17"><img src="proyectos/thumbnails/habits.jpg" alt="Colección by Habits · Ana Cecilia Moreno, Ana Paula Guerra, Mariana Zambrano" loading="lazy"></a>
-            <a class="fan-card" href="showcase.html#p-13"><img src="proyectos/thumbnails/turnout.jpg" alt="Turnout · Alejandra Urteaga, Maadai Salazar" loading="lazy"></a>
-          </div>
-          <div class="fan-nav" hidden>
-            <button class="fan-arrow" data-fan-prev type="button" aria-label="Anterior"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg></button>
-            <div class="fan-dots"></div>
-            <button class="fan-arrow" data-fan-next type="button" aria-label="Siguiente"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg></button>
-          </div>
-        </div>
-      </div>
-    </section>
+<!-- CTA -->
+<section class="cta wrap">
+  <h2 class="display rv">¿Listo para diseñar el futuro<span>?</span></h2>
+  <p class="cta-status rv"><span class="dot" aria-hidden="true"></span>Inscripciones abiertas</p>
+  <p class="visit rv"><a class="mail" href="mailto:ldg.crgs@udem.edu?subject=Quiero%20agendar%20una%20visita">Agenda una visita</a></p>
+  <p class="rv"><a class="plain" href="mailto:ldg.crgs@udem.edu">ldg.crgs@udem.edu</a></p>
+</section>
 
-    <!-- Equipo Alto Desempeño 2026 -->
-    <section class="section" id="equipo">
-      <div class="wrap">
-        <div class="sec-head"><span class="sec-no">02</span><h2>Equipo Alto Desempeño 2026</h2></div>
-        <p class="sec-sub">Generación de alto desempeño · mentora: Natalia Ceballos</p>
+<footer>
+  <span>© <span id="yy">2026</span> Diseño Gráfico · UDEM</span>
+  <nav aria-label="Pie">
+    <a href="showcase.html">Showcase</a>
+    <a href="trayecto.html">Trayecto</a>
+    <a href="avance.html">Mi Avance</a>
+    <a href="pef.html">Guía PEF</a>
+  </nav>
+  <span>Monterrey, MX</span>
+</footer>
 
-        <!-- iconos -->
-        <svg width="0" height="0" style="position:absolute" aria-hidden="true">
-          <symbol id="ic-search" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></symbol>
-          <symbol id="ic-users" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></symbol>
-          <symbol id="ic-tag" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12.586 2.586A2 2 0 0 0 11.172 2H4a2 2 0 0 0-2 2v7.172a2 2 0 0 0 .586 1.414l8.704 8.704a2.426 2.426 0 0 0 3.42 0l6.58-6.58a2.426 2.426 0 0 0 0-3.42z"/><circle cx="7.5" cy="7.5" r=".5" fill="currentColor"/></symbol>
-          <symbol id="ic-x" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6 6 18M6 6l12 12"/></symbol>
-        </svg>
+<script>
+(function(){
+  document.getElementById('yy').textContent = new Date().getFullYear();
 
-        <div class="equipo-rail">
-          <button class="equipo-nav prev" type="button" aria-label="Anterior"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg></button>
-          <div class="equipo-track" data-equipo-track>
-            <figure class="equipo-card is-mentor"><img src="assets/equipo/natalia_ad.jpg" alt="Natalia Ceballos · Mentora" loading="lazy"></figure>
-            <figure class="equipo-card"><img src="assets/equipo/melisa.jpg" alt="Melisa Vargas" loading="lazy"></figure>
-            <figure class="equipo-card"><img src="assets/equipo/ale.jpg" alt="Ale Gamez" loading="lazy"></figure>
-            <figure class="equipo-card"><img src="assets/equipo/anava.jpg" alt="Anava Pérez" loading="lazy"></figure>
-            <figure class="equipo-card"><img src="assets/equipo/ana.jpg" alt="Ana Salas" loading="lazy"></figure>
-            <figure class="equipo-card"><img src="assets/equipo/sofia.jpg" alt="Sofía Jiménez" loading="lazy"></figure>
-            <figure class="equipo-card"><img src="assets/equipo/any.jpg" alt="Any Herrera" loading="lazy"></figure>
-            <figure class="equipo-card"><img src="assets/equipo/isela.jpg" alt="Isela Wu" loading="lazy"></figure>
-            <figure class="equipo-card"><img src="assets/equipo/luciana.jpg" alt="Luciana Mireles" loading="lazy"></figure>
-            <figure class="equipo-card"><img src="assets/equipo/isa.jpg" alt="Isa Galindo" loading="lazy"></figure>
-            <figure class="equipo-card"><img src="assets/equipo/anna.jpg" alt="Anna Ferrer" loading="lazy"></figure>
-            <figure class="equipo-card"><img src="assets/equipo/cati.jpg" alt="Cati Romero" loading="lazy"></figure>
-            <figure class="equipo-card"><img src="assets/equipo/natalia.jpg" alt="Natalia Nuñez" loading="lazy"></figure>
-          </div>
-          <button class="equipo-nav next" type="button" aria-label="Siguiente"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg></button>
-        </div>
-      </div>
-    </section>
-  </main>
+  /* nav sólido al hacer scroll */
+  var nav = document.querySelector('.nav');
+  var onScroll = function(){ nav.classList.toggle('scrolled', window.scrollY > 40); };
+  addEventListener('scroll', onScroll, {passive:true});
+  onScroll();
 
-  <!-- FOOTER común · inyectado por assets/footer.js -->
+  var mReduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  /* palabra líquida del hero — port a vainilla de GooeyText (21st.dev):
+     dos capas de texto con blur cruzado bajo un filtro SVG de umbral de alfa */
+  var g1 = document.querySelector('#gooey .gt1');
+  var g2 = document.querySelector('#gooey .gt2');
+  if(g1 && g2){
+    var WORDS = ['marcas','interfaces','experiencias','contenido','historias','sistemas','futuros','comunidades'];
+    if(mReduce){
+      g1.style.opacity = '0';
+      g2.style.opacity = '1';
+      g2.textContent = WORDS[0];
+    }else{
+      var MORPH = 1, COOL = 1.2;
+      var idx = WORDS.length - 1, morph = 0, cooldown = COOL;
+      var last = performance.now();
+      var mqReduce = matchMedia('(prefers-reduced-motion: reduce)');
+      g1.textContent = WORDS[idx];
+      g2.textContent = WORDS[(idx + 1) % WORDS.length];
+      var setMorphFx = function(f){
+        g2.style.filter = 'blur(' + Math.min(8 / f - 8, 100) + 'px)';
+        g2.style.opacity = (Math.pow(f, .4) * 100) + '%';
+        f = 1 - f;
+        g1.style.filter = 'blur(' + Math.min(8 / f - 8, 100) + 'px)';
+        g1.style.opacity = (Math.pow(f, .4) * 100) + '%';
+      };
+      var animate = function(now){
+        if(mqReduce.matches){
+          /* el usuario activó "reducir movimiento" en vivo: detener y dejar estado estático */
+          g1.style.filter = ''; g1.style.opacity = '';
+          g2.style.filter = ''; g2.style.opacity = '';
+          g2.textContent = WORDS[0];
+          return;
+        }
+        requestAnimationFrame(animate);
+        var shouldInc = cooldown > 0;
+        cooldown -= (now - last) / 1000;
+        last = now;
+        if(cooldown <= 0){
+          if(shouldInc){
+            idx = (idx + 1) % WORDS.length;
+            g1.textContent = WORDS[idx];
+            g2.textContent = WORDS[(idx + 1) % WORDS.length];
+          }
+          morph -= cooldown;
+          cooldown = 0;
+          var f = morph / MORPH;
+          if(f > 1){ cooldown = COOL; f = 1; }
+          setMorphFx(f);
+        }else{
+          morph = 0;
+          g2.style.filter = '';
+          g2.style.opacity = '100%';
+          g1.style.filter = '';
+          g1.style.opacity = '0%';
+        }
+      };
+      requestAnimationFrame(animate);
+    }
+  }
+
+  /* reveal al hacer scroll */
+  var rvs = document.querySelectorAll('.rv');
+  if(mReduce || !('IntersectionObserver' in window)){
+    rvs.forEach(function(el){ el.classList.add('in'); });
+    return;
+  }
+  var io = new IntersectionObserver(function(entries){
+    entries.forEach(function(e){
+      if(e.isIntersecting){ e.target.classList.add('in'); io.unobserve(e.target); }
+    });
+  }, {threshold:.12, rootMargin:'0px 0px -8% 0px'});
+  rvs.forEach(function(el){ io.observe(el); });
+})();
+</script>
+<script>
+(function(){
+  var bar = document.querySelector('.nav');
+  var btn = document.querySelector('.menu-btn');
+  if(!bar || !btn) return;
+  var close = function(){ bar.classList.remove('open'); btn.setAttribute('aria-expanded','false'); };
+  btn.addEventListener('click', function(){
+    var open = bar.classList.toggle('open');
+    btn.setAttribute('aria-expanded', open ? 'true' : 'false');
+  });
+  document.addEventListener('click', function(e){ if(bar.classList.contains('open') && !bar.contains(e.target)) close(); });
+  document.addEventListener('keydown', function(e){ if(e.key === 'Escape') close(); });
+  addEventListener('resize', close);
+})();
+</script>
 </body>
 </html>
