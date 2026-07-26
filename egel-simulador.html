@@ -172,7 +172,7 @@
         </div>
       </div>
 
-      <p class="sim-ethics rv">Simulacro de práctica con reactivos del curso interno; no son reactivos oficiales de CENEVAL. Algunas claves están en proceso de validación docente. Niveles de desempeño estimados con los cortes de referencia del testimonio CENEVAL: Aún no satisfactorio (menos de 53%), Satisfactorio (53 a 74%) y Sobresaliente (75% o más).</p>
+      <p class="sim-ethics rv">Simulacro de práctica con reactivos del curso interno; no son reactivos oficiales de CENEVAL. Niveles de desempeño estimados con los cortes de referencia del testimonio CENEVAL: Aún no satisfactorio (menos de 53%), Satisfactorio (53 a 74%) y Sobresaliente (75% o más).</p>
       <p class="sr-only" id="sim-live" aria-live="polite"></p>
     </div>
   </section>
@@ -549,7 +549,7 @@ function feedbackHTML(it, answered){
   return '<div class="fb ' + (ok ? 'ok' : 'ko') + '" id="fb-box" role="status">' +
     '<span class="v">' + (ok ? 'Correcto' : 'Incorrecto · la respuesta es ' + letra(it.correcta)) + '</span>' +
     '<p>' + esc(it.porque) + '</p>' +
-    '<p class="src">Fuente: ' + esc(it.fuente) + (it.validar ? ' · clave en validación docente' : '') + '</p>' +
+    '<p class="src">Fuente: ' + esc(it.fuente) + '</p>' +
     '</div>';
 }
 function onAnswer(i){
@@ -704,7 +704,7 @@ function renderReview(res){
         letra(j) + ') ' + esc(op) + '</li>';
     });
     h += '</ul><p class="pq"><b>Porqué:</b> ' + esc(it.porque) + '</p>' +
-      '<p class="src">Fuente: ' + esc(it.fuente) + (it.validar ? ' · clave en validación docente' : '') + '</p>' +
+      '<p class="src">Fuente: ' + esc(it.fuente) + '</p>' +
       '</article>';
   });
   rev.innerHTML = h;
@@ -742,7 +742,7 @@ function fillActa(res, alumno){
   });
   h += '</table>' +
     '<p class="a-note">Simulacro de práctica con reactivos del curso interno; no son reactivos oficiales de CENEVAL. ' +
-    'Algunas claves están en proceso de validación docente. Niveles estimados con los cortes de referencia del testimonio: ' +
+    'Niveles estimados con los cortes de referencia del testimonio: ' +
     'Aún no satisfactorio (menos de 53%), Satisfactorio (53 a 74%), Sobresaliente (75% o más). ' +
     'Generado en portfolioldg.com el ' + hoy.toLocaleString('es-MX') + '.</p>';
   acta.innerHTML = h;
