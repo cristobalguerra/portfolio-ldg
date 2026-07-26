@@ -1,0 +1,390 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>LDG · UDEM · EGEL · Material de estudio</title>
+<meta name="description" content="Guía autodirigida, biblioteca de resúmenes y glosarios para preparar el EGEL Plus de Diseño Gráfico UDEM.">
+<link rel="icon" href="assets/favicon.svg?v=4" type="image/svg+xml">
+<link rel="icon" href="assets/favicon-32.png?v=4" sizes="32x32" type="image/png">
+<link rel="apple-touch-icon" href="assets/favicon-180.png?v=4">
+<meta name="theme-color" content="#0E0E0E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo:ital,wdth,wght@0,62..125,100..900;1,62..125,100..900&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/egel.css?v=20260726c">
+<script>document.documentElement.classList.add('js','egel-locked');</script>
+</head>
+<body>
+
+<header class="nav">
+  <a class="brand" href="index.html">LDG·UDEM<span class="b-arrow" aria-hidden="true"><svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="square" focusable="false"><path d="M2 2l8 8"/><path d="M10 4.6V10H4.6"/></svg></span></a>
+  <button class="menu-btn" type="button" aria-expanded="false" aria-controls="site-menu">Menú<span class="tick" aria-hidden="true"></span></button>
+  <nav id="site-menu" aria-label="Principal">
+    <ul>
+      <li><a href="showcase.html">Showcase</a></li>
+      <li><a href="trayecto.html">Trayecto</a></li>
+      <li><a href="egel.html" aria-current="page">EGEL</a></li>
+      <li><a href="avance.html">Mi Avance</a></li>
+      <li><a href="pef.html">Guía PEF</a></li>
+    </ul>
+  </nav>
+</header>
+
+<noscript>
+  <p style="padding:120px 20px 20px;max-width:640px;margin:0 auto">Esta herramienta necesita JavaScript. Actívalo para acceder al espacio EGEL.</p>
+</noscript>
+
+<main>
+
+<!-- CABECERA COMPACTA -->
+<div class="hero">
+  <div class="wrap">
+    <a class="rv" href="egel.html" style="display:inline-block;font-family:var(--mono);font-size:12px;font-weight:600;letter-spacing:.14em;text-transform:uppercase;color:var(--ink-soft);text-decoration:none;margin-bottom:22px">‹ Volver a EGEL</a>
+    <p class="eyebrow rv">Espacio EGEL</p>
+    <h1 class="title rv d1">Material de estudio</h1>
+    <div class="hero-meta rv d1">
+      <p class="lede">La guía autodirigida, la biblioteca de resúmenes y los glosarios de las tres áreas disciplinares, reunidos en una sola carpeta.</p>
+    </div>
+  </div>
+</div>
+
+<!-- PESTAÑAS -->
+<section style="padding-top:8px;padding-bottom:64px">
+  <div class="wrap">
+    <div class="mat-tabs rv" id="mat-tablist" role="tablist" aria-label="Material de estudio" style="scroll-margin-top:90px">
+      <button class="mat-tab" type="button" role="tab" id="tab-guia" aria-selected="true" aria-controls="panel-guia">Guía</button>
+      <button class="mat-tab" type="button" role="tab" id="tab-biblioteca" aria-selected="false" aria-controls="panel-biblioteca" tabindex="-1">Biblioteca</button>
+      <button class="mat-tab" type="button" role="tab" id="tab-glosario" aria-selected="false" aria-controls="panel-glosario" tabindex="-1">Glosario</button>
+    </div>
+
+    <!-- PANEL · GUÍA -->
+    <div class="mat-panel" role="tabpanel" id="panel-guia" aria-labelledby="tab-guia" tabindex="0">
+      <div class="sec-head rv"><span class="sec-no">01 Guía</span><h2>Plan autodirigido</h2></div>
+      <p class="sec-sub rv">Cómo prepararte en las semanas previas: el decálogo del curso, tres estrategias para resolver reactivos y la mecánica del acompañamiento.</p>
+
+      <span class="subh rv">El decálogo</span>
+      <ol class="deca rv d1" id="decalogo"></ol>
+
+      <span class="subh rv" id="estrategias-titulo">Estrategias para resolver reactivos</span>
+      <div class="rv d1" id="estrategias-intro" style="max-width:66ch;margin-bottom:18px"></div>
+      <div class="estrat rv d1" id="estrategias"></div>
+
+      <span class="subh rv">Cómo funciona el curso</span>
+      <ol class="steps rv d1" id="comofunciona"></ol>
+      <p class="credit rv" id="creditos"></p>
+    </div>
+
+    <!-- PANEL · BIBLIOTECA -->
+    <div class="mat-panel" role="tabpanel" id="panel-biblioteca" aria-labelledby="tab-biblioteca" tabindex="0" hidden>
+      <div class="sec-head rv"><span class="sec-no">02 Biblioteca</span><h2>Biblioteca de estudio</h2></div>
+      <p class="sec-sub rv">Resúmenes de la bibliografía recomendada por CENEVAL, organizados por las tres áreas disciplinares. Abre cada libro para leer su síntesis completa.</p>
+      <div class="search-row rv d1">
+        <label class="field" for="bib-q"><span>Buscar libro o autor</span>
+          <input type="search" id="bib-q" autocomplete="off" placeholder="Ej. Acaso, branding, tipografía">
+        </label>
+        <span class="count" id="bib-count" aria-live="polite"></span>
+      </div>
+      <p class="mat-loading" id="bib-loading" role="status" aria-live="polite" hidden>Cargando la biblioteca…</p>
+      <div id="bib-root" class="rv d1"></div>
+    </div>
+
+    <!-- PANEL · GLOSARIO -->
+    <div class="mat-panel" role="tabpanel" id="panel-glosario" aria-labelledby="tab-glosario" tabindex="0" hidden>
+      <div class="sec-head rv"><span class="sec-no">03 Glosario</span><h2>Glosarios</h2></div>
+      <p class="sec-sub rv">Términos clave de las tres áreas disciplinares con su definición y una interpretación en lenguaje llano. Filtra en vivo mientras escribes.</p>
+      <div class="seg-row rv d1" id="glos-tabs" role="group" aria-label="Área del glosario"></div>
+      <div class="search-row rv d1">
+        <label class="field" for="glos-q"><span>Buscar término</span>
+          <input type="search" id="glos-q" autocomplete="off" placeholder="Ej. semiótica, merma, CMYK">
+        </label>
+        <span class="count" id="glos-count" aria-live="polite"></span>
+      </div>
+      <p class="mat-loading" id="glos-loading" role="status" aria-live="polite" hidden>Cargando el glosario…</p>
+      <ul class="glos-list rv d1" id="glos-list"></ul>
+    </div>
+  </div>
+</section>
+
+</main>
+
+<footer>
+  <span>© <span id="yy">2026</span> Diseño Gráfico · UDEM</span>
+  <nav aria-label="Pie">
+    <a href="showcase.html">Showcase</a>
+    <a href="trayecto.html">Trayecto</a>
+    <a href="egel.html">EGEL</a>
+    <a href="avance.html">Mi Avance</a>
+    <a href="pef.html">Guía PEF</a>
+  </nav>
+  <span>Monterrey, MX</span>
+</footer>
+
+<!-- scripts al final del body -->
+<script src="assets/egel-common.js?v=20260726b"></script>
+<script src="assets/egel-core.js?v=20260726b"></script>
+<script>
+(function(){
+  'use strict';
+  var EG = window.EG, $ = EG.$, esc = EG.esc, norm = EG.norm;
+  var CORE = window.EGEL_CORE || {};
+
+  /* nombre de área (para encabezados de biblioteca) */
+  var AREA_NAME = {};
+  (CORE.areas || []).forEach(function(a){ AREA_NAME[a.n] = a.nombre; });
+
+  /* ---------- carga perezosa de scripts de datos ---------- */
+  var _loaded = {};
+  function loadScript(src){
+    if(_loaded[src]) return _loaded[src];
+    _loaded[src] = new Promise(function(resolve, reject){
+      var s = document.createElement('script');
+      s.src = src;
+      s.onload = function(){ resolve(); };
+      s.onerror = function(){ _loaded[src] = null; reject(new Error('No se pudo cargar ' + src)); };
+      document.head.appendChild(s);
+    });
+    return _loaded[src];
+  }
+
+  /* =====================================================
+     GUÍA · plan autodirigido (render inmediato)
+     ===================================================== */
+  function renderPlan(){
+    var ol = $('#decalogo');
+    (CORE.decalogo || []).forEach(function(d){
+      var li = document.createElement('li');
+      li.innerHTML = '<b>' + esc(d.titulo) + '</b><p>' + esc(d.texto) + '</p>';
+      ol.appendChild(li);
+    });
+
+    $('#estrategias-titulo').textContent = CORE.estrategias.titulo;
+    var intro = $('#estrategias-intro');
+    CORE.estrategias.intro.forEach(function(t){
+      var p = document.createElement('p');
+      p.style.cssText = 'font-size:.95rem;color:var(--ink-soft);margin-bottom:6px';
+      p.textContent = t;
+      intro.appendChild(p);
+    });
+    var estr = $('#estrategias');
+    CORE.estrategias.estrategias.forEach(function(e, i){
+      var det = document.createElement('details');
+      det.className = 'acc';
+      var pasos = e.pasos.map(function(p){ return '<li>' + esc(p) + '</li>'; }).join('');
+      det.innerHTML =
+        '<summary><span class="pm" aria-hidden="true"></span><span><b>' + (i + 1) + '. ' + esc(e.nombre) + '</b>' +
+        '<span class="who concepto">' + esc(e.concepto) + '</span></span></summary>' +
+        '<div class="panel"><ol style="margin-top:14px">' + pasos + '</ol>' +
+        '<div class="ej">' + e.ejemploHtml + '</div></div>';
+      estr.appendChild(det);
+    });
+
+    var como = $('#comofunciona');
+    (CORE.comoFunciona || []).forEach(function(t){
+      var li = document.createElement('li');
+      li.textContent = t;
+      como.appendChild(li);
+    });
+    $('#creditos').textContent = CORE.creditos;
+  }
+
+  /* =====================================================
+     BIBLIOTECA · render perezoso + buscador
+     ===================================================== */
+  function renderBiblioteca(){
+    var BIBLIOTECA = window.EGEL_BIBLIOTECA || {};
+    var root = $('#bib-root'), q = $('#bib-q'), count = $('#bib-count');
+    var entries = []; /* {det, heading, libro, autor, html, filled} */
+    var totalLibros = 0;
+
+    Object.keys(BIBLIOTECA).forEach(function(key){
+      var n = parseInt(key.slice(1), 10);
+      var books = BIBLIOTECA[key];
+      var h3 = document.createElement('h3');
+      h3.className = 'area-h';
+      h3.textContent = 'Área ' + n + ' · ' + (AREA_NAME[n] || '');
+      root.appendChild(h3);
+      var box = document.createElement('div');
+      root.appendChild(box);
+
+      books.forEach(function(b){
+        totalLibros++;
+        var det = document.createElement('details');
+        det.className = 'acc';
+        det.innerHTML =
+          '<summary><span class="pm" aria-hidden="true"></span><span><b>' + esc(b.libro) + '</b>' +
+          '<span class="who">' + esc(b.autor) + '</span></span></summary>' +
+          '<div class="panel"></div>';
+        var entry = {det: det, heading: h3, libro: b.libro, autor: b.autor, html: b.html, filled: false};
+        /* render perezoso: el resumen entra al DOM la primera vez que se abre */
+        det.addEventListener('toggle', function(){
+          if(det.open && !entry.filled){
+            det.querySelector('.panel').innerHTML = entry.html;
+            entry.filled = true;
+          }
+        });
+        box.appendChild(det);
+        entries.push(entry);
+      });
+    });
+
+    function applyFilter(){
+      var needle = norm(q.value.trim());
+      var shown = 0;
+      var visiblePerHeading = {};
+      entries.forEach(function(e){
+        var hit = !needle || norm(e.libro + ' ' + e.autor).indexOf(needle) !== -1;
+        e.det.hidden = !hit;
+        if(hit){
+          shown++;
+          visiblePerHeading[e.heading.textContent] = true;
+        }
+      });
+      entries.forEach(function(e){
+        e.heading.hidden = !visiblePerHeading[e.heading.textContent];
+      });
+      count.textContent = needle
+        ? shown + ' de ' + totalLibros + ' libros'
+        : totalLibros + ' libros';
+    }
+    q.addEventListener('input', applyFilter);
+    applyFilter();
+  }
+
+  /* =====================================================
+     GLOSARIOS · filtro en vivo, máx 60 resultados
+     ===================================================== */
+  function renderGlosarios(){
+    var GLOSARIO = window.EGEL_GLOSARIO || {};
+    var MAXG = 60;
+    var tabs = $('#glos-tabs'), q = $('#glos-q'), list = $('#glos-list'), count = $('#glos-count');
+    var keys = Object.keys(GLOSARIO);
+    var cur = keys[0];
+
+    keys.forEach(function(key){
+      var n = parseInt(key.slice(1), 10);
+      var b = document.createElement('button');
+      b.type = 'button';
+      b.className = 'seg';
+      b.textContent = 'Área ' + n;
+      b.setAttribute('aria-pressed', key === cur ? 'true' : 'false');
+      b.addEventListener('click', function(){
+        cur = key;
+        tabs.querySelectorAll('.seg').forEach(function(x){ x.setAttribute('aria-pressed', 'false'); });
+        b.setAttribute('aria-pressed', 'true');
+        paint();
+      });
+      tabs.appendChild(b);
+    });
+
+    function paint(){
+      var needle = norm(q.value.trim());
+      var terms = GLOSARIO[cur] || [];
+      var hits = [];
+      for(var i = 0; i < terms.length; i++){
+        var t = terms[i];
+        if(!needle || norm(t.t + ' ' + t.d + ' ' + t.e).indexOf(needle) !== -1) hits.push(t);
+      }
+      var shown = hits.slice(0, MAXG);
+      list.innerHTML = shown.map(function(t){
+        return '<li><span class="t">' + esc(t.t) + '</span>' +
+          '<p class="d">' + esc(t.d) + '</p>' +
+          '<p class="e"><b>En corto</b>' + esc(t.e) + '</p></li>';
+      }).join('');
+      var n = parseInt(cur.slice(1), 10);
+      count.textContent = hits.length + ' término' + (hits.length === 1 ? '' : 's') +
+        ' · Área ' + n + (hits.length > MAXG ? ' · se muestran ' + MAXG : '');
+    }
+    q.addEventListener('input', paint);
+    paint();
+  }
+
+  /* =====================================================
+     PESTAÑAS · wiring + carga perezosa de datos
+     ===================================================== */
+  var TABS = [
+    {name: 'guia',       btn: $('#tab-guia'),       panel: $('#panel-guia')},
+    {name: 'biblioteca', btn: $('#tab-biblioteca'), panel: $('#panel-biblioteca')},
+    {name: 'glosario',   btn: $('#tab-glosario'),   panel: $('#panel-glosario')}
+  ];
+  var bibLoaded = false, glosLoaded = false;
+
+  function ensureLazy(name){
+    if(name === 'biblioteca' && !bibLoaded){
+      bibLoaded = true;
+      var l = $('#bib-loading');
+      if(l){ l.hidden = false; }
+      loadScript('assets/egel-biblioteca.js?v=20260726b').then(function(){
+        if(l){ l.hidden = true; }
+        renderBiblioteca();
+      }).catch(function(){
+        bibLoaded = false;
+        if(l){ l.hidden = false; l.textContent = 'No se pudo cargar la biblioteca. Revisa tu conexión y vuelve a abrir la pestaña.'; }
+      });
+    }
+    if(name === 'glosario' && !glosLoaded){
+      glosLoaded = true;
+      var g = $('#glos-loading');
+      if(g){ g.hidden = false; }
+      loadScript('assets/egel-glosario.js?v=20260726b').then(function(){
+        if(g){ g.hidden = true; }
+        renderGlosarios();
+      }).catch(function(){
+        glosLoaded = false;
+        if(g){ g.hidden = false; g.textContent = 'No se pudo cargar el glosario. Revisa tu conexión y vuelve a abrir la pestaña.'; }
+      });
+    }
+  }
+
+  function activate(name, opts){
+    opts = opts || {};
+    var cur = null;
+    TABS.forEach(function(t){
+      var on = t.name === name;
+      t.btn.setAttribute('aria-selected', on ? 'true' : 'false');
+      t.btn.tabIndex = on ? 0 : -1;
+      t.panel.hidden = !on;
+      if(on) cur = t;
+    });
+    ensureLazy(name);
+    if(opts.updateHash){
+      try{ history.replaceState(null, '', name === 'guia' ? location.pathname + location.search : '#' + name); }catch(e){}
+    }
+    if(opts.focusPanel && cur){ cur.panel.focus(); }
+  }
+
+  TABS.forEach(function(t, i){
+    t.btn.addEventListener('click', function(){ activate(t.name, {focusPanel: true, updateHash: true}); });
+    t.btn.addEventListener('keydown', function(ev){
+      var idx = i;
+      if(ev.key === 'ArrowRight' || ev.key === 'ArrowDown'){ idx = (i + 1) % TABS.length; }
+      else if(ev.key === 'ArrowLeft' || ev.key === 'ArrowUp'){ idx = (i - 1 + TABS.length) % TABS.length; }
+      else if(ev.key === 'Home'){ idx = 0; }
+      else if(ev.key === 'End'){ idx = TABS.length - 1; }
+      else { return; }
+      ev.preventDefault();
+      var nt = TABS[idx];
+      activate(nt.name, {updateHash: true});
+      nt.btn.focus();
+    });
+  });
+
+  function tabFromHash(){
+    var h = (location.hash || '').replace('#', '').toLowerCase();
+    return (h === 'biblioteca' || h === 'glosario' || h === 'guia') ? h : null;
+  }
+
+  /* arranque */
+  renderPlan();
+  var initial = tabFromHash() || 'guia';
+  activate(initial, {});
+  if(initial !== 'guia'){
+    var tl = $('#mat-tablist');
+    if(tl && tl.scrollIntoView){ tl.scrollIntoView({block: 'start'}); }
+  }
+})();
+</script>
+<script src="assets/egel-gate.js?v=20260726b"></script>
+<script src="assets/egel-ui.js?v=20260726b"></script>
+</body>
+</html>

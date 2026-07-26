@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>LDG · UDEM · EGEL · Examen desde casa</title>
+<meta name="description" content="Checklist del Navegador Seguro de CENEVAL y del día del examen EGEL, con tu progreso guardado en este navegador.">
+<link rel="icon" href="assets/favicon.svg?v=4" type="image/svg+xml">
+<link rel="icon" href="assets/favicon-32.png?v=4" sizes="32x32" type="image/png">
+<link rel="apple-touch-icon" href="assets/favicon-180.png?v=4">
+<meta name="theme-color" content="#0E0E0E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo:ital,wdth,wght@0,62..125,100..900;1,62..125,100..900&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/egel.css?v=20260726c">
+<script>document.documentElement.classList.add('js','egel-locked');</script>
+</head>
+<body>
+
+<header class="nav">
+  <a class="brand" href="index.html">LDG·UDEM<span class="b-arrow" aria-hidden="true"><svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="square" focusable="false"><path d="M2 2l8 8"/><path d="M10 4.6V10H4.6"/></svg></span></a>
+  <button class="menu-btn" type="button" aria-expanded="false" aria-controls="site-menu">Menú<span class="tick" aria-hidden="true"></span></button>
+  <nav id="site-menu" aria-label="Principal">
+    <ul>
+      <li><a href="showcase.html">Showcase</a></li>
+      <li><a href="trayecto.html">Trayecto</a></li>
+      <li><a href="egel.html" aria-current="page">EGEL</a></li>
+      <li><a href="avance.html">Mi Avance</a></li>
+      <li><a href="pef.html">Guía PEF</a></li>
+    </ul>
+  </nav>
+</header>
+
+<noscript>
+  <p style="padding:120px 20px 20px;max-width:640px;margin:0 auto">Esta herramienta necesita JavaScript. Actívalo para acceder al espacio EGEL.</p>
+</noscript>
+
+<main>
+
+<!-- Cabecera compacta -->
+<div class="hero">
+  <div class="wrap">
+    <p class="rv" style="margin-bottom:6px"><a href="egel.html" style="font-family:var(--mono);font-size:.78rem;font-weight:600;letter-spacing:.14em;text-transform:uppercase;color:var(--ink-soft);text-decoration:none">‹ Volver a EGEL</a></p>
+    <div class="eyebrow rv">Espacio EGEL</div>
+    <h1 class="title rv d1">Examen desde casa</h1>
+    <div class="hero-meta">
+      <p class="lede rv d2">Checklist para presentar el EGEL desde casa: requisitos del Navegador Seguro de CENEVAL, la instalación previa y lo necesario para el día del examen.</p>
+    </div>
+  </div>
+</div>
+
+<!-- 06 EXAMEN DESDE CASA -->
+<section id="casa" class="band-light">
+  <div class="wrap">
+    <div class="sec-head rv"><span class="sec-no">06 En casa</span><h2>Examen desde casa</h2></div>
+    <p class="sec-sub rv">El EGEL se aplica desde casa con el Navegador Seguro de CENEVAL. Verifica cada punto con anticipación; tu progreso se guarda en este navegador.</p>
+    <div class="check rv d1" id="nsc-box">
+      <div class="check-progress">
+        <span class="pcount" id="nsc-count">0/0</span>
+        <span class="ptrack"><span class="pfill" id="nsc-fill"></span></span>
+        <span class="plabel">Completado</span>
+        <button class="ckreset" id="nsc-reset" type="button">Reiniciar</button>
+      </div>
+      <div id="nsc-groups"></div>
+    </div>
+    <p class="nsc-link rv">Descarga y verificación del navegador: <a href="https://navegadorseguro.ceneval.edu.mx" target="_blank" rel="noopener">navegadorseguro.ceneval.edu.mx</a></p>
+  </div>
+</section>
+
+</main>
+
+<footer>
+  <span>© <span id="yy">2026</span> Diseño Gráfico · UDEM</span>
+  <nav aria-label="Pie">
+    <a href="showcase.html">Showcase</a>
+    <a href="trayecto.html">Trayecto</a>
+    <a href="egel.html">EGEL</a>
+    <a href="avance.html">Mi Avance</a>
+    <a href="pef.html">Guía PEF</a>
+  </nav>
+  <span>Monterrey, MX</span>
+</footer>
+
+<!-- scripts al final del body -->
+<script src="assets/egel-common.js?v=20260726b"></script>
+<script src="assets/egel-core.js?v=20260726b"></script>
+<script>
+(function(){
+  'use strict';
+  var EG = window.EG,
+      $ = EG.$,
+      esc = EG.esc,
+      linkify = EG.linkify,
+      loadJSON = EG.loadJSON,
+      saveJSON = EG.saveJSON,
+      dropKey = EG.dropKey,
+      LS_NSC = EG.LS_NSC;
+  var CORE = window.EGEL_CORE;
+
+  /* =====================================================
+     06 · EXAMEN DESDE CASA (checklist NSC)
+     ===================================================== */
+  (function renderNSC(){
+    var groupsBox = $('#nsc-groups');
+    var saved = loadJSON(LS_NSC, {});
+    var inputs = [];
+    CORE.nsc.forEach(function(g, gi){
+      var div = document.createElement('div');
+      div.className = 'check-group';
+      var title = document.createElement('div');
+      title.className = 'check-gtitle';
+      title.textContent = g.grupo;
+      div.appendChild(title);
+      g.items.forEach(function(item, ii){
+        var id = 'nsc-' + gi + '-' + ii;
+        var label = document.createElement('label');
+        label.className = 'check-item';
+        var input = document.createElement('input');
+        input.type = 'checkbox';
+        input.setAttribute('data-ck', id);
+        var boxSpan = document.createElement('span');
+        boxSpan.className = 'check-box';
+        var txt = document.createElement('span');
+        txt.className = 'check-text';
+        var b = document.createElement('b');
+        b.appendChild(linkify(item));
+        txt.appendChild(b);
+        label.appendChild(input);
+        label.appendChild(boxSpan);
+        label.appendChild(txt);
+        div.appendChild(label);
+        inputs.push(input);
+      });
+      groupsBox.appendChild(div);
+    });
+
+    var countEl = $('#nsc-count'), fillEl = $('#nsc-fill');
+    function refresh(){
+      var done = 0;
+      inputs.forEach(function(i){ if(i.checked) done++; });
+      countEl.textContent = done + '/' + inputs.length;
+      fillEl.style.transform = 'scaleX(' + (inputs.length ? done / inputs.length : 0) + ')';
+    }
+    var warned = false;
+    function storageWarn(){
+      if(warned) return; warned = true;
+      var n = document.createElement('p');
+      n.className = 'check-warn';
+      n.textContent = 'El progreso no se guardará en este navegador.';
+      $('#nsc-box').insertAdjacentElement('afterend', n);
+    }
+    inputs.forEach(function(input){
+      var id = input.getAttribute('data-ck');
+      input.checked = !!saved[id];
+      input.addEventListener('change', function(){
+        saved[id] = input.checked;
+        if(!saveJSON(LS_NSC, saved)) storageWarn();
+        refresh();
+      });
+    });
+    $('#nsc-reset').addEventListener('click', function(){
+      if(!confirm('¿Reiniciar el checklist? Se borrará el progreso guardado.')) return;
+      saved = {};
+      dropKey(LS_NSC);
+      inputs.forEach(function(i){ i.checked = false; });
+      refresh();
+    });
+    refresh();
+  })();
+})();
+</script>
+<script src="assets/egel-gate.js?v=20260726b"></script>
+<script src="assets/egel-ui.js?v=20260726b"></script>
+</body>
+</html>

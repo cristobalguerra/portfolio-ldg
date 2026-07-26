@@ -1,0 +1,824 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>LDG · UDEM · EGEL · Simulador</title>
+<meta name="description" content="Simulador EGEL Plus de Diseño Gráfico UDEM: practica en el formato real del examen, con un examen completo cronometrado o una práctica corta por área.">
+<link rel="icon" href="assets/favicon.svg?v=4" type="image/svg+xml">
+<link rel="icon" href="assets/favicon-32.png?v=4" sizes="32x32" type="image/png">
+<link rel="apple-touch-icon" href="assets/favicon-180.png?v=4">
+<meta name="theme-color" content="#0E0E0E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo:ital,wdth,wght@0,62..125,100..900;1,62..125,100..900&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/egel.css?v=20260726c">
+<script>document.documentElement.classList.add('js','egel-locked');</script>
+<!-- Firebase (envio de resultados / acceso de coordinacion). Sin red, cae a correo. -->
+<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-database-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-auth-compat.js"></script>
+<script>
+  if (typeof firebase !== 'undefined') {
+    firebase.initializeApp({
+      apiKey: "AIzaSyBfWefsqHW90aqHP9Mz6s8w91eIar_x6j8",
+      authDomain: "portfolioldg-3ca20.firebaseapp.com",
+      databaseURL: "https://portfolioldg-3ca20-default-rtdb.firebaseio.com",
+      projectId: "portfolioldg-3ca20",
+      storageBucket: "portfolioldg-3ca20.firebasestorage.app",
+      messagingSenderId: "563272567632",
+      appId: "1:563272567632:web:85e36244c8f00d5cdf7a55"
+    });
+    window.db = firebase.database();
+  }
+</script>
+</head>
+<body>
+
+<header class="nav">
+  <a class="brand" href="index.html">LDG·UDEM<span class="b-arrow" aria-hidden="true"><svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="square" focusable="false"><path d="M2 2l8 8"/><path d="M10 4.6V10H4.6"/></svg></span></a>
+  <button class="menu-btn" type="button" aria-expanded="false" aria-controls="site-menu">Menú<span class="tick" aria-hidden="true"></span></button>
+  <nav id="site-menu" aria-label="Principal">
+    <ul>
+      <li><a href="showcase.html">Showcase</a></li>
+      <li><a href="trayecto.html">Trayecto</a></li>
+      <li><a href="egel.html" aria-current="page">EGEL</a></li>
+      <li><a href="avance.html">Mi Avance</a></li>
+      <li><a href="pef.html">Guía PEF</a></li>
+    </ul>
+  </nav>
+</header>
+
+<noscript>
+  <p style="padding:120px 20px 20px;max-width:640px;margin:0 auto">Esta herramienta necesita JavaScript. Actívalo para acceder al espacio EGEL.</p>
+</noscript>
+
+<style>
+  .hero-back{display:inline-flex;align-items:center;gap:.4em;font-family:var(--mono);font-size:.74rem;
+    font-weight:600;letter-spacing:.16em;text-transform:uppercase;color:var(--ink-soft);
+    text-decoration:none;margin-bottom:20px}
+  .hero-back:hover{color:var(--accent)}
+  #sim-registro .reg-acts{display:flex;gap:12px;flex-wrap:wrap;margin-top:6px}
+</style>
+
+<main>
+  <header class="hero">
+    <div class="wrap">
+      <a class="hero-back" href="egel.html">‹ Volver a EGEL</a>
+      <p class="eyebrow">Espacio EGEL</p>
+      <h1 class="title">Simulador</h1>
+      <div class="hero-meta">
+        <p class="lede">Practica en el formato real del examen: un examen completo cronometrado o una práctica corta por área con retroalimentación inmediata. Tu avance se guarda en este navegador.</p>
+      </div>
+    </div>
+  </header>
+
+  <section id="simulador">
+    <div class="wrap">
+      <div id="sim-root">
+        <!-- portada -->
+        <div id="sim-home">
+          <div class="resume-banner" id="resume-banner" hidden>
+            <p id="resume-text"></p>
+            <div class="acts">
+              <button class="btn solid mini" type="button" id="resume-yes">Reanudar</button>
+              <button class="btn mini" type="button" id="resume-no">Descartar</button>
+            </div>
+          </div>
+          <div class="sim-modes">
+            <button class="mode-card" type="button" id="mode-examen">
+              <span class="k">Modo A · Cronometrado</span>
+              <h3>Examen completo</h3>
+              <p>60 reactivos muestreados al azar del banco, proporcionales por área. 120 minutos con cronómetro, marcador para revisar y rejilla de navegación. Resultados por área al final.</p>
+            </button>
+            <button class="mode-card" type="button" id="mode-practica">
+              <span class="k">Modo B · Sin cronómetro</span>
+              <h3>Práctica por área</h3>
+              <p>Elige área y nivel: 15 reactivos con retroalimentación inmediata. Cada respuesta muestra la justificación para que estudies mientras practicas.</p>
+            </button>
+          </div>
+        </div>
+
+        <!-- registro previo al examen completo (Modo A) -->
+        <form class="send-box" id="sim-registro" hidden>
+          <h3>Antes de comenzar el examen</h3>
+          <p class="sim-note">El examen completo se registra a tu nombre para el reporte de coordinación. La práctica por área no requiere registro.</p>
+          <label class="field" for="reg-nombre"><span>Nombre completo</span>
+            <input type="text" id="reg-nombre" required maxlength="120" autocomplete="name"></label>
+          <label class="field" for="reg-mat"><span>Matrícula</span>
+            <input type="text" id="reg-mat" required minlength="5" maxlength="20" autocomplete="off" inputmode="numeric"></label>
+          <div class="reg-acts">
+            <button class="btn solid" type="submit" id="reg-start">Comenzar examen</button>
+            <button class="btn" type="button" id="reg-back">Volver</button>
+          </div>
+          <p class="status" id="reg-status" role="status"></p>
+        </form>
+
+        <!-- configuración de práctica -->
+        <div class="sim-shell sim-config" id="sim-config" hidden>
+          <div class="row">
+            <label class="field" for="cfg-area"><span>Área</span><select id="cfg-area"></select></label>
+            <label class="field" for="cfg-nivel"><span>Nivel</span><select id="cfg-nivel"></select></label>
+            <button class="btn solid" type="button" id="cfg-start">Comenzar práctica</button>
+            <button class="btn" type="button" id="cfg-back">Volver</button>
+          </div>
+          <p class="sim-note" id="cfg-note"></p>
+        </div>
+
+        <!-- examen / práctica en curso -->
+        <div class="sim-shell" id="sim-exam" hidden>
+          <div class="sim-bar">
+            <span class="pos" id="sim-pos"></span>
+            <span class="sim-timer" id="sim-timer" hidden>2:00:00</span>
+            <button class="mark-btn" type="button" id="mark-btn" aria-pressed="false" hidden>Marcar para revisar</button>
+          </div>
+          <div class="q-wrap" id="q-wrap"></div>
+          <div class="sim-foot">
+            <div class="grp">
+              <button class="btn" type="button" id="q-prev">Anterior</button>
+              <button class="btn" type="button" id="q-next">Siguiente</button>
+            </div>
+            <div class="grp">
+              <button class="btn solid" type="button" id="q-finish" hidden>Entregar examen</button>
+            </div>
+          </div>
+          <div class="qgrid" id="qgrid" role="group" aria-label="Ir a pregunta" hidden></div>
+          <p class="qgrid-key" id="qgrid-key" hidden>Relleno = respondida · punto = marcada para revisar</p>
+        </div>
+
+        <!-- resultados -->
+        <div class="sim-shell" id="sim-results" hidden>
+          <div class="res-head">
+            <span class="res-flag">Simulación · resultado no oficial</span>
+            <h3 class="sr-only" id="res-title" tabindex="-1">Resultados del simulacro</h3>
+          </div>
+          <div class="res-cells" id="res-cells"></div>
+          <ul class="res-areas" id="res-areas"></ul>
+          <div class="res-acts">
+            <button class="btn solid" type="button" id="res-send-btn">Enviar resultado a coordinación</button>
+            <button class="btn" type="button" id="res-print">Descargar acta</button>
+            <button class="btn" type="button" id="res-new">Nuevo simulacro</button>
+          </div>
+          <form class="send-box" id="send-box" hidden>
+            <h3>Enviar a coordinación</h3>
+            <label class="field" for="send-nombre"><span>Nombre completo</span>
+              <input type="text" id="send-nombre" required maxlength="120" autocomplete="name"></label>
+            <label class="field" for="send-mat"><span>Matrícula</span>
+              <input type="text" id="send-mat" required minlength="5" maxlength="20" autocomplete="off" inputmode="numeric"></label>
+            <button class="btn solid" type="submit" id="send-go">Enviar</button>
+            <p class="status" id="send-status" role="status"></p>
+          </form>
+          <div class="rev" id="rev"></div>
+        </div>
+      </div>
+
+      <p class="sim-ethics rv">Simulacro de práctica con reactivos del curso interno; no son reactivos oficiales de CENEVAL. Algunas claves están en proceso de validación docente. Niveles de desempeño estimados con los cortes de referencia del testimonio CENEVAL: Aún no satisfactorio (menos de 53%), Satisfactorio (53 a 74%) y Sobresaliente (75% o más).</p>
+      <p class="sr-only" id="sim-live" aria-live="polite"></p>
+    </div>
+  </section>
+</main>
+
+<div id="acta" class="print-only"></div>
+
+<footer>
+  <span>© <span id="yy">2026</span> Diseño Gráfico · UDEM</span>
+  <nav aria-label="Pie">
+    <a href="showcase.html">Showcase</a>
+    <a href="trayecto.html">Trayecto</a>
+    <a href="egel.html">EGEL</a>
+    <a href="avance.html">Mi Avance</a>
+    <a href="pef.html">Guía PEF</a>
+  </nav>
+  <span>Monterrey, MX</span>
+</footer>
+
+<!-- scripts al final del body -->
+<script src="assets/egel-common.js?v=20260726b"></script>
+<script src="assets/egel-core.js?v=20260726b"></script>
+<script src="assets/egel-banco.js?v=20260726b"></script>
+<script>
+/* ===== EGEL · SIMULADOR ===== */
+(function(){
+'use strict';
+
+/* utilidades puras y de storage compartidas (assets/egel-common.js) */
+var EG = window.EG;
+var $ = EG.$, esc = EG.esc, norm = EG.norm,
+    loadJSON = EG.loadJSON, saveJSON = EG.saveJSON, dropKey = EG.dropKey,
+    shuffle = EG.shuffle, permutation = EG.permutation, sampleExam = EG.sampleExam,
+    buildItem = EG.buildItem, computeResults = EG.computeResults, areaPct = EG.areaPct,
+    fmtClock = EG.fmtClock, nivelDesempeno = EG.nivelDesempeno, nivelClase = EG.nivelClase,
+    csvCell = EG.csvCell, buildCSV = EG.buildCSV, letra = EG.letra,
+    buildAttempt = EG.buildAttempt, resumenLineas = EG.resumenLineas, mailtoResumen = EG.mailtoResumen,
+    LS_SIM = EG.LS_SIM, LS_PEND = EG.LS_PEND;
+
+/* datos partidos: solo los que usa el simulador */
+var CORE = window.EGEL_CORE;
+var BANCO = window.EGEL_BANCO;
+
+/* indices derivados (igual que la pagina monolitica) */
+var BANK_BY_ID = {};
+BANCO.forEach(function(r){ BANK_BY_ID[r.id] = r; });
+var AREA_NAME = {};
+CORE.areas.forEach(function(a){ AREA_NAME[a.n] = a.nombre; });
+
+/* =====================================================
+   05 · SIMULADOR
+   ===================================================== */
+var EXAM_SEC = 120 * 60;
+var EXAM_BASE = {1: 18, 2: 18, 3: 18, 4: 6};
+var PRACTICE_N = 15;
+var NIVEL_LABEL = {clase: 'Reactivos de clase', basico: 'Básico', intermedio: 'Intermedio', avanzado: 'Avanzado', transversal: 'Transversal'};
+
+var S = null;      /* estado persistible */
+var ITEMS = [];    /* reactivos runtime (opciones barajadas) */
+var timerId = null;
+var announced = {};
+/* anclas de reloj absoluto de la sesión en curso: los navegadores estrangulan
+   los setInterval de pestañas ocultas, así que el conteo se deriva de Date.now()
+   y no del número de disparos del intervalo */
+var sessionStartMs = 0, elapsedBaseSec = 0;
+
+var elHome = $('#sim-home'), elConfig = $('#sim-config'), elExam = $('#sim-exam'), elResults = $('#sim-results');
+var elRegistro = $('#sim-registro');
+var elPos = $('#sim-pos'), elTimer = $('#sim-timer'), elMark = $('#mark-btn'), elQ = $('#q-wrap');
+var elPrev = $('#q-prev'), elNext = $('#q-next'), elFinish = $('#q-finish');
+var elGrid = $('#qgrid'), elGridKey = $('#qgrid-key'), elLive = $('#sim-live');
+
+function showView(v){
+  [elHome, elRegistro, elConfig, elExam, elResults].forEach(function(el){ el.hidden = (el !== v); });
+}
+function saveState(){
+  if(S) saveJSON(LS_SIM, S);
+}
+function clearState(){
+  S = null; ITEMS = [];
+  stopTimer();
+  dropKey(LS_SIM);
+}
+function stopTimer(){
+  if(timerId){ clearInterval(timerId); timerId = null; }
+}
+
+/* --- portada / reanudar --- */
+function refreshHome(){
+  var saved = loadJSON(LS_SIM, null);
+  var banner = $('#resume-banner'), txt = $('#resume-text');
+  if(saved && saved.v === 1 && saved.itemRefs && saved.itemRefs.length){
+    banner.hidden = false;
+    if(saved.done){
+      txt.textContent = 'Tienes los resultados de tu último simulacro (' + modoTexto(saved) + ').';
+      $('#resume-yes').textContent = 'Ver resultados';
+    }else{
+      var respondidas = saved.answers.filter(function(a){ return a !== null && a !== undefined; }).length;
+      txt.textContent = 'Tienes un simulacro sin terminar: ' + modoTexto(saved) + ', ' +
+        respondidas + ' de ' + saved.itemRefs.length + ' respondidas.';
+      $('#resume-yes').textContent = 'Reanudar';
+    }
+  }else{
+    banner.hidden = true;
+  }
+  showView(elHome);
+}
+function modoTexto(st){
+  if(st.mode === 'examen') return 'examen completo';
+  var a = st.cfg && st.cfg.area ? 'área ' + st.cfg.area : '';
+  var n = st.cfg && st.cfg.nivel && st.cfg.nivel !== 'todos' ? (NIVEL_LABEL[st.cfg.nivel] || st.cfg.nivel) : 'todos los niveles';
+  return 'práctica por área (' + a + ', ' + String(n).toLowerCase() + ')';
+}
+function rebuildItems(st){
+  var items = [];
+  for(var i = 0; i < st.itemRefs.length; i++){
+    var ref = st.itemRefs[i];
+    var r = BANK_BY_ID[ref.id];
+    if(!r) return null; /* banco cambió: la sesión guardada ya no es reproducible */
+    items.push(buildItem(r, ref.perm));
+  }
+  return items;
+}
+
+$('#resume-yes').addEventListener('click', function(){
+  var saved = loadJSON(LS_SIM, null);
+  if(!saved){ refreshHome(); return; }
+  var items = rebuildItems(saved);
+  if(!items){
+    dropKey(LS_SIM);
+    $('#resume-banner').hidden = true;
+    elLive.textContent = 'El banco de reactivos cambió y la sesión guardada ya no se puede reanudar.';
+    return;
+  }
+  S = saved; ITEMS = items;
+  announced = {};
+  if(S.done){ renderResults(); }
+  else{ startSession(true); }
+});
+$('#resume-no').addEventListener('click', function(){
+  clearState();
+  refreshHome();
+});
+
+/* --- arranque de modos --- */
+/* Modo A registra nombre y matricula ANTES de arrancar; el muestreo, el
+   barajado y la forma de S son identicos al original, solo se difieren hasta
+   que el registro es valido y se agrega S.alumno (persiste en LS_SIM). */
+$('#mode-examen').addEventListener('click', function(){
+  $('#sim-registro').reset();
+  var st = $('#reg-status'); st.textContent = ''; st.className = 'status';
+  if(S && S.alumno){ $('#reg-nombre').value = S.alumno.nombre || ''; $('#reg-mat').value = S.alumno.matricula || ''; }
+  showView(elRegistro);
+  $('#reg-nombre').focus();
+});
+$('#reg-back').addEventListener('click', refreshHome);
+$('#sim-registro').addEventListener('submit', function(ev){
+  ev.preventDefault();
+  var nombre = $('#reg-nombre').value.trim();
+  var mat = $('#reg-mat').value.trim();
+  var st = $('#reg-status');
+  if(!nombre || mat.length < 5){
+    st.className = 'status ko';
+    st.textContent = 'Escribe tu nombre y una matrícula de al menos 5 caracteres.';
+    return;
+  }
+  var picked = sampleExam(BANCO, EXAM_BASE);
+  ITEMS = picked.map(function(r){ return buildItem(r); });
+  S = {
+    v: 1, mode: 'examen', cfg: null,
+    alumno: {nombre: nombre, matricula: mat},
+    itemRefs: ITEMS.map(function(it){ return {id: it.id, perm: it.perm}; }),
+    answers: ITEMS.map(function(){ return null; }),
+    marked: ITEMS.map(function(){ return false; }),
+    cur: 0, remainingSec: EXAM_SEC, elapsedSec: 0,
+    startedISO: new Date().toISOString(), done: false
+  };
+  announced = {};
+  saveState();
+  startSession(false);
+});
+
+$('#mode-practica').addEventListener('click', function(){
+  buildConfig();
+  showView(elConfig);
+  $('#cfg-area').focus();
+});
+$('#cfg-back').addEventListener('click', refreshHome);
+
+function buildConfig(){
+  var selA = $('#cfg-area'), selN = $('#cfg-nivel');
+  selA.innerHTML = '';
+  CORE.areas.forEach(function(a){
+    var o = document.createElement('option');
+    o.value = a.n;
+    o.textContent = 'Área ' + a.n + ' · ' + a.nombre;
+    selA.appendChild(o);
+  });
+  function fillNiveles(){
+    var area = parseInt(selA.value, 10);
+    var counts = {};
+    BANCO.forEach(function(r){ if(r.area === area) counts[r.nivel] = (counts[r.nivel] || 0) + 1; });
+    selN.innerHTML = '';
+    var tot = 0, k;
+    for(k in counts) tot += counts[k];
+    var oAll = document.createElement('option');
+    oAll.value = 'todos';
+    oAll.textContent = 'Todos los niveles (' + tot + ')';
+    selN.appendChild(oAll);
+    ['basico', 'intermedio', 'avanzado', 'clase', 'transversal'].forEach(function(nv){
+      if(counts[nv]){
+        var o = document.createElement('option');
+        o.value = nv;
+        o.textContent = (NIVEL_LABEL[nv] || nv) + ' (' + counts[nv] + ')';
+        selN.appendChild(o);
+      }
+    });
+    note();
+  }
+  function note(){
+    var pool = poolPractica(parseInt(selA.value, 10), selN.value);
+    var n = Math.min(PRACTICE_N, pool.length);
+    $('#cfg-note').textContent = n < PRACTICE_N
+      ? 'Ese filtro tiene ' + pool.length + ' reactivos; la práctica usará todos los disponibles.'
+      : 'La práctica toma ' + PRACTICE_N + ' reactivos al azar, sin cronómetro y con retroalimentación inmediata.';
+  }
+  selA.onchange = fillNiveles;
+  selN.onchange = note;
+  fillNiveles();
+}
+function poolPractica(area, nivel){
+  return BANCO.filter(function(r){
+    return r.area === area && (nivel === 'todos' || r.nivel === nivel);
+  });
+}
+$('#cfg-start').addEventListener('click', function(){
+  var area = parseInt($('#cfg-area').value, 10);
+  var nivel = $('#cfg-nivel').value;
+  var pool = shuffle(poolPractica(area, nivel)).slice(0, PRACTICE_N);
+  if(!pool.length) return;
+  ITEMS = pool.map(function(r){ return buildItem(r); });
+  S = {
+    v: 1, mode: 'practica', cfg: {area: area, nivel: nivel},
+    itemRefs: ITEMS.map(function(it){ return {id: it.id, perm: it.perm}; }),
+    answers: ITEMS.map(function(){ return null; }),
+    marked: ITEMS.map(function(){ return false; }),
+    cur: 0, remainingSec: null, elapsedSec: 0,
+    startedISO: new Date().toISOString(), done: false
+  };
+  saveState();
+  startSession(false);
+});
+
+/* --- sesión en curso --- */
+function startSession(resumed){
+  var exam = S.mode === 'examen';
+  elTimer.hidden = !exam;
+  elMark.hidden = !exam;
+  elFinish.hidden = !exam;
+  elGrid.hidden = !exam;
+  elGridKey.hidden = !exam;
+  if(exam) buildGrid();
+  else elGrid.innerHTML = '';
+  showView(elExam);
+  renderQ(true);
+  /* ancla a reloj absoluto: al iniciar o reanudar, el plazo se recalcula desde
+     el remainingSec guardado (reanudar otro día no consume el tiempo ausente) */
+  sessionStartMs = Date.now();
+  elapsedBaseSec = S.elapsedSec || 0;
+  if(exam){
+    S.deadlineEpoch = Date.now() + S.remainingSec * 1000;
+    paintTimer();
+    stopTimer();
+    timerId = setInterval(tick, 1000);
+  }else{
+    stopTimer();
+    timerId = setInterval(function(){
+      if(!S || S.done) return;
+      var prev = S.elapsedSec;
+      S.elapsedSec = elapsedBaseSec + Math.round((Date.now() - sessionStartMs) / 1000);
+      if(S.elapsedSec !== prev && S.elapsedSec % 15 === 0) saveState();
+    }, 1000);
+  }
+  if(resumed) elLive.textContent = 'Simulacro reanudado en la pregunta ' + (S.cur + 1) + '.';
+}
+var MILESTONES = [
+  [60, 'Queda 1 hora.'], [30, 'Quedan 30 minutos.'], [10, 'Quedan 10 minutos.'],
+  [5, 'Quedan 5 minutos.'], [1, 'Queda 1 minuto.']
+];
+function tick(){
+  if(!S || S.done) return;
+  /* el tiempo restante se deriva del plazo absoluto: aunque la pestaña oculta
+     estrangule el intervalo, al volver el conteo refleja el tiempo real */
+  S.remainingSec = Math.round((S.deadlineEpoch - Date.now()) / 1000);
+  S.elapsedSec = elapsedBaseSec + Math.round((Date.now() - sessionStartMs) / 1000);
+  paintTimer();
+  if(S.remainingSec > 0){
+    var msg = null;
+    for(var i = 0; i < MILESTONES.length; i++){
+      if(S.remainingSec <= MILESTONES[i][0] * 60 && !announced[MILESTONES[i][0]]){
+        announced[MILESTONES[i][0]] = true;
+        msg = MILESTONES[i][1];
+      }
+    }
+    if(msg) elLive.textContent = msg;
+  }
+  if(S.remainingSec % 10 === 0) saveState();
+  if(S.remainingSec <= 0){
+    elLive.textContent = 'Tiempo agotado. El examen se entregó automáticamente.';
+    finishSession();
+  }
+}
+function paintTimer(){
+  elTimer.textContent = fmtClock(S.remainingSec);
+  elTimer.classList.toggle('low', S.remainingSec <= 600);
+}
+
+function renderQ(focusQ){
+  var it = ITEMS[S.cur];
+  var exam = S.mode === 'examen';
+  var n = S.cur + 1, total = ITEMS.length;
+  elPos.innerHTML = 'Pregunta <b>' + n + '</b> de ' + total +
+    ' · Área ' + it.area + '<span class="sr-only"> · ' + esc(AREA_NAME[it.area] || '') + '</span>';
+
+  var answered = S.answers[S.cur];
+  var locked = !exam && answered !== null && answered !== undefined;
+
+  var h = '<form><fieldset' + (locked ? ' aria-describedby="fb-box"' : '') + '>' +
+    '<legend tabindex="-1" id="q-legend"><span class="q-no">Pregunta ' + n + ' de ' + total + '</span>' +
+    '<span class="q-text">' + esc(it.pregunta) + '</span></legend>';
+  if(it.contexto){
+    h += '<p class="q-ctx">' + esc(it.contexto) + '</p>';
+  }
+  h += '<ul class="opts">';
+  it.opciones.forEach(function(op, i){
+    var cls = 'opt';
+    if(answered === i) cls += ' is-checked';
+    if(locked){
+      cls += ' locked';
+      if(i === it.correcta) cls += ' good';
+      else if(answered === i) cls += ' bad';
+    }
+    h += '<li><label class="' + cls + '">' +
+      '<input type="radio" name="q' + S.cur + '" value="' + i + '"' +
+      (answered === i ? ' checked' : '') + (locked ? ' disabled' : '') + '>' +
+      '<span class="lt" aria-hidden="true">' + letra(i) + '</span>' +
+      '<span class="tx">' + esc(op) + '</span></label></li>';
+  });
+  h += '</ul></fieldset></form>';
+  if(locked) h += feedbackHTML(it, answered);
+  elQ.innerHTML = h;
+
+  elQ.querySelectorAll('input[type="radio"]').forEach(function(r){
+    r.addEventListener('change', function(){ onAnswer(parseInt(r.value, 10)); });
+  });
+
+  elPrev.disabled = S.cur === 0;
+  if(exam){
+    elNext.textContent = 'Siguiente'; /* la práctica pudo dejar «Ver resultados» */
+    elNext.disabled = S.cur === total - 1;
+    elMark.setAttribute('aria-pressed', S.marked[S.cur] ? 'true' : 'false');
+    updateGrid();
+  }else{
+    elNext.textContent = (S.cur === total - 1) ? 'Ver resultados' : 'Siguiente';
+    elNext.disabled = !locked;
+  }
+  if(focusQ){
+    var lg = $('#q-legend');
+    if(lg) lg.focus();
+  }
+}
+function feedbackHTML(it, answered){
+  var ok = answered === it.correcta;
+  return '<div class="fb ' + (ok ? 'ok' : 'ko') + '" id="fb-box" role="status">' +
+    '<span class="v">' + (ok ? 'Correcto' : 'Incorrecto · la respuesta es ' + letra(it.correcta)) + '</span>' +
+    '<p>' + esc(it.porque) + '</p>' +
+    '<p class="src">Fuente: ' + esc(it.fuente) + (it.validar ? ' · clave en validación docente' : '') + '</p>' +
+    '</div>';
+}
+function onAnswer(i){
+  S.answers[S.cur] = i;
+  saveState();
+  if(S.mode === 'practica'){
+    renderQ(false); /* bloquea y muestra el porqué */
+    var fb = $('#fb-box');
+    if(fb) fb.scrollIntoView({block: 'nearest', behavior: 'auto'});
+  }else{
+    elQ.querySelectorAll('.opt').forEach(function(o){ o.classList.remove('is-checked'); });
+    var checked = elQ.querySelector('input:checked');
+    if(checked) checked.closest('.opt').classList.add('is-checked');
+    updateGrid();
+  }
+}
+
+elPrev.addEventListener('click', function(){ go(S.cur - 1); });
+elNext.addEventListener('click', function(){
+  if(S.mode === 'practica' && S.cur === ITEMS.length - 1){ finishSession(); return; }
+  go(S.cur + 1);
+});
+function go(i){
+  if(i < 0 || i >= ITEMS.length) return;
+  S.cur = i;
+  saveState();
+  renderQ(true);
+}
+elMark.addEventListener('click', function(){
+  S.marked[S.cur] = !S.marked[S.cur];
+  elMark.setAttribute('aria-pressed', S.marked[S.cur] ? 'true' : 'false');
+  saveState();
+  updateGrid();
+});
+elFinish.addEventListener('click', function(){
+  var faltan = S.answers.filter(function(a){ return a === null || a === undefined; }).length;
+  if(faltan > 0 && !confirm('Te faltan ' + faltan + ' preguntas por responder. ¿Entregar de todas formas?')) return;
+  finishSession();
+});
+
+function buildGrid(){
+  elGrid.innerHTML = '';
+  ITEMS.forEach(function(_, i){
+    var b = document.createElement('button');
+    b.type = 'button';
+    b.textContent = i + 1;
+    b.addEventListener('click', function(){ go(i); });
+    elGrid.appendChild(b);
+  });
+  updateGrid();
+}
+function updateGrid(){
+  var btns = elGrid.children;
+  for(var i = 0; i < btns.length; i++){
+    var b = btns[i];
+    var ans = S.answers[i] !== null && S.answers[i] !== undefined;
+    b.classList.toggle('ans', ans);
+    b.classList.toggle('mk', !!S.marked[i]);
+    b.classList.toggle('cur', i === S.cur);
+    b.setAttribute('aria-label', 'Pregunta ' + (i + 1) +
+      (ans ? ', respondida' : ', sin responder') +
+      (S.marked[i] ? ', marcada para revisar' : '') +
+      (i === S.cur ? ', actual' : ''));
+    b.setAttribute('aria-current', i === S.cur ? 'true' : 'false');
+  }
+}
+
+/* --- resultados --- */
+function duracionMin(){
+  return Math.round((S.elapsedSec || 0) / 60);
+}
+function modoAttempt(){
+  if(S.mode === 'examen') return 'examen-completo';
+  return ('practica-a' + S.cfg.area + '-' + S.cfg.nivel).slice(0, 40);
+}
+function finishSession(){
+  stopTimer();
+  S.done = true;
+  saveState();
+  renderResults();
+}
+function renderResults(){
+  var res = computeResults(ITEMS, S.answers);
+  showView(elResults);
+
+  $('#res-cells').innerHTML =
+    '<div class="cell"><span class="k">Correctas</span><span class="v">' + res.correctas + '<small> / ' + res.total + '</small></span></div>' +
+    '<div class="cell"><span class="k">Porcentaje</span><span class="v">' + res.pct + '<small>%</small></span></div>' +
+    '<div class="cell"><span class="k">Nivel estimado</span><span class="v" style="font-size:clamp(1rem,2vw,1.35rem);line-height:1.15">' + esc(res.nivelGlobal) + '</span></div>' +
+    '<div class="cell"><span class="k">Duración</span><span class="v">' + duracionMin() + '<small> min</small></span></div>';
+
+  var ul = $('#res-areas');
+  ul.innerHTML = '';
+  Object.keys(res.porArea).sort().forEach(function(k){
+    var p = res.porArea[k];
+    var n = parseInt(k.slice(1), 10);
+    var pc = p.de ? Math.round(p.ok / p.de * 100) : 0;
+    var li = document.createElement('li');
+    li.innerHTML = '<span class="nm">Área ' + n + ' · ' + esc(AREA_NAME[n] || '') + '</span>' +
+      '<span class="sc">' + p.ok + '/' + p.de + ' · ' + pc + '%</span>' +
+      '<span class="bar" aria-hidden="true"><i style="width:' + pc + '%"></i></span>' +
+      '<span class="lv ' + nivelClase(res.niveles[k]) + '">' + esc(res.niveles[k]) + '</span>';
+    ul.appendChild(li);
+  });
+
+  renderReview(res);
+  fillActa(res, S.alumno || null);
+
+  $('#send-box').hidden = true;
+  $('#send-status').textContent = '';
+  $('#send-status').className = 'status';
+  /* un envío previo deja el botón bloqueado como candado anti-duplicado;
+     un simulacro nuevo es otro intento y debe poder enviarse */
+  $('#send-go').disabled = false;
+  /* Modo A ya trae los datos del registro: el send-box se pre-llena y queda
+     de solo lectura; la practica (sin alumno) sigue con el formulario libre */
+  var _al = S.alumno || null, _nb = $('#send-nombre'), _mb = $('#send-mat');
+  if(_al){
+    _nb.value = _al.nombre || ''; _mb.value = _al.matricula || '';
+    _nb.readOnly = true; _mb.readOnly = true;
+  }else{
+    _nb.value = ''; _mb.value = '';
+    _nb.readOnly = false; _mb.readOnly = false;
+  }
+
+  var rt = $('#res-title');
+  rt.focus();
+  elLive.textContent = 'Simulacro terminado: ' + res.correctas + ' de ' + res.total + ' correctas, ' + res.pct + ' por ciento.';
+}
+function renderReview(res){
+  var rev = $('#rev');
+  var h = '<h3>Revisión reactivo por reactivo</h3>';
+  ITEMS.forEach(function(it, i){
+    var a = S.answers[i];
+    var status, cls;
+    if(a === null || a === undefined){ status = 'Sin responder'; cls = 'om'; }
+    else if(a === it.correcta){ status = 'Correcta'; cls = 'ok'; }
+    else{ status = 'Incorrecta'; cls = 'ko'; }
+    h += '<article class="rev-item"><div class="hd">' +
+      '<span class="n">' + (i + 1) + ' · Área ' + it.area + '</span>' +
+      '<span class="st ' + cls + '">' + status + '</span></div>' +
+      '<p class="qq">' + esc(it.pregunta) + '</p>' +
+      (it.contexto ? '<p class="cx">' + esc(it.contexto) + '</p>' : '') +
+      '<ul>';
+    it.opciones.forEach(function(op, j){
+      var liCls = '', mark = '';
+      if(j === it.correcta){ liCls = 'good'; mark = '✓'; }
+      if(a === j && j !== it.correcta){ liCls = 'bad'; mark = '✗'; }
+      else if(a === j && j === it.correcta){ mark = '✓'; }
+      h += '<li class="' + liCls + '"><span class="m" aria-hidden="true">' + mark + '</span>' +
+        '<span class="sr-only">' + (j === it.correcta ? 'Respuesta correcta. ' : '') + (a === j ? 'Tu respuesta. ' : '') + '</span>' +
+        letra(j) + ') ' + esc(op) + '</li>';
+    });
+    h += '</ul><p class="pq"><b>Porqué:</b> ' + esc(it.porque) + '</p>' +
+      '<p class="src">Fuente: ' + esc(it.fuente) + (it.validar ? ' · clave en validación docente' : '') + '</p>' +
+      '</article>';
+  });
+  rev.innerHTML = h;
+}
+
+$('#res-new').addEventListener('click', function(){
+  clearState();
+  refreshHome();
+});
+
+/* --- acta imprimible --- */
+function fillActa(res, alumno){
+  var acta = $('#acta');
+  var hoy = new Date();
+  var h = '<p class="a-kick">Licenciatura en Diseño Gráfico · UDEM · Curso EGEL</p>' +
+    '<h1>Acta de simulacro · EGEL Plus</h1>' +
+    '<p class="a-flag">Simulación de práctica · No es un resultado oficial de CENEVAL</p>' +
+    '<p class="a-meta">' +
+    'Alumno: ' + (alumno && alumno.nombre ? esc(alumno.nombre) : '________________________________') +
+    ' · Matrícula: ' + (alumno && alumno.matricula ? esc(alumno.matricula) : '____________') + '<br>' +
+    'Fecha: ' + hoy.toLocaleDateString('es-MX', {year: 'numeric', month: 'long', day: 'numeric'}) +
+    ' · Modo: ' + esc(modoTexto(S)) +
+    ' · Duración: ' + duracionMin() + ' min</p>' +
+    '<table><tr><th>Correctas</th><th>Porcentaje</th><th>Nivel estimado</th></tr>' +
+    '<tr><td class="a-big">' + res.correctas + ' / ' + res.total + '</td>' +
+    '<td class="a-big">' + res.pct + '%</td>' +
+    '<td class="a-big">' + esc(res.nivelGlobal) + '</td></tr></table>' +
+    '<table><tr><th>Área</th><th>Correctas</th><th>%</th><th>Nivel estimado</th></tr>';
+  Object.keys(res.porArea).sort().forEach(function(k){
+    var p = res.porArea[k];
+    var n = parseInt(k.slice(1), 10);
+    var pc = p.de ? Math.round(p.ok / p.de * 100) : 0;
+    h += '<tr><td>Área ' + n + ' · ' + esc(AREA_NAME[n] || '') + '</td>' +
+      '<td>' + p.ok + ' / ' + p.de + '</td><td>' + pc + '%</td><td>' + esc(res.niveles[k]) + '</td></tr>';
+  });
+  h += '</table>' +
+    '<p class="a-note">Simulacro de práctica con reactivos del curso interno; no son reactivos oficiales de CENEVAL. ' +
+    'Algunas claves están en proceso de validación docente. Niveles estimados con los cortes de referencia del testimonio: ' +
+    'Aún no satisfactorio (menos de 53%), Satisfactorio (53 a 74%), Sobresaliente (75% o más). ' +
+    'Generado en portfolioldg.com el ' + hoy.toLocaleString('es-MX') + '.</p>';
+  acta.innerHTML = h;
+}
+$('#res-print').addEventListener('click', function(){
+  var nombre = $('#send-nombre').value.trim();
+  var mat = $('#send-mat').value.trim();
+  fillActa(computeResults(ITEMS, S.answers), (nombre || mat) ? {nombre: nombre, matricula: mat} : null);
+  window.print();
+});
+
+/* --- envío a coordinación --- */
+$('#res-send-btn').addEventListener('click', function(){
+  var box = $('#send-box');
+  box.hidden = !box.hidden;
+  if(!box.hidden) $('#send-nombre').focus();
+});
+$('#send-box').addEventListener('submit', function(ev){
+  ev.preventDefault();
+  var nombre = $('#send-nombre').value.trim();
+  var mat = $('#send-mat').value.trim();
+  var status = $('#send-status');
+  if(!nombre || mat.length < 5){
+    status.className = 'status ko';
+    status.textContent = 'Escribe tu nombre y una matrícula de al menos 5 caracteres.';
+    return;
+  }
+  var res = computeResults(ITEMS, S.answers);
+  var att = buildAttempt(nombre, mat, res, modoAttempt(), duracionMin());
+  fillActa(res, {nombre: nombre, matricula: mat});
+  status.className = 'status';
+  status.textContent = 'Enviando…';
+  $('#send-go').disabled = true;
+
+  function fallo(motivo){
+    var pend = loadJSON(LS_PEND, []);
+    pend.push(att);
+    saveJSON(LS_PEND, pend);
+    status.className = 'status ko';
+    status.innerHTML = 'No se pudo enviar a la base (' + esc(motivo) + '). ' +
+      'Tu resultado quedó guardado en este navegador; puedes mandarlo por correo: ' +
+      '<a href="' + esc(mailtoResumen(att)) + '">enviar resumen a ldg.crgs@udem.edu</a>.';
+    $('#send-go').disabled = false;
+  }
+  if(typeof firebase === 'undefined' || !window.db){
+    fallo('sin conexión con Firebase');
+    return;
+  }
+  var authP = firebase.auth().currentUser
+    ? Promise.resolve()
+    : firebase.auth().signInAnonymously();
+  authP.then(function(){
+    return window.db.ref('egelAttempts').push(att);
+  }).then(function(){
+    status.className = 'status ok';
+    status.textContent = 'Resultado enviado a coordinación. Gracias.';
+    $('#send-go').disabled = true;
+  }).catch(function(err){
+    fallo(err && err.code ? err.code : 'error de red');
+  });
+});
+
+/* guardar al ocultar la pestaña; al volver, resincronizar el cronómetro
+   con el reloj absoluto sin esperar el siguiente disparo del intervalo */
+document.addEventListener('visibilitychange', function(){
+  if(document.visibilityState === 'hidden'){
+    saveState();
+  }else if(S && !S.done && S.mode === 'examen' && timerId){
+    tick();
+  }
+});
+
+refreshHome();
+})();
+</script>
+<script src="assets/egel-gate.js?v=20260726b"></script>
+<script src="assets/egel-ui.js?v=20260726b"></script>
+</body>
+</html>
