@@ -751,6 +751,12 @@ $('#res-print').addEventListener('click', function(){
   var nombre = $('#send-nombre').value.trim();
   var mat = $('#send-mat').value.trim();
   fillActa(computeResults(ITEMS, S.answers), (nombre || mat) ? {nombre: nombre, matricula: mat} : null);
+  /* el navegador nombra el PDF con el título del documento: lo fijamos a
+     "Acta de simulacro" (con matrícula si la hay) y lo restauramos al cerrar */
+  var prevTitle = document.title;
+  document.title = 'Acta de simulacro EGEL' + (mat ? ' - ' + mat : '');
+  var restore = function(){ document.title = prevTitle; window.removeEventListener('afterprint', restore); };
+  window.addEventListener('afterprint', restore);
   window.print();
 });
 
