@@ -107,11 +107,11 @@ a{color:inherit;text-decoration:none}
   position:relative;height:100vh;height:100svh;
   /* la bandera mide ~66vw de alto: si el viewport es más alto que
      bandera + interfaz, recorta el cielo sobrante */
-  max-height:calc(66vw + 120px);
+  max-height:calc(83vw + 120px);
   min-height:400px;
 }
 @media (orientation:landscape){
-  .hero-par{max-height:calc(54vw + 140px)}  /* bandera al 78%: ~54vw de alto */
+  .hero-par{max-height:calc(69vw + 140px)}  /* bandera al 78%: ~69vw de alto */
 }
 .hero-par__visuals{position:absolute;inset:0;overflow:clip}
 .hero-par__cielo{
@@ -603,7 +603,7 @@ footer a:hover{color:var(--ink)}
     var camera = new THREE.PerspectiveCamera(38, 1, 0.1, 20);
     camera.position.z = 3.2;
 
-    var IMG_ASPECT = 1596/1104;
+    var IMG_ASPECT = 1596/1410;
     var uniforms = {
       uTime:{value:0},
       uAmp:{value:0.12},
@@ -661,7 +661,8 @@ footer a:hover{color:var(--ink)}
       if (!mesh) return;
       var wh = 2*Math.tan(camera.fov*Math.PI/360)*camera.position.z;
       var ww = wh*camera.aspect;
-      var sw = (W > H) ? ww*0.78 : ww*0.94;        /* bandera centrada */
+      /* bandera centrada; en horizontal también limita por alto (deja sitio al CTA) */
+      var sw = (W > H) ? Math.min(ww*0.78, wh*0.8*IMG_ASPECT) : ww*0.94;
       var sh = sw/IMG_ASPECT;
       mesh.scale.set(sw, sh, 1);
       mesh.position.y = wh/2 - sh/2 + wh*0.02;     /* siempre pegada al top */
