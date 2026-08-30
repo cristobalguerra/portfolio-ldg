@@ -369,7 +369,7 @@ footer a:hover{color:var(--ink)}
   <div class="hero-par__visuals">
     <div class="hero-par__cielo" aria-hidden="true"></div>
     <canvas class="hero-par__cloth" id="clothCanvas" aria-hidden="true"></canvas>
-    <img class="hero-par__fallback" id="clothFallback" src="assets/dnorte.jpg" alt="" aria-hidden="true">
+    <img class="hero-par__fallback" id="clothFallback" src="assets/dnorte.jpg?v=2" alt="" aria-hidden="true">
     <h1 class="sr-only">Open call · Pieza gráfica: Diseño del Norte</h1>
     <div class="hero-par__fade" aria-hidden="true"></div>
     <a class="hero-par__cta" href="#registro">Aparta tu lugar <span class="arrow" aria-hidden="true">↓</span></a>
@@ -641,7 +641,7 @@ footer a:hover{color:var(--ink)}
     });
 
     var mesh = null;
-    new THREE.TextureLoader().load('assets/dnorte.jpg', function(tex){
+    new THREE.TextureLoader().load('assets/dnorte.jpg?v=2', function(tex){
       tex.minFilter = THREE.LinearFilter;
       tex.generateMipmaps = false;
       uniforms.uTex.value = tex;
