@@ -1,0 +1,767 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="robots" content="noindex,nofollow">
+<meta name="theme-color" content="#0E0E0E">
+<title>NORTE · Convocatoria de cartel · LDG UDEM</title>
+<meta name="description" content="Convocatoria de cartel sobre el diseño del norte, con sesión de conceptualización junto a David Despau y exposición en el Muro del Sexto Piso del CRGS. 30 lugares.">
+<link rel="icon" href="assets/favicon.svg?v=4" type="image/svg+xml">
+<link rel="icon" href="assets/favicon-32.png?v=4" sizes="32x32" type="image/png">
+<link rel="apple-touch-icon" href="assets/favicon-180.png?v=4">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo:ital,wdth,wght@0,62..125,100..900;1,62..125,100..900&family=Instrument+Serif:ital@1&display=swap" rel="stylesheet">
+
+<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-database-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-auth-compat.js"></script>
+<script>
+  if (typeof firebase !== 'undefined') {
+    firebase.initializeApp({
+      apiKey: "AIzaSyBfWefsqHW90aqHP9Mz6s8w91eIar_x6j8",
+      authDomain: "portfolioldg-3ca20.firebaseapp.com",
+      databaseURL: "https://portfolioldg-3ca20-default-rtdb.firebaseio.com",
+      projectId: "portfolioldg-3ca20",
+      storageBucket: "portfolioldg-3ca20.firebasestorage.app",
+      messagingSenderId: "563272567632",
+      appId: "1:563272567632:web:85e36244c8f00d5cdf7a55"
+    });
+    window.db = firebase.database();
+  }
+</script>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+
+<style>
+/* ============ «LIMPIA» · NORTE ============
+   Mismo sistema del sitio: Archivo variable, negro plano,
+   hairlines, acento morado quirúrgico. */
+
+:root{
+  --bg:#0E0E0E;
+  --ink:#F2F2F0;
+  --ink-soft:#9C9C98;
+  --ink-dim:#5C5C58;
+  --line:rgba(255,255,255,.12);
+  --accent:hsl(280 85% 76%);
+  --max:1200px;
+  --pad:clamp(20px,4vw,56px);
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html{overflow-x:clip;scroll-behavior:smooth}
+@media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}}
+body{
+  background:var(--bg);color:var(--ink);
+  font-family:'Archivo',system-ui,sans-serif;
+  font-size:17px;line-height:1.55;
+  -webkit-font-smoothing:antialiased;
+}
+::selection{background:var(--accent);color:#0E0E0E}
+:focus-visible{outline:2px solid var(--accent);outline-offset:3px}
+img{max-width:100%;display:block}
+a{color:inherit;text-decoration:none}
+
+.display{
+  font-weight:800;font-stretch:118%;
+  text-transform:uppercase;letter-spacing:-.01em;line-height:.94;
+  text-wrap:balance;
+}
+.label{
+  font-size:11px;font-weight:600;letter-spacing:.18em;
+  text-transform:uppercase;color:var(--ink-soft);
+}
+.wrap{max-width:var(--max);margin:0 auto;padding-inline:var(--pad)}
+
+.rv{opacity:0;transform:translateY(26px);transition:opacity .7s ease,transform .7s ease}
+.rv.in{opacity:1;transform:none}
+@media (prefers-reduced-motion:reduce){.rv{opacity:1;transform:none;transition:none}}
+
+/* ---------- nav ---------- */
+.nav{
+  position:fixed;inset:0 0 auto 0;z-index:10;
+  display:flex;align-items:center;justify-content:space-between;gap:16px;
+  padding:22px var(--pad);
+  background:transparent;border-bottom:1px solid transparent;
+  transition:background .3s ease,border-color .3s ease,padding .3s ease;
+}
+.nav.scrolled{
+  background:rgba(14,14,14,.96);border-color:var(--line);padding-block:14px;
+}
+.nav .brand{font-weight:800;font-stretch:118%;font-size:17px;letter-spacing:.01em}
+.nav .brand sup{color:var(--accent);font-size:.55em}
+.nav .go-form{
+  font-size:11px;font-weight:700;letter-spacing:.18em;text-transform:uppercase;
+  border:1px solid var(--line);padding:10px 18px;border-radius:999px;
+  transition:border-color .2s,color .2s;white-space:nowrap;
+}
+.nav .go-form:hover{border-color:var(--accent);color:var(--accent)}
+@media(max-width:720px){
+  .nav{padding-inline:16px}
+  .nav .brand{font-size:14px}
+}
+
+/* ---------- hero · parallax de capas (idea Osmo, reinterpretada) ---------- */
+.hero-par{
+  position:relative;height:100vh;height:100svh;
+  /* la bandera mide ~66vw de alto: si el viewport es más alto que
+     bandera + interfaz, recorta el cielo sobrante */
+  max-height:calc(66vw + 150px);
+  min-height:400px;
+}
+.hero-par__visuals{position:absolute;inset:0;overflow:clip}
+.hero-par__cielo{
+  position:absolute;inset:0;z-index:1;
+  background:linear-gradient(180deg,#7A93AC 0%,#5F7D99 46%,#31506B 100%);
+}
+.hero-par__cloth{position:absolute;inset:0;z-index:2;width:100%;height:100%;display:block}
+.hero-par__fallback{
+  position:absolute;inset:0;z-index:2;margin:auto;
+  max-width:96%;max-height:82%;object-fit:contain;display:none;
+}
+.sr-only{
+  position:absolute;width:1px;height:1px;padding:0;margin:-1px;
+  overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap;border:0;
+}
+.page-grain,.page-grain--mult{
+  position:fixed;inset:0;z-index:60;pointer-events:none;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='256' height='256'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='256' height='256' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+.page-grain{opacity:.16;mix-blend-mode:screen}          /* aparece sobre negro */
+.page-grain--mult{opacity:.1;mix-blend-mode:multiply}   /* aparece sobre papel */
+.hero-par__fade{
+  position:absolute;inset:auto 0 0 0;height:42%;z-index:5;pointer-events:none;
+  background:linear-gradient(to bottom,
+    hsl(0 0% 5.5% / 0) 0%,
+    hsl(0 0% 5.5% / .14) 28%,
+    hsl(0 0% 5.5% / .38) 50%,
+    hsl(0 0% 5.5% / .68) 70%,
+    hsl(0 0% 5.5% / .9) 86%,
+    var(--bg) 100%);
+}
+.hero-par__cta{
+  position:absolute;z-index:6;left:50%;transform:translateX(-50%);
+  bottom:clamp(26px,6vh,56px);
+  display:inline-flex;align-items:center;gap:10px;
+  background:var(--accent);color:#0E0E0E;border-radius:999px;
+  padding:16px 30px;
+  font-size:12px;font-weight:700;letter-spacing:.2em;text-transform:uppercase;
+  white-space:nowrap;transition:transform .2s ease,box-shadow .2s ease;
+}
+.hero-par__cta:hover{transform:translateX(-50%) translateY(-2px);box-shadow:0 10px 34px hsl(280 85% 76% / .35)}
+.hero-par__cta .arrow{font-size:14px;line-height:1}
+
+/* ---------- intro ---------- */
+.page-intro{padding-block:clamp(36px,7vh,80px)}
+.page-intro .lede{
+  max-width:56ch;color:var(--ink-soft);
+  font-size:clamp(16px,1.9vw,20px);line-height:1.6;
+}
+.page-intro .lede em{font-style:normal;color:var(--ink)}
+
+/* ---------- secciones ---------- */
+section{padding-block:clamp(60px,9vh,110px)}
+
+/* bloques «papel»: lo operativo en blanco, lo atmosférico en negro */
+.paper{
+  background:#F2F2F0;
+  --ink:#0E0E0E;
+  --ink-soft:#55555A;
+  --ink-dim:#8A8A86;
+  --line:rgba(14,14,14,.16);
+  --accent:hsl(280 60% 44%);
+  color:var(--ink);
+  padding-block:clamp(70px,10vh,120px);
+}
+.sec-head{display:flex;align-items:center;gap:18px;margin-bottom:clamp(36px,6vh,64px)}
+.sec-head::after{content:"";flex:1;height:1px;background:var(--line)}
+
+/* ---------- stats ---------- */
+.stats{display:grid;grid-template-columns:repeat(4,1fr);border-block:1px solid var(--line)}
+.stat{padding:clamp(28px,4.5vh,44px) clamp(18px,2.5vw,36px);border-left:1px solid var(--line)}
+.stat:first-child{border-left:0;padding-left:0}
+.stat .num{display:block;font-size:clamp(38px,5.4vw,76px);margin-bottom:14px}
+.stat .label{display:block;max-width:18ch}
+@media(max-width:720px){
+  .stats{grid-template-columns:1fr 1fr}
+  .stat{padding-inline:18px}
+  .stat:nth-child(odd){border-left:0;padding-left:0}
+  .stat:nth-child(n+3){border-top:1px solid var(--line)}
+}
+
+/* ---------- brief ---------- */
+.brief-intro{
+  font-size:clamp(22px,3vw,36px);line-height:1.32;font-weight:420;
+  color:var(--ink-soft);max-width:34ch;letter-spacing:-.01em;
+}
+.brief-intro em{
+  font-family:'Instrument Serif',Georgia,serif;
+  font-style:italic;font-weight:400;font-size:1.12em;
+  color:var(--ink);
+}
+.brief-body{margin-top:clamp(36px,6vh,56px);display:grid;grid-template-columns:1fr 1fr;gap:clamp(28px,4vw,72px)}
+.brief-body p{color:var(--ink-soft);font-size:16px;max-width:52ch}
+.brief-body p+p{margin-top:18px}
+.brief-body strong{color:var(--ink);font-weight:650}
+@media(max-width:820px){.brief-body{grid-template-columns:1fr}}
+.territorios{list-style:none;margin-top:clamp(40px,7vh,64px)}
+.territorios li{border-top:1px solid var(--line)}
+.territorios li:last-child{border-bottom:1px solid var(--line)}
+.territorios .name{
+  display:flex;align-items:baseline;gap:20px;
+  padding:clamp(14px,2.6vh,24px) 0;
+  font-size:clamp(24px,4.6vw,52px);color:var(--ink-dim);
+  transition:color .35s ease;
+}
+.territorios li:hover .name{color:var(--ink)}
+.territorios .name small{font-size:13px;font-weight:400;font-stretch:100%;text-transform:none;letter-spacing:0;color:var(--ink-dim);max-width:34ch;line-height:1.4}
+@media (prefers-reduced-motion:reduce){.territorios .name{transition:none}}
+@media(max-width:720px){.territorios .name{flex-direction:column;gap:6px}}
+
+/* ---------- despau ---------- */
+.despau-name{font-size:clamp(44px,9vw,110px);margin-bottom:26px}
+.despau-name span{color:var(--accent)}
+.despau-grid{display:grid;grid-template-columns:1.05fr .95fr;gap:clamp(28px,4vw,72px);align-items:start}
+#despau{overflow:clip}
+.despau-figure{margin:0;position:relative}
+.despau-figure::before{
+  content:"";position:absolute;inset:-10% -18%;pointer-events:none;
+  background:radial-gradient(ellipse 52% 46% at 50% 38%,
+    rgba(242,242,240,.92),
+    rgba(242,242,240,.45) 52%,
+    rgba(242,242,240,0) 74%);
+}
+.despau-figure img{
+  position:relative;width:100%;height:auto;display:block;
+  -webkit-mask-image:linear-gradient(to bottom,#000 76%,transparent 99%);
+  mask-image:linear-gradient(to bottom,#000 76%,transparent 99%);
+}
+.despau-figure figcaption{
+  display:flex;justify-content:space-between;gap:12px;
+  margin-top:14px;
+  font-size:10.5px;font-weight:600;letter-spacing:.18em;text-transform:uppercase;
+  color:#8A8A86;
+}
+.despau-clients{margin-top:clamp(28px,5vh,44px)}
+.despau-grid p{color:var(--ink-soft);font-size:16px;max-width:56ch}
+.despau-grid p+p{margin-top:18px}
+.despau-grid strong{color:var(--ink);font-weight:650}
+.despau-clients{border-top:1px solid var(--line)}
+.despau-clients li{
+  list-style:none;border-bottom:1px solid var(--line);
+  padding:14px 0;display:flex;justify-content:space-between;gap:14px;align-items:baseline;
+}
+.despau-clients .c{font-weight:650;font-size:15px}
+.despau-clients .t{font-size:12px;color:var(--ink-dim);letter-spacing:.08em;text-transform:uppercase;text-align:right}
+@media(max-width:820px){
+  .despau-grid{grid-template-columns:1fr}
+  .despau-figure{order:-1;max-width:440px}
+}
+
+/* ---------- timeline ---------- */
+.tl{list-style:none}
+.tl li{
+  display:grid;grid-template-columns:210px minmax(0,1fr);gap:10px 36px;
+  padding:26px 0;border-top:1px solid var(--line);
+}
+.tl li:last-child{border-bottom:1px solid var(--line)}
+.tl .when{font-weight:800;font-stretch:118%;text-transform:uppercase;font-size:clamp(17px,2vw,22px);line-height:1.2}
+.tl .when small{display:block;font-size:11px;font-weight:600;letter-spacing:.16em;color:var(--accent);margin-top:6px}
+.tl .what h3{font-size:clamp(16px,1.9vw,20px);font-weight:650;margin-bottom:6px}
+.tl .what p{color:var(--ink-soft);font-size:15px;max-width:60ch}
+.tl .chip{
+  display:inline-block;margin-left:10px;vertical-align:2px;
+  font-size:10px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;
+  color:var(--ink-dim);border:1px solid var(--line);border-radius:999px;padding:3px 9px;
+}
+@media(max-width:720px){.tl li{grid-template-columns:1fr;gap:8px;padding:22px 0}}
+
+/* ---------- expo ---------- */
+.expo-callout{
+  border:1px solid var(--line);padding:clamp(28px,4.5vh,48px) clamp(22px,3vw,44px);
+  display:grid;grid-template-columns:1fr auto;gap:20px;align-items:end;
+}
+.expo-callout h3{font-size:clamp(28px,5vw,58px)}
+.expo-callout .floor{font-size:clamp(48px,8vw,110px);color:var(--accent)}
+.expo-callout p{grid-column:1/-1;color:var(--ink-soft);font-size:15.5px;max-width:62ch}
+@media(max-width:720px){.expo-callout{grid-template-columns:1fr}}
+
+/* ---------- especificaciones ---------- */
+.specs{list-style:none}
+.specs li{
+  display:grid;grid-template-columns:210px minmax(0,1fr);gap:8px 36px;
+  padding:20px 0;border-top:1px solid var(--line);align-items:baseline;
+}
+.specs li:last-child{border-bottom:1px solid var(--line)}
+.specs .k{font-size:11px;font-weight:600;letter-spacing:.18em;text-transform:uppercase;color:var(--ink-soft)}
+.specs .v{font-size:clamp(16px,1.9vw,20px);font-weight:650}
+.specs .v small{display:block;font-weight:400;font-size:13.5px;color:var(--ink-dim);margin-top:4px}
+.specs .chip{
+  display:inline-block;margin-left:10px;vertical-align:2px;
+  font-size:10px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;
+  color:var(--ink-dim);border:1px solid var(--line);border-radius:999px;padding:3px 9px;
+}
+@media(max-width:720px){.specs li{grid-template-columns:1fr}}
+
+/* ---------- registro / form ---------- */
+.reg-head h2{font-size:clamp(34px,6.5vw,76px);max-width:16ch;margin-bottom:14px}
+.reg-head h2 span{color:var(--accent)}
+.reg-status{
+  display:flex;align-items:center;gap:10px;
+  font-size:12px;font-weight:600;letter-spacing:.16em;text-transform:uppercase;
+  color:var(--ink-soft);margin-bottom:44px;
+}
+.reg-status .dot{width:8px;height:8px;border-radius:50%;background:var(--accent);flex:none}
+form.reg{max-width:640px}
+.field{margin-bottom:34px}
+.field label{display:block;margin-bottom:10px}
+.field input,.field select,.field textarea{
+  width:100%;background:transparent;border:0;border-bottom:1px solid var(--line);
+  padding:10px 2px;color:var(--ink);font:inherit;font-size:16px;
+  transition:border-color .2s;border-radius:0;
+}
+.field textarea{resize:vertical;min-height:74px;line-height:1.5}
+.field input::placeholder,.field textarea::placeholder{color:var(--ink-dim)}
+.field input:focus-visible,.field select:focus-visible,.field textarea:focus-visible{outline:none;border-color:var(--accent)}
+.field select{appearance:none;-webkit-appearance:none;cursor:pointer;
+  background-image:url("data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8'%3E%3Cpath d='M1 1l5 5 5-5' fill='none' stroke='%239C9C98' stroke-width='1.6'/%3E%3C/svg%3E");
+  background-repeat:no-repeat;background-position:right 4px center;
+}
+.field select option{background:#161616;color:var(--ink)}
+.field .hint{font-size:12.5px;color:var(--ink-dim);margin-top:8px}
+.hp{position:absolute;left:-9999px;opacity:0;height:0;overflow:hidden}
+.reg button[type="submit"]{
+  background:none;cursor:pointer;font-family:inherit;
+  font-size:12px;font-weight:700;letter-spacing:.2em;text-transform:uppercase;
+  color:var(--ink);border:1px solid var(--ink);border-radius:999px;
+  padding:16px 34px;transition:background .2s,color .2s,border-color .2s;
+}
+.reg button[type="submit"]:hover{background:var(--accent);border-color:var(--accent);color:#0E0E0E}
+.reg button[type="submit"][disabled]{opacity:.45;cursor:wait}
+.reg-msg{margin-top:26px;font-size:15px;max-width:52ch;display:none}
+.reg-msg.ok{display:block;color:var(--ink)}
+.reg-msg.err{display:block;color:var(--ink-soft)}
+.reg-msg a{border-bottom:1px solid var(--accent);color:var(--accent)}
+.reg-done{display:none;max-width:56ch}
+.reg-done h3{font-size:clamp(24px,4vw,40px);margin-bottom:16px}
+.reg-done p{color:var(--ink-soft);font-size:16px}
+.reg-note{margin-top:40px;font-size:12.5px;color:var(--ink-dim);max-width:56ch}
+
+/* ---------- footer ---------- */
+footer{
+  border-top:1px solid var(--line);
+  display:flex;flex-wrap:wrap;gap:14px 34px;align-items:center;justify-content:space-between;
+  padding:26px var(--pad);font-size:12px;color:var(--ink-soft);
+}
+footer a{letter-spacing:.1em;text-transform:uppercase;font-size:11px;font-weight:600}
+footer a:hover{color:var(--ink)}
+</style>
+</head>
+<body>
+
+<header class="nav">
+  <a class="brand" href="index.html">LDG·UDEM<sup>®</sup></a>
+  <a class="go-form" href="#registro">Quiero mi lugar</a>
+</header>
+
+<!-- HERO · parallax de capas -->
+<header class="hero-par" aria-label="NORTE · Convocatoria de cartel">
+  <div class="hero-par__visuals">
+    <div class="hero-par__cielo" aria-hidden="true"></div>
+    <canvas class="hero-par__cloth" id="clothCanvas" aria-hidden="true"></canvas>
+    <img class="hero-par__fallback" id="clothFallback" src="assets/dnorte.jpg" alt="" aria-hidden="true">
+    <h1 class="sr-only">Open call · Pieza gráfica: Diseño del Norte</h1>
+    <div class="hero-par__fade" aria-hidden="true"></div>
+    <a class="hero-par__cta" href="#registro">Aparta tu lugar <span class="arrow" aria-hidden="true">↓</span></a>
+  </div>
+</header>
+<div class="page-grain" aria-hidden="true"></div>
+<div class="page-grain--mult" aria-hidden="true"></div>
+
+<!-- INTRO -->
+<section class="page-intro wrap">
+  <p class="lede rv">Una convocatoria de cartel sobre <em>el diseño del norte</em>, con sesión de conceptualización junto a <em>David Despau</em>, Global Community Professor de la UDEM. Las piezas se imprimen y se exponen en el Muro del Sexto Piso del CRGS.</p>
+</section>
+
+<!-- STATS -->
+<section class="wrap" style="padding-top:0">
+  <div class="stats rv">
+    <div class="stat">
+      <span class="display num">30</span>
+      <span class="label">Lugares · registro previo</span>
+    </div>
+    <div class="stat">
+      <span class="display num">21.09</span>
+      <span class="label">Sesión con David Despau</span>
+    </div>
+    <div class="stat">
+      <span class="display num">23.09</span>
+      <span class="label">Entrega del archivo final</span>
+    </div>
+    <div class="stat">
+      <span class="display num">6.º</span>
+      <span class="label">Piso del CRGS · exposición</span>
+    </div>
+  </div>
+</section>
+
+<!-- REGISTRO -->
+<section class="wrap" id="registro">
+  <div class="sec-head rv"><h2 class="label">Registro</h2></div>
+  <div class="reg-head rv">
+    <h2 class="display">30 lugares<span>.</span> Uno es tuyo<span>.</span></h2>
+    <p class="reg-status"><span class="dot" aria-hidden="true"></span>Convocatoria abierta · cierre: jueves 17 de septiembre</p>
+  </div>
+
+  <form class="reg rv" id="regForm" novalidate>
+    <div class="field">
+      <label class="label" for="fNombre">Nombre completo</label>
+      <input id="fNombre" name="nombre" type="text" autocomplete="name" maxlength="120" required>
+    </div>
+    <div class="field">
+      <label class="label" for="fMatricula">Matrícula</label>
+      <input id="fMatricula" name="matricula" type="text" inputmode="numeric" maxlength="20" required>
+    </div>
+    <div class="field">
+      <label class="label" for="fCorreo">Correo UDEM</label>
+      <input id="fCorreo" name="correo" type="email" autocomplete="email" maxlength="120" placeholder="tu.nombre@udem.edu" required>
+      <p class="hint">Usa tu correo institucional: ahí llega la confirmación de tu lugar.</p>
+    </div>
+    <div class="field">
+      <label class="label" for="fSemestre">Semestre</label>
+      <select id="fSemestre" name="semestre" required>
+        <option value="" selected disabled>Elige tu semestre</option>
+        <option>1.º</option><option>2.º</option><option>3.º</option>
+        <option>4.º</option><option>5.º</option><option>6.º</option>
+        <option>7.º</option><option>8.º</option><option>9.º</option>
+      </select>
+    </div>
+    <div class="field">
+      <label class="label" for="fNorte">En una línea: ¿qué es el norte para ti?</label>
+      <textarea id="fNorte" name="norte" maxlength="300" placeholder="Sin presión: es tu primer boceto, en palabras." required></textarea>
+    </div>
+    <div class="hp" aria-hidden="true">
+      <label for="fWeb">Deja este campo vacío</label>
+      <input id="fWeb" name="web" type="text" tabindex="-1" autocomplete="off">
+    </div>
+    <button type="submit" id="regBtn">Registrarme</button>
+    <p class="reg-msg" id="regMsg" role="status" aria-live="polite"></p>
+    <p class="reg-note">Tus datos solo se usan para organizar esta convocatoria y los ve únicamente la coordinación del programa. Si el formulario falla, escríbenos a <a href="mailto:ldg.crgs@udem.edu" style="color:var(--ink)">ldg.crgs@udem.edu</a>.</p>
+  </form>
+
+  <div class="reg-done rv" id="regDone">
+    <h3 class="display">Registro enviado</h3>
+    <p>Revisa tu correo UDEM: la coordinación confirma los 30 lugares el viernes 18 de septiembre. Mientras tanto, empieza a bocetar — a la sesión del 21 se llega con la idea trabajada.</p>
+  </div>
+</section>
+
+<!-- BRIEF -->
+<section class="paper" id="brief">
+<div class="wrap">
+  <div class="sec-head rv"><h2 class="label">El brief</h2></div>
+  <p class="brief-intro rv">Diseña un cartel que le cuente <em>el norte</em> a alguien que nunca ha venido.</p>
+  <div class="brief-body rv">
+    <div>
+      <p>El tema es <strong>el diseño del norte</strong>: lo que significa diseñar desde acá y sobre acá. Tu cartel debe traducir una lectura personal del norte de México en una pieza gráfica que se sostenga sola, sin pie de página ni explicación al lado.</p>
+      <p>El punto de partida es tuyo. Puede salir del paisaje o de la mesa, de la letra pintada sobre lámina o de la industria que nos rodea. Lo que importa es la traducción: del lugar común a un lenguaje gráfico propio.</p>
+    </div>
+    <div>
+      <p><strong>Piensa en una pieza que pueda viajar.</strong> Un buen cartel del norte funciona igual en este muro que a 900 km de aquí; evita el chiste local que solo se entiende en Monterrey y busca la imagen que lo vuelve universal.</p>
+      <p>La técnica es libre: ilustración, fotografía, tipografía, collage o 3D. Pieza individual e inédita, hecha para esta convocatoria.</p>
+    </div>
+  </div>
+  <ul class="territorios rv" aria-label="Territorios posibles del brief">
+    <li><span class="name display">Paisaje <small>cerros, desierto, calor, horizonte industrial</small></span></li>
+    <li><span class="name display">Letra <small>rótulos, lámina pintada, gráfica popular</small></span></li>
+    <li><span class="name display">Mesa <small>lo que se come y cómo se comparte</small></span></li>
+    <li><span class="name display">Trabajo <small>acero, maquila, oficio, borde fronterizo</small></span></li>
+    <li><span class="name display">Ruido <small>música, calle, mercado, estadio</small></span></li>
+  </ul>
+</div>
+</section>
+
+<!-- DESPAU -->
+<section class="wrap" id="despau">
+  <div class="sec-head rv"><h2 class="label">El invitado</h2></div>
+  <h3 class="display despau-name rv">David <span>Despau</span></h3>
+  <div class="despau-grid rv">
+    <div>
+      <p>Ilustrador con base en Madrid. Estudió Arquitectura, se tituló en Bellas Artes con especialidad en Diseño y dirigió equipos creativos en agencias de publicidad antes de dedicarse por completo a la ilustración. Su trazo —línea de bolígrafo y tinta sobre capas de acuarela y proceso digital— lo convirtió en uno de los retratistas más reconocibles de la ilustración editorial contemporánea.</p>
+      <p>Ha publicado en <strong>Time, The New Yorker, The Washington Post, Sports Illustrated y GQ</strong>, y ha trabajado para marcas como DC Comics, Warner Bros., Porsche, Coca-Cola y Ubisoft. Taschen incluyó su obra en la serie <em>Illustration Now!</em> —su trabajo abre la portada del volumen 3— y Lürzer's Archive lo ha seleccionado entre los <em>200 Best Illustrators</em> del mundo.</p>
+      <p>Visita la UDEM como <strong>Global Community Professor</strong>. En esta convocatoria revisará tu concepto en persona: llega a la sesión con la idea trabajada y sal de ella con una dirección clara.</p>
+      <ul class="despau-clients" aria-label="Selección de clientes y publicaciones">
+        <li><span class="c">Time · The New Yorker</span><span class="t">Editorial</span></li>
+        <li><span class="c">The Washington Post</span><span class="t">Editorial</span></li>
+        <li><span class="c">DC Comics · Warner Bros.</span><span class="t">Entretenimiento</span></li>
+        <li><span class="c">Porsche · Coca-Cola</span><span class="t">Marcas</span></li>
+        <li><span class="c">Illustration Now! · Taschen</span><span class="t">Libros</span></li>
+        <li><span class="c">200 Best Illustrators</span><span class="t">Lürzer's Archive</span></li>
+      </ul>
+    </div>
+    <figure class="despau-figure rv">
+      <img src="assets/despau.webp" alt="Autorretrato ilustrado de David Despau: tinta y rayado a pluma con acuarela azul" loading="lazy" width="1400" height="1225" onerror="this.closest('figure').style.display='none'">
+      <figcaption><span>David Despau</span><span>Autorretrato · tinta y acuarela</span></figcaption>
+    </figure>
+  </div>
+</section>
+
+<!-- CÓMO FUNCIONA -->
+<section class="paper" id="fechas">
+<div class="wrap">
+  <div class="sec-head rv"><h2 class="label">Cómo funciona</h2></div>
+  <ol class="tl rv">
+    <li>
+      <div class="when">Hoy → Jue 17.09<small>Registro</small></div>
+      <div class="what">
+        <h3>Aparta tu lugar en esta página</h3>
+        <p>Solo hay 30 lugares y se asignan por orden de registro. La coordinación confirma tu lugar por correo el viernes 18. Desde ese momento empieza tu trabajo: llega a la sesión con tu concepto avanzado —bocetos, referencias, una dirección—.</p>
+      </div>
+    </li>
+    <li>
+      <div class="when">Lun 21.09 · 11:00–13:00<small>Sesión de conceptualización</small></div>
+      <div class="what">
+        <h3>Trabajo de concepto + retro de David Despau<span class="chip">salón por confirmar</span></h3>
+        <p>La primera hora es mesa de trabajo con el equipo del programa para aterrizar tu idea. A partir de las 12:00 se suma David Despau y revisa los proyectos: retroalimentación directa, proyecto por proyecto.</p>
+      </div>
+    </li>
+    <li>
+      <div class="when">Mié 23.09 · antes de 13:00<small>Entrega final</small></div>
+      <div class="what">
+        <h3>Archivo listo para imprenta</h3>
+        <p>Entrega puntual y sin extensiones: la producción de la exposición depende de esta fecha. El medio de entrega llega en tu correo de confirmación.</p>
+      </div>
+    </li>
+    <li>
+      <div class="when">Vie 25.09<small>Impresión y montaje</small></div>
+      <div class="what">
+        <h3>Tu cartel sube al muro</h3>
+        <p>La escuela imprime y monta las piezas en el Muro del Sexto Piso del CRGS. Tú solo entregas el archivo; del papel al muro nos encargamos nosotros.</p>
+      </div>
+    </li>
+  </ol>
+</div>
+</section>
+
+<!-- EXPO -->
+<section class="wrap" id="expo">
+  <div class="sec-head rv"><h2 class="label">La exposición</h2></div>
+  <div class="expo-callout rv">
+    <h3 class="display">El Muro del<br>Sexto Piso</h3>
+    <span class="display floor">6.º</span>
+    <p>Espacio de exhibición del Centro de las Artes dentro del CRGS. Este ciclo le toca a Diseño Gráfico y lo vamos a llenar de norte: los carteles de la convocatoria se exponen ahí, impresos y montados en forma, a la vista de toda la comunidad del edificio.</p>
+  </div>
+</section>
+
+<!-- ESPECIFICACIONES -->
+<section class="paper" id="especificaciones">
+<div class="wrap">
+  <div class="sec-head rv"><h2 class="label">Especificaciones</h2></div>
+  <ul class="specs rv">
+    <li><span class="k">Formato</span><span class="v">60 × 90 cm · vertical<span class="chip">por confirmar</span></span></li>
+    <li><span class="k">Archivo</span><span class="v">PDF · CMYK · 300 dpi<small>Con 5 mm de rebase y tipografías convertidas a curvas o incrustadas.</small></span></li>
+    <li><span class="k">Técnica</span><span class="v">Libre<small>Ilustración, fotografía, tipografía, collage o 3D. La pieza final se entrega como archivo digital para imprenta.</small></span></li>
+    <li><span class="k">Autoría</span><span class="v">Individual e inédita<small>Una pieza por participante, creada para esta convocatoria.</small></span></li>
+    <li><span class="k">Producción</span><span class="v">A cargo de la escuela<small>La impresión y el montaje corren por cuenta de la Escuela de Arte, Arquitectura y Diseño.</small></span></li>
+  </ul>
+</div>
+</section>
+
+<footer>
+  <span>© <span id="yy">2026</span> Diseño Gráfico · UDEM</span>
+  <a href="index.html">portfolioldg.com</a>
+  <span>CRGS · Monterrey, MX</span>
+</footer>
+
+<script>
+(function(){
+  document.getElementById('yy').textContent = new Date().getFullYear();
+
+  /* nav sólido al hacer scroll */
+  var nav = document.querySelector('.nav');
+  var onScroll = function(){ nav.classList.toggle('scrolled', window.scrollY > 40); };
+  addEventListener('scroll', onScroll, {passive:true});
+  onScroll();
+
+  /* ---- portada: el póster como tela al viento (Three.js) ---- */
+  var mReduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  (function(){
+    var canvas = document.getElementById('clothCanvas');
+    if (!canvas) return;
+    var fb = document.getElementById('clothFallback');
+    function fallback(){
+      if (fb) fb.style.display = 'block';
+      canvas.style.display = 'none';
+    }
+    if (typeof THREE === 'undefined'){ fallback(); return; }
+
+    var renderer;
+    try {
+      renderer = new THREE.WebGLRenderer({canvas:canvas, antialias:true, alpha:true});
+    } catch(e){ fallback(); return; }
+    renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2));
+
+    var scene = new THREE.Scene();
+    var camera = new THREE.PerspectiveCamera(38, 1, 0.1, 20);
+    camera.position.z = 3.2;
+
+    var IMG_ASPECT = 1596/1104;
+    var uniforms = {
+      uTime:{value:0},
+      uAmp:{value:0.12},
+      uTex:{value:null}
+    };
+    var mat = new THREE.ShaderMaterial({
+      uniforms: uniforms,
+      vertexShader: [
+        'uniform float uTime; uniform float uAmp;',
+        'varying vec2 vUv; varying float vShade;',
+        'void main(){',
+        '  vUv = uv;',
+        '  vec3 p = position;',
+        '  float e = clamp(0.5 - p.y, 0.0, 1.0);',   /* 0 arriba (fija) -> 1 abajo (libre) */
+        '  float env = 0.1 + 0.9*e;',
+        '  float A = p.x*9.0 + uTime*2.0;',
+        '  float B = p.x*5.0 + p.y*7.0 + uTime*1.4;',
+        '  float C = p.y*11.0 + uTime*2.5;',
+        '  float wav = sin(A)*0.5 + sin(B)*0.35 + sin(C)*0.15;',
+        '  p.z = wav * uAmp * env;',
+        '  float dzdx = (cos(A)*9.0*0.5 + cos(B)*5.0*0.35) * uAmp * env;',
+        '  vShade = -dzdx*0.18;',
+        '  gl_Position = projectionMatrix * modelViewMatrix * vec4(p, 1.0);',
+        '}'
+      ].join('\n'),
+      fragmentShader: [
+        'uniform sampler2D uTex;',
+        'varying vec2 vUv; varying float vShade;',
+        'void main(){',
+        '  vec4 c = texture2D(uTex, vUv);',
+        '  c.rgb *= clamp(1.0 + vShade, 0.78, 1.22);',
+        '  gl_FragColor = c;',
+        '}'
+      ].join('\n')
+    });
+
+    var mesh = null;
+    new THREE.TextureLoader().load('assets/dnorte.jpg', function(tex){
+      tex.minFilter = THREE.LinearFilter;
+      tex.generateMipmaps = false;
+      uniforms.uTex.value = tex;
+      mesh = new THREE.Mesh(new THREE.PlaneGeometry(1, 1, 64, 44), mat);
+      mesh.rotation.x = -0.04;
+      scene.add(mesh);
+      layout();
+      renderer.render(scene, camera);
+    }, undefined, fallback);
+
+    function layout(){
+      var el = canvas.parentElement;
+      var W = el.clientWidth, H = el.clientHeight;
+      renderer.setSize(W, H, false);
+      camera.aspect = W/H;
+      camera.updateProjectionMatrix();
+      if (!mesh) return;
+      var wh = 2*Math.tan(camera.fov*Math.PI/360)*camera.position.z;
+      var ww = wh*camera.aspect;
+      var sw = (W > H) ? ww*0.78 : ww*0.94;        /* bandera centrada */
+      var sh = sw/IMG_ASPECT;
+      mesh.scale.set(sw, sh, 1);
+      mesh.position.y = wh/2 - sh/2 + wh*0.02;     /* siempre pegada al top */
+      uniforms.uAmp.value = sw*0.1;
+    }
+    addEventListener('resize', layout);
+
+    if (mReduce){ layout(); renderer.render(scene, camera); return; }
+    var t0 = performance.now();
+    requestAnimationFrame(function tick(now){
+      requestAnimationFrame(tick);
+      if (document.hidden || !mesh) return;
+      uniforms.uTime.value = (now - t0)/1000;
+      renderer.render(scene, camera);
+    });
+  })();
+
+  /* ---- registro → Firebase (norteRegistros), con respaldo por correo ---- */
+  var $form = document.getElementById('regForm');
+  var $btn  = document.getElementById('regBtn');
+  var $msg  = document.getElementById('regMsg');
+  var $done = document.getElementById('regDone');
+  var CONTACT = 'ldg.crgs@udem.edu';
+
+  function mailtoFallback(data){
+    var subject = encodeURIComponent('Registro · Convocatoria NORTE');
+    var body = encodeURIComponent(
+      'Nombre: ' + data.nombre +
+      '\nMatrícula: ' + data.matricula +
+      '\nCorreo: ' + data.correo +
+      '\nSemestre: ' + data.semestre +
+      '\nEl norte para mí: ' + data.norte
+    );
+    return 'mailto:' + CONTACT + '?subject=' + subject + '&body=' + body;
+  }
+
+  $form.addEventListener('submit', function(ev){
+    ev.preventDefault();
+    if (document.getElementById('fWeb').value) return; /* honeypot */
+
+    if (!$form.checkValidity()){
+      $form.reportValidity();
+      return;
+    }
+    var data = {
+      nombre:    document.getElementById('fNombre').value.trim(),
+      matricula: document.getElementById('fMatricula').value.trim(),
+      correo:    document.getElementById('fCorreo').value.trim().toLowerCase(),
+      semestre:  document.getElementById('fSemestre').value,
+      norte:     document.getElementById('fNorte').value.trim(),
+      fecha:     new Date().toISOString()
+    };
+    if (!/@udem\.edu(\.mx)?$/.test(data.correo)){
+      $msg.className = 'reg-msg err';
+      $msg.textContent = 'Usa tu correo institucional (@udem.edu): ahí se confirma tu lugar.';
+      return;
+    }
+
+    $btn.disabled = true;
+    $msg.className = 'reg-msg';
+    $msg.textContent = '';
+
+    function ok(){
+      $form.style.display = 'none';
+      $done.style.display = 'block';
+      $done.classList.add('in');
+      $done.scrollIntoView({behavior:'smooth', block:'center'});
+    }
+    function fail(){
+      $btn.disabled = false;
+      $msg.className = 'reg-msg err';
+      $msg.innerHTML = 'No se pudo enviar el registro en línea. ' +
+        '<a href="' + mailtoFallback(data) + '">Mándalo por correo con un clic</a> y cuenta igual.';
+    }
+
+    if (typeof firebase === 'undefined' || !window.db){ fail(); return; }
+
+    var auth = firebase.auth();
+    var signed = auth.currentUser ? Promise.resolve() : auth.signInAnonymously();
+    signed
+      .then(function(){ return db.ref('norteRegistros').push(data); })
+      .then(ok)
+      .catch(fail);
+  });
+
+  /* reveal al hacer scroll */
+  var rvs = document.querySelectorAll('.rv');
+  if(mReduce || !('IntersectionObserver' in window)){
+    rvs.forEach(function(el){ el.classList.add('in'); });
+    return;
+  }
+  var io = new IntersectionObserver(function(entries){
+    entries.forEach(function(e){
+      if(e.isIntersecting){ e.target.classList.add('in'); io.unobserve(e.target); }
+    });
+  }, {threshold:.12, rootMargin:'0px 0px -8% 0px'});
+  rvs.forEach(function(el){ io.observe(el); });
+})();
+</script>
+</body>
+</html>
