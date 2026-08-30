@@ -223,26 +223,22 @@ section{padding-block:clamp(60px,9vh,110px)}
 .despau-name{font-size:clamp(44px,9vw,110px);margin-bottom:26px}
 .despau-name span{color:var(--accent)}
 .despau-grid{display:grid;grid-template-columns:1.05fr .95fr;gap:clamp(28px,4vw,72px);align-items:start}
-#despau{overflow:clip}
-.despau-figure{margin:0;position:relative}
+.despau-figure{
+  margin:0;position:relative;
+  background:linear-gradient(180deg,#7A93AC 0%,#5F7D99 52%,#31506B 100%);
+}
+/* marco de «capa seleccionada»: bounding box + manijas, como en el póster */
 .despau-figure::before{
-  content:"";position:absolute;inset:-10% -18%;pointer-events:none;
-  background:radial-gradient(ellipse 52% 46% at 50% 38%,
-    rgba(242,242,240,.92),
-    rgba(242,242,240,.45) 52%,
-    rgba(242,242,240,0) 74%);
+  content:"";position:absolute;inset:9px;pointer-events:none;
+  border:1px solid rgba(125,226,138,.9);
+  background-image:
+    linear-gradient(#7DE28A,#7DE28A),linear-gradient(#7DE28A,#7DE28A),
+    linear-gradient(#7DE28A,#7DE28A),linear-gradient(#7DE28A,#7DE28A);
+  background-size:7px 7px;
+  background-position:0 0,100% 0,0 100%,100% 100%;
+  background-repeat:no-repeat;
 }
-.despau-figure img{
-  position:relative;width:100%;height:auto;display:block;
-  -webkit-mask-image:linear-gradient(to bottom,#000 76%,transparent 99%);
-  mask-image:linear-gradient(to bottom,#000 76%,transparent 99%);
-}
-.despau-figure figcaption{
-  display:flex;justify-content:space-between;gap:12px;
-  margin-top:14px;
-  font-size:10.5px;font-weight:600;letter-spacing:.18em;text-transform:uppercase;
-  color:#8A8A86;
-}
+.despau-figure img{position:relative;width:100%;height:auto;display:block}
 .despau-clients{margin-top:clamp(28px,5vh,44px)}
 .despau-grid p{color:var(--ink-soft);font-size:16px;max-width:56ch}
 .despau-grid p+p{margin-top:18px}
@@ -501,7 +497,6 @@ footer a:hover{color:var(--ink)}
     </div>
     <figure class="despau-figure rv">
       <img src="assets/despau.webp" alt="Autorretrato ilustrado de David Despau: tinta y rayado a pluma con acuarela azul" loading="lazy" width="1400" height="1225" onerror="this.closest('figure').style.display='none'">
-      <figcaption><span>David Despau</span><span>Autorretrato · tinta y acuarela</span></figcaption>
     </figure>
   </div>
 </section>
