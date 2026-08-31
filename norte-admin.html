@@ -127,6 +127,12 @@ button.mini:hover{color:var(--ink);border-color:var(--ink)}
 .estado.dentro{color:#0E0E0E;background:var(--verde)}
 .estado.espera{color:var(--accent);border:1px solid var(--accent)}
 .fila-espera td{opacity:.62}
+button.borrar{
+  background:none;cursor:pointer;font-family:inherit;font-size:12px;line-height:1;
+  color:var(--ink-dim);border:1px solid var(--line);border-radius:50%;
+  width:28px;height:28px;transition:color .2s,border-color .2s;
+}
+button.borrar:hover{color:#E25555;border-color:#E25555}
 #vacio{padding:48px 0;color:var(--ink-soft);font-size:14px;display:none}
 .nota{margin-top:26px;font-size:12px;color:var(--ink-dim);max-width:64ch}
 .tabla-scroll{overflow-x:auto}
@@ -187,7 +193,7 @@ button.mini:hover{color:var(--ink);border-color:var(--ink)}
       <thead>
         <tr>
           <th>#</th><th>Estado</th><th>Nombre</th><th>Matrícula</th><th>Sem.</th>
-          <th>Correo</th><th>«El norte para mí»</th><th>Llegada</th>
+          <th>Correo</th><th>«El norte para mí»</th><th>Llegada</th><th></th>
         </tr>
       </thead>
       <tbody id="cuerpo"></tbody>
@@ -195,7 +201,7 @@ button.mini:hover{color:var(--ink);border-color:var(--ink)}
   </div>
   <p id="vacio">Aún no hay registros. En cuanto alguien se registre, aparece aquí solo.</p>
 
-  <p class="nota">El orden es por fecha de llegada: los primeros 30 quedan «dentro» y el resto en lista de espera. Para borrar un registro (p. ej. una prueba) usa la consola de Firebase — este panel es solo de lectura.</p>
+  <p class="nota">El orden es por fecha de llegada: los primeros 30 quedan «dentro» y el resto en lista de espera. El botón ✕ borra un registro de forma definitiva — pide confirmación, pero no hay papelera.</p>
 </section>
 
 <script>
@@ -233,6 +239,7 @@ button.mini:hover{color:var(--ink);border-color:var(--ink)}
         + '<td class="correo">' + esc(r.correo) + '</td>'
         + '<td class="norte-txt" title="' + esc(r.norte) + '">' + esc(r.norte) + '</td>'
         + '<td class="fecha">' + esc(fmtFecha(r.fecha)) + '</td>'
+        + '<td><button class="borrar" data-id="' + esc(r._id) + '" data-nombre="' + esc(r.nombre) + '" title="Borrar este registro">✕</button></td>'
         + '</tr>';
     }).join('');
   }
@@ -277,6 +284,17 @@ button.mini:hover{color:var(--ink);border-color:var(--ink)}
   $('#btnSalir').addEventListener('click', function(){ salir('Sesión cerrada.'); });
 
   $('#buscar').addEventListener('input', function(){ filtro = norm(this.value.trim()); pintar(); });
+
+  $('#cuerpo').addEventListener('click', function(ev){
+    var btn = ev.target.closest('.borrar');
+    if (!btn) return;
+    var nombre = btn.getAttribute('data-nombre') || 'este registro';
+    if (!confirm('¿Borrar el registro de «' + nombre + '»? Esto no se puede deshacer.')) return;
+    db.ref('norteRegistros/' + btn.getAttribute('data-id')).remove()
+      .catch(function(err){
+        alert('No se pudo borrar (' + (err && err.code || 'error') + '). Si dice PERMISSION_DENIED, falta publicar las reglas nuevas en la consola.');
+      });
+  });
 
   $('#btnCsv').addEventListener('click', function(){
     var enc = ['Orden','Estado','Nombre','Matricula','Correo','Semestre','El norte para mi','Fecha'];
