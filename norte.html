@@ -636,7 +636,11 @@ footer a:hover{color:var(--ink)}
         'varying vec2 vUv; varying float vShade;',
         'void main(){',
         '  vec4 c = texture2D(uTex, vUv);',
-        '  c.rgb *= clamp(1.0 + vShade, 0.55, 1.4);',
+        '  float wx = sin(vUv.x*900.0);',            /* urdimbre */
+        '  float wy = sin(vUv.y*820.0);',            /* trama */
+        '  float tejido = (wx + wy) * 0.045;',
+        '  float fibra = fract(sin(dot(vUv, vec2(12.9898,78.233))) * 43758.5453) - 0.5;',
+        '  c.rgb *= clamp(1.0 + vShade, 0.55, 1.4) * (1.0 + tejido + fibra*0.06);',
         '  gl_FragColor = c;',
         '}'
       ].join('\n')
