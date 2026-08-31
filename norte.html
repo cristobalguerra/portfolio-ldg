@@ -622,10 +622,12 @@ footer a:hover{color:var(--ink)}
         '  float A = p.x*9.0 + uTime*2.0;',
         '  float B = p.x*5.0 + p.y*7.0 + uTime*1.4;',
         '  float C = p.y*11.0 + uTime*2.5;',
-        '  float wav = sin(A)*0.5 + sin(B)*0.35 + sin(C)*0.15;',
+        '  float D = p.x*16.0 + p.y*6.0 + uTime*3.1;',
+        '  float wav = sin(A)*0.5 + sin(B)*0.35 + sin(C)*0.15 + sin(D)*0.1;',
         '  p.z = wav * uAmp * env;',
-        '  float dzdx = (cos(A)*9.0*0.5 + cos(B)*5.0*0.35) * uAmp * env;',
-        '  vShade = -dzdx*0.18;',
+        '  float sx = cos(A)*4.5 + cos(B)*1.75 + cos(D)*1.6;',
+        '  float sy = cos(B)*2.45 + cos(C)*1.65 + cos(D)*0.6;',
+        '  vShade = -(sx*0.05 + sy*0.032) * env;',
         '  gl_Position = projectionMatrix * modelViewMatrix * vec4(p, 1.0);',
         '}'
       ].join('\n'),
@@ -634,7 +636,7 @@ footer a:hover{color:var(--ink)}
         'varying vec2 vUv; varying float vShade;',
         'void main(){',
         '  vec4 c = texture2D(uTex, vUv);',
-        '  c.rgb *= clamp(1.0 + vShade, 0.78, 1.22);',
+        '  c.rgb *= clamp(1.0 + vShade, 0.55, 1.4);',
         '  gl_FragColor = c;',
         '}'
       ].join('\n')
@@ -666,7 +668,7 @@ footer a:hover{color:var(--ink)}
       var sh = sw/IMG_ASPECT;
       mesh.scale.set(sw, sh, 1);
       mesh.position.y = wh/2 - sh/2 + wh*0.02;     /* siempre pegada al top */
-      uniforms.uAmp.value = sw*0.1;
+      uniforms.uAmp.value = sw*0.2;
     }
     addEventListener('resize', layout);
 
