@@ -632,7 +632,7 @@ footer a:hover{color:var(--ink)}
         '}'
       ].join('\n'),
       fragmentShader: [
-        'uniform sampler2D uTex;',
+        'uniform sampler2D uTex; uniform float uTime;',
         'varying vec2 vUv; varying float vShade;',
         'void main(){',
         '  vec4 c = texture2D(uTex, vUv);',
@@ -640,7 +640,9 @@ footer a:hover{color:var(--ink)}
         '  float wy = sin(vUv.y*820.0);',            /* trama */
         '  float tejido = (wx + wy) * 0.045;',
         '  float fibra = fract(sin(dot(vUv, vec2(12.9898,78.233))) * 43758.5453) - 0.5;',
+        '  float grano = fract(sin(dot(gl_FragCoord.xy, vec2(12.9898,78.233)) + uTime*61.0) * 43758.5453) - 0.5;',
         '  c.rgb *= clamp(1.0 + vShade, 0.55, 1.4) * (1.0 + tejido + fibra*0.06);',
+        '  c.rgb += grano*0.07;',
         '  gl_FragColor = c;',
         '}'
       ].join('\n')
