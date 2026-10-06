@@ -460,8 +460,10 @@ dialog.ficha::backdrop{background:rgba(20,20,20,.7)}
 .cta .manif{
   font-size:clamp(40px,7.5vw,96px);max-width:12ch;margin:0 0 clamp(72px,12vh,128px);
   letter-spacing:-.04em;line-height:.96;
-  font-style:italic;font-synthesis:style; /* New June no trae itálica: el navegador la inclina */
 }
+.cta .manif span{display:block}
+/* segunda línea en light e itálica; New June se autohospeda en Regular (su peso ligero aquí) y el navegador la inclina */
+.cta .manif .lt{font-weight:400;font-style:italic;font-synthesis:style;letter-spacing:-.03em;margin-top:.08em}
 .cta h2{font-size:clamp(22px,2.6vw,32px);max-width:22ch;margin:0 0 22px;letter-spacing:-.01em;line-height:1.15}
 .cta .visit{margin-bottom:20px}
 .cta a.mail{
@@ -699,7 +701,7 @@ footer nav a:hover{color:var(--ink)}
   <div class="ceja-dark" aria-hidden="true"></div>
   <div class="wrap">
     <p class="label rv">LDG <span class="arrow">→</span> LDVN · Plan 2027</p>
-    <p class="manif display rv">El diseño evoluciona. La carrera también.</p>
+    <p class="manif display rv"><span>El diseño evoluciona.</span> <span class="lt">La carrera también.</span></p>
     <h2 class="display rv">Conoce el programa en persona.</h2>
     <p class="visit rv"><a class="mail" href="mailto:ldg.crgs@udem.edu?subject=Quiero%20conocer%20la%20Licenciatura%20en%20Dise%C3%B1o%20Visual%20y%20Negocios%20Creativos">Agenda una visita</a></p>
     <p class="rv"><a class="plain" href="mailto:ldg.crgs@udem.edu">ldg.crgs@udem.edu</a></p>
