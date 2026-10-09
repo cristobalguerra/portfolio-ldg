@@ -3,26 +3,22 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta name="theme-color" content="#0E0E0E">
+<meta name="theme-color" content="#232323">
 <title>LDG · UDEM · Trayecto</title>
 <link rel="icon" href="assets/favicon.svg?v=4" type="image/svg+xml">
 <link rel="icon" href="assets/favicon-32.png?v=4" sizes="32x32" type="image/png">
 <link rel="apple-touch-icon" href="assets/favicon-180.png?v=4">
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Archivo:ital,wdth,wght@0,62..125,100..900;1,62..125,100..900&display=swap" rel="stylesheet">
 <style>
 /* ============ PROPUESTA «LIMPIA» · Trayecto del egresado ============
-   Misma mano que propuesta-limpia.html: grotesca editorial mínima,
-   una sola familia (Archivo variable), negro plano, aire, acento quirúrgico. */
+   Look & feel LDVN vía assets/ldvn.css (New June, negro #232323, amarillo #FFF500). */
 
 :root{
-  --bg:#0E0E0E;
+  --bg:#232323;
   --ink:#F2F2F0;
-  --ink-soft:#9C9C98;
-  --ink-dim:#5C5C58;
-  --line:rgba(255,255,255,.12);
-  --accent:hsl(280 85% 76%);
+  --ink-soft:#A8A8A3;
+  --ink-dim:#7A7A76;
+  --line:#5C5C5C;
+  --accent:#FFF500;
   --max:1200px;
   --pad:clamp(20px,4vw,56px);
 }
@@ -31,23 +27,23 @@ html{overflow-x:clip;scroll-behavior:smooth}
 @media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}}
 body{
   background:var(--bg);color:var(--ink);
-  font-family:'Archivo',system-ui,sans-serif;
+  font-family:'New June',system-ui,sans-serif;
   font-size:17px;line-height:1.55;
   -webkit-font-smoothing:antialiased;
 }
-::selection{background:var(--accent);color:#0E0E0E}
+::selection{background:var(--accent);color:#232323}
 :focus-visible{outline:2px solid var(--accent);outline-offset:3px}
 img{max-width:100%;display:block}
 a{color:inherit;text-decoration:none}
 
 /* ---------- utilidades tipográficas ---------- */
 .display{
-  font-weight:800;font-stretch:118%;
-  text-transform:uppercase;letter-spacing:-.01em;line-height:.94;
+  font-weight:700;
+  letter-spacing:-.01em;line-height:.94;
   text-wrap:balance;
 }
 .label{
-  font-size:11px;font-weight:600;letter-spacing:.18em;
+  font-size:11px;font-weight:700;letter-spacing:.08em;
   text-transform:uppercase;color:var(--ink-soft);
 }
 .wrap{max-width:var(--max);margin:0 auto;padding-inline:var(--pad)}
@@ -66,9 +62,9 @@ a{color:inherit;text-decoration:none}
   transition:background .3s ease,border-color .3s ease,padding .3s ease;
 }
 .nav.scrolled{
-  background:rgba(14,14,14,.96);border-color:var(--line);padding-block:14px;
+  background:rgba(35,35,35,.96);border-color:var(--line);padding-block:14px;
 }
-.nav .brand{font-weight:800;font-stretch:118%;font-size:17px;letter-spacing:.01em}
+.nav .brand{font-weight:700;font-size:17px;letter-spacing:.01em}
 .nav .brand{display:inline-flex;align-items:center;gap:.14em}
 /* flecha de marca: celda cuadrada de 1em (alto del logotipo), gira al hover */
 .nav .brand .b-arrow{width:1em;height:1em;display:grid;place-items:center;color:var(--accent);flex:none}
@@ -80,7 +76,7 @@ a{color:inherit;text-decoration:none}
   display:none;align-items:center;gap:9px;
   background:none;border:1px solid var(--line);border-radius:99px;
   color:var(--ink);font:inherit;font-size:10px;font-weight:700;
-  letter-spacing:.18em;text-transform:uppercase;padding:9px 14px;cursor:pointer;
+  letter-spacing:.08em;text-transform:uppercase;padding:9px 14px;cursor:pointer;
 }
 .menu-btn .tick{
   width:7px;height:7px;border-right:1.6px solid var(--accent);border-bottom:1.6px solid var(--accent);
@@ -90,44 +86,44 @@ a{color:inherit;text-decoration:none}
 @media (prefers-reduced-motion:reduce){.menu-btn .tick{transition:none}}
 /* ---------- banda clara: apartados documentales sobre papel ---------- */
 .band-light{
-  --bg:#F4F3EF;
-  --ink:#141414;
-  --ink-soft:#57564F;
-  --ink-dim:#75746E;
-  --line:rgba(0,0,0,.14);
-  --line-2:rgba(0,0,0,.3);
-  --paper:#F4F3EF;
-  --paper-2:#EAE8E1;
-  --accent:hsl(280 60% 42%);
-  --yellow:hsl(280 60% 42%);
-  --yellow-deep:hsl(280 65% 36%);
-  --verm:hsl(280 60% 42%);
-  --on-accent:#F4F3EF;
+  --bg:#F2F2F0;
+  --ink:#232323;
+  --ink-soft:#5C5C5C;
+  --ink-dim:#7A7A76;
+  --line:#C9C9C5;
+  --line-2:#8A8A86;
+  --paper:#F2F2F0;
+  --paper-2:#E2E2DE;
+  --accent:#232323;
+  --yellow:#232323;
+  --yellow-deep:#232323;
+  --verm:#232323;
+  --on-accent:#F2F2F0;
   --warn:hsl(8 70% 40%);
   --green:hsl(145 60% 27%);
   background:var(--bg);color:var(--ink);
 }
-.band-light ::selection{background:hsl(280 60% 42%);color:#F4F3EF}
+.band-light ::selection{background:#232323;color:#F2F2F0}
 .nav ul{display:flex;gap:clamp(14px,2.5vw,34px);list-style:none}
 .nav ul a{
-  font-size:11.5px;font-weight:600;letter-spacing:.14em;text-transform:uppercase;
+  font-size:11.5px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;
   padding-bottom:3px;border-bottom:1px solid transparent;transition:border-color .2s;
 }
 .nav ul a:hover{border-color:var(--ink)}
 .nav ul a[aria-current="page"]{border-color:var(--ink)}
 @media(max-width:720px){
   .nav{padding-inline:16px}
-  .nav.open{background:rgba(14,14,14,.98);border-color:var(--line)}
+  .nav.open{background:rgba(35,35,35,.98);border-color:var(--line)}
   .nav .brand{font-size:14px}
   .menu-btn{display:inline-flex}
   .nav > nav{
     position:absolute;top:100%;left:0;right:0;display:none;
-    background:rgba(14,14,14,.98);border-bottom:1px solid var(--line);
+    background:rgba(35,35,35,.98);border-bottom:1px solid var(--line);
   }
   .nav.open > nav{display:block}
   .nav ul{display:block;padding:4px 16px 14px}
   .nav ul a{
-    display:block;font-size:13px;letter-spacing:.16em;
+    display:block;font-size:13px;letter-spacing:.08em;
     padding:15px 2px;border-bottom:0;border-top:1px solid var(--line);
   }
   .nav ul li:first-child a{border-top:0}
@@ -145,8 +141,8 @@ a{color:inherit;text-decoration:none}
 .print-btn{
   display:inline-flex;align-items:center;gap:10px;margin-top:34px;
   background:none;border:1px solid var(--line);border-radius:99px;
-  color:var(--ink);font:inherit;font-size:11px;font-weight:600;
-  letter-spacing:.18em;text-transform:uppercase;
+  color:var(--ink);font:inherit;font-size:11px;font-weight:700;
+  letter-spacing:.08em;text-transform:uppercase;
   padding:12px 22px;cursor:pointer;
   transition:color .2s,border-color .2s;
 }
@@ -194,7 +190,7 @@ section{padding-block:clamp(60px,9vh,110px)}
   gap:clamp(28px,5vw,72px);align-items:start;
   padding:8px 0 clamp(44px,7vh,68px);
 }
-.tr-photo{overflow:hidden;background:#161616}
+.tr-photo{overflow:hidden;background:#2E2E2E}
 .tr-photo img{
   width:100%;aspect-ratio:4/5;object-fit:cover;
   filter:grayscale(1) contrast(1.04);transition:filter .4s ease;
@@ -204,14 +200,14 @@ section{padding-block:clamp(60px,9vh,110px)}
 
 .tr-detail{min-width:0}
 .tr-kicker{display:block;margin-bottom:4px}
-.tr-kicker b{color:var(--accent);font-weight:600}
+.tr-kicker b{color:var(--accent);font-weight:700}
 .tr-block{margin-top:30px}
 .tr-block .label{display:block;margin-bottom:13px}
 .tr-block p{color:var(--ink-soft);font-size:15.5px;line-height:1.65;max-width:62ch}
 .tr-block p+p{margin-top:12px}
 .tr-skills{display:flex;flex-wrap:wrap;gap:10px}
 .tr-skills span{
-  font-size:12px;font-weight:600;letter-spacing:.04em;color:var(--ink);
+  font-size:12px;font-weight:700;letter-spacing:.04em;color:var(--ink);
   border:1px solid var(--line);border-radius:99px;padding:8px 15px;
 }
 .tr-stats{
@@ -220,12 +216,12 @@ section{padding-block:clamp(60px,9vh,110px)}
 }
 .tr-stats dt{margin-bottom:8px}
 .tr-stats dd{
-  font-weight:800;font-stretch:118%;text-transform:uppercase;
+  font-weight:700;
   font-size:clamp(17px,2.2vw,23px);letter-spacing:-.01em;line-height:1;
 }
 .tr-links{display:flex;flex-wrap:wrap;gap:14px 26px;margin-top:32px}
 .tr-links a{
-  font-size:11.5px;font-weight:700;letter-spacing:.18em;text-transform:uppercase;
+  font-size:11.5px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;
   border-bottom:1px solid var(--ink);padding-bottom:4px;
   transition:color .2s,border-color .2s;
 }
@@ -233,13 +229,13 @@ section{padding-block:clamp(60px,9vh,110px)}
 
 /* ---------- cierre ---------- */
 .cierre p.big{
-  font-size:clamp(20px,2.9vw,33px);line-height:1.32;font-weight:420;
+  font-size:clamp(20px,2.9vw,33px);line-height:1.32;font-weight:400;
   color:var(--ink-soft);max-width:30ch;letter-spacing:-.01em;
 }
-.cierre p.big em{font-style:italic;font-weight:640;color:var(--ink)}
+.cierre p.big em{font-style:italic;font-weight:700;color:var(--ink)}
 .cierre .go{margin-top:30px}
 .cierre .go a{
-  font-size:12px;font-weight:700;letter-spacing:.2em;text-transform:uppercase;
+  font-size:12px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;
   border-bottom:1px solid var(--ink);padding-bottom:5px;
   transition:color .2s,border-color .2s;
 }
@@ -252,7 +248,7 @@ footer{
   padding:26px var(--pad);font-size:12px;color:var(--ink-soft);
 }
 footer nav{display:flex;flex-wrap:wrap;gap:20px}
-footer nav a{letter-spacing:.1em;text-transform:uppercase;font-size:11px;font-weight:600}
+footer nav a{letter-spacing:.1em;text-transform:uppercase;font-size:11px;font-weight:700}
 footer nav a:hover{color:var(--ink)}
 
 /* ---------- móvil ---------- */
@@ -271,7 +267,7 @@ footer nav a:hover{color:var(--ink)}
     --ink-soft:#555555;
     --ink-dim:#777777;
     --line:rgba(0,0,0,.16);
-    --accent:#6d28d9;
+    --accent:#232323;
   }
   html,body{background:#fff !important;color:#111 !important}
   .nav,footer,.print-btn,.tr-plus,.cierre{display:none !important}
@@ -289,6 +285,9 @@ footer nav a:hover{color:var(--ink)}
   a{color:inherit !important}
 }
 </style>
+<link rel="preload" href="assets/fonts/NewJune-Bold.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="assets/fonts/NewJune-Regular.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="assets/ldvn.css?v=20261009d">
 </head>
 <body>
 

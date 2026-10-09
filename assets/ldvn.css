@@ -1,0 +1,198 @@
+/* ============ LDVN · capa de look & feel para las páginas LDG ============
+   Transición LDG → LDVN (Plan 2027). Esta hoja se carga DESPUÉS del CSS
+   propio de cada página y solo cambia la interfaz: tipografía, color,
+   píldoras, cejas. Ningún contenido vive aquí.
+   Fuente de verdad: /LDVN (desplegable Open House, Figma OQaTxz7HaCGYw65vbuCIcZ).
+   New June (tipografía UDEM) · negro #232323 · amarillo #FFF500 ·
+   papel #F2F2F0 · gris #A8A8A3 · hairlines #5C5C5C. */
+
+@font-face{
+  font-family:'New June';font-weight:400;font-style:normal;font-display:swap;
+  src:url('fonts/NewJune-Regular.woff2') format('woff2');
+}
+@font-face{
+  font-family:'New June';font-weight:700;font-style:normal;font-display:swap;
+  src:url('fonts/NewJune-Bold.woff2') format('woff2');
+}
+
+/* ---------- tokens ---------- */
+:root{
+  --bg:#232323;
+  --ink:#F2F2F0;
+  --ink-soft:#A8A8A3;
+  --ink-dim:#7A7A76;
+  --line:#5C5C5C;
+  --line-2:#8A8A86;
+  --accent:#FFF500;
+  --eyebrow:#FFF500;
+  --on-accent:#232323;
+  --paper:var(--bg);
+  --paper-2:#2E2E2E;
+  --yellow:#FFF500;
+  --yellow-deep:#E6DD00;
+  --verm:#FFF500;
+  --disp:'New June',system-ui,-apple-system,sans-serif;
+  --sans:'New June',system-ui,-apple-system,sans-serif;
+  --mono:'New June',system-ui,-apple-system,sans-serif;
+  --ease:cubic-bezier(.22,1,.36,1);
+}
+body{
+  background:var(--bg);color:var(--ink);
+  font-family:'New June',system-ui,-apple-system,sans-serif;
+  font-synthesis:none;
+  -webkit-font-smoothing:antialiased;
+}
+::selection{background:var(--accent);color:#232323}
+:focus-visible{outline:2px solid var(--accent);outline-offset:3px}
+button{font:inherit;color:inherit}
+em{font-style:normal;font-weight:700} /* New June se autohospeda en Regular y Bold */
+.arrow{font-family:system-ui,-apple-system,sans-serif} /* la flecha → no existe en New June */
+
+/* ---------- banda papel (documento) ---------- */
+.band-light{
+  --bg:#F2F2F0;
+  --ink:#232323;
+  --ink-soft:#5C5C5C;
+  --ink-dim:#7A7A76;
+  --line:#C9C9C5;
+  --line-2:#8A8A86;
+  --paper:#F2F2F0;
+  --paper-2:#E2E2DE;
+  --accent:#232323;
+  --eyebrow:#7A7A76;
+  --yellow:#232323;
+  --yellow-deep:#232323;
+  --verm:#232323;
+  --on-accent:#F2F2F0;
+  background:var(--bg);color:var(--ink);
+}
+.band-light ::selection{background:#232323;color:#FFF500}
+
+/* ---------- banda amarilla (contraportada) ---------- */
+.band-yellow{
+  --bg:#FFF500;
+  --ink:#232323;
+  --ink-soft:#4A4A3C;
+  --ink-dim:#5C5C50;
+  --line:rgba(35,35,35,.35);
+  --line-2:rgba(35,35,35,.6);
+  --accent:#232323;
+  --eyebrow:#232323;
+  --on-accent:#FFF500;
+  background:var(--bg);color:var(--ink);
+}
+.band-yellow ::selection{background:#232323;color:#FFF500}
+
+/* ---------- tipografía ---------- */
+.display,h1.title{
+  font-family:var(--disp);font-weight:700;font-stretch:normal;
+  text-transform:none;letter-spacing:-.025em;line-height:.98;
+  text-wrap:balance;
+}
+.label,.eyebrow,.sec-no{
+  font-family:var(--sans);font-size:12px;font-weight:700;letter-spacing:.08em;
+  text-transform:uppercase;color:var(--eyebrow);
+}
+.eyebrow::before{background:var(--accent)}
+.sec-no{
+  background:var(--accent);color:var(--on-accent);
+  padding:6px 12px 5px;border-radius:99px;
+}
+.band-light .sec-no{background:#232323;color:#F2F2F0}
+b,strong{font-weight:700}
+
+/* ---------- nav ----------
+   Fondo permanente: desenfoque + degradado neutro (negro → transparente),
+   en un pseudo para que el desplegable móvil no quede recortado por la máscara. */
+.nav{background:transparent;border-bottom:0}
+.nav.scrolled{background:transparent;border-color:transparent}
+.nav::before{
+  content:"";position:absolute;left:0;right:0;top:0;bottom:-44px;z-index:-1;pointer-events:none;
+  background:linear-gradient(180deg,rgba(35,35,35,.78) 0%,rgba(35,35,35,.42) 55%,rgba(35,35,35,0) 100%);
+  -webkit-backdrop-filter:blur(14px) saturate(100%);backdrop-filter:blur(14px) saturate(100%);
+  -webkit-mask-image:linear-gradient(180deg,#000 0%,#000 50%,transparent 100%);
+  mask-image:linear-gradient(180deg,#000 0%,#000 50%,transparent 100%);
+}
+.nav.open::before{display:none}
+.nav .brand{font-weight:700;font-stretch:normal;font-size:17px;letter-spacing:-.01em}
+.nav .brand .b-arrow{color:var(--accent)}
+.nav ul a{
+  font-size:12px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;
+  border-bottom:1px solid transparent;transition:border-color .2s,color .2s;
+}
+.nav ul a:hover{border-color:var(--ink)}
+.nav ul a[aria-current="page"],.nav ul a[aria-current="true"]{color:var(--accent);border-color:transparent}
+.menu-btn{
+  border:1px solid var(--line);border-radius:99px;color:var(--ink);
+  font-size:11px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;
+}
+.menu-btn .tick{border-color:var(--accent)}
+@media(max-width:760px){
+  .nav.open,.nav > nav{background:rgba(35,35,35,.98)}
+  .nav ul a{font-size:13px;letter-spacing:.1em}
+}
+
+/* ---------- píldoras: botones, chips, etiquetas ---------- */
+.btn,.print-btn,.chip,.pill,.tag-chip,.filter button,.filters button,.tabs button,.tab{
+  border-radius:99px;
+  font-family:var(--sans);font-weight:700;letter-spacing:.08em;text-transform:uppercase;
+}
+.btn,.print-btn{
+  font-size:12px;padding:14px 20px;border:1px solid var(--line-2);color:var(--ink);
+  transition:background .2s,color .2s,border-color .2s;
+}
+.btn:hover,.print-btn:hover{border-color:var(--ink);color:var(--ink)}
+.btn.solid{background:var(--accent);color:var(--on-accent);border-color:var(--accent)}
+.btn.solid:hover{background:var(--ink);color:var(--bg);border-color:var(--ink)}
+.btn.mini{padding:8px 14px;font-size:10.5px}
+/* píldora amarilla de titular (como «La carrera también.» en el desplegable) */
+.pill{
+  display:inline-block;background:var(--accent);color:var(--on-accent);
+  border:1px solid var(--accent);font-size:12px;padding:8px 16px;
+}
+.band-light .pill,.band-yellow .pill{background:#232323;color:#F2F2F0;border-color:#232323}
+
+/* ---------- enlaces subrayados ---------- */
+.more a,.cta a.mail,.ruta a,.linkbtn{
+  font-size:12px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;
+}
+.more a:hover,.cta a.mail:hover{color:var(--accent);border-color:var(--accent)}
+.band-yellow .cta a.mail:hover,.band-yellow .more a:hover{color:var(--ink-soft);border-color:var(--ink-soft)}
+
+/* ---------- cejas en diagonal (el corte del desplegable) ---------- */
+.ceja{
+  position:absolute;top:0;bottom:0;z-index:0;pointer-events:none;
+  width:clamp(72px,9vw,140px);background:var(--accent);
+}
+.ceja.right{right:0;clip-path:polygon(0 0,100% 0,100% 100%,58% 100%)} /* más ancha arriba, como el corte del desplegable */
+.ceja.left{left:0;clip-path:polygon(0 0,100% 0,42% 100%,0 100%)}
+.ceja.dark{background:#232323}
+@media(max-width:760px){.ceja{display:none}}
+
+/* ---------- hero del inicio: la portada del desplegable ---------- */
+.hero .udem-tag{position:absolute;top:0;right:0;z-index:2;height:clamp(47px,5.4vw,65px)} /* 10% menor */
+.hero .udem-tag img{height:100%;width:auto}
+.hero .label{color:var(--accent);opacity:1}
+.hero .hint{letter-spacing:.12em;color:var(--ink-soft)}
+@media(max-width:760px){.hero .udem-tag{height:47px}}
+
+/* ---------- statement / cta ---------- */
+.statement .pill{display:inline-block;background:var(--accent);color:var(--on-accent);border-color:var(--accent);font-size:12px;font-weight:700;letter-spacing:.08em;padding:8px 16px;margin-bottom:30px}
+.cta-status{letter-spacing:.08em;font-weight:700}
+.cta-status .dot{background:var(--accent)}
+.cta.band-yellow{position:relative;overflow:clip;max-width:none;padding-inline:0}
+.cta.band-yellow > .wrap,.cta.band-yellow > .cta-in{position:relative;z-index:1}
+
+/* ---------- footer ---------- */
+footer nav a{letter-spacing:.08em;text-transform:uppercase;font-size:11px;font-weight:700}
+
+/* ---------- superficies ---------- */
+.work .ph,.tr-photo,.modal-media{background:#2E2E2E}
+.modal{background:#232323}
+
+/* ---------- impresión ---------- */
+@media print{
+  :root{--accent:#232323;--eyebrow:#232323;--yellow:#232323;--verm:#232323}
+  body{font-family:'New June',system-ui,sans-serif}
+  .ceja,.udem-tag{display:none !important}
+}

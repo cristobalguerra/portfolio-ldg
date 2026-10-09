@@ -3,14 +3,11 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta name="theme-color" content="#0E0E0E">
+<meta name="theme-color" content="#232323">
 <title>LDG · UDEM · Showcase</title>
 <link rel="icon" href="assets/favicon.svg?v=4" type="image/svg+xml">
 <link rel="icon" href="assets/favicon-32.png?v=4" sizes="32x32" type="image/png">
 <link rel="apple-touch-icon" href="assets/favicon-180.png?v=4">
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Archivo:ital,wdth,wght@0,62..125,100..900;1,62..125,100..900&display=swap" rel="stylesheet">
 
 <!-- Firebase (solo lectura · ldgProjects/ldgAwards). Si no carga la red, el script cae a los 17 proyectos base. -->
 <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
@@ -32,16 +29,15 @@
 
 <style>
 /* ============ PROPUESTA «LIMPIA» · SHOWCASE — catálogo de tesis ============
-   Misma mano que propuesta-limpia.html: grotesca editorial mínima,
-   una sola familia (Archivo variable), negro plano, aire, acento quirúrgico. */
+   Look & feel LDVN vía assets/ldvn.css (New June, negro #232323, amarillo #FFF500). */
 
 :root{
-  --bg:#0E0E0E;
+  --bg:#232323;
   --ink:#F2F2F0;
-  --ink-soft:#9C9C98;
+  --ink-soft:#A8A8A3;
   --ink-dim:#7A7A76;
-  --line:rgba(255,255,255,.12);
-  --accent:hsl(280 85% 76%);
+  --line:#5C5C5C;
+  --accent:#FFF500;
   --max:1200px;
   --pad:clamp(20px,4vw,56px);
 }
@@ -50,23 +46,23 @@ html{overflow-x:clip;scroll-behavior:smooth}
 @media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}}
 body{
   background:var(--bg);color:var(--ink);
-  font-family:'Archivo',system-ui,sans-serif;
+  font-family:'New June',system-ui,sans-serif;
   font-size:17px;line-height:1.55;
   -webkit-font-smoothing:antialiased;
 }
-::selection{background:var(--accent);color:#0E0E0E}
+::selection{background:var(--accent);color:#232323}
 :focus-visible{outline:2px solid var(--accent);outline-offset:3px}
 img{max-width:100%;display:block}
 a{color:inherit;text-decoration:none}
 
 /* ---------- utilidades tipográficas ---------- */
 .display{
-  font-weight:800;font-stretch:118%;
-  text-transform:uppercase;letter-spacing:-.01em;line-height:.94;
+  font-weight:700;
+  letter-spacing:-.01em;line-height:.94;
   text-wrap:balance;
 }
 .label{
-  font-size:11px;font-weight:600;letter-spacing:.18em;
+  font-size:11px;font-weight:700;letter-spacing:.08em;
   text-transform:uppercase;color:var(--ink-soft);
 }
 .wrap{max-width:var(--max);margin:0 auto;padding-inline:var(--pad)}
@@ -85,9 +81,9 @@ a{color:inherit;text-decoration:none}
   transition:background .3s ease,border-color .3s ease,padding .3s ease;
 }
 .nav.scrolled{
-  background:rgba(14,14,14,.96);border-color:var(--line);padding-block:14px;
+  background:rgba(35,35,35,.96);border-color:var(--line);padding-block:14px;
 }
-.nav .brand{font-weight:800;font-stretch:118%;font-size:17px;letter-spacing:.01em}
+.nav .brand{font-weight:700;font-size:17px;letter-spacing:.01em}
 .nav .brand{display:inline-flex;align-items:center;gap:.14em}
 /* flecha de marca: celda cuadrada de 1em (alto del logotipo), gira al hover */
 .nav .brand .b-arrow{width:1em;height:1em;display:grid;place-items:center;color:var(--accent);flex:none}
@@ -99,7 +95,7 @@ a{color:inherit;text-decoration:none}
   display:none;align-items:center;gap:9px;
   background:none;border:1px solid var(--line);border-radius:99px;
   color:var(--ink);font:inherit;font-size:10px;font-weight:700;
-  letter-spacing:.18em;text-transform:uppercase;padding:9px 14px;cursor:pointer;
+  letter-spacing:.08em;text-transform:uppercase;padding:9px 14px;cursor:pointer;
 }
 .menu-btn .tick{
   width:7px;height:7px;border-right:1.6px solid var(--accent);border-bottom:1.6px solid var(--accent);
@@ -109,44 +105,44 @@ a{color:inherit;text-decoration:none}
 @media (prefers-reduced-motion:reduce){.menu-btn .tick{transition:none}}
 /* ---------- banda clara: apartados documentales sobre papel ---------- */
 .band-light{
-  --bg:#F4F3EF;
-  --ink:#141414;
-  --ink-soft:#57564F;
-  --ink-dim:#75746E;
-  --line:rgba(0,0,0,.14);
-  --line-2:rgba(0,0,0,.3);
-  --paper:#F4F3EF;
-  --paper-2:#EAE8E1;
-  --accent:hsl(280 60% 42%);
-  --yellow:hsl(280 60% 42%);
-  --yellow-deep:hsl(280 65% 36%);
-  --verm:hsl(280 60% 42%);
-  --on-accent:#F4F3EF;
+  --bg:#F2F2F0;
+  --ink:#232323;
+  --ink-soft:#5C5C5C;
+  --ink-dim:#7A7A76;
+  --line:#C9C9C5;
+  --line-2:#8A8A86;
+  --paper:#F2F2F0;
+  --paper-2:#E2E2DE;
+  --accent:#232323;
+  --yellow:#232323;
+  --yellow-deep:#232323;
+  --verm:#232323;
+  --on-accent:#F2F2F0;
   --warn:hsl(8 70% 40%);
   --green:hsl(145 60% 27%);
   background:var(--bg);color:var(--ink);
 }
-.band-light ::selection{background:hsl(280 60% 42%);color:#F4F3EF}
+.band-light ::selection{background:#232323;color:#F2F2F0}
 .nav ul{display:flex;gap:clamp(14px,2.5vw,34px);list-style:none}
 .nav ul a{
-  font-size:11.5px;font-weight:600;letter-spacing:.14em;text-transform:uppercase;
+  font-size:11.5px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;
   padding-bottom:3px;border-bottom:1px solid transparent;transition:border-color .2s;
 }
 .nav ul a:hover{border-color:var(--ink)}
 .nav ul a[aria-current="page"]{border-color:var(--ink)}
 @media(max-width:720px){
   .nav{padding-inline:16px}
-  .nav.open{background:rgba(14,14,14,.98);border-color:var(--line)}
+  .nav.open{background:rgba(35,35,35,.98);border-color:var(--line)}
   .nav .brand{font-size:14px}
   .menu-btn{display:inline-flex}
   .nav > nav{
     position:absolute;top:100%;left:0;right:0;display:none;
-    background:rgba(14,14,14,.98);border-bottom:1px solid var(--line);
+    background:rgba(35,35,35,.98);border-bottom:1px solid var(--line);
   }
   .nav.open > nav{display:block}
   .nav ul{display:block;padding:4px 16px 14px}
   .nav ul a{
-    display:block;font-size:13px;letter-spacing:.16em;
+    display:block;font-size:13px;letter-spacing:.08em;
     padding:15px 2px;border-bottom:0;border-top:1px solid var(--line);
   }
   .nav ul li:first-child a{border-top:0}
@@ -181,7 +177,7 @@ section{padding-block:clamp(60px,9vh,110px)}
 .ctl-search input::-webkit-search-cancel-button{filter:grayscale(1)}
 .chips{display:flex;flex-wrap:wrap;gap:8px}
 .chip{
-  font-family:inherit;font-size:11px;font-weight:600;letter-spacing:.14em;
+  font-family:inherit;font-size:11px;font-weight:700;letter-spacing:.08em;
   text-transform:uppercase;color:var(--ink-soft);
   background:transparent;border:1px solid var(--line);border-radius:99px;
   padding:8px 15px;cursor:pointer;
@@ -190,7 +186,7 @@ section{padding-block:clamp(60px,9vh,110px)}
 .chip:hover{color:var(--ink);border-color:var(--ink-soft)}
 .chip[aria-pressed="true"]{color:var(--bg);background:var(--ink);border-color:var(--ink)}
 .count{
-  font-size:11px;font-weight:600;letter-spacing:.14em;text-transform:uppercase;
+  font-size:11px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;
   color:var(--ink-dim);margin-bottom:clamp(40px,6vh,64px);
 }
 @media(max-width:720px){
@@ -207,7 +203,7 @@ section{padding-block:clamp(60px,9vh,110px)}
   align-items:start;
 }
 .work{grid-column:span 12}
-.work .ph{overflow:hidden;background:#161616}
+.work .ph{overflow:hidden;background:#2E2E2E}
 .work img{
   width:100%;aspect-ratio:4/5;object-fit:cover;
   transition:transform .6s cubic-bezier(.2,.6,.2,1);
@@ -218,7 +214,7 @@ section{padding-block:clamp(60px,9vh,110px)}
   padding-top:14px;border-top:1px solid var(--line);margin-top:14px;
 }
 .work h3{
-  font-size:15.5px;font-weight:650;letter-spacing:.01em;line-height:1.3;
+  font-size:15.5px;font-weight:700;letter-spacing:.01em;line-height:1.3;
   border-bottom:1px solid transparent;display:inline;transition:border-color .2s;
 }
 .work:hover h3{border-color:var(--ink)}
@@ -228,7 +224,7 @@ section{padding-block:clamp(60px,9vh,110px)}
 }
 .empty{color:var(--ink-soft);font-size:15px}
 .empty button{
-  font-family:inherit;font-size:12px;font-weight:700;letter-spacing:.2em;
+  font-family:inherit;font-size:12px;font-weight:700;letter-spacing:.08em;
   text-transform:uppercase;color:var(--ink);background:none;border:0;cursor:pointer;
   border-bottom:1px solid var(--ink);padding:0 0 4px;margin-left:14px;
   transition:color .2s,border-color .2s;
@@ -250,7 +246,7 @@ section{padding-block:clamp(60px,9vh,110px)}
 .award .tags .badge{color:var(--accent)}
 .award h3{font-size:clamp(19px,2.2vw,24px)}
 .award .students{font-size:13px;color:var(--ink-soft);margin-top:9px;line-height:1.5}
-.award .advisor{font-size:11px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:var(--ink-dim);margin-top:9px}
+.award .advisor{font-size:11px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--ink-dim);margin-top:9px}
 @media(max-width:720px){
   .award{flex-direction:column}
   .award .aimg{flex-basis:auto}
@@ -264,14 +260,14 @@ section{padding-block:clamp(60px,9vh,110px)}
 .modal-panel{
   position:relative;margin:auto;width:min(940px,100%);
   max-height:min(700px,88svh);
-  background:#141414;border:1px solid var(--line);
+  background:#232323;border:1px solid var(--line);
   display:grid;grid-template-columns:minmax(0,4fr) minmax(0,6fr);
   overflow:hidden;
   animation:mfade .35s ease both;
 }
 @keyframes mfade{from{opacity:0;transform:translateY(18px)}to{opacity:1;transform:none}}
 @media (prefers-reduced-motion:reduce){.modal-panel{animation:none}}
-.modal-media{min-height:0;background:#161616}
+.modal-media{min-height:0;background:#2E2E2E}
 .modal-media img{width:100%;height:100%;object-fit:cover}
 .modal-body{padding:clamp(24px,4vw,44px);overflow-y:auto;scrollbar-width:thin;scrollbar-color:var(--ink-dim) transparent}
 .modal-body .kicker{color:var(--accent);margin-bottom:14px}
@@ -281,12 +277,12 @@ section{padding-block:clamp(60px,9vh,110px)}
   margin:24px 0;padding-block:20px;border-block:1px solid var(--line);
 }
 .modal-meta div:first-child{grid-column:1/-1}
-.modal-meta dt{font-size:10px;font-weight:600;letter-spacing:.18em;text-transform:uppercase;color:var(--ink-dim);margin-bottom:4px}
+.modal-meta dt{font-size:10px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--ink-dim);margin-bottom:4px}
 .modal-meta dd{font-size:14px;line-height:1.45}
 .modal-abstract{font-size:14.5px;line-height:1.65;color:var(--ink-soft)}
 .modal-dl{
   display:inline-block;margin-top:28px;
-  font-size:12px;font-weight:700;letter-spacing:.2em;text-transform:uppercase;
+  font-size:12px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;
   border-bottom:1px solid var(--ink);padding-bottom:5px;
   transition:color .2s,border-color .2s;
 }
@@ -296,7 +292,7 @@ section{padding-block:clamp(60px,9vh,110px)}
   position:absolute;top:14px;right:14px;z-index:2;
   width:40px;height:40px;display:grid;place-items:center;
   font-family:inherit;font-size:15px;line-height:1;color:var(--ink);
-  background:rgba(14,14,14,.82);border:1px solid var(--line);border-radius:50%;
+  background:rgba(35,35,35,.82);border:1px solid var(--line);border-radius:50%;
   cursor:pointer;transition:border-color .2s,color .2s;
 }
 .modal-close:hover{border-color:var(--ink)}
@@ -315,9 +311,12 @@ footer{
   padding:26px var(--pad);font-size:12px;color:var(--ink-soft);
 }
 footer nav{display:flex;flex-wrap:wrap;gap:20px}
-footer nav a{letter-spacing:.1em;text-transform:uppercase;font-size:11px;font-weight:600}
+footer nav a{letter-spacing:.1em;text-transform:uppercase;font-size:11px;font-weight:700}
 footer nav a:hover{color:var(--ink)}
 </style>
+<link rel="preload" href="assets/fonts/NewJune-Bold.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="assets/fonts/NewJune-Regular.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="assets/ldvn.css?v=20261009d">
 </head>
 <body>
 
