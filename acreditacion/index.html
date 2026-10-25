@@ -225,10 +225,34 @@ a.prof:hover{border-color:var(--line-2)}
 .paper h2{color:#1A1A17}
 .paper .sub{color:#5C5C58}
 .paper .label{color:#7A7A76}
-.paper .nivel{margin:0 0 30px}
+/* mapa del plan: 9 semestres en escala común, un cuadro por proyecto, tres niveles */
+.mapa{margin:44px 0 36px}
+.mapa .mt{font-size:12px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:#7A7A76;margin:0 0 14px}
+.mapa .niv{display:grid;grid-template-columns:repeat(9,1fr);gap:0 6px;margin:0 0 8px}
+.mapa .niv div{grid-column:span 3;border-top:3px solid #1A1A17;padding:8px 0 0;font-size:13px;line-height:1.3}
+.mapa .niv div b{display:block;font-size:15px;letter-spacing:-.01em}
+.mapa .niv div span{color:#5C5C58}
+.mapa .niv div em{font-style:normal;font-weight:700;color:#1A1A17}
+.mapa .sem{display:grid;grid-template-columns:repeat(9,1fr);gap:0 6px}
+.mapa .ms{border-top:1px solid #D4D3CE;padding:10px 0 0;min-height:74px}
+.mapa .ms u{display:block;text-decoration:none;font-size:11px;color:#7A7A76;font-variant-numeric:tabular-nums;margin-bottom:8px}
+.mapa .ms i{display:block;width:100%;height:14px;margin:0 0 4px;background:var(--dot,#1A1A17);cursor:pointer;transition:opacity .2s}
+.mapa .ms i.e1{--dot:var(--e1)}.mapa .ms i.e2{--dot:var(--e2)}.mapa .ms i.e3{--dot:var(--e3)}.mapa .ms i.e4{--dot:var(--e4)}.mapa .ms i.e5{--dot:var(--e5)}
+.mapa .ms i.oculto{opacity:.15}
+.mapa .ms i:hover,.mapa .ms i:focus-visible{outline:2px solid #1A1A17;outline-offset:1px}
+.mapa .ms:nth-child(3n+1){border-top-color:#1A1A17}
+.mapa .nota{font-size:12px;color:#5C5C58;margin:12px 0 0}
+/* tres niveles en columnas paralelas; la barra superior avanza 1/3, 2/3, 3/3 del plan */
+.niveles{display:grid;grid-template-columns:repeat(3,1fr);gap:0 28px}
+.paper .nivel{margin:0;padding-top:14px;position:relative}
+.paper .nivel::before{content:"";position:absolute;left:0;top:0;height:6px;width:100%;background:linear-gradient(90deg,#1A1A17 var(--p),#E6E5E0 var(--p))}
+.paper .nivel[data-n="1"]{--p:33.333%}.paper .nivel[data-n="2"]{--p:66.666%}.paper .nivel[data-n="3"]{--p:100%}
 .paper .nivel h3{margin:0 0 4px;font-size:22px;font-weight:700;letter-spacing:-.02em}
+.paper .nivel h3 .g{display:block;font-size:40px;line-height:1;letter-spacing:-.04em;color:#1A1A17;margin-bottom:6px}
 .paper .nivel h3 small{display:block;font-size:12px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:#7A7A76;margin-bottom:6px}
-.paper .proy{display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:0 24px;margin:0;padding:0;list-style:none}
+.paper .nivel .sin{display:none;font-size:13px;color:#7A7A76;margin:10px 0 0;border-top:1px solid #D4D3CE;padding-top:12px}
+.paper .nivel.vacio .sin{display:block}
+.paper .proy{display:block;margin:0;padding:0;list-style:none}
 .paper .proy li{font-size:15px;padding:12px 0 12px 20px;border-top:1px solid #D4D3CE;position:relative}
 .paper .proy li::before{content:"";position:absolute;left:0;top:19px;width:10px;height:10px;border-radius:50%;background:var(--dot,#1A1A17)}
 .paper .proy li.e1{--dot:var(--e1)}.paper .proy li.e2{--dot:var(--e2)}.paper .proy li.e3{--dot:var(--e3)}.paper .proy li.e4{--dot:var(--e4)}.paper .proy li.e5{--dot:var(--e5)}
@@ -243,7 +267,7 @@ a.prof:hover{border-color:var(--line-2)}
 .filtros .pill:hover{opacity:1}
 .filtros .pill:focus-visible{outline:2px solid #1A1A17;outline-offset:2px}
 .filtros .pill.on[data-e="all"]{background:#1A1A17;color:#F2F2F0}
-.paper .nivel.vacio{display:none}
+.paper .nivel.vacio .proy{display:none}
 .paper .proy li.oculto{display:none}
 .paper .pill{font-size:12.5px;padding:6px 12px}
 
@@ -340,6 +364,9 @@ footer .credito b{color:var(--ink);font-weight:700}
   .lb .prev,.lb .next,.lb .close{width:48px;height:48px}
   .lb .cap{font-size:13px}
   .paper .proy li{padding:14px 0 14px 20px}
+  .niveles{grid-template-columns:1fr;gap:28px 0}
+  .mapa .niv div{font-size:12px}.mapa .niv div b{font-size:13px}
+  .mapa .ms{min-height:60px}.mapa .ms i{height:10px}
   .person,.prof{padding:16px}
   footer .lockup{width:100%}
   .arc-hint,.fan-cap{margin-bottom:36px}
@@ -529,18 +556,25 @@ footer .credito b{color:var(--ink);font-weight:700}
       </div>
     </div>
 
-    <div class="nivel">
-      <h3><small>Nivel básico · 1.º a 3.<sup>er</sup> semestre</small>4 proyectos</h3>
+    <div class="mapa" id="mapa" aria-label="Distribución de los proyectos por semestre y nivel">
+      <p class="mt">Los 18 proyectos sobre el plan de estudios</p>
+      <div class="niv" id="mapa-niv"></div>
+      <div class="sem" id="mapa-sem"></div>
+      <p class="nota">Cada cuadro es un proyecto, colocado en el semestre de la materia; el color indica su eje curricular. Los tres niveles siguen la progresión del plan y el comité entrevista a los estudiantes de cada uno el lunes.</p>
+    </div>
+    <div class="niveles">
+    <div class="nivel" data-n="1">
+      <h3><span class="g">.1</span><small>Nivel básico · 1.º a 3.<sup>er</sup> semestre</small>4 proyectos</h3>
       <ul class="proy">
         <li class="e1" data-i="1" tabindex="0" role="button"><i>.01</i><b>Bitácora de la forma</b><span>Estudio de Introducción a la Composición Visual · 1.º</span></li>
         <li class="e1" data-i="10" tabindex="0" role="button"><i>.10</i><b>Las reglas de la forma</b><span>Estudio de Fundamentos del Diseño Gráfico · 2.º</span></li>
         <li class="e2" data-i="2" tabindex="0" role="button"><i>.02</i><b>La Victoria</b><span>Fotografía Profesional de Objeto · 3.º</span></li>
         <li class="e2" data-i="11" tabindex="0" role="button"><i>.11</i><b>Sombrerito</b><span>Fotografía Profesional de Objeto · 3.º</span></li>
       </ul>
+      <p class="sin">Sin proyectos de este eje en el nivel.</p>
     </div>
-
-    <div class="nivel">
-      <h3><small>Nivel intermedio · 4.º a 6.º semestre</small>8 proyectos</h3>
+    <div class="nivel" data-n="2">
+      <h3><span class="g">.2</span><small>Nivel intermedio · 4.º a 6.º semestre</small>8 proyectos</h3>
       <ul class="proy">
         <li class="e2" data-i="3" tabindex="0" role="button"><i>.03</i><b>Scoop &amp; Clip</b><span>Empaque y Marca · 4.º</span></li>
         <li class="e2" data-i="4" tabindex="0" role="button"><i>.04</i><b>Hello Amsterdam</b><span>Estudio de Diseño Informativo · 4.º</span></li>
@@ -551,10 +585,10 @@ footer .credito b{color:var(--ink);font-weight:700}
         <li class="e3" data-i="6" tabindex="0" role="button"><i>.06</i><b>La jugada maestra</b><span>Estudio de Diseño de Interacción · 6.º</span></li>
         <li class="e3" data-i="15" tabindex="0" role="button"><i>.15</i><b>Ojo de Tigre</b><span>Estudio de Diseño de Interacción · 6.º</span></li>
       </ul>
+      <p class="sin">Sin proyectos de este eje en el nivel.</p>
     </div>
-
-    <div class="nivel">
-      <h3><small>Nivel terminal · 7.º a 9.º semestre</small>6 proyectos</h3>
+    <div class="nivel" data-n="3">
+      <h3><span class="g">.3</span><small>Nivel terminal · 7.º a 9.º semestre</small>6 proyectos</h3>
       <ul class="proy">
         <li class="e4" data-i="7" tabindex="0" role="button"><i>.07</i><b>Artefacto</b><span>Estudio de Diseño de Servicios · 7.º</span></li>
         <li class="e4" data-i="16" tabindex="0" role="button"><i>.16</i><b>Taller MDillon</b><span>Estudio de Diseño de Servicios · 7.º</span></li>
@@ -563,6 +597,8 @@ footer .credito b{color:var(--ink);font-weight:700}
         <li class="e5" data-i="9" tabindex="0" role="button"><i>.09</i><b>La Máquina del Souvenir</b><span>Proyecto de Evaluación Final (PEF) · 9.º</span></li>
         <li class="e5" data-i="18" tabindex="0" role="button"><i>.18</i><b>Regen</b><span>Proyecto de Evaluación Final (PEF) · 9.º</span></li>
       </ul>
+      <p class="sin">Sin proyectos de este eje en el nivel.</p>
+    </div>
     </div>
   </div>
 </section>
@@ -858,6 +894,17 @@ footer .credito b{color:var(--ink);font-weight:700}
 <script>
 (function(){
   // Catálogo desde la lista por nivel (fuente única): número, título, materia y eje.
+  (function(){
+    var niv=document.getElementById('mapa-niv'), sem=document.getElementById('mapa-sem'); if(!niv) return;
+    var N=[['Básico','1.º–3.º'],['Intermedio','4.º–6.º'],['Terminal','7.º–9.º']];
+    niv.innerHTML=N.map(function(n,k){ var c=document.querySelectorAll('.paper .nivel')[k].querySelectorAll('.proy li').length; return '<div><b>'+n[0]+'</b><span>'+n[1]+' · <em>'+c+'</em> proyectos</span></div>'; }).join('');
+    var cells=[]; for(var i=1;i<=9;i++) cells.push({s:i,q:[]});
+    document.querySelectorAll('.paper .proy li').forEach(function(li){ var m=/(\d)\.(?:º|er)\s*$/.exec(li.querySelector('span').textContent.trim()); if(!m) return; var eje=(li.className.match(/\be\d\b/)||[''])[0];
+      cells[+m[1]-1].q.push('<i class="'+eje+'" data-i="'+li.dataset.i+'" tabindex="0" role="button" title="'+li.querySelector('i').textContent+' '+li.querySelector('b').textContent.replace(/"/g,'&quot;')+'"></i>'); });
+    sem.innerHTML=cells.map(function(c){ return '<div class="ms"><u>'+c.s+'.º</u>'+c.q.join('')+'</div>'; }).join('');
+    sem.addEventListener('click',function(ev){ var q=ev.target.closest('i[data-i]'); if(!q) return; var li=document.querySelector('.paper .proy li[data-i="'+q.dataset.i+'"]'); if(li) li.click(); });
+    sem.addEventListener('keydown',function(ev){ if((ev.key==='Enter'||ev.key===' ')&&ev.target.matches('i[data-i]')){ ev.preventDefault(); ev.target.click(); } });
+  })();
   var items=[].map.call(document.querySelectorAll('.paper .proy li'),function(li){
     return {i:+li.dataset.i, t:li.querySelector('b').textContent, s:li.querySelector('span').textContent, e:li.className};
   }).sort(function(a,b){return a.i-b.i;});
@@ -935,6 +982,8 @@ footer .credito b{color:var(--ink);font-weight:700}
     filtros.querySelectorAll('.pill').forEach(function(b){ var on=b.dataset.e===e; b.classList.toggle('on',on); b.setAttribute('aria-pressed',on); });
     document.querySelectorAll('.paper .proy li').forEach(function(li){ li.classList.toggle('oculto',e!=='all'&&!li.classList.contains(e)); });
     document.querySelectorAll('.paper .nivel').forEach(function(n){ var vis=n.querySelectorAll('.proy li:not(.oculto)').length; n.classList.toggle('vacio',!vis); n.querySelector('h3').lastChild.textContent=vis+(vis===1?' proyecto':' proyectos'); });
+    document.querySelectorAll('#mapa-sem i').forEach(function(q){ q.classList.toggle('oculto',e!=='all'&&!q.classList.contains(e)); });
+    document.querySelectorAll('#mapa-niv em').forEach(function(em,k){ var n=document.querySelectorAll('.paper .nivel')[k]; em.textContent=n.querySelectorAll('.proy li:not(.oculto)').length; });
     fan.classList.add('snap'); go(Math.floor(view.length/2));
   }
   filtros.addEventListener('click',function(ev){ var b=ev.target.closest('.pill'); if(b) filtrar(b.dataset.e); });
