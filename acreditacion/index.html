@@ -46,12 +46,12 @@ a{color:inherit}
 .hero p b{color:var(--ink);font-weight:700}
 .photo{position:absolute;inset:0;z-index:0;background:url('../assets/crgs-hero.jpg') center 35%/cover no-repeat}
 /* sol: una banda de luz cálida que entra por la derecha y respira, muy tenue; va y regresa en bucle */
-.sol{position:absolute;inset:-25% -30%;z-index:1;pointer-events:none;mix-blend-mode:screen;opacity:.85;
+.sol{position:absolute;inset:-25% -45%;z-index:1;pointer-events:none;mix-blend-mode:screen;opacity:.85;
   background:
     radial-gradient(55% 50% at 90% 6%,rgba(255,214,150,.7) 0%,rgba(255,196,120,.3) 35%,rgba(255,180,100,0) 70%),
     linear-gradient(150deg,rgba(255,220,170,0) 26%,rgba(255,220,170,.3) 40%,rgba(255,240,210,.58) 52%,rgba(255,220,170,.3) 64%,rgba(255,220,170,0) 78%);
-  animation:sol 48s ease-in-out infinite alternate;will-change:transform,opacity}
-@keyframes sol{0%{transform:translate(9%,-3%);opacity:.6}100%{transform:translate(-9%,3%);opacity:.95}}
+  animation:sol 40s ease-in-out infinite alternate;will-change:transform,opacity}
+@keyframes sol{0%{transform:translate(24%,-7%);opacity:.3}45%{opacity:1}100%{transform:translate(-24%,7%);opacity:.35}}
 @media(prefers-reduced-motion:reduce){.sol{animation:none;opacity:.8}}
 /* lens flare: núcleo en el sol y fantasmas alineados hacia la esquina opuesta; respira con la luz */
 .flare{position:absolute;inset:0;z-index:1;pointer-events:none;mix-blend-mode:screen;opacity:.55;
@@ -63,8 +63,8 @@ a{color:inherit}
     radial-gradient(circle at 55% 52%,rgba(255,200,150,.16) 0,rgba(255,200,150,.07) 3.4%,rgba(255,200,150,0) 4.4%),
     radial-gradient(circle at 44% 66%,rgba(255,235,200,.14) 0,rgba(255,235,200,0) 1%),
     radial-gradient(circle at 33% 80%,rgba(190,215,255,.12) 0,rgba(190,215,255,.05) 4.2%,rgba(190,215,255,0) 5.2%);
-  animation:flare 48s ease-in-out infinite alternate;will-change:transform,opacity}
-@keyframes flare{0%{transform:translate(1.2%,-.6%);opacity:.42}100%{transform:translate(-1.2%,.6%);opacity:.62}}
+  animation:flare 40s ease-in-out infinite alternate;will-change:transform,opacity}
+@keyframes flare{0%{transform:translate(2.5%,-1.2%);opacity:.3}45%{opacity:.7}100%{transform:translate(-2.5%,1.2%);opacity:.35}}
 @media(prefers-reduced-motion:reduce){.flare{animation:none;opacity:.5}}
 @media(max-width:720px){.flare{opacity:.4}}
 .fade{position:absolute;inset:0;z-index:1;background:
