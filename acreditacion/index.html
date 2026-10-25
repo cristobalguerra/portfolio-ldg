@@ -184,33 +184,45 @@ h2 .n{color:var(--yellow);margin-right:.25em}
 .paper .pills{margin:0 0 36px}
 .paper .pill{font-size:12.5px;padding:6px 12px}
 
-/* ---------- arco de carteles (adaptación del «scroll morph hero») ----------
-   18 fichas 85×190 sobre un arco; el scroll de la sección lo hace girar y
-   un clic abre la ficha a tamaño completo. En la primera visita las fichas
-   entran dispersas y se recogen en el arco (sessionStorage evita repetirlo). */
-.arc{position:relative;height:clamp(360px,52vw,560px);margin:8px 0 36px;overflow:hidden;cursor:grab;user-select:none;touch-action:pan-y}
-.arc.drag{cursor:grabbing}
-.arc .pivot{position:absolute;left:50%;bottom:-62%;width:0;height:0}
-.arc .card{position:absolute;left:0;top:0;width:var(--cw,150px);aspect-ratio:85/190;margin-left:calc(var(--cw,150px)/-2);
-  transform-origin:50% var(--r);translate:0 calc(-1*var(--r));
-  border-radius:8px;overflow:hidden;background:#0E0E0E;box-shadow:0 12px 30px rgba(0,0,0,.28);
-  transition:transform 1.1s cubic-bezier(.22,1,.36,1),opacity .6s;will-change:transform}
-.arc .card img{display:block;width:100%;height:100%;object-fit:cover}
-.arc .card button{all:unset;position:absolute;inset:0;cursor:pointer}
-.arc .card button:focus-visible{outline:3px solid var(--yellow);outline-offset:-3px}
-.arc .card .n{position:absolute;left:8px;top:8px;background:var(--yellow);color:#0E0E0E;font-size:11px;font-weight:700;padding:3px 7px;border-radius:99px;letter-spacing:.04em}
-.arc.live .card{transition:none}
-.arc .card.scatter{opacity:0}
-.arc-hint{display:flex;justify-content:space-between;align-items:center;gap:12px;font-size:12px;color:#7A7A76;margin:-24px 0 32px}
-.arc-hint .label{color:#7A7A76}
-.arc-hint .cur{font-weight:700;color:#0E0E0E;font-size:14px}
-.arc-hint .cur small{display:block;font-weight:400;color:#5C5C58;font-size:12px}
-.arc-btns{display:flex;gap:6px}
-.arc-btns button{all:unset;cursor:pointer;width:34px;height:34px;border:1px solid #C9C9C5;border-radius:50%;display:grid;place-items:center;color:#0E0E0E;font-size:16px}
-.arc-btns button:hover{border-color:#0E0E0E}
-.arc-btns button:focus-visible{outline:2px solid #0E0E0E;outline-offset:2px}
-@media(max-width:720px){.arc{--cw:104px;height:62vw}.arc .pivot{bottom:-70%}}
-@media(prefers-reduced-motion:reduce){.arc .card{transition:none}}
+/* ---------- carteles en abanico ----------
+   Una fila curva de fichas 85×190: la central nítida y a escala completa,
+   las vecinas se alejan, bajan de escala y se atenúan. Se navega con
+   arrastre, rueda horizontal, flechas o clic en una ficha lateral; al
+   soltar, la fila se ajusta a la ficha más cercana al centro. */
+.fan{position:relative;height:520px;margin:16px 0 0;overflow:hidden;cursor:grab;user-select:none;touch-action:pan-y;
+  -webkit-mask-image:linear-gradient(90deg,transparent,#000 12%,#000 88%,transparent);mask-image:linear-gradient(90deg,transparent,#000 12%,#000 88%,transparent)}
+.fan.drag{cursor:grabbing}
+.fan .pivot{position:absolute;left:50%;top:var(--py);width:0;height:0}
+.fan .card{position:absolute;left:0;top:0;width:var(--cw,210px);aspect-ratio:85/190;margin-left:calc(var(--cw,210px)/-2);
+  transform-origin:50% var(--r);translate:0 calc(-1*var(--r));opacity:var(--o,1);transition:opacity .5s;will-change:transform}
+.fan .card .in{position:absolute;inset:0;border-radius:12px;overflow:hidden;background:#141414;
+  box-shadow:0 1px 0 rgba(255,255,255,.06) inset,0 24px 50px -20px rgba(0,0,0,.45);transform-origin:50% 50%;will-change:transform}
+.fan .card img{display:block;width:100%;height:100%;object-fit:cover;transition:filter .5s}
+.fan .card:not(.is-center) img{filter:saturate(.85) brightness(.94)}
+.fan .card button{all:unset;position:absolute;inset:0;cursor:pointer}
+.fan .card button:focus-visible{outline:3px solid var(--yellow);outline-offset:-3px}
+.fan.snap .card,.fan.snap .card .in{transition:transform .55s cubic-bezier(.22,1,.36,1),opacity .5s}
+.fan.intro .card,.fan.intro .card .in{transition:transform 1.3s cubic-bezier(.22,1,.36,1),opacity .9s}
+.fan-cap{display:grid;grid-template-columns:1fr auto;align-items:end;gap:16px;margin:10px 0 44px;padding-top:16px;border-top:1px solid #D4D3CE}
+.fan-cap .cur{margin:0;font-size:20px;font-weight:700;letter-spacing:-.02em;color:#0E0E0E}
+.fan-cap .cur .n{color:#7A7A76;font-weight:400;margin-right:8px;font-variant-numeric:tabular-nums}
+.fan-cap .cur small{display:block;font-size:13px;font-weight:400;color:#5C5C58;margin-top:4px}
+.fan-cap .cur small i{font-style:normal;display:inline-block;width:8px;height:8px;border-radius:50%;background:var(--dot);margin-right:6px;vertical-align:baseline}
+.fan-tools{display:flex;align-items:center;gap:8px}
+.fan-tools .open{all:unset;cursor:pointer;background:#0E0E0E;color:#F2F2F0;border-radius:99px;padding:10px 16px;font-size:12px;font-weight:700;letter-spacing:.1em;text-transform:uppercase}
+.fan-tools .open:hover{background:#333}
+.fan-tools .nav{all:unset;cursor:pointer;width:38px;height:38px;border:1px solid #C9C9C5;border-radius:50%;display:grid;place-items:center;color:#0E0E0E;font-size:16px}
+.fan-tools .nav:hover{border-color:#0E0E0E}
+.fan-tools button:focus-visible{outline:2px solid #0E0E0E;outline-offset:2px}
+.fan-dots{display:flex;gap:4px;justify-content:center;margin:14px 0 0}
+.fan-dots i{width:14px;height:3px;border-radius:2px;background:#D4D3CE}
+.fan-dots i.on{background:#0E0E0E}
+@media(max-width:720px){
+  .fan{--cw:150px;-webkit-mask-image:linear-gradient(90deg,transparent,#000 6%,#000 94%,transparent);mask-image:linear-gradient(90deg,transparent,#000 6%,#000 94%,transparent)}
+  .fan-cap{grid-template-columns:1fr;gap:12px}
+  .fan-cap .cur{font-size:17px}
+}
+@media(prefers-reduced-motion:reduce){.fan .card,.fan .card .in{transition:none!important}}
 .paper .proy li{cursor:pointer}
 .paper .proy li:hover b{text-decoration:underline}
 
@@ -428,12 +440,17 @@ footer a:hover{color:var(--yellow);border-color:var(--yellow)}
       <span class="pill e5">Diseño Gráfico Práctica · 9.º</span>
     </div>
 
-    <div class="arc" id="arc" aria-label="Carteles de la exposición">
-      <div class="pivot" id="arc-pivot"></div>
+    <div class="fan" id="fan" aria-label="Carteles de la exposición">
+      <div class="pivot" id="fan-pivot"></div>
     </div>
-    <div class="arc-hint">
-      <p class="cur" id="arc-cur" aria-live="polite"></p>
-      <div class="arc-btns"><button type="button" id="arc-prev" aria-label="Cartel anterior">←</button><button type="button" id="arc-next" aria-label="Cartel siguiente">→</button></div>
+    <div class="fan-dots" id="fan-dots" aria-hidden="true"></div>
+    <div class="fan-cap">
+      <p class="cur" id="fan-cur" aria-live="polite"></p>
+      <div class="fan-tools">
+        <button type="button" class="nav" id="fan-prev" aria-label="Cartel anterior">←</button>
+        <button type="button" class="nav" id="fan-next" aria-label="Cartel siguiente">→</button>
+        <button type="button" class="open" id="fan-open">Abrir cartel ↗</button>
+      </div>
     </div>
 
     <div class="nivel">
@@ -670,50 +687,65 @@ footer a:hover{color:var(--yellow);border-color:var(--yellow)}
   var pad=function(n){return String(n).padStart(2,'0');};
   var src=function(n,th){return '../assets/expo/'+(th?'thumb/':'')+pad(n)+'.jpg';};
 
-  // ---------- arco ----------
-  var arc=document.getElementById('arc'), pivot=document.getElementById('arc-pivot'), cur=document.getElementById('arc-cur');
-  var STEP=9, SPAN=70, cards=[], rot=0, offset=0, reduce=matchMedia('(prefers-reduced-motion:reduce)').matches;
+  // ---------- abanico ----------
+  var fan=document.getElementById('fan'), pivot=document.getElementById('fan-pivot'), cur=document.getElementById('fan-cur'), dots=document.getElementById('fan-dots');
+  var reduce=matchMedia('(prefers-reduced-motion:reduce)').matches;
+  var cards=[], pos=Math.floor(items.length/2), vel=0, raf=0, STEP=12;
+  var EJE={e1:'#8FD3F4',e2:'#A6E3A1',e3:'#FFB067',e4:'#C9B6F2',e5:'#F7A8C9'};
   items.forEach(function(it,k){
-    var c=document.createElement('div'); c.className='card'; c.dataset.k=k;
-    c.innerHTML='<img src="'+src(it.i,true)+'" alt="" loading="lazy"><span class="n">.'+pad(it.i)+'</span><button type="button" aria-label="Abrir '+it.t+'"></button>';
-    c.querySelector('button').addEventListener('click',function(){open(k);});
+    var c=document.createElement('div'); c.className='card';
+    c.innerHTML='<div class="in"><img src="'+src(it.i,true)+'" alt="" loading="lazy"><button type="button" aria-label="'+it.t+'"></button></div>';
+    c.querySelector('button').addEventListener('click',function(e){ if(Math.abs(k-pos)<.5) open(k); else go(k); });
     pivot.appendChild(c); cards.push(c);
+    var d=document.createElement('i'); dots.appendChild(d);
   });
-  // el pivote vive bajo el escenario (bottom negativo); el radio deja la ficha más alta a 12px del borde
-  function radius(){ var pb=parseFloat(getComputedStyle(pivot).bottom); return arc.clientHeight-pb-12; }
+  var dotEls=[].slice.call(dots.children);
+  function geo(){
+    // radio grande = curva suave; el pivote queda muy abajo del escenario
+    var cw=cards[0].offsetWidth||210, r=fan.clientWidth*2.6; if(r<1400) r=1400;
+    fan.style.setProperty('--r',r+'px');
+    var ch=cw*190/85; fan.style.height=Math.round(ch+56)+'px'; var top=28; // el escenario mide lo que la ficha central
+    fan.style.setProperty('--py',(top+r)+'px');
+    STEP=(cw*1.32/r)*180/Math.PI;                              // hueco de un tercio de ficha entre vecinas
+  }
   function layout(){
-    var r=radius(); arc.style.setProperty('--r',r+'px');
-    var mid=(items.length-1)/2;
-    // paso angular: las fichas se tocan sin encimarse (ancho × 1.06 sobre el radio)
-    var cw=cards[0].offsetWidth||150; STEP=Math.max(8,(cw*1.06/r)*180/Math.PI); SPAN=mid*STEP;
-    cards.forEach(function(c,k){ c.style.transform='rotate('+((k-mid)*STEP+rot+offset)+'deg)'; });
-    var near=Math.round(mid-(rot+offset)/STEP); near=Math.max(0,Math.min(items.length-1,near));
-    var it=items[near]; cur.innerHTML='.'+pad(it.i)+' '+it.t+'<small>'+it.s+'</small>';
-    cards.forEach(function(c,k){ c.style.zIndex=100-Math.abs(k-near); });
+    cards.forEach(function(c,k){
+      var d=k-pos, a=d*STEP, ad=Math.abs(d);
+      var sc=Math.max(.74,1-ad*.08), op=ad<.5?1:Math.max(.3,.95-ad*.18);
+      c.style.transform='rotate('+a+'deg)'; c.firstChild.style.transform='scale('+sc+')';
+      c.style.setProperty('--o',op); c.style.zIndex=100-Math.round(ad*10);
+      c.classList.toggle('is-center',ad<.5);
+    });
+    var near=Math.max(0,Math.min(items.length-1,Math.round(pos)));
+    var it=items[near];
+    cur.innerHTML='<span class="n">.'+pad(it.i)+'</span>'+it.t+'<small><i style="--dot:'+(EJE[it.e]||'#0E0E0E')+'"></i>'+it.s+'</small>';
+    dotEls.forEach(function(d,k){ d.classList.toggle('on',k===near); });
   }
-  // el scroll de la sección gira el arco: de +70° (entrando) a −70° (saliendo)
-  function onScroll(){
-    var sec=document.getElementById('expo').getBoundingClientRect();
-    var p=(innerHeight*0.5-sec.top)/(sec.height); p=Math.max(0,Math.min(1,p));
-    rot=SPAN-2*SPAN*p; layout();
-  }
-  // entrada: dispersas → arco (solo la primera vez por sesión)
-  var seen=false; try{ seen=sessionStorage.getItem('arc-seen')==='1'; }catch(e){}
+  function go(k){ pos=Math.max(0,Math.min(items.length-1,k)); fan.classList.add('snap'); layout(); }
+  function snap(){ go(Math.round(pos)); }
+  // entrada: las fichas llegan apiladas desde el centro y se abren en abanico (una vez por sesión)
+  var seen=false; try{ seen=sessionStorage.getItem('fan-seen')==='1'; }catch(e){}
+  geo();
   if(!seen&&!reduce){
-    cards.forEach(function(c){ c.classList.add('scatter'); c.style.transform='rotate('+(Math.random()*360)+'deg) translate('+(Math.random()*400-200)+'px,'+(Math.random()*300)+'px) scale(.6)'; });
+    cards.forEach(function(c){ c.style.transform='rotate(0deg)'; c.firstChild.style.transform='translateY(120px) scale(.6)'; c.style.setProperty('--o',0); });
+    fan.classList.add('intro');
     new IntersectionObserver(function(en,io){ if(!en[0].isIntersecting)return; io.disconnect();
-      requestAnimationFrame(function(){ cards.forEach(function(c){c.classList.remove('scatter');}); onScroll();
-        setTimeout(function(){ arc.classList.add('live'); try{sessionStorage.setItem('arc-seen','1');}catch(e){} },1200); });
-    },{threshold:.35}).observe(arc);
-  } else { arc.classList.add('live'); onScroll(); }
-  addEventListener('scroll',onScroll,{passive:true}); addEventListener('resize',layout);
-  // arrastre horizontal
-  var d=null;
-  arc.addEventListener('pointerdown',function(e){ d={x:e.clientX,o:offset}; arc.classList.add('drag'); });
-  addEventListener('pointermove',function(e){ if(!d)return; offset=d.o+(e.clientX-d.x)/6; layout(); });
-  addEventListener('pointerup',function(){ d=null; arc.classList.remove('drag'); });
-  document.getElementById('arc-prev').onclick=function(){offset+=STEP;layout();};
-  document.getElementById('arc-next').onclick=function(){offset-=STEP;layout();};
+      requestAnimationFrame(function(){ layout(); setTimeout(function(){ fan.classList.remove('intro'); try{sessionStorage.setItem('fan-seen','1');}catch(e){} },1400); });
+    },{threshold:.3}).observe(fan);
+  } else layout();
+  addEventListener('resize',function(){ geo(); layout(); });
+  // arrastre con inercia y ajuste
+  var d=null, pxPerCard;
+  fan.addEventListener('pointerdown',function(e){ pxPerCard=(cards[0].offsetWidth||210)*1.32; d={x:e.clientX,p:pos,t:Date.now(),lx:e.clientX,v:0}; fan.classList.remove('snap'); fan.classList.add('drag'); cancelAnimationFrame(raf); });
+  addEventListener('pointermove',function(e){ if(!d)return; var now=Date.now(); d.v=(e.clientX-d.lx)/Math.max(1,now-d.t); d.lx=e.clientX; d.t=now;
+    pos=Math.max(-.4,Math.min(items.length-.6,d.p-(e.clientX-d.x)/pxPerCard)); layout(); });
+  addEventListener('pointerup',function(){ if(!d)return; var v=d.v; d=null; fan.classList.remove('drag');
+    var target=Math.round(pos-v*220/pxPerCard); go(target); });
+  fan.addEventListener('wheel',function(e){ if(Math.abs(e.deltaX)<=Math.abs(e.deltaY))return; e.preventDefault(); pos+=e.deltaX/400; fan.classList.remove('snap'); layout(); clearTimeout(raf); raf=setTimeout(snap,120); },{passive:false});
+  document.getElementById('fan-prev').onclick=function(){go(Math.round(pos)-1);};
+  document.getElementById('fan-next').onclick=function(){go(Math.round(pos)+1);};
+  document.getElementById('fan-open').onclick=function(){open(Math.round(pos));};
+  fan.addEventListener('keydown',function(e){ if(e.key==='ArrowRight'){go(Math.round(pos)+1);e.preventDefault();} if(e.key==='ArrowLeft'){go(Math.round(pos)-1);e.preventDefault();} });
 
   // ---------- lightbox ----------
   var lb=document.getElementById('lb'), img=document.getElementById('lb-img'), k0=0;
