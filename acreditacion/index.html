@@ -184,6 +184,51 @@ h2 .n{color:var(--yellow);margin-right:.25em}
 .paper .pills{margin:0 0 36px}
 .paper .pill{font-size:12.5px;padding:6px 12px}
 
+/* ---------- arco de carteles (adaptación del «scroll morph hero») ----------
+   18 fichas 85×190 sobre un arco; el scroll de la sección lo hace girar y
+   un clic abre la ficha a tamaño completo. En la primera visita las fichas
+   entran dispersas y se recogen en el arco (sessionStorage evita repetirlo). */
+.arc{position:relative;height:clamp(360px,52vw,560px);margin:8px 0 36px;overflow:hidden;cursor:grab;user-select:none;touch-action:pan-y}
+.arc.drag{cursor:grabbing}
+.arc .pivot{position:absolute;left:50%;bottom:-62%;width:0;height:0}
+.arc .card{position:absolute;left:0;top:0;width:var(--cw,150px);aspect-ratio:85/190;margin-left:calc(var(--cw,150px)/-2);
+  transform-origin:50% var(--r);translate:0 calc(-1*var(--r));
+  border-radius:8px;overflow:hidden;background:#0E0E0E;box-shadow:0 12px 30px rgba(0,0,0,.28);
+  transition:transform 1.1s cubic-bezier(.22,1,.36,1),opacity .6s;will-change:transform}
+.arc .card img{display:block;width:100%;height:100%;object-fit:cover}
+.arc .card button{all:unset;position:absolute;inset:0;cursor:pointer}
+.arc .card button:focus-visible{outline:3px solid var(--yellow);outline-offset:-3px}
+.arc .card .n{position:absolute;left:8px;top:8px;background:var(--yellow);color:#0E0E0E;font-size:11px;font-weight:700;padding:3px 7px;border-radius:99px;letter-spacing:.04em}
+.arc.live .card{transition:none}
+.arc .card.scatter{opacity:0}
+.arc-hint{display:flex;justify-content:space-between;align-items:center;gap:12px;font-size:12px;color:#7A7A76;margin:-24px 0 32px}
+.arc-hint .label{color:#7A7A76}
+.arc-hint .cur{font-weight:700;color:#0E0E0E;font-size:14px}
+.arc-hint .cur small{display:block;font-weight:400;color:#5C5C58;font-size:12px}
+.arc-btns{display:flex;gap:6px}
+.arc-btns button{all:unset;cursor:pointer;width:34px;height:34px;border:1px solid #C9C9C5;border-radius:50%;display:grid;place-items:center;color:#0E0E0E;font-size:16px}
+.arc-btns button:hover{border-color:#0E0E0E}
+.arc-btns button:focus-visible{outline:2px solid #0E0E0E;outline-offset:2px}
+@media(max-width:720px){.arc{--cw:104px;height:62vw}.arc .pivot{bottom:-70%}}
+@media(prefers-reduced-motion:reduce){.arc .card{transition:none}}
+.paper .proy li{cursor:pointer}
+.paper .proy li:hover b{text-decoration:underline}
+
+/* lightbox */
+.lb{border:0;padding:0;background:transparent;max-width:100vw;max-height:100vh;width:100vw;height:100vh;color:#F2F2F0}
+.lb::backdrop{background:rgba(8,8,8,.94)}
+.lb .box{position:relative;width:100%;height:100%;display:grid;grid-template-rows:1fr auto;align-items:center;justify-items:center;padding:20px 20px 16px;box-sizing:border-box}
+.lb img{max-height:calc(100vh - 92px);max-width:calc(100vw - 40px);width:auto;height:auto;border-radius:10px;box-shadow:0 30px 80px rgba(0,0,0,.6);object-fit:contain}
+.lb .cap{display:flex;flex-wrap:wrap;align-items:baseline;gap:6px 14px;justify-content:center;padding-top:12px;font-size:14px;color:#A8A8A3;text-align:center}
+.lb .cap b{color:#F2F2F0;font-size:16px}
+.lb .cap .n{color:var(--yellow);font-weight:700}
+.lb button{all:unset;cursor:pointer;position:absolute;top:50%;transform:translateY(-50%);width:44px;height:44px;border-radius:50%;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.2);display:grid;place-items:center;font-size:20px;color:#F2F2F0}
+.lb button:hover{background:rgba(255,255,255,.16)}
+.lb button:focus-visible{outline:2px solid var(--yellow);outline-offset:2px}
+.lb .prev{left:14px}.lb .next{right:14px}
+.lb .close{top:14px;right:14px;transform:none;font-size:16px}
+@media(max-width:720px){.lb .prev,.lb .next{top:auto;bottom:70px;transform:none}}
+
 /* pie */
 footer{padding:56px 0 64px;border-top:1px solid var(--line);color:var(--ink-dim);font-size:13px}
 footer .logos{display:flex;flex-wrap:wrap;gap:28px;align-items:center;margin-bottom:28px;color:var(--ink-soft);font-size:11px;font-weight:700;letter-spacing:.14em;text-transform:uppercase}
@@ -383,39 +428,47 @@ footer a:hover{color:var(--yellow);border-color:var(--yellow)}
       <span class="pill e5">Diseño Gráfico Práctica · 9.º</span>
     </div>
 
+    <div class="arc" id="arc" aria-label="Carteles de la exposición">
+      <div class="pivot" id="arc-pivot"></div>
+    </div>
+    <div class="arc-hint">
+      <p class="cur" id="arc-cur" aria-live="polite"></p>
+      <div class="arc-btns"><button type="button" id="arc-prev" aria-label="Cartel anterior">←</button><button type="button" id="arc-next" aria-label="Cartel siguiente">→</button></div>
+    </div>
+
     <div class="nivel">
       <h3><small>Nivel básico · 1.º a 3.<sup>er</sup> semestre</small>4 proyectos</h3>
       <ul class="proy">
-        <li class="e1"><i>.01</i><b>Bitácora de la forma</b><span>Estudio de Introducción a la Composición Visual · 1.º</span></li>
-        <li class="e1"><i>.10</i><b>Las reglas de la forma</b><span>Estudio de Fundamentos del Diseño Gráfico · 2.º</span></li>
-        <li class="e2"><i>.02</i><b>La Victoria</b><span>Fotografía Profesional de Objeto · 3.º</span></li>
-        <li class="e2"><i>.11</i><b>Sombrerito</b><span>Fotografía Profesional de Objeto · 3.º</span></li>
+        <li class="e1" data-i="1" tabindex="0" role="button"><i>.01</i><b>Bitácora de la forma</b><span>Estudio de Introducción a la Composición Visual · 1.º</span></li>
+        <li class="e1" data-i="10" tabindex="0" role="button"><i>.10</i><b>Las reglas de la forma</b><span>Estudio de Fundamentos del Diseño Gráfico · 2.º</span></li>
+        <li class="e2" data-i="2" tabindex="0" role="button"><i>.02</i><b>La Victoria</b><span>Fotografía Profesional de Objeto · 3.º</span></li>
+        <li class="e2" data-i="11" tabindex="0" role="button"><i>.11</i><b>Sombrerito</b><span>Fotografía Profesional de Objeto · 3.º</span></li>
       </ul>
     </div>
 
     <div class="nivel">
       <h3><small>Nivel intermedio · 4.º a 6.º semestre</small>8 proyectos</h3>
       <ul class="proy">
-        <li class="e2"><i>.03</i><b>Scoop &amp; Clip</b><span>Empaque y Marca · 4.º</span></li>
-        <li class="e2"><i>.04</i><b>Hello Amsterdam</b><span>Estudio de Diseño Informativo · 4.º</span></li>
-        <li class="e2"><i>.12</i><b>Portada 360° UDEM</b><span>Diseño de Publicaciones · 4.º</span></li>
-        <li class="e2"><i>.13</i><b>Madrid Metro</b><span>Estudio de Diseño Informativo · 4.º</span></li>
-        <li class="e3"><i>.05</i><b>Parallax</b><span>Mercadotecnia y Comunicación de Marca · 5.º</span></li>
-        <li class="e3"><i>.14</i><b>Catálogo de proveedores</b><span>Gestión y Operación de Proyectos de Diseño · 5.º</span></li>
-        <li class="e3"><i>.06</i><b>La jugada maestra</b><span>Estudio de Diseño de Interacción · 6.º</span></li>
-        <li class="e3"><i>.15</i><b>Ojo de Tigre</b><span>Estudio de Diseño de Interacción · 6.º</span></li>
+        <li class="e2" data-i="3" tabindex="0" role="button"><i>.03</i><b>Scoop &amp; Clip</b><span>Empaque y Marca · 4.º</span></li>
+        <li class="e2" data-i="4" tabindex="0" role="button"><i>.04</i><b>Hello Amsterdam</b><span>Estudio de Diseño Informativo · 4.º</span></li>
+        <li class="e2" data-i="12" tabindex="0" role="button"><i>.12</i><b>Portada 360° UDEM</b><span>Diseño de Publicaciones · 4.º</span></li>
+        <li class="e2" data-i="13" tabindex="0" role="button"><i>.13</i><b>Madrid Metro</b><span>Estudio de Diseño Informativo · 4.º</span></li>
+        <li class="e3" data-i="5" tabindex="0" role="button"><i>.05</i><b>Parallax</b><span>Mercadotecnia y Comunicación de Marca · 5.º</span></li>
+        <li class="e3" data-i="14" tabindex="0" role="button"><i>.14</i><b>Catálogo de proveedores</b><span>Gestión y Operación de Proyectos de Diseño · 5.º</span></li>
+        <li class="e3" data-i="6" tabindex="0" role="button"><i>.06</i><b>La jugada maestra</b><span>Estudio de Diseño de Interacción · 6.º</span></li>
+        <li class="e3" data-i="15" tabindex="0" role="button"><i>.15</i><b>Ojo de Tigre</b><span>Estudio de Diseño de Interacción · 6.º</span></li>
       </ul>
     </div>
 
     <div class="nivel">
       <h3><small>Nivel terminal · 7.º a 9.º semestre</small>6 proyectos</h3>
       <ul class="proy">
-        <li class="e4"><i>.07</i><b>Artefacto</b><span>Estudio de Diseño de Servicios · 7.º</span></li>
-        <li class="e4"><i>.16</i><b>Taller MDillon</b><span>Estudio de Diseño de Servicios · 7.º</span></li>
-        <li class="e4"><i>.08</i><b>Synergy</b><span>Estudio Integral de Diseño · 8.º</span></li>
-        <li class="e4"><i>.17</i><b>Back Door</b><span>Estudio Integral de Diseño · 8.º</span></li>
-        <li class="e5"><i>.09</i><b>La Máquina del Souvenir</b><span>Proyecto de Evaluación Final (PEF) · 9.º</span></li>
-        <li class="e5"><i>.18</i><b>Regen</b><span>Proyecto de Evaluación Final (PEF) · 9.º</span></li>
+        <li class="e4" data-i="7" tabindex="0" role="button"><i>.07</i><b>Artefacto</b><span>Estudio de Diseño de Servicios · 7.º</span></li>
+        <li class="e4" data-i="16" tabindex="0" role="button"><i>.16</i><b>Taller MDillon</b><span>Estudio de Diseño de Servicios · 7.º</span></li>
+        <li class="e4" data-i="8" tabindex="0" role="button"><i>.08</i><b>Synergy</b><span>Estudio Integral de Diseño · 8.º</span></li>
+        <li class="e4" data-i="17" tabindex="0" role="button"><i>.17</i><b>Back Door</b><span>Estudio Integral de Diseño · 8.º</span></li>
+        <li class="e5" data-i="9" tabindex="0" role="button"><i>.09</i><b>La Máquina del Souvenir</b><span>Proyecto de Evaluación Final (PEF) · 9.º</span></li>
+        <li class="e5" data-i="18" tabindex="0" role="button"><i>.18</i><b>Regen</b><span>Proyecto de Evaluación Final (PEF) · 9.º</span></li>
       </ul>
     </div>
   </div>
@@ -466,6 +519,16 @@ footer a:hover{color:var(--yellow);border-color:var(--yellow)}
 </section>
 
 </main>
+
+<dialog class="lb" id="lb" aria-label="Cartel a tamaño completo">
+  <div class="box">
+    <img id="lb-img" alt="">
+    <p class="cap"><span class="n" id="lb-n"></span><b id="lb-t"></b><span id="lb-s"></span></p>
+    <button type="button" class="prev" id="lb-prev" aria-label="Anterior">←</button>
+    <button type="button" class="next" id="lb-next" aria-label="Siguiente">→</button>
+    <button type="button" class="close" id="lb-close" aria-label="Cerrar">✕</button>
+  </div>
+</dialog>
 
 <footer>
   <div class="wrap">
@@ -596,6 +659,79 @@ footer a:hover{color:var(--yellow);border-color:var(--yellow)}
   render();
   setInterval(function(){ if(manual==null) render(); },30000);
   window.addEventListener('resize',edges);
+})();
+</script>
+<script>
+(function(){
+  // Catálogo desde la lista por nivel (fuente única): número, título, materia y eje.
+  var items=[].map.call(document.querySelectorAll('.paper .proy li'),function(li){
+    return {i:+li.dataset.i, t:li.querySelector('b').textContent, s:li.querySelector('span').textContent, e:li.className};
+  }).sort(function(a,b){return a.i-b.i;});
+  var pad=function(n){return String(n).padStart(2,'0');};
+  var src=function(n,th){return '../assets/expo/'+(th?'thumb/':'')+pad(n)+'.jpg';};
+
+  // ---------- arco ----------
+  var arc=document.getElementById('arc'), pivot=document.getElementById('arc-pivot'), cur=document.getElementById('arc-cur');
+  var STEP=9, SPAN=70, cards=[], rot=0, offset=0, reduce=matchMedia('(prefers-reduced-motion:reduce)').matches;
+  items.forEach(function(it,k){
+    var c=document.createElement('div'); c.className='card'; c.dataset.k=k;
+    c.innerHTML='<img src="'+src(it.i,true)+'" alt="" loading="lazy"><span class="n">.'+pad(it.i)+'</span><button type="button" aria-label="Abrir '+it.t+'"></button>';
+    c.querySelector('button').addEventListener('click',function(){open(k);});
+    pivot.appendChild(c); cards.push(c);
+  });
+  // el pivote vive bajo el escenario (bottom negativo); el radio deja la ficha más alta a 12px del borde
+  function radius(){ var pb=parseFloat(getComputedStyle(pivot).bottom); return arc.clientHeight-pb-12; }
+  function layout(){
+    var r=radius(); arc.style.setProperty('--r',r+'px');
+    var mid=(items.length-1)/2;
+    // paso angular: las fichas se tocan sin encimarse (ancho × 1.06 sobre el radio)
+    var cw=cards[0].offsetWidth||150; STEP=Math.max(8,(cw*1.06/r)*180/Math.PI); SPAN=mid*STEP;
+    cards.forEach(function(c,k){ c.style.transform='rotate('+((k-mid)*STEP+rot+offset)+'deg)'; });
+    var near=Math.round(mid-(rot+offset)/STEP); near=Math.max(0,Math.min(items.length-1,near));
+    var it=items[near]; cur.innerHTML='.'+pad(it.i)+' '+it.t+'<small>'+it.s+'</small>';
+    cards.forEach(function(c,k){ c.style.zIndex=100-Math.abs(k-near); });
+  }
+  // el scroll de la sección gira el arco: de +70° (entrando) a −70° (saliendo)
+  function onScroll(){
+    var sec=document.getElementById('expo').getBoundingClientRect();
+    var p=(innerHeight*0.5-sec.top)/(sec.height); p=Math.max(0,Math.min(1,p));
+    rot=SPAN-2*SPAN*p; layout();
+  }
+  // entrada: dispersas → arco (solo la primera vez por sesión)
+  var seen=false; try{ seen=sessionStorage.getItem('arc-seen')==='1'; }catch(e){}
+  if(!seen&&!reduce){
+    cards.forEach(function(c){ c.classList.add('scatter'); c.style.transform='rotate('+(Math.random()*360)+'deg) translate('+(Math.random()*400-200)+'px,'+(Math.random()*300)+'px) scale(.6)'; });
+    new IntersectionObserver(function(en,io){ if(!en[0].isIntersecting)return; io.disconnect();
+      requestAnimationFrame(function(){ cards.forEach(function(c){c.classList.remove('scatter');}); onScroll();
+        setTimeout(function(){ arc.classList.add('live'); try{sessionStorage.setItem('arc-seen','1');}catch(e){} },1200); });
+    },{threshold:.35}).observe(arc);
+  } else { arc.classList.add('live'); onScroll(); }
+  addEventListener('scroll',onScroll,{passive:true}); addEventListener('resize',layout);
+  // arrastre horizontal
+  var d=null;
+  arc.addEventListener('pointerdown',function(e){ d={x:e.clientX,o:offset}; arc.classList.add('drag'); });
+  addEventListener('pointermove',function(e){ if(!d)return; offset=d.o+(e.clientX-d.x)/6; layout(); });
+  addEventListener('pointerup',function(){ d=null; arc.classList.remove('drag'); });
+  document.getElementById('arc-prev').onclick=function(){offset+=STEP;layout();};
+  document.getElementById('arc-next').onclick=function(){offset-=STEP;layout();};
+
+  // ---------- lightbox ----------
+  var lb=document.getElementById('lb'), img=document.getElementById('lb-img'), k0=0;
+  function show(k){ k0=(k+items.length)%items.length; var it=items[k0];
+    img.src=src(it.i); img.alt='Cartel '+it.t;
+    document.getElementById('lb-n').textContent='.'+pad(it.i); document.getElementById('lb-t').textContent=it.t; document.getElementById('lb-s').textContent=it.s;
+    var nx=items[(k0+1)%items.length]; (new Image()).src=src(nx.i); }
+  function open(k){ show(k); if(!lb.open) lb.showModal(); }
+  document.getElementById('lb-prev').onclick=function(){show(k0-1);};
+  document.getElementById('lb-next').onclick=function(){show(k0+1);};
+  document.getElementById('lb-close').onclick=function(){lb.close();};
+  lb.addEventListener('click',function(e){ if(e.target===lb) lb.close(); });
+  lb.addEventListener('keydown',function(e){ if(e.key==='ArrowRight')show(k0+1); if(e.key==='ArrowLeft')show(k0-1); });
+  document.querySelectorAll('.paper .proy li').forEach(function(li){
+    var k=items.findIndex(function(it){return it.i===+li.dataset.i;});
+    li.addEventListener('click',function(){open(k);});
+    li.addEventListener('keydown',function(e){ if(e.key==='Enter'||e.key===' '){e.preventDefault();open(k);} });
+  });
 })();
 </script>
 </body>
