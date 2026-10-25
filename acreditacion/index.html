@@ -163,6 +163,16 @@ h2 .n{color:var(--yellow);margin-right:.25em}
 .agenda tr.soft td.h{color:var(--ink-dim);font-weight:400}
 .agenda tr.key td.a{font-weight:700}
 
+/* profesorado */
+.profes{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:14px}
+.prof{display:flex;gap:16px;align-items:flex-start;text-decoration:none;color:inherit;border:1px solid var(--line);border-radius:14px;padding:18px;background:var(--card);transition:border-color .2s}
+.prof:hover{border-color:var(--line-2)}
+.prof img{width:72px;height:72px;border-radius:50%;object-fit:cover;object-position:50% 25%;flex:none;background:#2E2E2E}
+.prof b{display:block;font-size:16px;letter-spacing:-.01em}
+.prof .rol{display:block;color:var(--yellow);font-size:12px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;margin:4px 0 6px}
+.prof span:not(.rol){display:block;color:var(--ink-soft);font-size:13px;line-height:1.45}
+.prof:focus-visible{outline:2px solid var(--yellow);outline-offset:2px}
+
 /* lugares / equipo */
 .people{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:14px}
 .person{border:1px solid var(--line);border-radius:14px;padding:18px 20px;background:var(--card)}
@@ -307,6 +317,7 @@ footer .credito b{color:var(--ink);font-weight:700}
       <li><a href="#expo">Exposición</a></li>
       <li><a href="#lugares">Lugares</a></li>
       <li><a href="#equipo">Equipo</a></li>
+      <li><a href="#profesores">Profesores</a></li>
     </ul>
   </div>
 </nav>
@@ -546,6 +557,52 @@ footer .credito b{color:var(--ink);font-weight:700}
       <div class="person foto"><img src="../assets/comite/chavarria.jpg" width="88" height="88" alt="" loading="lazy"><div><b>José Ángel Chavarría Nieto</b><span>Par evaluador · ULSA Bajío</span></div></div>
       <div class="person foto"><img src="../assets/comite/audirac.jpg" width="88" height="88" alt="" loading="lazy"><div><b>Juan Mauricio Audirac Camarena</b><span>Par evaluador · UDLAP</span></div></div>
       <div class="person foto"><img src="../assets/comite/raul.jpg" width="88" height="88" alt="" loading="lazy"><div><b>Raúl Parada Hidalgo</b><span>Par evaluador</span></div></div>
+    </div>
+  </div>
+</section>
+
+<section class="block" id="profesores">
+  <div class="wrap">
+    <p class="label y">Profesorado</p>
+    <h2>Quienes imparten la Licenciatura</h2>
+    <p class="sub">Los profesores de Diseño Gráfico publicados en el sitio del Centro Roberto Garza Sada; cada tarjeta abre su perfil completo.</p>
+    <div class="profes">
+      <a class="prof" href="https://crgs.udem.edu.mx/arte-arquitectura-y-diseno/academia/profesores/cristobal-rodolfo-guerra-tamez" target="_blank" rel="noopener">
+        <img src="../assets/profes/cristobal-guerra.jpg" width="480" height="480" alt="" loading="lazy">
+        <div><b>Cristobal Guerra Tamez</b><span class="rol">Director de la Licenciatura en Diseño Gráfico</span><span>Doctor en Filosofía (UANL), Summa Cum Laude · SNII · Comportamiento del consumidor y experiencia de usuario</span></div>
+      </a>
+      <a class="prof" href="https://crgs.udem.edu.mx/arte-arquitectura-y-diseno/academia/profesores/eduardo-guizar-vukovich" target="_blank" rel="noopener">
+        <img src="../assets/profes/eduardo-guizar.jpg" width="480" height="480" alt="" loading="lazy">
+        <div><b>Eduardo Guizar Vukovich</b><span class="rol">Director del Departamento de Diseño y Multimedia</span><span>Diseño Gráfico y Publicidad · posgrados en Comunicación y Psicología · dirección creativa</span></div>
+      </a>
+      <a class="prof" href="https://crgs.udem.edu.mx/arte-arquitectura-y-diseno/academia/profesores/iliana-moreno-ma" target="_blank" rel="noopener">
+        <img src="../assets/profes/iliana-moreno.jpg" width="480" height="480" alt="" loading="lazy">
+        <div><b>Iliana Moreno</b><span class="rol">Profesora de Diseño Gráfico</span><span>MA en Administración de Diseño (Southampton) · diseño estratégico, emprendimiento creativo, branding y tipografía</span></div>
+      </a>
+      <a class="prof" href="https://crgs.udem.edu.mx/arte-arquitectura-y-diseno/academia/profesores/rolando-angulo-mdg" target="_blank" rel="noopener">
+        <img src="../assets/profes/rolando-angulo.jpg" width="480" height="480" alt="" loading="lazy">
+        <div><b>Rolando Angulo</b><span class="rol">Profesor de Diseño Gráfico</span><span>Máster en Branding (ELISAVA) · identidad y marca, estrategia y fotografía digital</span></div>
+      </a>
+      <a class="prof" href="https://crgs.udem.edu.mx/arte-arquitectura-y-diseno/academia/profesores/sergio-trujillo" target="_blank" rel="noopener">
+        <img src="../assets/profes/sergio-trujillo.jpg" width="480" height="480" alt="" loading="lazy">
+        <div><b>Sergio Trujillo</b><span class="rol">Profesor de Diseño Gráfico</span><span>MA Typeface Design (Reading) · MA Identidad y Branding (LCC) · tipografía e identidad gráfica</span></div>
+      </a>
+      <a class="prof" href="https://crgs.udem.edu.mx/arte-arquitectura-y-diseno/academia/profesores/carlos-delgado-de-robles" target="_blank" rel="noopener">
+        <img src="../assets/profes/carlos-delgado.jpg" width="480" height="480" alt="" loading="lazy">
+        <div><b>Carlos Delgado de Robles</b><span class="rol">Profesor de Diseño Gráfico</span><span>Máster en Experiencia de Usuario (ESNE, Madrid) · UX, diseño conceptual, fotografía e ilustración</span></div>
+      </a>
+      <a class="prof" href="https://crgs.udem.edu.mx/arte-arquitectura-y-diseno/academia/profesores/mariel-garcia-hernandez" target="_blank" rel="noopener">
+        <img src="../assets/profes/mariel-garcia.jpg" width="480" height="480" alt="" loading="lazy">
+        <div><b>Mariel García Hernández</b><span class="rol">Profesora de Diseño Gráfico</span><span>Doctora en Diseño y Visualización de la Información (UAM) · SNII · diseño de información y UX research</span></div>
+      </a>
+      <a class="prof" href="https://crgs.udem.edu.mx/arte-arquitectura-y-diseno/academia/profesores/natalia-ceballos-gutierrez" target="_blank" rel="noopener">
+        <img src="../assets/profes/natalia-ceballos.jpg" width="480" height="480" alt="" loading="lazy">
+        <div><b>Natalia Ceballos Gutiérrez</b><span class="rol">Profesora de planta</span><span>Maestría en Diseño de Envase y Embalaje (UDEM) · Máster en Diseño Estratégico e Innovación (Elisava)</span></div>
+      </a>
+      <a class="prof" href="https://crgs.udem.edu.mx/arte-arquitectura-y-diseno/academia/profesores/gabriela-maria-guajardo-calles-1" target="_blank" rel="noopener">
+        <img src="../assets/profes/gabriela-guajardo.jpg" width="480" height="480" alt="" loading="lazy">
+        <div><b>Gabriela Guajardo Calles</b><span class="rol">Profesora de Diseño Gráfico</span><span>Fotógrafa · LDG UDEM y Colegio Ansel Adams · más de 21 años en fotografía comercial, retrato y arquitectura</span></div>
+      </a>
     </div>
   </div>
 </section>
