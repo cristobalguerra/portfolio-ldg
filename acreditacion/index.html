@@ -182,6 +182,14 @@ h2 .n{color:var(--yellow);margin-right:.25em}
 .paper .proy li span{display:block;color:#5C5C58;font-size:13px;margin-top:2px}
 .paper .leyenda{font-size:12px;color:#5C5C58;margin:0 0 24px}
 .paper .pills{margin:0 0 36px}
+.filtros .pill{cursor:pointer;font:inherit;font-size:12.5px;padding:7px 13px;opacity:.55;transition:opacity .2s,transform .2s}
+.filtros .pill[data-e="all"]{background:transparent;color:#0E0E0E;border-color:#0E0E0E}
+.filtros .pill.on{opacity:1}
+.filtros .pill:hover{opacity:1}
+.filtros .pill:focus-visible{outline:2px solid #0E0E0E;outline-offset:2px}
+.filtros .pill.on[data-e="all"]{background:#0E0E0E;color:#F2F2F0}
+.paper .nivel.vacio{display:none}
+.paper .proy li.oculto{display:none}
 .paper .pill{font-size:12.5px;padding:6px 12px}
 
 /* ---------- carteles en abanico ----------
@@ -431,13 +439,14 @@ footer a:hover{color:var(--yellow);border-color:var(--yellow)}
     <p class="label">Martes 3 · 15:50 – 17:50 · 5.º piso</p>
     <h2><span class="n" style="color:#0E0E0E">.01–.18</span>Exposición de trabajos</h2>
     <p class="sub">Dieciocho proyectos agrupados por nivel, como pide el COMAPROD. Cada pieza lleva una ficha con el propósito formativo de la materia, los aprendizajes demostrados y un código QR con la evidencia completa.</p>
-    <p class="leyenda">Cada proyecto indica su materia y semestre; el punto de color señala el eje curricular del Mapa LDG.</p>
-    <div class="pills">
-      <span class="pill e1">Fundamentos del Diseño Gráfico 2D y 3D · 1.º–2.º</span>
-      <span class="pill e2">Identidad e Información 2D y 3D · 3.º–4.º</span>
-      <span class="pill e3">Estrategia e Innovación · 5.º–6.º</span>
-      <span class="pill e4">Sustentabilidad y Tecnología · 7.º–8.º</span>
-      <span class="pill e5">Diseño Gráfico Práctica · 9.º</span>
+    <p class="leyenda">Elige un eje curricular del Mapa LDG para ver solo sus carteles; el punto de color lo señala en cada proyecto.</p>
+    <div class="pills filtros" id="filtros" role="group" aria-label="Filtrar por eje">
+      <button type="button" class="pill on" data-e="all" aria-pressed="true">Todos · 18</button>
+      <button type="button" class="pill e1" data-e="e1" aria-pressed="false">Fundamentos del Diseño Gráfico 2D y 3D · 1.º–2.º</button>
+      <button type="button" class="pill e2" data-e="e2" aria-pressed="false">Identidad e Información 2D y 3D · 3.º–4.º</button>
+      <button type="button" class="pill e3" data-e="e3" aria-pressed="false">Estrategia e Innovación · 5.º–6.º</button>
+      <button type="button" class="pill e4" data-e="e4" aria-pressed="false">Sustentabilidad y Tecnología · 7.º–8.º</button>
+      <button type="button" class="pill e5" data-e="e5" aria-pressed="false">Diseño Gráfico Práctica · 9.º</button>
     </div>
 
     <div class="fan" id="fan" aria-label="Carteles de la exposición">
@@ -690,12 +699,12 @@ footer a:hover{color:var(--yellow);border-color:var(--yellow)}
   // ---------- abanico ----------
   var fan=document.getElementById('fan'), pivot=document.getElementById('fan-pivot'), cur=document.getElementById('fan-cur'), dots=document.getElementById('fan-dots');
   var reduce=matchMedia('(prefers-reduced-motion:reduce)').matches;
-  var cards=[], pos=Math.floor(items.length/2), vel=0, raf=0, STEP=12;
+  var cards=[], view=items.map(function(_,k){return k;}), pos=Math.floor(items.length/2), vel=0, raf=0, STEP=12;
   var EJE={e1:'#8FD3F4',e2:'#A6E3A1',e3:'#FFB067',e4:'#C9B6F2',e5:'#F7A8C9'};
   items.forEach(function(it,k){
     var c=document.createElement('div'); c.className='card';
     c.innerHTML='<div class="in"><img src="'+src(it.i,true)+'" alt="" loading="lazy"><button type="button" aria-label="'+it.t+'"></button></div>';
-    c.querySelector('button').addEventListener('click',function(e){ if(Math.abs(k-pos)<.5) open(k); else go(k); });
+    c.querySelector('button').addEventListener('click',function(e){ var v=view.indexOf(k); if(Math.abs(v-pos)<.5) open(k); else go(v); });
     pivot.appendChild(c); cards.push(c);
     var d=document.createElement('i'); dots.appendChild(d);
   });
@@ -710,18 +719,20 @@ footer a:hover{color:var(--yellow);border-color:var(--yellow)}
   }
   function layout(){
     cards.forEach(function(c,k){
-      var d=k-pos, a=d*STEP, ad=Math.abs(d);
+      var v=view.indexOf(k); c.style.display=v<0?'none':'';
+      if(v<0) return;
+      var d=v-pos, a=d*STEP, ad=Math.abs(d);
       var sc=Math.max(.74,1-ad*.08), op=ad<.5?1:Math.max(.3,.95-ad*.18);
       c.style.transform='rotate('+a+'deg)'; c.firstChild.style.transform='scale('+sc+')';
       c.style.setProperty('--o',op); c.style.zIndex=100-Math.round(ad*10);
       c.classList.toggle('is-center',ad<.5);
     });
-    var near=Math.max(0,Math.min(items.length-1,Math.round(pos)));
-    var it=items[near];
+    var near=Math.max(0,Math.min(view.length-1,Math.round(pos)));
+    var it=items[view[near]];
     cur.innerHTML='<span class="n">.'+pad(it.i)+'</span>'+it.t+'<small><i style="--dot:'+(EJE[it.e]||'#0E0E0E')+'"></i>'+it.s+'</small>';
-    dotEls.forEach(function(d,k){ d.classList.toggle('on',k===near); });
+    dotEls.forEach(function(d,k){ var v=view.indexOf(k); d.style.display=v<0?'none':''; d.classList.toggle('on',v===near); });
   }
-  function go(k){ pos=Math.max(0,Math.min(items.length-1,k)); fan.classList.add('snap'); layout(); }
+  function go(k){ pos=Math.max(0,Math.min(view.length-1,k)); fan.classList.add('snap'); layout(); }
   function snap(){ go(Math.round(pos)); }
   // entrada: las fichas llegan apiladas desde el centro y se abren en abanico (una vez por sesión)
   var seen=false; try{ seen=sessionStorage.getItem('fan-seen')==='1'; }catch(e){}
@@ -738,27 +749,39 @@ footer a:hover{color:var(--yellow);border-color:var(--yellow)}
   var d=null, pxPerCard;
   fan.addEventListener('pointerdown',function(e){ pxPerCard=(cards[0].offsetWidth||210)*1.32; d={x:e.clientX,p:pos,t:Date.now(),lx:e.clientX,v:0}; fan.classList.remove('snap'); fan.classList.add('drag'); cancelAnimationFrame(raf); });
   addEventListener('pointermove',function(e){ if(!d)return; var now=Date.now(); d.v=(e.clientX-d.lx)/Math.max(1,now-d.t); d.lx=e.clientX; d.t=now;
-    pos=Math.max(-.4,Math.min(items.length-.6,d.p-(e.clientX-d.x)/pxPerCard)); layout(); });
+    pos=Math.max(-.4,Math.min(view.length-.6,d.p-(e.clientX-d.x)/pxPerCard)); layout(); });
   addEventListener('pointerup',function(){ if(!d)return; var v=d.v; d=null; fan.classList.remove('drag');
     var target=Math.round(pos-v*220/pxPerCard); go(target); });
   fan.addEventListener('wheel',function(e){ if(Math.abs(e.deltaX)<=Math.abs(e.deltaY))return; e.preventDefault(); pos+=e.deltaX/400; fan.classList.remove('snap'); layout(); clearTimeout(raf); raf=setTimeout(snap,120); },{passive:false});
   document.getElementById('fan-prev').onclick=function(){go(Math.round(pos)-1);};
   document.getElementById('fan-next').onclick=function(){go(Math.round(pos)+1);};
-  document.getElementById('fan-open').onclick=function(){open(Math.round(pos));};
+  document.getElementById('fan-open').onclick=function(){open(view[Math.max(0,Math.min(view.length-1,Math.round(pos)))]);};
   fan.addEventListener('keydown',function(e){ if(e.key==='ArrowRight'){go(Math.round(pos)+1);e.preventDefault();} if(e.key==='ArrowLeft'){go(Math.round(pos)-1);e.preventDefault();} });
+
+  // ---------- filtro por eje ----------
+  var filtros=document.getElementById('filtros');
+  function filtrar(e){
+    view=items.map(function(it,k){return (e==='all'||it.e===e)?k:-1;}).filter(function(k){return k>=0;});
+    filtros.querySelectorAll('.pill').forEach(function(b){ var on=b.dataset.e===e; b.classList.toggle('on',on); b.setAttribute('aria-pressed',on); });
+    document.querySelectorAll('.paper .proy li').forEach(function(li){ li.classList.toggle('oculto',e!=='all'&&!li.classList.contains(e)); });
+    document.querySelectorAll('.paper .nivel').forEach(function(n){ var vis=n.querySelectorAll('.proy li:not(.oculto)').length; n.classList.toggle('vacio',!vis); n.querySelector('h3').lastChild.textContent=vis+(vis===1?' proyecto':' proyectos'); });
+    fan.classList.add('snap'); go(Math.floor(view.length/2));
+  }
+  filtros.addEventListener('click',function(ev){ var b=ev.target.closest('.pill'); if(b) filtrar(b.dataset.e); });
 
   // ---------- lightbox ----------
   var lb=document.getElementById('lb'), img=document.getElementById('lb-img'), k0=0;
-  function show(k){ k0=(k+items.length)%items.length; var it=items[k0];
+  function show(k){ var v=view.indexOf(k); if(v<0){ view=items.map(function(_,i){return i;}); v=k; }
+    k0=view[(v+view.length)%view.length]; var it=items[k0];
     img.src=src(it.i); img.alt='Cartel '+it.t;
     document.getElementById('lb-n').textContent='.'+pad(it.i); document.getElementById('lb-t').textContent=it.t; document.getElementById('lb-s').textContent=it.s;
-    var nx=items[(k0+1)%items.length]; (new Image()).src=src(nx.i); }
+    var nx=items[view[(view.indexOf(k0)+1)%view.length]]; (new Image()).src=src(nx.i); }
   function open(k){ show(k); if(!lb.open) lb.showModal(); }
-  document.getElementById('lb-prev').onclick=function(){show(k0-1);};
-  document.getElementById('lb-next').onclick=function(){show(k0+1);};
+  document.getElementById('lb-prev').onclick=function(){show(view[(view.indexOf(k0)-1+view.length)%view.length]);};
+  document.getElementById('lb-next').onclick=function(){show(view[(view.indexOf(k0)+1)%view.length]);};
   document.getElementById('lb-close').onclick=function(){lb.close();};
   lb.addEventListener('click',function(e){ if(e.target===lb) lb.close(); });
-  lb.addEventListener('keydown',function(e){ if(e.key==='ArrowRight')show(k0+1); if(e.key==='ArrowLeft')show(k0-1); });
+  lb.addEventListener('keydown',function(e){ if(e.key==='ArrowRight')document.getElementById('lb-next').onclick(); if(e.key==='ArrowLeft')document.getElementById('lb-prev').onclick(); });
   document.querySelectorAll('.paper .proy li').forEach(function(li){
     var k=items.findIndex(function(it){return it.i===+li.dataset.i;});
     li.addEventListener('click',function(){open(k);});
