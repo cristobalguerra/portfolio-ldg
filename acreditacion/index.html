@@ -45,6 +45,70 @@ a{color:inherit}
 .ghost.glow{-webkit-mask-image:none;mask-image:none;filter:blur(34px);opacity:.45}
 .fade{position:absolute;inset:0;z-index:1;background:linear-gradient(90deg,var(--bg) 0%,var(--bg) 38%,rgba(14,14,14,.6) 58%,rgba(14,14,14,0) 82%)}
 
+/* ---------- en vivo: stepper de la jornada ----------
+   Adaptación del patrón «shipment timeline» (ReUI stepper 18) a HTML plano:
+   indicador de 26px con anillo, conector de puntos, título + hora con línea
+   punteada, panel con resumen y botones. El estado sale del reloj. */
+.live{padding:40px 0 8px;border-top:1px solid var(--line)}
+.live-head{display:flex;flex-wrap:wrap;align-items:baseline;gap:10px 18px;margin-bottom:22px}
+.live-head .label{display:flex;align-items:center;gap:8px}
+.live-dot{width:8px;height:8px;border-radius:50%;background:var(--yellow);box-shadow:0 0 0 0 rgba(255,245,0,.6);animation:pulse 2s infinite}
+@keyframes pulse{0%{box-shadow:0 0 0 0 rgba(255,245,0,.55)}70%{box-shadow:0 0 0 10px rgba(255,245,0,0)}100%{box-shadow:0 0 0 0 rgba(255,245,0,0)}}
+.live-head .now{color:var(--ink-dim);font-size:13px}
+.live-head .now b{color:var(--ink);font-weight:700}
+.live-row{position:relative;margin:0 -8px}
+.live-row.has-prev{-webkit-mask-image:linear-gradient(90deg,transparent,#000 40px);mask-image:linear-gradient(90deg,transparent,#000 40px)}
+.live-row.has-next{-webkit-mask-image:linear-gradient(90deg,#000 calc(100% - 40px),transparent);mask-image:linear-gradient(90deg,#000 calc(100% - 40px),transparent)}
+.live-row.has-prev.has-next{-webkit-mask-image:linear-gradient(90deg,transparent,#000 40px,#000 calc(100% - 40px),transparent);mask-image:linear-gradient(90deg,transparent,#000 40px,#000 calc(100% - 40px),transparent)}
+.live-track{display:flex;overflow-x:auto;scroll-snap-type:x proximity;scroll-padding-inline:48px;scrollbar-width:none;padding:6px 8px;cursor:grab}
+.live-track::-webkit-scrollbar{display:none}
+.live-track.drag{cursor:grabbing;scroll-snap-type:none}
+.stage{flex:1 0 auto;min-width:200px;max-width:280px;scroll-snap-align:start;display:flex;flex-direction:column;gap:8px;padding-right:4px}
+.stage:last-child{min-width:150px}
+.stage-top{display:flex;align-items:center;gap:4px}
+.stage button.ind{all:unset;cursor:pointer;display:grid;place-items:center;width:26px;height:26px;border-radius:50%;border:1px solid var(--line-2);flex:none}
+.stage button.ind:focus-visible{outline:2px solid var(--yellow);outline-offset:2px}
+.stage .ind i{display:grid;place-items:center;width:22px;height:22px;border-radius:50%;background:var(--line-2);color:#0E0E0E;font-style:normal}
+.stage .ind svg{width:14px;height:14px}
+.stage[data-state="completed"] .ind{border-color:#A6E3A1}
+.stage[data-state="completed"] .ind i{background:#A6E3A1}
+.stage[data-state="active"] .ind{border-color:var(--yellow)}
+.stage[data-state="active"] .ind i{background:var(--yellow)}
+.stage[data-state="active"] .ind svg{animation:spin 2.4s linear infinite}
+.stage[data-state="next"] .ind{border-color:var(--ink-soft)}
+@keyframes spin{to{transform:rotate(360deg)}}
+@media(prefers-reduced-motion:reduce){.stage .ind svg,.live-dot{animation:none}}
+/* conector de puntos de 4px */
+.conn{flex:1;height:4px;min-width:16px;margin-right:8px;background:linear-gradient(90deg,var(--c1,#8A8A86),var(--c2,#8A8A86) 70%);
+  -webkit-mask-image:radial-gradient(circle 2px at 2px 2px,#000 98%,transparent 100%);-webkit-mask-size:7px 4px;-webkit-mask-repeat:repeat-x;
+  mask-image:radial-gradient(circle 2px at 2px 2px,#000 98%,transparent 100%);mask-size:7px 4px;mask-repeat:repeat-x}
+.stage[data-state="completed"] .conn{--c1:#A6E3A1}
+.stage[data-state="completed"].next-done .conn{--c2:#A6E3A1}
+.stage:last-child .conn{--c2:transparent}
+.stage-body{display:grid;grid-template-columns:auto minmax(64px,1fr);align-items:baseline;gap:6px 4px;padding:0 20px 0 2px}
+.stage-body .t,.stage-body .k{min-width:0}
+.stage:last-child .stage-body{padding-right:4px}
+.stage-body .t{font-size:14px;font-weight:700;color:var(--ink);letter-spacing:-.01em;line-height:1.25}
+.stage[data-state="pending"] .stage-body .t{color:var(--ink-soft)}
+.stage[data-state="pending"] .stage-body .t{font-weight:400}
+.stage-body .v{display:flex;align-items:baseline;gap:4px;min-width:0}
+.lead{flex:1;min-width:8px;border-bottom:1px dashed var(--line-2);align-self:stretch;margin-bottom:5px}
+.stage-body .val{font-size:12px;color:var(--ink-soft);white-space:nowrap;font-variant-numeric:tabular-nums}
+.stage-body .k{font-size:12px;font-weight:700;color:var(--ink-soft)}
+.stage[data-state="active"] .stage-body .val.now{color:var(--yellow);font-weight:700}
+.live-panel{margin-top:22px;text-align:center}
+.live-panel .state{display:inline-block;font-size:11px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--yellow);margin-bottom:8px}
+.live-panel .state.done{color:#A6E3A1}
+.live-panel h3{margin:0 0 6px;font-size:20px;font-weight:700;letter-spacing:-.02em}
+.live-panel p{margin:0 auto;max-width:56ch;color:var(--ink-soft);font-size:15px}
+.live-btns{display:flex;justify-content:center;gap:8px;margin-top:16px;flex-wrap:wrap}
+.live-btns button{all:unset;cursor:pointer;border:1px solid var(--line-2);border-radius:99px;padding:8px 16px;font-size:12px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--ink)}
+.live-btns button:hover{border-color:var(--ink)}
+.live-btns button:disabled{opacity:.35;cursor:default}
+.live-btns button.y{background:var(--yellow);color:#0E0E0E;border-color:var(--yellow)}
+.live-btns button:focus-visible{outline:2px solid var(--yellow);outline-offset:2px}
+@media(max-width:720px){.stage{min-width:170px;max-width:220px}}
+
 /* ---------- navegación por días ---------- */
 .days{position:sticky;top:0;z-index:4;background:rgba(14,14,14,.86);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);border-top:1px solid var(--line);border-bottom:1px solid var(--line)}
 .days .wrap{position:relative}
@@ -181,6 +245,19 @@ footer a:hover{color:var(--yellow);border-color:var(--yellow)}
 
 <main>
 
+<section class="live" id="envivo" aria-label="Estado de la agenda en este momento">
+  <div class="wrap">
+    <div class="live-head">
+      <p class="label"><span class="live-dot" aria-hidden="true"></span><span id="live-title">En vivo</span></p>
+      <p class="now" id="live-now"></p>
+    </div>
+    <div class="live-row" id="live-row">
+      <div class="live-track" id="live-track" role="tablist" aria-label="Actividades del día"></div>
+    </div>
+    <div class="live-panel" id="live-panel" aria-live="polite"></div>
+  </div>
+</section>
+
 <section class="block" id="antes">
   <div class="wrap">
     <p class="label y">Antes de llegar</p>
@@ -206,7 +283,7 @@ footer a:hover{color:var(--yellow);border-color:var(--yellow)}
   </div>
 </section>
 
-<section class="block" id="dia-1">
+<section class="block" id="dia-1" data-date="2026-11-01">
   <div class="wrap">
     <p class="label">Día 1</p>
     <h2><span class="n">.01</span>Domingo 1 de noviembre</h2>
@@ -234,7 +311,7 @@ footer a:hover{color:var(--yellow);border-color:var(--yellow)}
   </div>
 </section>
 
-<section class="block" id="dia-2">
+<section class="block" id="dia-2" data-date="2026-11-02">
   <div class="wrap">
     <p class="label">Día 2</p>
     <h2><span class="n">.02</span>Lunes 2 de noviembre</h2>
@@ -256,7 +333,7 @@ footer a:hover{color:var(--yellow);border-color:var(--yellow)}
   </div>
 </section>
 
-<section class="block" id="dia-3">
+<section class="block" id="dia-3" data-date="2026-11-03">
   <div class="wrap">
     <p class="label">Día 3</p>
     <h2><span class="n">.03</span>Martes 3 de noviembre</h2>
@@ -277,7 +354,7 @@ footer a:hover{color:var(--yellow);border-color:var(--yellow)}
   </div>
 </section>
 
-<section class="block" id="dia-4">
+<section class="block" id="dia-4" data-date="2026-11-04">
   <div class="wrap">
     <p class="label">Día 4</p>
     <h2><span class="n">.04</span>Miércoles 4 de noviembre</h2>
@@ -404,5 +481,125 @@ footer a:hover{color:var(--yellow);border-color:var(--yellow)}
   </div>
 </footer>
 
+<script>
+(function(){
+  // Fuente única: las tablas de cada día. Monterrey va en UTC−6 en noviembre.
+  var TZ='-06:00';
+  var ICON={
+    check:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg>',
+    dashed:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-dasharray="3.4 3.4"><circle cx="12" cy="12" r="8"/></svg>'
+  };
+  var SUMMARY_DONE='Agenda concluida. Gracias por la visita; el acta de cierre queda en manos del comité.';
+
+  function parseTimes(txt){
+    var m=txt.replace(/\s/g,'').match(/^(\d{1,2}):(\d{2})(?:[–-](\d{1,2}):(\d{2}))?$/);
+    if(!m) return null;
+    return {s:[+m[1],+m[2]], e:m[3]?[+m[3],+m[4]]:null};
+  }
+  function at(date,hm){ return new Date(date+'T'+String(hm[0]).padStart(2,'0')+':'+String(hm[1]).padStart(2,'0')+':00'+TZ); }
+  function fmt(d){ return d.toLocaleTimeString('es-MX',{hour:'2-digit',minute:'2-digit',hour12:false,timeZone:'America/Monterrey'}); }
+
+  var days=[].map.call(document.querySelectorAll('section[data-date]'),function(sec){
+    var date=sec.dataset.date, ev=[];
+    sec.querySelectorAll('.agenda tbody tr').forEach(function(tr){
+      var t=parseTimes(tr.querySelector('td.h').textContent); if(!t) return;
+      var a=tr.querySelector('td.a'), d=a.querySelector('.d'), l=tr.querySelector('td.l');
+      var title=a.childNodes[0].textContent.trim();
+      var lb=l&&l.querySelector('b'), place=l?(lb?lb.textContent:l.textContent).trim().replace(/\s+/g,' '):'';
+      ev.push({title:title, detail:d?d.textContent.trim():'', place:place,
+               start:at(date,t.s), end:t.e?at(date,t.e):null, soft:tr.classList.contains('soft'), id:sec.id});
+    });
+    ev.forEach(function(e,i){ if(!e.end) e.end=ev[i+1]?ev[i+1].start:new Date(e.start.getTime()+60*60000); });
+    return {date:date, id:sec.id, label:sec.querySelector('h2').textContent.replace(/^\s*\.\d+\s*/,'').trim(), events:ev};
+  });
+  var all=[].concat.apply([],days.map(function(d){return d.events;}));
+
+  var q=new URLSearchParams(location.search).get('ahora'); // ?ahora=2026-11-02T10:30 para simular
+  function now(){ return q?new Date(q+(q.length<=16?':00'+TZ:'')):new Date(); }
+
+  var track=document.getElementById('live-track'), row=document.getElementById('live-row'),
+      panel=document.getElementById('live-panel'), nowEl=document.getElementById('live-now'),
+      titleEl=document.getElementById('live-title');
+  var manual=null; // índice elegido con los botones; null = seguir el reloj
+
+  function liveIndex(n){
+    var i=all.findIndex(function(e){return n<e.end;});
+    return i<0?all.length:i; // length = todo concluido
+  }
+  function stateOf(i,li,n){
+    if(i<li) return 'completed';
+    if(i===li) return all[i]&&n>=all[i].start?'active':'next';
+    return 'pending';
+  }
+
+  function render(){
+    var n=now(), li=liveIndex(n), cur=manual==null?li:manual;
+    var dayOf=all[Math.min(cur,all.length-1)].id;
+    var dayEvents=all.filter(function(e){return e.id===dayOf;});
+    var base=all.indexOf(dayEvents[0]);
+    var day=days.find(function(d){return d.id===dayOf;});
+
+    titleEl.textContent=(li>=all.length?'Visita concluida':n<all[0].start?'Cuenta regresiva':'En vivo')+' · '+day.label;
+    var first=all[0].start;
+    nowEl.innerHTML=li>=all.length?'<b>'+'4 de noviembre, '+fmt(all[all.length-1].end)+'</b> · cierre':
+      n<first?'Faltan <b>'+Math.ceil((first-n)/86400000)+' días</b> · hoy '+fmt(n)+' (Monterrey)':
+      'Ahora <b>'+fmt(n)+'</b> en Monterrey';
+
+    track.innerHTML='';
+    dayEvents.forEach(function(e,k){
+      var i=base+k, st=stateOf(i,li,n);
+      var el=document.createElement('div'); el.className='stage'+(i+1<li?' next-done':''); el.dataset.state=st;
+      el.setAttribute('role','presentation');
+      var icon=st==='completed'?ICON.check:ICON.dashed;
+      el.innerHTML='<div class="stage-top"><button class="ind" role="tab" aria-selected="'+(i===cur)+'" aria-label="'+e.title+'"><i>'+icon+'</i></button><span class="conn" aria-hidden="true"></span></div>'+
+        '<div class="stage-body"><span class="t">'+e.title+'</span><span class="v"><span class="lead"></span><span class="val'+(st==='active'?' now':'')+'">'+fmt(e.start)+'</span></span>'+
+        (e.place?'<span class="k">Lugar</span><span class="v"><span class="lead"></span><span class="val">'+e.place+'</span></span>':'')+
+        '</div>';
+      el.querySelector('button').addEventListener('click',function(){manual=i;render();});
+      track.appendChild(el);
+    });
+
+    var e=all[cur];
+    if(!e){
+      panel.innerHTML='<span class="state done">Concluida</span><h3>Visita COMAPROD 1–4 de noviembre</h3><p>'+SUMMARY_DONE+'</p>';
+    } else {
+      var st=stateOf(cur,li,n), lbl={completed:'Concluida',active:'En curso',next:'Siguiente',pending:'Pendiente'}[st];
+      var mins=Math.round((e.start-n)/60000);
+      var when=st==='active'?'Termina a las '+fmt(e.end)+'.':st==='next'&&mins<180?'Empieza en '+mins+' min.':'';
+      panel.innerHTML='<span class="state'+(st==='completed'?' done':'')+'">'+lbl+' · '+fmt(e.start)+' – '+fmt(e.end)+'</span><h3>'+e.title+'</h3><p>'+(e.detail||e.place)+' '+when+'</p>';
+    }
+    var b=document.createElement('div'); b.className='live-btns';
+    b.innerHTML='<button id="lb-prev"'+(cur<=0?' disabled':'')+'>Anterior</button><button id="lb-next"'+(cur>=all.length?' disabled':'')+'>Siguiente</button>'+(manual!=null&&manual!==li?'<button id="lb-now" class="y">Volver a ahora</button>':'');
+    panel.appendChild(b);
+    b.querySelector('#lb-prev').onclick=function(){manual=Math.max(0,cur-1);render();};
+    b.querySelector('#lb-next').onclick=function(){manual=Math.min(all.length,cur+1);render();};
+    var bn=b.querySelector('#lb-now'); if(bn) bn.onclick=function(){manual=null;render();};
+
+    // traer la etapa actual a la vista y sincronizar los desvanecidos de borde
+    var sel=track.querySelector('[aria-selected="true"]');
+    if(sel){ var stg=sel.closest('.stage'); track.scrollLeft=Math.max(0,stg.offsetLeft-track.offsetLeft-48); }
+    edges();
+  }
+  function edges(){
+    row.classList.toggle('has-prev',track.scrollLeft>4);
+    row.classList.toggle('has-next',track.scrollLeft+track.clientWidth<track.scrollWidth-4);
+  }
+  track.addEventListener('scroll',edges,{passive:true});
+  // arrastre con el ratón
+  var drag=null;
+  track.addEventListener('pointerdown',function(ev){ if(ev.pointerType!=='mouse')return; drag={x:ev.clientX,l:track.scrollLeft}; });
+  window.addEventListener('pointermove',function(ev){ if(!drag)return; if(Math.abs(ev.clientX-drag.x)>3)track.classList.add('drag'); track.scrollLeft=drag.l-(ev.clientX-drag.x); });
+  window.addEventListener('pointerup',function(){ drag=null; track.classList.remove('drag'); });
+  track.addEventListener('keydown',function(ev){
+    if(ev.key!=='ArrowRight'&&ev.key!=='ArrowLeft')return;
+    var tabs=[].slice.call(track.querySelectorAll('[role=tab]')), i=tabs.indexOf(document.activeElement); if(i<0)return;
+    var j=ev.key==='ArrowRight'?Math.min(tabs.length-1,i+1):Math.max(0,i-1); tabs[j].focus(); tabs[j].click(); ev.preventDefault();
+  });
+
+  render();
+  setInterval(function(){ if(manual==null) render(); },30000);
+  window.addEventListener('resize',edges);
+})();
+</script>
 </body>
 </html>
