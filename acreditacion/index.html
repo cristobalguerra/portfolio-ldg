@@ -26,6 +26,7 @@
 }
 *{box-sizing:border-box}
 html{scroll-behavior:smooth}
+section[id],#envivo{scroll-margin-top:60px}
 body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--sans);-webkit-font-smoothing:antialiased;line-height:1.5}
 a{color:inherit}
 .wrap{width:min(1080px,100% - 48px);margin-inline:auto}
@@ -134,9 +135,13 @@ a{color:inherit}
 .days .wrap::after{content:"";position:absolute;top:0;bottom:0;right:0;width:48px;pointer-events:none;background:linear-gradient(90deg,rgba(26,26,23,0),rgba(26,26,23,.95))}
 .days ul{list-style:none;margin:0;padding:0 48px 0 0;display:flex;gap:6px;overflow-x:auto;scrollbar-width:none}
 .days ul::-webkit-scrollbar{display:none}
-.days a{display:block;padding:16px 14px 14px;text-decoration:none;white-space:nowrap;font-size:13px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--ink-soft);border-bottom:2px solid transparent}
-.days a .n{color:var(--yellow);margin-right:8px}
+.days a{display:block;padding:16px 12px 14px;text-decoration:none;white-space:nowrap;font-size:12.5px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--ink-soft);border-bottom:2px solid transparent;transition:color .2s,border-color .2s}
 .days a:hover{color:var(--ink)}
+.days a.on{color:var(--yellow);border-bottom-color:var(--yellow)}
+.days li.grp a{color:var(--ink);padding-right:18px;margin-right:6px;border-right:1px solid var(--line-2)}
+.days li.grp a::before{content:"";display:inline-block;width:7px;height:7px;border-radius:50%;background:var(--yellow);margin-right:8px;vertical-align:1px}
+.days li.grp-label{padding:16px 6px 14px 8px;font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--ink-dim);white-space:nowrap}
+.days a.last{padding-right:18px;margin-right:6px;border-right:1px solid var(--line-2)}
 
 /* ---------- secciones ---------- */
 section.block{padding:72px 0 24px;border-top:1px solid var(--line)}
@@ -325,10 +330,12 @@ footer .credito b{color:var(--ink);font-weight:700}
 <nav class="days" aria-label="Días de la visita">
   <div class="wrap">
     <ul>
-      <li><a href="#dia-1"><span class="n">.01</span>Dom</a></li>
-      <li><a href="#dia-2"><span class="n">.02</span>Lun</a></li>
-      <li><a href="#dia-3"><span class="n">.03</span>Mar</a></li>
-      <li><a href="#dia-4"><span class="n">.04</span>Mié</a></li>
+      <li class="grp"><a href="#envivo">Ahora</a></li>
+      <li class="grp-label" aria-hidden="true">Agenda</li>
+      <li><a href="#dia-1">Dom 1</a></li>
+      <li><a href="#dia-2">Lun 2</a></li>
+      <li><a href="#dia-3">Mar 3</a></li>
+      <li><a href="#dia-4" class="last">Mié 4</a></li>
       <li><a href="#expo">Exposición</a></li>
       <li><a href="#lugares">Sedes</a></li>
       <li><a href="#equipo">Equipo</a></li>
@@ -650,6 +657,19 @@ footer .credito b{color:var(--ink);font-weight:700}
 </footer>
 
 <script>
+(function(){
+  // marca en la barra la sección visible
+  var links=[].slice.call(document.querySelectorAll('.days a[href^="#"]'));
+  var targets=links.map(function(a){return document.querySelector(a.getAttribute('href'));}).filter(Boolean);
+  function mark(){
+    var y=scrollY+innerHeight*0.35, cur=null;
+    targets.forEach(function(t){ if(t.offsetTop<=y) cur=t; });
+    links.forEach(function(a){ a.classList.toggle('on',cur&&a.getAttribute('href')==='#'+cur.id); });
+    // en móvil la barra se desplaza: mantener a la vista la sección activa
+    var on=document.querySelector('.days a.on'); if(on){ var ul=on.closest('ul'), r=on.getBoundingClientRect(), c=ul.getBoundingClientRect(); if(r.left<c.left||r.right>c.right) ul.scrollTo({left:on.offsetLeft-24,behavior:'smooth'}); }
+  }
+  addEventListener('scroll',mark,{passive:true}); addEventListener('load',mark); mark();
+})();
 (function(){
   // Fuente única: las tablas de cada día. Monterrey va en UTC−6 en noviembre.
   var TZ='-06:00', OPEN_MIN=30; // filas sin hora de fin: bloque abierto de 30 min
