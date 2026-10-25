@@ -194,9 +194,9 @@ h2 .n{color:var(--yellow);margin-right:.25em}
 .fan.drag{cursor:grabbing}
 .fan .pivot{position:absolute;left:50%;top:var(--py);width:0;height:0}
 .fan .card{position:absolute;left:0;top:0;width:var(--cw,210px);aspect-ratio:85/190;margin-left:calc(var(--cw,210px)/-2);
+  background:none;border:0;border-radius:0;padding:0; /* anula la .card de las tarjetas oscuras */
   transform-origin:50% var(--r);translate:0 calc(-1*var(--r));opacity:var(--o,1);transition:opacity .5s;will-change:transform}
-.fan .card .in{position:absolute;inset:0;border-radius:12px;overflow:hidden;background:#141414;
-  box-shadow:0 1px 0 rgba(255,255,255,.06) inset,0 24px 50px -20px rgba(0,0,0,.45);transform-origin:50% 50%;will-change:transform}
+.fan .card .in{position:absolute;inset:0;overflow:hidden;transform-origin:50% 50%;will-change:transform}
 .fan .card img{display:block;width:100%;height:100%;object-fit:cover;transition:filter .5s}
 .fan .card:not(.is-center) img{filter:saturate(.85) brightness(.94)}
 .fan .card button{all:unset;position:absolute;inset:0;cursor:pointer}
@@ -230,7 +230,7 @@ h2 .n{color:var(--yellow);margin-right:.25em}
 .lb{border:0;padding:0;background:transparent;max-width:100vw;max-height:100vh;width:100vw;height:100vh;color:#F2F2F0}
 .lb::backdrop{background:rgba(8,8,8,.94)}
 .lb .box{position:relative;width:100%;height:100%;display:grid;grid-template-rows:1fr auto;align-items:center;justify-items:center;padding:20px 20px 16px;box-sizing:border-box}
-.lb img{max-height:calc(100vh - 92px);max-width:calc(100vw - 40px);width:auto;height:auto;border-radius:10px;box-shadow:0 30px 80px rgba(0,0,0,.6);object-fit:contain}
+.lb img{max-height:calc(100vh - 92px);max-width:calc(100vw - 40px);width:auto;height:auto;object-fit:contain}
 .lb .cap{display:flex;flex-wrap:wrap;align-items:baseline;gap:6px 14px;justify-content:center;padding-top:12px;font-size:14px;color:#A8A8A3;text-align:center}
 .lb .cap b{color:#F2F2F0;font-size:16px}
 .lb .cap .n{color:var(--yellow);font-weight:700}
