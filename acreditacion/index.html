@@ -204,9 +204,9 @@ h2 .n{color:var(--yellow);margin-right:.25em}
 .fan .card{position:absolute;left:0;top:0;width:var(--cw,210px);aspect-ratio:85/190;margin-left:calc(var(--cw,210px)/-2);
   background:none;border:0;border-radius:0;padding:0; /* anula la .card de las tarjetas oscuras */
   transform-origin:50% var(--r);translate:0 calc(-1*var(--r));opacity:var(--o,1);transition:opacity .5s;will-change:transform}
-.fan .card .in{position:absolute;inset:0;overflow:hidden;transform-origin:50% 50%;will-change:transform}
+.fan .card .in{position:absolute;inset:0;overflow:hidden;transform-origin:50% 50%;will-change:transform,filter;transition:filter .5s}
 .fan .card img{display:block;width:100%;height:100%;object-fit:cover;transition:filter .5s}
-.fan .card:not(.is-center) img{filter:saturate(.85) brightness(.94)}
+.fan .card:not(.is-center) img{filter:none}
 .fan .card button{all:unset;position:absolute;inset:0;cursor:pointer}
 .fan .card button:focus-visible{outline:3px solid var(--yellow);outline-offset:-3px}
 .fan.snap .card,.fan.snap .card .in{transition:transform .55s cubic-bezier(.22,1,.36,1),opacity .5s}
@@ -713,16 +713,18 @@ footer a:hover{color:var(--yellow);border-color:var(--yellow)}
     // radio grande = curva suave; el pivote queda muy abajo del escenario
     var cw=cards[0].offsetWidth||210, r=fan.clientWidth*2.6; if(r<1400) r=1400;
     fan.style.setProperty('--r',r+'px');
-    var ch=cw*190/85; fan.style.height=Math.round(ch+56)+'px'; var top=28; // el escenario mide lo que la ficha central
+    var ch0=cw*190/85, ch=ch0*1.12; fan.style.height=Math.round(ch+48)+'px'; var top=24+(ch-ch0)/2; // la central crece desde su centro // el escenario mide lo que la ficha central
     fan.style.setProperty('--py',(top+r)+'px');
-    STEP=(cw*1.32/r)*180/Math.PI;                              // hueco de un tercio de ficha entre vecinas
+    STEP=(cw*1.42/r)*180/Math.PI;                              // hueco de un tercio de ficha entre vecinas
   }
   function layout(){
     cards.forEach(function(c,k){
       var v=view.indexOf(k); c.style.display=v<0?'none':'';
       if(v<0) return;
       var d=v-pos, a=d*STEP, ad=Math.abs(d);
-      var sc=Math.max(.74,1-ad*.08), op=ad<.5?1:Math.max(.3,.95-ad*.18);
+      // la central crece (1.12); las demás bajan de escala, se desenfocan y pierden opacidad: cristal al fondo
+      var sc=ad<.5?1.12:Math.max(.66,.86-(ad-1)*.1), op=ad<.5?1:Math.max(.28,.85-ad*.2), bl=ad<.5?0:Math.min(7,1.5+ad*2);
+      c.firstChild.style.filter=bl?'blur('+bl.toFixed(1)+'px) saturate(.8)':'';
       c.style.transform='rotate('+a+'deg)'; c.firstChild.style.transform='scale('+sc+')';
       c.style.setProperty('--o',op); c.style.zIndex=100-Math.round(ad*10);
       c.classList.toggle('is-center',ad<.5);
@@ -747,7 +749,7 @@ footer a:hover{color:var(--yellow);border-color:var(--yellow)}
   addEventListener('resize',function(){ geo(); layout(); });
   // arrastre con inercia y ajuste
   var d=null, pxPerCard;
-  fan.addEventListener('pointerdown',function(e){ pxPerCard=(cards[0].offsetWidth||210)*1.32; d={x:e.clientX,p:pos,t:Date.now(),lx:e.clientX,v:0}; fan.classList.remove('snap'); fan.classList.add('drag'); cancelAnimationFrame(raf); });
+  fan.addEventListener('pointerdown',function(e){ pxPerCard=(cards[0].offsetWidth||210)*1.42; d={x:e.clientX,p:pos,t:Date.now(),lx:e.clientX,v:0}; fan.classList.remove('snap'); fan.classList.add('drag'); cancelAnimationFrame(raf); });
   addEventListener('pointermove',function(e){ if(!d)return; var now=Date.now(); d.v=(e.clientX-d.lx)/Math.max(1,now-d.t); d.lx=e.clientX; d.t=now;
     pos=Math.max(-.4,Math.min(view.length-.6,d.p-(e.clientX-d.x)/pxPerCard)); layout(); });
   addEventListener('pointerup',function(){ if(!d)return; var v=d.v; d=null; fan.classList.remove('drag');
