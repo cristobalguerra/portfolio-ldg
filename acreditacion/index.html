@@ -53,6 +53,20 @@ a{color:inherit}
   animation:sol 48s ease-in-out infinite alternate;will-change:transform,opacity}
 @keyframes sol{0%{transform:translate(9%,-3%);opacity:.6}100%{transform:translate(-9%,3%);opacity:.95}}
 @media(prefers-reduced-motion:reduce){.sol{animation:none;opacity:.8}}
+/* lens flare: núcleo en el sol y fantasmas alineados hacia la esquina opuesta; respira con la luz */
+.flare{position:absolute;inset:0;z-index:1;pointer-events:none;mix-blend-mode:screen;opacity:.55;
+  background:
+    radial-gradient(circle at 91% 7%,rgba(255,250,235,.9) 0,rgba(255,236,190,.5) 1.2%,rgba(255,210,140,.18) 3.5%,rgba(255,200,120,0) 7%),
+    radial-gradient(circle at 91% 7%,rgba(255,230,180,0) 8%,rgba(255,230,180,.22) 8.6%,rgba(255,230,180,0) 9.4%),
+    radial-gradient(circle at 76% 26%,rgba(255,220,170,.26) 0,rgba(255,220,170,.1) 2.2%,rgba(255,220,170,0) 3%),
+    radial-gradient(circle at 64% 41%,rgba(200,230,255,.22) 0,rgba(200,230,255,0) 1.4%),
+    radial-gradient(circle at 55% 52%,rgba(255,200,150,.16) 0,rgba(255,200,150,.07) 3.4%,rgba(255,200,150,0) 4.4%),
+    radial-gradient(circle at 44% 66%,rgba(255,235,200,.14) 0,rgba(255,235,200,0) 1%),
+    radial-gradient(circle at 33% 80%,rgba(190,215,255,.12) 0,rgba(190,215,255,.05) 4.2%,rgba(190,215,255,0) 5.2%);
+  animation:flare 48s ease-in-out infinite alternate;will-change:transform,opacity}
+@keyframes flare{0%{transform:translate(1.2%,-.6%);opacity:.42}100%{transform:translate(-1.2%,.6%);opacity:.62}}
+@media(prefers-reduced-motion:reduce){.flare{animation:none;opacity:.5}}
+@media(max-width:720px){.flare{opacity:.4}}
 .fade{position:absolute;inset:0;z-index:1;background:
   linear-gradient(180deg,rgba(26,26,23,.35) 0%,rgba(26,26,23,.15) 40%,rgba(26,26,23,.85) 78%,var(--bg) 100%),
   linear-gradient(90deg,rgba(26,26,23,.75) 0%,rgba(26,26,23,.35) 50%,rgba(26,26,23,.1) 100%)}
@@ -388,6 +402,7 @@ footer .credito b{color:var(--ink);font-weight:700}
 <header class="hero">
   <div class="photo" aria-hidden="true"></div>
   <div class="sol" aria-hidden="true"></div>
+  <div class="flare" aria-hidden="true"></div>
   <div class="fade" aria-hidden="true"></div>
   <div class="wrap">
     <p class="num">Licenciatura en<br>Diseño Gráfico</p>
