@@ -16,7 +16,7 @@
    Página sin liga desde la navegación: solo quien tiene el enlace llega aquí. */
 :root{
   --bg:#0E0E0E; --card:#161616; --card-2:#1C1C1C; --line:#2A2A28; --line-2:#3A3A38;
-  --ink:#F2F2F0; --ink-soft:#A8A8A3; --ink-dim:#7A7A76;
+  --ink:#F2F2F0; --ink-soft:#A8A8A3; --ink-dim:#8A8A86;
   --yellow:#FFF500; --paper:#EEEDE8;
   --e1:#8FD3F4; --e2:#A6E3A1; --e3:#FFB067; --e4:#C9B6F2; --e5:#F7A8C9;
   --sans:"Helvetica Neue",Helvetica,Inter,Arial,sans-serif;
@@ -47,7 +47,9 @@ a{color:inherit}
 
 /* ---------- navegación por días ---------- */
 .days{position:sticky;top:0;z-index:4;background:rgba(14,14,14,.86);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);border-top:1px solid var(--line);border-bottom:1px solid var(--line)}
-.days ul{list-style:none;margin:0;padding:0;display:flex;gap:6px;overflow-x:auto;scrollbar-width:none}
+.days .wrap{position:relative}
+.days .wrap::after{content:"";position:absolute;top:0;bottom:0;right:0;width:48px;pointer-events:none;background:linear-gradient(90deg,rgba(14,14,14,0),rgba(14,14,14,.95))}
+.days ul{list-style:none;margin:0;padding:0 48px 0 0;display:flex;gap:6px;overflow-x:auto;scrollbar-width:none}
 .days ul::-webkit-scrollbar{display:none}
 .days a{display:block;padding:16px 14px 14px;text-decoration:none;white-space:nowrap;font-size:13px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--ink-soft);border-bottom:2px solid transparent}
 .days a .n{color:var(--yellow);margin-right:8px}
@@ -105,9 +107,19 @@ h2 .n{color:var(--yellow);margin-right:.25em}
 .paper h2{color:#0E0E0E}
 .paper .sub{color:#5C5C58}
 .paper .label{color:#7A7A76}
-.paper .proy{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:10px 18px;margin:0;padding:0;list-style:none}
-.paper .proy li{font-size:14px;padding:10px 0;border-top:1px solid #D4D3CE}
+.paper .nivel{margin:0 0 30px}
+.paper .nivel h3{margin:0 0 4px;font-size:22px;font-weight:700;letter-spacing:-.02em}
+.paper .nivel h3 small{display:block;font-size:12px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:#7A7A76;margin-bottom:6px}
+.paper .proy{display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:0 24px;margin:0;padding:0;list-style:none}
+.paper .proy li{font-size:15px;padding:12px 0 12px 20px;border-top:1px solid #D4D3CE;position:relative}
+.paper .proy li::before{content:"";position:absolute;left:0;top:19px;width:10px;height:10px;border-radius:50%;background:var(--dot,#0E0E0E)}
+.paper .proy li.e1{--dot:var(--e1)}.paper .proy li.e2{--dot:var(--e2)}.paper .proy li.e3{--dot:var(--e3)}.paper .proy li.e4{--dot:var(--e4)}.paper .proy li.e5{--dot:var(--e5)}
 .paper .proy li i{font-style:normal;color:#7A7A76;font-size:12px;letter-spacing:.06em;margin-right:8px;font-variant-numeric:tabular-nums}
+.paper .proy li b{font-weight:700}
+.paper .proy li span{display:block;color:#5C5C58;font-size:13px;margin-top:2px}
+.paper .leyenda{font-size:12px;color:#5C5C58;margin:0 0 24px}
+.paper .pills{margin:0 0 36px}
+.paper .pill{font-size:12.5px;padding:6px 12px}
 
 /* pie */
 footer{padding:56px 0 64px;border-top:1px solid var(--line);color:var(--ink-dim);font-size:13px}
@@ -119,6 +131,9 @@ footer a:hover{color:var(--yellow);border-color:var(--yellow)}
 
 @media(max-width:720px){
   .hero{min-height:auto;padding:88px 0 40px}
+  .ghost{opacity:.35;bottom:auto;top:40px;right:-30vw;font-size:300px}
+  .ghost.glow{opacity:.25}
+  .fade{background:linear-gradient(180deg,rgba(14,14,14,0) 0%,rgba(14,14,14,.75) 35%,var(--bg) 70%)}
   .agenda thead{display:none}
   .agenda tr{display:grid;grid-template-columns:1fr;gap:4px;padding:14px 0;border-bottom:1px solid var(--line)}
   .agenda td{border:0;padding:0}
@@ -153,10 +168,11 @@ footer a:hover{color:var(--yellow);border-color:var(--yellow)}
 <nav class="days" aria-label="Días de la visita">
   <div class="wrap">
     <ul>
-      <li><a href="#dia-1"><span class="n">.01</span>Dom · Presentación</a></li>
-      <li><a href="#dia-2"><span class="n">.02</span>Lun · Estudiantes y egresados</a></li>
-      <li><a href="#dia-3"><span class="n">.03</span>Mar · Profesores y exposición</a></li>
-      <li><a href="#dia-4"><span class="n">.04</span>Mié · Retroalimentación</a></li>
+      <li><a href="#dia-1"><span class="n">.01</span>Dom</a></li>
+      <li><a href="#dia-2"><span class="n">.02</span>Lun</a></li>
+      <li><a href="#dia-3"><span class="n">.03</span>Mar</a></li>
+      <li><a href="#dia-4"><span class="n">.04</span>Mié</a></li>
+      <li><a href="#expo">Exposición</a></li>
       <li><a href="#lugares">Lugares</a></li>
       <li><a href="#equipo">Equipo</a></li>
     </ul>
@@ -199,14 +215,9 @@ footer a:hover{color:var(--yellow);border-color:var(--yellow)}
       <thead><tr><th>Hora</th><th>Actividad</th><th>Lugar</th></tr></thead>
       <tbody>
         <tr class="key">
-          <td class="h">18:00</td>
-          <td class="a">Acto protocolario de presentación<span class="d">Autoridades de la UDEM y miembros del comité evaluador. Se inauguran los trabajos de la segunda fase y se repasa la agenda de los tres días siguientes.</span></td>
+          <td class="h">18:00 – 18:30</td>
+          <td class="a">Acto protocolario de presentación<span class="d">Autoridades de la UDEM y miembros del comité evaluador. Se inauguran los trabajos de la segunda fase, se repasa la agenda de los tres días siguientes y el director del programa entrega a la coordinadora del comité la relación de estudiantes activos, de la que el comité selecciona a quienes participarán en las entrevistas del lunes.</span></td>
           <td class="l"><b>SAFI Valle Oriente</b>Salón por confirmar</td>
-        </tr>
-        <tr>
-          <td class="h">18:00</td>
-          <td class="a">Entrega de la relación de estudiantes<span class="d">El director del programa entrega al coordinador del comité la lista de alumnos activos para que el comité seleccione a quienes participarán en las entrevistas del lunes.</span></td>
-          <td class="l"><b>SAFI Valle Oriente</b></td>
         </tr>
         <tr class="key">
           <td class="h">18:30 – 20:00</td>
@@ -288,34 +299,51 @@ footer a:hover{color:var(--yellow);border-color:var(--yellow)}
   <div class="wrap">
     <p class="label">Martes 3 · 15:50 – 17:50 · 5.º piso</p>
     <h2><span class="n" style="color:#0E0E0E">.01–.18</span>Exposición de trabajos</h2>
-    <p class="sub">Dieciocho proyectos de los tres niveles del plan de estudios. Cada pieza lleva una ficha con el propósito formativo de la materia, los aprendizajes demostrados y un código QR con la evidencia completa.</p>
-    <div class="pills" style="margin-bottom:28px">
+    <p class="sub">Dieciocho proyectos agrupados por nivel, como pide el COMAPROD. Cada pieza lleva una ficha con el propósito formativo de la materia, los aprendizajes demostrados y un código QR con la evidencia completa.</p>
+    <p class="leyenda">Cada proyecto indica su materia y semestre; el punto de color señala el eje curricular del Mapa LDG.</p>
+    <div class="pills">
       <span class="pill e1">Fundamentos del Diseño Gráfico 2D y 3D · 1.º–2.º</span>
       <span class="pill e2">Identidad e Información 2D y 3D · 3.º–4.º</span>
       <span class="pill e3">Estrategia e Innovación · 5.º–6.º</span>
       <span class="pill e4">Sustentabilidad y Tecnología · 7.º–8.º</span>
       <span class="pill e5">Diseño Gráfico Práctica · 9.º</span>
     </div>
-    <ul class="proy">
-      <li><i>.01</i>Bitácora de la forma</li>
-      <li><i>.02</i>La Victoria</li>
-      <li><i>.03</i>Scoop &amp; Clip</li>
-      <li><i>.04</i>Hello Amsterdam</li>
-      <li><i>.05</i>Parallax</li>
-      <li><i>.06</i>La jugada maestra</li>
-      <li><i>.07</i>Artefacto</li>
-      <li><i>.08</i>Synergy</li>
-      <li><i>.09</i>La Máquina del Souvenir</li>
-      <li><i>.10</i>Las reglas de la forma</li>
-      <li><i>.11</i>Sombrerito</li>
-      <li><i>.12</i>Portada 360° UDEM</li>
-      <li><i>.13</i>Madrid Metro</li>
-      <li><i>.14</i>Catálogo de proveedores</li>
-      <li><i>.15</i>Ojo de Tigre</li>
-      <li><i>.16</i>Taller MDillon</li>
-      <li><i>.17</i>Back Door</li>
-      <li><i>.18</i>Regen</li>
-    </ul>
+
+    <div class="nivel">
+      <h3><small>Nivel básico · 1.º a 3.<sup>er</sup> semestre</small>4 proyectos</h3>
+      <ul class="proy">
+        <li class="e1"><i>.01</i><b>Bitácora de la forma</b><span>Estudio de Introducción a la Composición Visual · 1.º</span></li>
+        <li class="e1"><i>.10</i><b>Las reglas de la forma</b><span>Estudio de Fundamentos del Diseño Gráfico · 2.º</span></li>
+        <li class="e2"><i>.02</i><b>La Victoria</b><span>Fotografía Profesional de Objeto · 3.º</span></li>
+        <li class="e2"><i>.11</i><b>Sombrerito</b><span>Fotografía Profesional de Objeto · 3.º</span></li>
+      </ul>
+    </div>
+
+    <div class="nivel">
+      <h3><small>Nivel intermedio · 4.º a 6.º semestre</small>8 proyectos</h3>
+      <ul class="proy">
+        <li class="e2"><i>.03</i><b>Scoop &amp; Clip</b><span>Empaque y Marca · 4.º</span></li>
+        <li class="e2"><i>.04</i><b>Hello Amsterdam</b><span>Estudio de Diseño Informativo · 4.º</span></li>
+        <li class="e2"><i>.12</i><b>Portada 360° UDEM</b><span>Diseño de Publicaciones · 4.º</span></li>
+        <li class="e2"><i>.13</i><b>Madrid Metro</b><span>Estudio de Diseño Informativo · 4.º</span></li>
+        <li class="e3"><i>.05</i><b>Parallax</b><span>Mercadotecnia y Comunicación de Marca · 5.º</span></li>
+        <li class="e3"><i>.14</i><b>Catálogo de proveedores</b><span>Gestión y Operación de Proyectos de Diseño · 5.º</span></li>
+        <li class="e3"><i>.06</i><b>La jugada maestra</b><span>Estudio de Diseño de Interacción · 6.º</span></li>
+        <li class="e3"><i>.15</i><b>Ojo de Tigre</b><span>Estudio de Diseño de Interacción · 6.º</span></li>
+      </ul>
+    </div>
+
+    <div class="nivel">
+      <h3><small>Nivel terminal · 7.º a 9.º semestre</small>6 proyectos</h3>
+      <ul class="proy">
+        <li class="e4"><i>.07</i><b>Artefacto</b><span>Estudio de Diseño de Servicios · 7.º</span></li>
+        <li class="e4"><i>.16</i><b>Taller MDillon</b><span>Estudio de Diseño de Servicios · 7.º</span></li>
+        <li class="e4"><i>.08</i><b>Synergy</b><span>Estudio Integral de Diseño · 8.º</span></li>
+        <li class="e4"><i>.17</i><b>Back Door</b><span>Estudio Integral de Diseño · 8.º</span></li>
+        <li class="e5"><i>.09</i><b>La Máquina del Souvenir</b><span>Proyecto de Evaluación Final (PEF) · 9.º</span></li>
+        <li class="e5"><i>.18</i><b>Regen</b><span>Proyecto de Evaluación Final (PEF) · 9.º</span></li>
+      </ul>
+    </div>
   </div>
 </section>
 
@@ -328,7 +356,7 @@ footer a:hover{color:var(--yellow);border-color:var(--yellow)}
       <div class="card">
         <h3>Domingo</h3>
         <p><b>Hotel SAFI Valle Oriente</b></p>
-        <p class="muted">Av. Lázaro Cárdenas 2400 Pte., Valle Oriente, San Pedro Garza García, N. L.</p>
+        <p class="muted">Valle Oriente, San Pedro Garza García, N. L.</p>
         <div class="pills"><a class="pill" href="https://maps.google.com/?q=Hotel+Safi+Valle+Oriente" target="_blank" rel="noopener">Ver en el mapa</a></div>
       </div>
       <div class="card">
