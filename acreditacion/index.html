@@ -1,0 +1,380 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="robots" content="noindex,nofollow,noarchive">
+<meta name="theme-color" content="#0E0E0E">
+<title>Visita COMAPROD · 1–4 de noviembre · LDG UDEM</title>
+<meta name="description" content="Agenda de la visita del comité evaluador del COMAPROD a la Licenciatura en Diseño Gráfico de la UDEM.">
+<link rel="icon" href="../assets/favicon.svg?v=4" type="image/svg+xml">
+<link rel="icon" href="../assets/favicon-32.png?v=4" sizes="32x32" type="image/png">
+<link rel="apple-touch-icon" href="../assets/favicon-180.png?v=4">
+<style>
+/* ============ COMAPROD · Artes finales 85×190 llevadas a pantalla ============
+   Negro pleno, amarillo UDEM, línea de ejes curriculares, numerales de puntos.
+   Página sin liga desde la navegación: solo quien tiene el enlace llega aquí. */
+:root{
+  --bg:#0E0E0E; --card:#161616; --card-2:#1C1C1C; --line:#2A2A28; --line-2:#3A3A38;
+  --ink:#F2F2F0; --ink-soft:#A8A8A3; --ink-dim:#7A7A76;
+  --yellow:#FFF500; --paper:#EEEDE8;
+  --e1:#8FD3F4; --e2:#A6E3A1; --e3:#FFB067; --e4:#C9B6F2; --e5:#F7A8C9;
+  --sans:"Helvetica Neue",Helvetica,Inter,Arial,sans-serif;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--sans);-webkit-font-smoothing:antialiased;line-height:1.5}
+a{color:inherit}
+.wrap{width:min(1080px,100% - 48px);margin-inline:auto}
+.tag{position:absolute;top:0;right:0;z-index:3;background:var(--yellow);color:var(--bg);font-weight:700;font-size:20px;padding:12px 20px 10px;letter-spacing:-.01em}
+.label{font-size:12px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--ink-soft)}
+.label.y{color:var(--yellow)}
+.eje-line{display:block;width:120px;height:4px;border-radius:2px;margin:0 0 14px;
+  background:linear-gradient(90deg,var(--e1),var(--e2),var(--e3),var(--e4),var(--e5))}
+
+/* ---------- héroe ---------- */
+.hero{position:relative;overflow:hidden;padding:96px 0 48px;min-height:92vh;display:flex;align-items:flex-end}
+.hero .wrap{position:relative;z-index:2}
+.hero h1{font-size:clamp(44px,8vw,112px);font-weight:700;line-height:.95;letter-spacing:-.035em;margin:12px 0 22px;max-width:12ch}
+.hero .num{color:var(--yellow);font-weight:700;font-size:clamp(64px,12vw,170px);line-height:.9;letter-spacing:-.06em;margin:0 0 10px}
+.hero p{font-size:clamp(17px,1.6vw,20px);color:var(--ink-soft);max-width:58ch;margin:0}
+.hero p b{color:var(--ink);font-weight:700}
+.ghost{position:absolute;right:-4vw;bottom:-6vw;z-index:0;font-weight:700;font-size:clamp(220px,38vw,560px);line-height:.78;letter-spacing:-.07em;color:var(--yellow);
+  -webkit-mask-image:radial-gradient(circle,#000 0 5px,transparent 5.6px);mask-image:radial-gradient(circle,#000 0 5px,transparent 5.6px);
+  -webkit-mask-size:15px 15px;mask-size:15px 15px;filter:blur(1.5px);opacity:.75;pointer-events:none;user-select:none}
+.ghost.glow{-webkit-mask-image:none;mask-image:none;filter:blur(34px);opacity:.45}
+.fade{position:absolute;inset:0;z-index:1;background:linear-gradient(90deg,var(--bg) 0%,var(--bg) 38%,rgba(14,14,14,.6) 58%,rgba(14,14,14,0) 82%)}
+
+/* ---------- navegación por días ---------- */
+.days{position:sticky;top:0;z-index:4;background:rgba(14,14,14,.86);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);border-top:1px solid var(--line);border-bottom:1px solid var(--line)}
+.days ul{list-style:none;margin:0;padding:0;display:flex;gap:6px;overflow-x:auto;scrollbar-width:none}
+.days ul::-webkit-scrollbar{display:none}
+.days a{display:block;padding:16px 14px 14px;text-decoration:none;white-space:nowrap;font-size:13px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--ink-soft);border-bottom:2px solid transparent}
+.days a .n{color:var(--yellow);margin-right:8px}
+.days a:hover{color:var(--ink)}
+
+/* ---------- secciones ---------- */
+section.block{padding:72px 0 24px;border-top:1px solid var(--line)}
+section.block:first-of-type{border-top:0}
+h2{font-size:clamp(28px,3.6vw,44px);font-weight:700;letter-spacing:-.03em;line-height:1.02;margin:8px 0 6px}
+h2 .n{color:var(--yellow);margin-right:.25em}
+.sub{color:var(--ink-soft);font-size:16px;margin:0 0 28px}
+.sub b{color:var(--ink);font-weight:700}
+
+/* tarjeta oscura (propósito formativo) */
+.card{background:var(--card);border:1px solid var(--line);border-radius:18px;padding:26px 28px}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:18px}
+.card h3{margin:0 0 10px;font-size:12px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--ink-soft)}
+.card p,.card li{font-size:15px;color:var(--ink);margin:0}
+.card ul{margin:0;padding-left:18px;color:var(--ink-soft)}
+.card li{margin:4px 0;color:var(--ink)}
+.card .muted{color:var(--ink-soft)}
+
+/* píldoras */
+.pills{display:flex;flex-wrap:wrap;gap:8px;margin:14px 0 0}
+.pill{display:inline-block;border:1px solid var(--line-2);border-radius:99px;padding:7px 14px;font-size:13.5px;color:var(--ink)}
+.pill.e1{background:var(--e1);color:#0E0E0E;border-color:var(--e1)}
+.pill.e2{background:var(--e2);color:#0E0E0E;border-color:var(--e2)}
+.pill.e3{background:var(--e3);color:#0E0E0E;border-color:var(--e3)}
+.pill.e4{background:var(--e4);color:#0E0E0E;border-color:var(--e4)}
+.pill.e5{background:var(--e5);color:#0E0E0E;border-color:var(--e5)}
+.pill.y{background:var(--yellow);color:#0E0E0E;border-color:var(--yellow);font-weight:700}
+
+/* agenda: tabla del pliego */
+.agenda{width:100%;border-collapse:collapse;margin:8px 0 40px}
+.agenda th{text-align:left;font-size:11px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--ink-dim);padding:0 0 10px;border-bottom:1px solid var(--line-2)}
+.agenda td{vertical-align:top;padding:16px 18px 16px 0;border-bottom:1px solid var(--line);font-size:15.5px}
+.agenda td.h{width:140px;color:var(--yellow);font-weight:700;white-space:nowrap;font-variant-numeric:tabular-nums;letter-spacing:-.01em}
+.agenda td.h small{display:block;color:var(--ink-dim);font-weight:400;font-size:12px;letter-spacing:.06em;text-transform:uppercase;margin-top:2px}
+.agenda td.a{color:var(--ink)}
+.agenda td.a .d{display:block;color:var(--ink-soft);font-size:14px;margin-top:4px;max-width:62ch}
+.agenda td.l{width:220px;color:var(--ink-soft);font-size:14px}
+.agenda td.l b{display:block;color:var(--ink);font-weight:700;font-size:14.5px}
+.agenda tr.soft td{color:var(--ink-dim)}
+.agenda tr.soft td.h{color:var(--ink-dim);font-weight:400}
+.agenda tr.key td.a{font-weight:700}
+
+/* lugares / equipo */
+.people{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:14px}
+.person{border:1px solid var(--line);border-radius:14px;padding:18px 20px;background:var(--card)}
+.person b{display:block;font-size:16px;letter-spacing:-.01em}
+.person span{display:block;color:var(--ink-soft);font-size:13.5px;margin-top:3px}
+
+/* banda papel (como el pliego claro de la exposición) */
+.paper{background:var(--paper);color:#0E0E0E;padding:64px 0;margin:48px 0 0}
+.paper h2{color:#0E0E0E}
+.paper .sub{color:#5C5C58}
+.paper .label{color:#7A7A76}
+.paper .proy{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:10px 18px;margin:0;padding:0;list-style:none}
+.paper .proy li{font-size:14px;padding:10px 0;border-top:1px solid #D4D3CE}
+.paper .proy li i{font-style:normal;color:#7A7A76;font-size:12px;letter-spacing:.06em;margin-right:8px;font-variant-numeric:tabular-nums}
+
+/* pie */
+footer{padding:56px 0 64px;border-top:1px solid var(--line);color:var(--ink-dim);font-size:13px}
+footer .logos{display:flex;flex-wrap:wrap;gap:28px;align-items:center;margin-bottom:28px;color:var(--ink-soft);font-size:11px;font-weight:700;letter-spacing:.14em;text-transform:uppercase}
+footer .logos span{padding-right:28px;border-right:1px solid var(--line-2)}
+footer .logos span:last-child{border:0}
+footer a{color:var(--ink-soft);text-decoration:none;border-bottom:1px solid var(--line-2)}
+footer a:hover{color:var(--yellow);border-color:var(--yellow)}
+
+@media(max-width:720px){
+  .hero{min-height:auto;padding:88px 0 40px}
+  .agenda thead{display:none}
+  .agenda tr{display:grid;grid-template-columns:1fr;gap:4px;padding:14px 0;border-bottom:1px solid var(--line)}
+  .agenda td{border:0;padding:0}
+  .agenda td.h,.agenda td.l{width:auto}
+  .agenda td.l{margin-top:4px}
+}
+@media print{
+  body{background:#fff;color:#000}
+  .tag,.days,.ghost,.fade{display:none}
+  .hero{min-height:auto;padding:24px 0}
+  .agenda td.h{color:#000}
+}
+</style>
+</head>
+<body>
+
+<div class="tag">UDEM</div>
+
+<header class="hero">
+  <div class="ghost glow" aria-hidden="true">LD<br>G</div>
+  <div class="ghost" aria-hidden="true">LD<br>G</div>
+  <div class="fade" aria-hidden="true"></div>
+  <div class="wrap">
+    <span class="eje-line" aria-hidden="true"></span>
+    <p class="label">Licenciatura en Diseño Gráfico · Visita de acreditación COMAPROD</p>
+    <p class="num">.01–.04</p>
+    <h1>Bienvenidos a la UDEM</h1>
+    <p>Del <b>1 al 4 de noviembre de 2026</b> la Licenciatura en Diseño Gráfico recibe al comité evaluador del COMAPROD en el Centro Roberto Garza Sada. Esta página reúne la agenda de los cuatro días, los lugares y las personas con quienes van a trabajar.</p>
+  </div>
+</header>
+
+<nav class="days" aria-label="Días de la visita">
+  <div class="wrap">
+    <ul>
+      <li><a href="#dia-1"><span class="n">.01</span>Dom · Presentación</a></li>
+      <li><a href="#dia-2"><span class="n">.02</span>Lun · Estudiantes y egresados</a></li>
+      <li><a href="#dia-3"><span class="n">.03</span>Mar · Profesores y exposición</a></li>
+      <li><a href="#dia-4"><span class="n">.04</span>Mié · Retroalimentación</a></li>
+      <li><a href="#lugares">Lugares</a></li>
+      <li><a href="#equipo">Equipo</a></li>
+    </ul>
+  </div>
+</nav>
+
+<main>
+
+<section class="block" id="antes">
+  <div class="wrap">
+    <p class="label y">Antes de llegar</p>
+    <h2>Lo que vamos a preparar para ustedes</h2>
+    <p class="sub">Un espacio de trabajo privado en el CRGS durante los tres días en campus, con equipo de cómputo, impresora, conexión a los sistemas institucionales y café.</p>
+    <div class="grid">
+      <div class="card">
+        <h3>Sede del domingo</h3>
+        <p><b>Hotel SAFI Valle Oriente</b></p>
+        <p class="muted">Acto de presentación, entrevista con el director del programa y reunión privada del comité.</p>
+      </div>
+      <div class="card">
+        <h3>Sede de lunes a miércoles</h3>
+        <p><b>Centro Roberto Garza Sada (CRGS), UDEM</b></p>
+        <p class="muted">Entrevistas en el aula CR60202A y en la sala del 3.<sup>er</sup> piso; exposición en el 5.º piso. Traslados hotel–campus a cargo de la UDEM.</p>
+      </div>
+      <div class="card">
+        <h3>Documentos</h3>
+        <p><b>Autoestudio LDG 2025 y anexos</b></p>
+        <p class="muted">Siguen disponibles en la carpeta compartida que ya tienen; en el espacio de trabajo habrá una copia digital y las evidencias organizadas por categoría.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="block" id="dia-1">
+  <div class="wrap">
+    <p class="label">Día 1</p>
+    <h2><span class="n">.01</span>Domingo 1 de noviembre</h2>
+    <p class="sub"><b>Hotel SAFI Valle Oriente.</b> Tarde de apertura; el horario puede ajustarse según la llegada de los vuelos.</p>
+    <table class="agenda">
+      <thead><tr><th>Hora</th><th>Actividad</th><th>Lugar</th></tr></thead>
+      <tbody>
+        <tr class="key">
+          <td class="h">18:00</td>
+          <td class="a">Acto protocolario de presentación<span class="d">Autoridades de la UDEM y miembros del comité evaluador. Se inauguran los trabajos de la segunda fase y se repasa la agenda de los tres días siguientes.</span></td>
+          <td class="l"><b>SAFI Valle Oriente</b>Salón por confirmar</td>
+        </tr>
+        <tr>
+          <td class="h">18:00</td>
+          <td class="a">Entrega de la relación de estudiantes<span class="d">El director del programa entrega al coordinador del comité la lista de alumnos activos para que el comité seleccione a quienes participarán en las entrevistas del lunes.</span></td>
+          <td class="l"><b>SAFI Valle Oriente</b></td>
+        </tr>
+        <tr class="key">
+          <td class="h">18:30 – 20:00</td>
+          <td class="a">Entrevista a profundidad con el director del programa<span class="d">Participan únicamente los pares evaluadores y el responsable del programa.</span></td>
+          <td class="l"><b>SAFI Valle Oriente</b></td>
+        </tr>
+        <tr class="soft">
+          <td class="h">20:00 – 20:30</td>
+          <td class="a">Reunión privada del comité evaluador</td>
+          <td class="l">SAFI Valle Oriente</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<section class="block" id="dia-2">
+  <div class="wrap">
+    <p class="label">Día 2</p>
+    <h2><span class="n">.02</span>Lunes 2 de noviembre</h2>
+    <p class="sub"><b>CRGS, UDEM.</b> Talleres, estudiantes de los tres niveles y egresados.</p>
+    <table class="agenda">
+      <thead><tr><th>Hora</th><th>Actividad</th><th>Lugar</th></tr></thead>
+      <tbody>
+        <tr class="soft"><td class="h">8:00 – 8:30</td><td class="a">Traslado del comité a la UDEM</td><td class="l">SAFI Valle Oriente → UDEM</td></tr>
+        <tr><td class="h">8:30 – 8:50</td><td class="a">Recepción y espacio de trabajo del comité</td><td class="l"><b>CRGS</b>Nivel 3</td></tr>
+        <tr class="key"><td class="h">8:50 – 9:50</td><td class="a">Profesores responsables de los talleres de diseño<span class="d">Incluye el recorrido por los laboratorios y talleres del programa.</span></td><td class="l"><b>CR60202A</b></td></tr>
+        <tr class="key"><td class="h">10:00 – 11:20</td><td class="a">Estudiantes del nivel básico<span class="d">1.º a 3.<sup>er</sup> semestre.</span></td><td class="l"><b>CR60202A</b></td></tr>
+        <tr class="key"><td class="h">11:30 – 12:50</td><td class="a">Estudiantes del nivel intermedio<span class="d">4.º a 6.º semestre.</span></td><td class="l"><b>CR60202A</b></td></tr>
+        <tr class="soft"><td class="h">13:10 – 14:40</td><td class="a">Comida</td><td class="l">Restaurante por confirmar</td></tr>
+        <tr class="key"><td class="h">15:15 – 16:30</td><td class="a">Estudiantes del nivel terminal<span class="d">7.º y 8.º semestre.</span></td><td class="l"><b>Sala 3.<sup>er</sup> piso</b></td></tr>
+        <tr class="key"><td class="h">17:00 – 18:30</td><td class="a">Egresados<span class="d">Entre uno y cinco años de egreso.</span></td><td class="l"><b>Sala 3.<sup>er</sup> piso</b></td></tr>
+        <tr class="soft"><td class="h">18:30</td><td class="a">Traslado al hotel y revisión de documentos del comité</td><td class="l">SAFI Valle Oriente</td></tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<section class="block" id="dia-3">
+  <div class="wrap">
+    <p class="label">Día 3</p>
+    <h2><span class="n">.03</span>Martes 3 de noviembre</h2>
+    <p class="sub"><b>CRGS, UDEM.</b> Profesores, autoridades, áreas de apoyo y recorrido por la exposición de trabajos.</p>
+    <table class="agenda">
+      <thead><tr><th>Hora</th><th>Actividad</th><th>Lugar</th></tr></thead>
+      <tbody>
+        <tr class="soft"><td class="h">8:00 – 8:30</td><td class="a">Traslado del comité a la UDEM</td><td class="l">SAFI Valle Oriente → UDEM</td></tr>
+        <tr class="key"><td class="h">8:40 – 9:50</td><td class="a">Profesores de tiempo completo</td><td class="l"><b>CR60202A</b></td></tr>
+        <tr class="key"><td class="h">10:00 – 11:20</td><td class="a">Coordinadora del comité con autoridades de la UDEM<span class="d">Vicerrectoría, Decanato de la Escuela de Arte y Diseño y Dirección del Departamento.</span></td><td class="l"><b>CR60202A</b></td></tr>
+        <tr class="key"><td class="h">11:30 – 12:50</td><td class="a">Profesores de teoría y de asignatura</td><td class="l"><b>CRGS</b>Aula por confirmar</td></tr>
+        <tr class="soft"><td class="h">13:00 – 14:30</td><td class="a">Comida en el campus</td><td class="l">Sala 3.<sup>er</sup> piso</td></tr>
+        <tr class="key"><td class="h">14:40 – 15:40</td><td class="a">Funcionarios de áreas de apoyo<span class="d">Biblioteca, Servicios Escolares, Vinculación, Servicio Social, Permanencia, EXAUDEM y Talleres.</span></td><td class="l"><b>Sala 3.<sup>er</sup> piso</b></td></tr>
+        <tr class="key"><td class="h">15:50 – 17:50</td><td class="a">Recorrido por la exposición de trabajos<span class="d">Muestra de proyectos de los niveles básico, intermedio y terminal, con sus autores presentes para conversar con el comité.</span></td><td class="l"><b>Exposición · 5.º piso</b>Inicio en la sala del 3.<sup>er</sup> piso</td></tr>
+        <tr class="soft"><td class="h">17:50</td><td class="a">Traslado al hotel y revisión de documentos del comité</td><td class="l">SAFI Valle Oriente</td></tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<section class="block" id="dia-4">
+  <div class="wrap">
+    <p class="label">Día 4</p>
+    <h2><span class="n">.04</span>Miércoles 4 de noviembre</h2>
+    <p class="sub"><b>CRGS, UDEM.</b> Cierre de la visita y traslado al aeropuerto.</p>
+    <table class="agenda">
+      <thead><tr><th>Hora</th><th>Actividad</th><th>Lugar</th></tr></thead>
+      <tbody>
+        <tr class="soft"><td class="h">8:00 – 8:20</td><td class="a">Traslado del comité a la UDEM</td><td class="l">SAFI Valle Oriente → UDEM</td></tr>
+        <tr><td class="h">8:30 – 9:30</td><td class="a">Revisión y llenado del formato por parte del comité</td><td class="l"><b>Sala 3.<sup>er</sup> piso</b></td></tr>
+        <tr class="key"><td class="h">9:40 – 10:30</td><td class="a">Retroalimentación del comité al responsable del programa</td><td class="l"><b>Sala 3.<sup>er</sup> piso</b></td></tr>
+        <tr class="key"><td class="h">10:40 – 11:00</td><td class="a">Acto protocolario de clausura<span class="d">Cierre de la segunda fase del proceso de acreditación.</span></td><td class="l"><b>Sala 3.<sup>er</sup> piso</b></td></tr>
+        <tr class="soft"><td class="h">11:00</td><td class="a">Traslado del comité al aeropuerto</td><td class="l">Coordinado por la UDEM</td></tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<section class="paper" id="expo">
+  <div class="wrap">
+    <p class="label">Martes 3 · 15:50 – 17:50 · 5.º piso</p>
+    <h2><span class="n" style="color:#0E0E0E">.01–.18</span>Exposición de trabajos</h2>
+    <p class="sub">Dieciocho proyectos de los tres niveles del plan de estudios. Cada pieza lleva una ficha con el propósito formativo de la materia, los aprendizajes demostrados y un código QR con la evidencia completa.</p>
+    <div class="pills" style="margin-bottom:28px">
+      <span class="pill e1">Fundamentos del Diseño Gráfico 2D y 3D · 1.º–2.º</span>
+      <span class="pill e2">Identidad e Información 2D y 3D · 3.º–4.º</span>
+      <span class="pill e3">Estrategia e Innovación · 5.º–6.º</span>
+      <span class="pill e4">Sustentabilidad y Tecnología · 7.º–8.º</span>
+      <span class="pill e5">Diseño Gráfico Práctica · 9.º</span>
+    </div>
+    <ul class="proy">
+      <li><i>.01</i>Bitácora de la forma</li>
+      <li><i>.02</i>La Victoria</li>
+      <li><i>.03</i>Scoop &amp; Clip</li>
+      <li><i>.04</i>Hello Amsterdam</li>
+      <li><i>.05</i>Parallax</li>
+      <li><i>.06</i>La jugada maestra</li>
+      <li><i>.07</i>Artefacto</li>
+      <li><i>.08</i>Synergy</li>
+      <li><i>.09</i>La Máquina del Souvenir</li>
+      <li><i>.10</i>Las reglas de la forma</li>
+      <li><i>.11</i>Sombrerito</li>
+      <li><i>.12</i>Portada 360° UDEM</li>
+      <li><i>.13</i>Madrid Metro</li>
+      <li><i>.14</i>Catálogo de proveedores</li>
+      <li><i>.15</i>Ojo de Tigre</li>
+      <li><i>.16</i>Taller MDillon</li>
+      <li><i>.17</i>Back Door</li>
+      <li><i>.18</i>Regen</li>
+    </ul>
+  </div>
+</section>
+
+<section class="block" id="lugares">
+  <div class="wrap">
+    <p class="label y">Lugares</p>
+    <h2>Dónde nos vemos</h2>
+    <p class="sub">Dos sedes para toda la visita.</p>
+    <div class="grid">
+      <div class="card">
+        <h3>Domingo</h3>
+        <p><b>Hotel SAFI Valle Oriente</b></p>
+        <p class="muted">Av. Lázaro Cárdenas 2400 Pte., Valle Oriente, San Pedro Garza García, N. L.</p>
+        <div class="pills"><a class="pill" href="https://maps.google.com/?q=Hotel+Safi+Valle+Oriente" target="_blank" rel="noopener">Ver en el mapa</a></div>
+      </div>
+      <div class="card">
+        <h3>Lunes a miércoles</h3>
+        <p><b>Centro Roberto Garza Sada de Arte, Arquitectura y Diseño</b></p>
+        <p class="muted">Universidad de Monterrey · Av. Ignacio Morones Prieto 4500 Pte., San Pedro Garza García, N. L. Aula CR60202A (nivel 2), sala del 3.<sup>er</sup> piso y exposición en el 5.º piso.</p>
+        <div class="pills"><a class="pill" href="https://maps.google.com/?q=Centro+Roberto+Garza+Sada+UDEM" target="_blank" rel="noopener">Ver en el mapa</a></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="block" id="equipo">
+  <div class="wrap">
+    <p class="label y">Equipo</p>
+    <h2>Quiénes los reciben</h2>
+    <p class="sub">Cualquier ajuste a la agenda durante la visita pasa por el director del programa.</p>
+    <div class="people">
+      <div class="person"><b>Jessica Ochoa</b><span>Decana · Escuela de Arte y Diseño</span></div>
+      <div class="person"><b>Eduardo Guizar</b><span>Director · Departamento de Diseño</span></div>
+      <div class="person"><b>Cristóbal Guerra</b><span>Director · Licenciatura en Diseño Gráfico</span></div>
+      <div class="person"><b>Elena de Gasperín</b><span>Coordinadora · Licenciatura en Diseño Gráfico</span></div>
+      <div class="person"><b>Jaír Salazar</b><span>Dirección de Evaluación y Acreditación (DEAC)</span></div>
+    </div>
+    <p class="label" style="margin:40px 0 12px">Comité evaluador COMAPROD</p>
+    <div class="people">
+      <div class="person"><b>Marcela Castro Cantú</b><span>Coordinadora del comité</span></div>
+      <div class="person"><b>José Ángel Chavarría Nieto</b><span>Par evaluador · ULSA Bajío</span></div>
+      <div class="person"><b>Juan Mauricio Audirac Camarena</b><span>Par evaluador · UDLAP</span></div>
+      <div class="person"><b>Raúl Parada Hidalgo</b><span>Par evaluador</span></div>
+    </div>
+  </div>
+</section>
+
+</main>
+
+<footer>
+  <div class="wrap">
+    <div class="logos">
+      <span>Escuela de Arte y Diseño</span>
+      <span>Centro Roberto Garza Sada</span>
+      <span>Universidad de Monterrey</span>
+    </div>
+    <p>Licenciatura en Diseño Gráfico · Universidad de Monterrey · <a href="mailto:cristobal.guerra@udem.edu">cristobal.guerra@udem.edu</a><br>Página de uso interno para el comité evaluador. Versión del 25 de octubre de 2026.</p>
+  </div>
+</footer>
+
+</body>
+</html>
