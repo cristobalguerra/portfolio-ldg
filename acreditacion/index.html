@@ -527,7 +527,7 @@ footer .credito b{color:var(--ink);font-weight:700}
         <tr class="key"><td class="h">11:30 – 12:50</td><td class="a">Profesores de teoría y de asignatura</td><td class="l"><b>Salón 223</b>Taller sustentable</td></tr>
         <tr class="soft"><td class="h">13:00 – 14:30</td><td class="a">Comida en el campus<span class="d">Menú de Nectar Works.</span></td><td class="l"><b>Sala de juntas · 3.<sup>er</sup> piso</b></td></tr>
         <tr class="key"><td class="h">14:40 – 15:40</td><td class="a">Funcionarios de áreas de apoyo<span class="d">Comité escolar, Investigación, Servicio Social, Acompañamiento estudiantil, Vinculación, Biblioteca y Ayudas financieras.</span></td><td class="l"><b>Sala de juntas · 3.<sup>er</sup> piso</b></td></tr>
-        <tr class="key"><td class="h">15:50 – 17:50</td><td class="a">Recorrido por la exposición de trabajos<span class="d">Muestra de proyectos de los niveles básico, intermedio y terminal, con sus autores presentes para conversar con el comité.</span></td><td class="l"><b>Exposición · 5.º piso</b></td></tr>
+        <tr class="key"><td class="h">15:50 – 17:50</td><td class="a">Recorrido por la exposición de trabajos<span class="d">Muestra de proyectos de los niveles básico, intermedio y terminal, con sus autores presentes para conversar con el comité.</span></td><td class="l"><b>Sala polivalente</b>Exposición</td></tr>
         <tr class="soft"><td class="h">17:50</td><td class="a">Traslado al hotel y revisión de documentos del comité</td><td class="l">SAFI Valle Oriente</td></tr>
       </tbody>
     </table>
@@ -554,7 +554,7 @@ footer .credito b{color:var(--ink);font-weight:700}
 
 <section class="paper" id="expo">
   <div class="wrap">
-    <p class="label">Martes 3 · 15:50 – 17:50 · 5.º piso</p>
+    <p class="label">Sala polivalente · abierta lunes 2 y martes 3 de 10:00 a 20:00 · recorrido con el comité martes 15:50 – 17:50</p>
     <h2><span class="n" style="color:#1A1A17">.01–.18</span>Exposición de trabajos</h2>
     <p class="sub">Dieciocho proyectos agrupados por los tres niveles del plan de estudios. Cada pieza lleva una ficha con el propósito formativo de la materia, los aprendizajes demostrados y un código QR con la evidencia completa.</p>
     <p class="leyenda">Filtra por eje curricular del Mapa LDG; el punto de color identifica el eje de cada proyecto.</p>
@@ -642,7 +642,7 @@ footer .credito b{color:var(--ink);font-weight:700}
       <div class="card">
         <h3>Lunes a miércoles</h3>
         <p><b>Centro Roberto Garza Sada de Arte, Arquitectura y Diseño</b></p>
-        <p class="muted">Universidad de Monterrey · Av. Ignacio Morones Prieto 4500 Pte., San Pedro Garza García, N. L. Aula CR60202A, sala de juntas del 3.<sup>er</sup> piso (CR N3), salón 223 y exposición en el 5.º piso.</p>
+        <p class="muted">Universidad de Monterrey · Av. Ignacio Morones Prieto 4500 Pte., San Pedro Garza García, N. L. Aula CR60202A, sala de juntas del 3.<sup>er</sup> piso (CR N3), salón 223 y exposición en la sala polivalente (abierta lunes 2 y martes 3 de 10:00 a 20:00).</p>
         <div class="pills"><a class="pill" href="https://maps.google.com/?q=Centro+Roberto+Garza+Sada+UDEM" target="_blank" rel="noopener">Ver en el mapa</a></div>
       </div>
     </div>
@@ -781,7 +781,7 @@ footer .credito b{color:var(--ink);font-weight:700}
     if(/CR60202A/.test(l)) return {k:'Aula CR60202A'};
     if(/Sala de juntas|Sala 3/.test(l)) return {k:'Sala de juntas · 3.er piso'};
     if(/Salón 223/.test(l)) return {k:'Salón 223'};
-    if(/Exposici/.test(l)) return {k:'Exposición · 5.º piso'};
+    if(/polivalente|Exposici/.test(l)) return {k:'Sala polivalente'};
     if(/Nivel 3/.test(l)) return {k:'CRGS · Nivel 3'};
     if(/Aula por confirmar/.test(l)) return {k:'Aula por confirmar'};
     if(/SAFI/.test(l)) return {k:'Hotel SAFI'};
@@ -793,7 +793,7 @@ footer .credito b{color:var(--ink);font-weight:700}
     [/exposición/i,'Exposición'],[/clausura/i,'Clausura'],[/llenado del formato/i,'Formato'],[/Retroalimentación/i,'Retroalimentación'],[/presentación/i,'Presentación'],
     [/Entrevista a profundidad/i,'Director del programa'],[/Reunión privada/i,'Reunión privada'],[/Recepción/i,'Recepción'],[/^Comida/i,'Comida'],[/aeropuerto/i,'Aeropuerto'],[/hotel/i,'Al hotel'],[/^Traslado/i,'Traslado']];
   function shortOf(t){ for(var i=0;i<SHORT.length;i++) if(SHORT[i][0].test(t)) return SHORT[i][1]; return t; }
-  var LANE_ORDER=['Hotel SAFI','Aula CR60202A','Salón 223','Sala de juntas · 3.er piso','Exposición · 5.º piso','Comida','Traslado'];
+  var LANE_ORDER=['Hotel SAFI','Aula CR60202A','Salón 223','Sala de juntas · 3.er piso','Sala polivalente','Comida','Traslado'];
 
   var days=[].map.call(document.querySelectorAll('section[data-date]'),function(sec){
     var date=sec.dataset.date, ev=[];
