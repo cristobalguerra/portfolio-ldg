@@ -2,90 +2,210 @@
   "rules": {
     ".read": false,
     ".write": false,
-
     "admins": {
       "$uid": {
         ".read": "auth != null && auth.uid === $uid",
         ".write": false
       }
     },
-
     "pefProjects": {
       ".read": true,
       ".write": "auth != null && root.child('admins').child(auth.uid).val() === true",
       "$i": {
         ".validate": "newData.hasChildren(['id', 'name', 'members', 'summary', 'problem', 'email'])",
-        "id": { ".validate": "newData.isString() && newData.val().length <= 64" },
-        "name": { ".validate": "newData.isString() && newData.val().length > 0 && newData.val().length <= 300" },
-        "members": { ".validate": "newData.isString() && newData.val().length <= 1000" },
-        "summary": { ".validate": "newData.isString() && newData.val().length <= 10000" },
-        "problem": { ".validate": "newData.isString() && newData.val().length <= 10000" },
-        "email": { ".validate": "newData.isString() && (newData.val().endsWith('@udem.edu') || newData.val().endsWith('@udem.edu.mx'))" },
-        "pdfUrl": { ".validate": "newData.isString() && newData.val().length <= 5000000" },
-        "createdAt": { ".validate": "newData.isString() && newData.val().length <= 40" },
-        "$other": { ".validate": false }
+        "id": {
+          ".validate": "newData.isString() && newData.val().length <= 64"
+        },
+        "name": {
+          ".validate": "newData.isString() && newData.val().length > 0 && newData.val().length <= 300"
+        },
+        "members": {
+          ".validate": "newData.isString() && newData.val().length <= 1000"
+        },
+        "summary": {
+          ".validate": "newData.isString() && newData.val().length <= 10000"
+        },
+        "problem": {
+          ".validate": "newData.isString() && newData.val().length <= 10000"
+        },
+        "email": {
+          ".validate": "newData.isString() && (newData.val().endsWith('@udem.edu') || newData.val().endsWith('@udem.edu.mx'))"
+        },
+        "pdfUrl": {
+          ".validate": "newData.isString() && newData.val().length <= 5000000"
+        },
+        "createdAt": {
+          ".validate": "newData.isString() && newData.val().length <= 40"
+        },
+        "$other": {
+          ".validate": false
+        }
       }
     },
-
     "pefFeedback": {
       ".read": "auth != null && root.child('admins').child(auth.uid).val() === true",
       ".write": "auth != null && root.child('admins').child(auth.uid).val() === true",
       "$fbId": {
         ".write": "auth != null && !data.exists() && newData.exists()",
         ".validate": "newData.hasChildren(['projectId', 'profName', 'feedback', 'interest'])",
-        "projectId": { ".validate": "newData.isString() && newData.val().length <= 64" },
-        "profName": { ".validate": "newData.isString() && newData.val().length > 0 && newData.val().length <= 150" },
-        "feedback": { ".validate": "newData.isString() && newData.val().length > 0 && newData.val().length <= 5000" },
-        "interest": { ".validate": "newData.val() === 'si' || newData.val() === 'no' || newData.val() === 'sinodal'" },
-        "id": { ".validate": "newData.isString() && newData.val().length <= 64" },
-        "createdAt": { ".validate": "newData.isString() && newData.val().length <= 40" },
-        "$other": { ".validate": false }
+        "projectId": {
+          ".validate": "newData.isString() && newData.val().length <= 64"
+        },
+        "profName": {
+          ".validate": "newData.isString() && newData.val().length > 0 && newData.val().length <= 150"
+        },
+        "feedback": {
+          ".validate": "newData.isString() && newData.val().length > 0 && newData.val().length <= 5000"
+        },
+        "interest": {
+          ".validate": "newData.val() === 'si' || newData.val() === 'no' || newData.val() === 'sinodal'"
+        },
+        "id": {
+          ".validate": "newData.isString() && newData.val().length <= 64"
+        },
+        "createdAt": {
+          ".validate": "newData.isString() && newData.val().length <= 40"
+        },
+        "$other": {
+          ".validate": false
+        }
       }
     },
-
     "egelAttempts": {
       ".read": "auth != null && root.child('admins').child(auth.uid).val() === true",
       ".write": false,
       "$attemptId": {
         ".write": "auth != null && !data.exists() && newData.exists()",
         ".validate": "newData.hasChildren(['nombre', 'matricula', 'fecha', 'modo', 'total', 'correctas', 'duracionMin'])",
-        "nombre": { ".validate": "newData.isString() && newData.val().length > 0 && newData.val().length <= 120" },
-        "matricula": { ".validate": "newData.isString() && newData.val().length >= 5 && newData.val().length <= 20" },
-        "fecha": { ".validate": "newData.isString() && newData.val().length <= 40" },
-        "modo": { ".validate": "newData.isString() && newData.val().length <= 40" },
-        "total": { ".validate": "newData.isNumber() && newData.val() >= 1 && newData.val() <= 200" },
-        "correctas": { ".validate": "newData.isNumber() && newData.val() >= 0 && newData.val() <= 200" },
-        "duracionMin": { ".validate": "newData.isNumber() && newData.val() >= 0 && newData.val() <= 600" },
-        "porArea": { ".validate": "newData.hasChildren()" },
-        "niveles": { ".validate": "newData.hasChildren()" },
-        "$other": { ".validate": false }
+        "nombre": {
+          ".validate": "newData.isString() && newData.val().length > 0 && newData.val().length <= 120"
+        },
+        "matricula": {
+          ".validate": "newData.isString() && newData.val().length >= 5 && newData.val().length <= 20"
+        },
+        "fecha": {
+          ".validate": "newData.isString() && newData.val().length <= 40"
+        },
+        "modo": {
+          ".validate": "newData.isString() && newData.val().length <= 40"
+        },
+        "total": {
+          ".validate": "newData.isNumber() && newData.val() >= 1 && newData.val() <= 200"
+        },
+        "correctas": {
+          ".validate": "newData.isNumber() && newData.val() >= 0 && newData.val() <= 200"
+        },
+        "duracionMin": {
+          ".validate": "newData.isNumber() && newData.val() >= 0 && newData.val() <= 600"
+        },
+        "porArea": {
+          ".validate": "newData.hasChildren()"
+        },
+        "niveles": {
+          ".validate": "newData.hasChildren()"
+        },
+        "$other": {
+          ".validate": false
+        }
       }
     },
-
     "norteRegistros": {
       ".read": "auth != null && root.child('admins').child(auth.uid).val() === true",
       ".write": false,
       "$regId": {
         ".write": "(auth != null && !data.exists() && newData.exists()) || (auth != null && root.child('admins').child(auth.uid).val() === true)",
         ".validate": "newData.hasChildren(['nombre', 'matricula', 'correo', 'semestre', 'norte', 'fecha'])",
-        "nombre": { ".validate": "newData.isString() && newData.val().length > 0 && newData.val().length <= 120" },
-        "matricula": { ".validate": "newData.isString() && newData.val().length >= 5 && newData.val().length <= 20" },
-        "correo": { ".validate": "newData.isString() && (newData.val().endsWith('@udem.edu') || newData.val().endsWith('@udem.edu.mx'))" },
-        "semestre": { ".validate": "newData.isString() && newData.val().length <= 10" },
-        "norte": { ".validate": "newData.isString() && newData.val().length <= 300" },
-        "fecha": { ".validate": "newData.isString() && newData.val().length <= 40" },
-        "$other": { ".validate": false }
+        "nombre": {
+          ".validate": "newData.isString() && newData.val().length > 0 && newData.val().length <= 120"
+        },
+        "matricula": {
+          ".validate": "newData.isString() && newData.val().length >= 5 && newData.val().length <= 20"
+        },
+        "correo": {
+          ".validate": "newData.isString() && (newData.val().endsWith('@udem.edu') || newData.val().endsWith('@udem.edu.mx'))"
+        },
+        "semestre": {
+          ".validate": "newData.isString() && newData.val().length <= 10"
+        },
+        "norte": {
+          ".validate": "newData.isString() && newData.val().length <= 300"
+        },
+        "fecha": {
+          ".validate": "newData.isString() && newData.val().length <= 40"
+        },
+        "$other": {
+          ".validate": false
+        }
       }
     },
-
     "ldgProjects": {
       ".read": true,
       ".write": "auth != null && root.child('admins').child(auth.uid).val() === true"
     },
-
     "ldgAwards": {
       ".read": true,
       ".write": "auth != null && root.child('admins').child(auth.uid).val() === true"
+    },
+    "teamLdg": {
+      ".read": "auth != null",
+      ".write": "auth != null",
+      "config": {
+        ".validate": "newData.hasChildren(['inicio','fin'])"
+      },
+      "alumnas": {
+        "$id": {
+          ".validate": "$id === 'maria' || $id === 'mariana'",
+          "nombre": {
+            ".validate": "newData.isString() && newData.val().length <= 120"
+          },
+          "correo": {
+            ".validate": "newData.isString() && newData.val().length <= 120"
+          },
+          "matricula": {
+            ".validate": "newData.isString() && newData.val().length <= 20"
+          },
+          "$other": {
+            ".validate": "newData.isString() || newData.isNumber() || newData.isBoolean()"
+          }
+        }
+      },
+      "actividades": {
+        "$id": {
+          "titulo": {
+            ".validate": "newData.isString() && newData.val().length > 0 && newData.val().length <= 300"
+          },
+          "descripcion": {
+            ".validate": "newData.isString() && newData.val().length <= 5000"
+          },
+          "estado": {
+            ".validate": "newData.val() === 'por_hacer' || newData.val() === 'en_proceso' || newData.val() === 'en_revision' || newData.val() === 'terminada'"
+          }
+        }
+      },
+      "reuniones": {
+        "$id": {
+          "fecha": {
+            ".validate": "newData.isString() && newData.val().length <= 10"
+          },
+          "acuerdos": {
+            ".validate": "newData.isString() && newData.val().length <= 10000"
+          }
+        }
+      },
+      "logros": {
+        "$id": {
+          "titulo": {
+            ".validate": "newData.isString() && newData.val().length > 0 && newData.val().length <= 300"
+          }
+        }
+      },
+      "horas": {
+        "$id": {
+          "horas": {
+            ".validate": "newData.isNumber() && newData.val() > 0 && newData.val() <= 24"
+          }
+        }
+      }
     }
   }
 }
