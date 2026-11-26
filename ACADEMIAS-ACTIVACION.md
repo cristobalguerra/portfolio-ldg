@@ -10,7 +10,7 @@ y solo se leen con sesión iniciada y permiso.
 | Rol | Cómo se da de alta | Puede |
 | --- | --- | --- |
 | Dirección | UID en `/admins` (ya existente) | Leer y editar todo, cargar datos |
-| Academia | UID en `/plataformaMiembros` | Leer todo y capturar perfiles de entrada y salida |
+| Academia | UID en `/plataformaMiembros` | Leer todo, capturar perfiles, editar el directorio, asignar profesores a materias y subir archivos |
 
 ## Pasos (consola de Firebase, proyecto portfolioldg-3ca20)
 
@@ -44,3 +44,20 @@ curl "https://portfolioldg-3ca20-default-rtdb.firebaseio.com/plataforma.json"
 - `candados/{id}`: plan, materia, requiere, tipo (candado o simultanea), origen (vigente o sugerido)
 - `perfiles/{clave}/entrada|salida/{habilidad}`: true
 - `habilidades/{slug}`: nombre
+- `personas/{id}`: nombre, puesto, correo, telefono, ubicacion
+- `archivos/{clave}/{id}`: categoria (Syllabus, Entregable, Rúbrica, Otro), titulo, nombre, tamano, por, fecha, url
+- `materias/{clave}/profesores/{personaId}`: true
+- `academias/{id}/liderId` y `apoyoIds/{personaId}`
+
+Fuera de `/plataforma`, para no cargar la escucha principal:
+
+- `/plataformaFotos/{personaId}`: foto recortada a 480 px (data URL JPEG)
+- `/plataformaArchivos/{id}`: contenido del archivo (data URL, máx. 4 MB). Para
+  archivos más pesados se guarda una liga de Drive en `archivos/.../url`.
+
+## Archivos y fotos
+
+Los archivos se guardan en la Realtime Database, no en Firebase Storage, para no
+depender de un servicio adicional. El plan gratuito incluye 1 GB: alcanza para
+syllabus y rúbricas, no para entregables pesados (video, PDF de tesis); esos van
+como liga de Drive.

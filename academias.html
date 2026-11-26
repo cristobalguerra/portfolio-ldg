@@ -170,6 +170,27 @@ dialog::backdrop{background:rgba(27,22,18,.55)}
 .adm>*{min-width:0}
 .adm select.in{width:100%;max-width:100%}
 textarea.in{min-height:96px;resize:vertical}
+.cels{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:10px;margin:8px 0 16px}
+.cel{border:1px solid var(--line-2);background:var(--paper);padding:10px;display:grid;gap:8px;align-content:start;min-width:0}
+.cel.lead{grid-column:1/-1;grid-template-columns:96px 1fr;gap:14px;border:2px solid var(--ink);align-items:start}
+@media(min-width:640px){.cel.lead{grid-column:span 2}}
+.cel .nm{font-weight:700;line-height:1.2;overflow-wrap:anywhere}
+.cel .ct{display:grid;gap:2px;font-size:.9rem;overflow-wrap:anywhere}
+.cel .ct a{text-underline-offset:3px}
+.av{width:56px;height:56px;object-fit:cover;background:var(--paper-2);border:1px solid var(--ink);display:inline-grid;place-items:center;font-family:var(--disp);font-size:1.2rem;flex:none}
+.av.big{width:96px;height:96px;font-size:2rem}
+.av.sm{width:26px;height:26px;font-size:.72rem}
+.avs{display:inline-flex;gap:3px;vertical-align:middle}
+.files{list-style:none!important;padding:0!important;display:grid;gap:6px;margin-bottom:12px}
+.files li{border:1px solid var(--line-2);padding:8px 10px;display:flex;flex-wrap:wrap;gap:6px 10px;align-items:center;justify-content:space-between;max-width:none}
+.files .meta{display:block;color:var(--ink-soft);font-size:.85rem}
+.up{display:grid;gap:8px;border:1px dashed var(--line-2);padding:12px}
+@media(min-width:640px){.up{grid-template-columns:1fr 2fr}}
+.up .full{grid-column:1/-1}
+#form .fb{display:grid;gap:14px}
+#form label{display:grid;gap:4px}
+.checks{display:grid;gap:6px;max-height:220px;overflow:auto;border:1px solid var(--line-2);padding:10px}
+.checks label{display:flex!important;gap:8px;align-items:center}
 .toast{position:fixed;left:50%;bottom:22px;transform:translateX(-50%);background:var(--ink);color:var(--paper);padding:10px 16px;z-index:50;opacity:0;pointer-events:none;transition:opacity .25s var(--ease)}
 .toast.on{opacity:1}
 @media (prefers-reduced-motion:reduce){*{transition:none!important}}
@@ -197,6 +218,7 @@ textarea.in{min-height:96px;resize:vertical}
   <nav class="tabs mono" role="tablist" aria-label="Vistas">
     <button role="tab" data-v="malla">Malla</button>
     <button role="tab" data-v="academias">Academias</button>
+    <button role="tab" data-v="personas">Directorio</button>
     <button role="tab" data-v="equiv">Equivalencias</button>
     <button role="tab" data-v="alumno">Alumno</button>
     <button role="tab" data-v="alertas">Alertas <span class="n" id="nAlertas"></span></button>
@@ -206,6 +228,7 @@ textarea.in{min-height:96px;resize:vertical}
 </section>
 
 <dialog id="ficha" aria-labelledby="fichaT"></dialog>
+<dialog id="form" aria-labelledby="formT"></dialog>
 <div class="toast mono" id="toast" role="status"></div>
 
 <script>
@@ -220,7 +243,10 @@ function keys(o){return Object.keys(o||{});}
 function toast(t){var el=$('#toast');el.textContent=t;el.classList.add('on');clearTimeout(toast.t);toast.t=setTimeout(function(){el.classList.remove('on');},2600);}
 function fail(err){toast('No se guardó ('+((err&&err.code)||'error')+')');}
 
-var D={materias:{},academias:{},equivalencias:{},candados:{},perfiles:{},habilidades:{},meta:null};
+var D={materias:{},academias:{},equivalencias:{},candados:{},perfiles:{},habilidades:{},personas:{},archivos:{},meta:null};
+var F={}; /* fotos por persona, nodo aparte para no cargar la escucha principal */
+var CATS=['Syllabus','Entregable','Rúbrica','Otro'];
+var EXT=/\.(pdf|docx?|pptx?|xlsx?|png|jpe?g)$/i, MAXB=4*1024*1024;
 var S={vista:'malla',plan:'LDVN',tipo:'',sem:2,esAdmin:false,uid:null,abierta:null};
 var PLAN={LDG:'LDG 2021',LDVN:'LDVN 2027'};
 
@@ -238,11 +264,38 @@ function proveedores(m,h){
   if(!m.semestre) return [];
   return mats(m.plan).filter(function(p){return p.semestre&&p.semestre<m.semestre&&perfil(p.clave).salida.indexOf(h)!==-1;});
 }
+function P(id){return D.personas[id];}
+function ini(n){return String(n||'?').trim().split(/\s+/).slice(0,2).map(function(x){return x.charAt(0);}).join('').toUpperCase();}
+function av(pid,cls){
+  var p=P(pid)||{}, f=F[pid];
+  return (typeof f==='string'&&f.indexOf('data:image/')===0)?'<img class="av '+(cls||'')+'" src="'+esc(f)+'" alt="Foto de '+esc(p.nombre)+'">':'<span class="av '+(cls||'')+'" aria-hidden="true">'+esc(ini(p.nombre))+'</span>';
+}
+function liderNombre(a){return a?((P(a.liderId)||{}).nombre||a.lider||''):'';}
+function apoyoIds(a){return keys(a&&a.apoyoIds).filter(P);}
+function apoyoNombre(a){if(!a)return '';var n=apoyoIds(a).map(function(x){return P(x).nombre;});return n.length?n.join(', '):(a.apoyo||'');}
+function profes(k){return keys((M(k)||{}).profesores).filter(P);}
+function archivos(k){var o=D.archivos[k]||{};return keys(o).map(function(id){var f=o[id];f._id=id;return f;}).sort(function(a,b){return CATS.indexOf(a.categoria)-CATS.indexOf(b.categoria)||String(a.titulo).localeCompare(String(b.titulo));});}
+function rolesDe(pid){
+  var r=[];
+  keys(D.academias).forEach(function(id){var a=D.academias[id];if(a.liderId===pid)r.push('Líder · '+a.nombre);else if((a.apoyoIds||{})[pid])r.push('Apoyo · '+a.nombre);});
+  return r;
+}
+function materiasDe(pid){return mats().filter(function(m){return (m.profesores||{})[pid];});}
+function cel(pid,rol,o){
+  var p=P(pid); if(!p) return ''; o=o||{};
+  var ct='';
+  if(p.correo) ct+='<a href="mailto:'+esc(p.correo)+'">'+esc(p.correo)+'</a>';
+  if(p.telefono) ct+='<a href="tel:'+esc(String(p.telefono).replace(/[^0-9+]/g,''))+'">'+esc(p.telefono)+'</a>';
+  if(p.ubicacion) ct+='<span class="soft">'+esc(p.ubicacion)+'</span>';
+  return '<article class="cel'+(o.lead?' lead':'')+'">'+av(pid,o.lead?'big':'')+'<div style="display:grid;gap:6px;min-width:0"><span class="mono soft">'+esc(rol)+'</span><div class="nm">'+esc(p.nombre)+'</div>'
+    +(p.puesto?'<div class="soft" style="font-size:.9rem">'+esc(p.puesto)+'</div>':'')+(ct?'<div class="ct">'+ct+'</div>':(o.lead?'<div class="soft" style="font-size:.9rem">Sin datos de contacto</div>':''))
+    +(o.extra||'')+'<div><button class="btn line sm" data-edit-p="'+esc(pid)+'">Editar</button></div></div></article>';
+}
 function esEstudio(m){return (m.creditos===12)||/^estudio\b/i.test(m.nombre);}
 
 /* ---------- alertas ---------- */
 function alertas(){
-  var A={hueco:[],sugerido:[],sobrante:[],sinPerfil:[],sinEntregable:[],sinAcademia:[],sinSemestre:[],sinEquiv:[],nueva:[],repetido:[]};
+  var A={hueco:[],sugerido:[],sobrante:[],sinPerfil:[],sinEntregable:[],sinAcademia:[],sinSemestre:[],sinEquiv:[],nueva:[],repetido:[],sinProfesor:[],sinSyllabus:[],sinLider:[]};
   var sug={};
   mats().forEach(function(m){
     var p=perfil(m.clave);
@@ -250,6 +303,8 @@ function alertas(){
     if(!(m.entregables||[]).length) A.sinEntregable.push({k:m.clave});
     if(!m.academia) A.sinAcademia.push({k:m.clave});
     if(!m.semestre) A.sinSemestre.push({k:m.clave});
+    if(!profes(m.clave).length) A.sinProfesor.push({k:m.clave});
+    if(!archivos(m.clave).some(function(f){return f.categoria==='Syllabus';})) A.sinSyllabus.push({k:m.clave});
     p.entrada.forEach(function(h){
       if(!m.semestre) return;
       var pr=proveedores(m,h);
@@ -285,6 +340,8 @@ var GRUPOS=[
  ['sinSemestre','Materia sin semestre','Falta ubicar la materia en la malla.'],
  ['sinEquiv','Sin equivalencia en LDVN','Materias 2021 cuyo contenido no cubre ninguna obligatoria LDVN.'],
  ['nueva','LDVN sin antecedente','Materias LDVN que ninguna materia 2021 cargada acredita. Prácticas y PEF aparecen aquí porque falta su plan analítico 2021.'],
+ ['sinProfesor','Materia sin profesor','Materias sin profesores asignados.'],
+ ['sinSyllabus','Sin syllabus','Materias sin syllabus cargado.'],
  ['sinPerfil','Perfil por capturar','Sin perfil de entrada y salida no se pueden revisar huecos ni candados.'],
  ['sinEntregable','Sin entregables','Materias sin entregables registrados.']
 ];
@@ -316,6 +373,7 @@ function celda(m){
   if(e) tags+=tipoTag(e.tipo);
   if(p.entrada.length&&p.salida.length) tags+='<span class="tag ok">Perfil</span>';
   if(candadosDe(m.clave).length) tags+='<span class="tag">Candado</span>';
+  var pr=profes(m.clave); if(pr.length) tags+='<span class="avs">'+pr.slice(0,4).map(function(x){return av(x,'sm');}).join('')+'</span>';
   return '<button class="cell'+(esEstudio(m)?' estudio':'')+'" data-open="'+esc(m.clave)+'"><span class="cl mono"><span>'+esc(m.clave)+'</span><span>'+(m.creditos?m.creditos+' cr.':'')+'</span></span><span class="nm">'+esc(m.nombre)+'</span><span class="ft">'+tags+'</span></button>';
 }
 function vacio(){
@@ -323,7 +381,7 @@ function vacio(){
 }
 
 function vAcademias(){
-  var h='<div class="head"><div><span class="mono soft">Lámina 02 · Academias 2025</span><h1 class="disp">Academias y <span class="hl">líderes</span></h1><p>Cada academia con sus materias 2021 y su espejo en LDVN. La barra resume equivalencias directas, parciales y sin equivalencia.</p></div></div>';
+  var h='<div class="head"><div><span class="mono soft">Lámina 02 · Academias 2025</span><h1 class="disp">Academias en <span class="hl">células</span></h1><p>Cada academia con su líder, apoyo y los profesores que dan sus materias; debajo, las materias 2021 y su espejo en LDVN.</p></div></div>';
   var ids=keys(D.academias).sort(function(a,b){return D.academias[a].num-D.academias[b].num;});
   if(!ids.length) return h+vacio();
   ids.forEach(function(id){
@@ -331,15 +389,28 @@ function vAcademias(){
     var c={Directa:0,Parcial:0,'Sin equivalencia':0};
     m21.forEach(function(m){var e=D.equivalencias[m.clave];if(e)c[e.tipo]++;});
     var tot=m21.length, cont=tot?Math.round(100*(c.Directa+c.Parcial)/tot):null;
-    h+='<article class="ac"><div><span class="mono soft">Academia '+a.num+'</span><h2 class="disp">'+esc(a.nombre)+'</h2><div class="who">'
-      +'<div><span class="mono soft">Líder</span><br><strong>'+esc(a.lider||'Por definir')+'</strong></div><div><span class="mono soft">Apoyo</span><br>'+esc(a.apoyo||'Por definir')+'</div></div>';
+    h+='<article class="ac"><div><span class="mono soft">Academia '+a.num+'</span><h2 class="disp">'+esc(a.nombre)+'</h2>';
     if(tot){h+='<div class="bar" aria-hidden="true"><i class="d" style="width:'+(100*c.Directa/tot)+'%"></i><i class="p" style="width:'+(100*c.Parcial/tot)+'%"></i><i class="s" style="width:'+(100*c['Sin equivalencia']/tot)+'%"></i></div><span class="mono soft">'+c.Directa+' directas · '+c.Parcial+' parciales · '+c['Sin equivalencia']+' sin equiv. · continuidad '+cont+'%</span>';}
     else h+='<p class="mono soft" style="margin-top:10px">Sin planes analíticos 2021 cargados</p>';
-    if(S.esAdmin) h+='<p style="margin-top:12px"><button class="btn line sm" data-edit-ac="'+id+'">Editar líder y apoyo</button></p>';
-    h+='</div><div><div class="pairs">'+m21.map(function(m){
+    if(S.esAdmin) h+='<p style="margin-top:12px"><button class="btn line sm" data-edit-ac="'+id+'">Asignar líder y apoyo</button></p>';
+    h+='</div><div>';
+    var cs='', vistos={};
+    if(P(a.liderId)){cs+=cel(a.liderId,'Líder de academia',{lead:true});vistos[a.liderId]=1;}
+    else cs+='<article class="cel lead"><span class="av big" aria-hidden="true">?</span><div><span class="mono soft">Líder de academia</span><div class="nm">'+esc(a.lider||'Por definir')+'</div><div class="soft" style="font-size:.9rem">Sin ficha en el directorio</div></div></article>';
+    apoyoIds(a).forEach(function(x){cs+=cel(x,'Apoyo');vistos[x]=1;});
+    var porProf={};
+    m21.concat(mv).forEach(function(m){profes(m.clave).forEach(function(x){(porProf[x]=porProf[x]||[]).push(m);});});
+    keys(porProf).sort(function(x,y){return P(x).nombre.localeCompare(P(y).nombre);}).forEach(function(x){
+      var chips='<div class="ft" style="display:flex;flex-wrap:wrap;gap:4px">'+porProf[x].map(function(m){return '<button class="tag" style="cursor:pointer;background:none" data-open="'+esc(m.clave)+'" title="'+esc(m.nombre)+'">'+esc(m.clave)+'</button>';}).join('')+'</div>';
+      if(vistos[x]) return;
+      cs+=cel(x,'Profesor',{extra:chips});
+    });
+    h+='<div class="cels">'+cs+'</div>';
+    if(!keys(porProf).length) h+='<p class="mono soft" style="margin:-6px 0 14px">Aún no hay profesores asignados a sus materias. Se asignan desde la ficha de cada materia.</p>';
+    h+='<details class="more"'+(m21.length?'':' hidden')+'><summary class="mono">Materias y equivalencias · '+m21.length+'</summary><div class="pairs" style="margin-top:6px">'+m21.map(function(m){
       var e=D.equivalencias[m.clave]||{};
       return '<div class="pair"><div>'+lk(m.clave)+'</div><div class="arrow">'+(e.tipo?tipoTag(e.tipo):'')+'</div><div>'+(e.destino?lk(e.destino):'<span class="soft">Sin espejo obligatorio</span>')+'</div></div>';
-    }).join('')+'</div>';
+    }).join('')+'</div></details>';
     var extra=mv.filter(function(m){return !m21.some(function(x){return (D.equivalencias[x.clave]||{}).destino===m.clave;});});
     if(extra.length) h+='<p class="mono soft" style="margin:12px 0 4px">También propuestas para esta academia en LDVN</p><div class="pairs">'+extra.map(function(m){return '<div class="pair"><div></div><div class="arrow"></div><div>'+lk(m.clave)+'</div></div>';}).join('')+'</div>';
     h+='</div></article>';
@@ -347,9 +418,21 @@ function vAcademias(){
   return h;
 }
 
+function vPersonas(){
+  var ids=keys(D.personas).sort(function(a,b){return P(a).nombre.localeCompare(P(b).nombre);});
+  var h='<div class="head"><div><span class="mono soft">Lámina 03 · '+ids.length+' personas</span><h1 class="disp">Directorio de <span class="hl">profesores</span></h1><p>Foto, datos de contacto, academias y materias de cada persona.</p></div><div class="filters"><button class="btn" data-edit-p="">Nueva persona</button></div></div>';
+  if(!ids.length) return h+'<div class="empty">Todavía no hay personas. Agrega la primera con el botón Nueva persona.</div>';
+  h+='<div class="cels" style="grid-template-columns:repeat(auto-fill,minmax(230px,1fr))">'+ids.map(function(x){
+    var r=rolesDe(x), ms=materiasDe(x);
+    var extra=(r.length?'<div style="font-size:.9rem">'+r.map(esc).join('<br>')+'</div>':'')+(ms.length?'<div class="ft" style="display:flex;flex-wrap:wrap;gap:4px">'+ms.map(function(m){return '<button class="tag" style="cursor:pointer;background:none" data-open="'+esc(m.clave)+'" title="'+esc(m.nombre)+'">'+esc(m.clave)+'</button>';}).join('')+'</div>':'<div class="mono soft">Sin materias asignadas</div>');
+    return cel(x,r.length?'Academia':'Profesor',{extra:extra});
+  }).join('')+'</div>';
+  return h;
+}
+
 function vEquiv(){
   var rows=mats('LDG').filter(function(m){var e=D.equivalencias[m.clave];return e&&(!S.tipo||e.tipo===S.tipo);});
-  var h='<div class="head"><div><span class="mono soft">Lámina 03 · '+rows.length+' filas</span><h1 class="disp">Equivalencias <span class="hl">2021 → LDVN</span></h1><p>Cruce por objetivo y unidades temáticas. El conteo de unidades es lectura de dirección y lo valida cada academia.</p></div>'
+  var h='<div class="head"><div><span class="mono soft">Lámina 04 · '+rows.length+' filas</span><h1 class="disp">Equivalencias <span class="hl">2021 → LDVN</span></h1><p>Cruce por objetivo y unidades temáticas. El conteo de unidades es lectura de dirección y lo valida cada academia.</p></div>'
     +'<div class="filters"><select class="in mono" id="fTipo" aria-label="Filtrar por tipo"><option value="">Todos los tipos</option>'+['Directa','Parcial','Sin equivalencia'].map(function(t){return '<option'+(S.tipo===t?' selected':'')+'>'+t+'</option>';}).join('')+'</select><button class="btn line sm" id="csv">Exportar CSV</button></div></div>';
   if(!keys(D.equivalencias).length) return h+vacio();
   h+='<div class="tbl-scroll"><table><thead><tr class="mono"><th>LDG 2021</th><th>LDVN 2027</th><th>Tipo</th><th>Unidades</th><th>Evidencia</th></tr></thead><tbody>'+rows.map(function(m){
@@ -362,7 +445,7 @@ function vEquiv(){
 function vAlumno(){
   var list=mats(S.plan), max=list.reduce(function(n,m){return Math.max(n,m.semestre||0);},1);
   if(S.sem>max) S.sem=max;
-  var h='<div class="head"><div><span class="mono soft">Lámina 04 · Perfil acumulado</span><h1 class="disp">Alumno al llegar a <span class="hl">'+S.sem+'° semestre</span></h1><p>Lo que el alumno ya sabe hacer según los perfiles de salida de los semestres previos, y lo que le piden las materias que va a cursar.</p></div>'
+  var h='<div class="head"><div><span class="mono soft">Lámina 05 · Perfil acumulado</span><h1 class="disp">Alumno al llegar a <span class="hl">'+S.sem+'° semestre</span></h1><p>Lo que el alumno ya sabe hacer según los perfiles de salida de los semestres previos, y lo que le piden las materias que va a cursar.</p></div>'
     +'<div class="filters">'+planSeg()+'<select class="in mono" id="fSem" aria-label="Semestre">'+Array.apply(null,{length:max}).map(function(_,i){return '<option value="'+(i+1)+'"'+(S.sem===i+1?' selected':'')+'>'+(i+1)+'° semestre</option>';}).join('')+'</select></div></div>';
   if(!list.length) return h+vacio();
   var prev=list.filter(function(m){return m.semestre&&m.semestre<S.sem;}), now=list.filter(function(m){return m.semestre===S.sem;});
@@ -382,10 +465,10 @@ function vAlumno(){
 
 function vAlertas(){
   var A=alertas();
-  var h='<div class="head"><div><span class="mono soft">Lámina 05 · Revisión automática</span><h1 class="disp">Lo que <span class="hl">no empata</span></h1><p>La plataforma cruza perfiles, candados, entregables, academias y equivalencias. Las primeras seis revisiones cuentan como alerta; las demás son pendientes de captura.</p></div></div>';
+  var h='<div class="head"><div><span class="mono soft">Lámina 06 · Revisión automática</span><h1 class="disp">Lo que <span class="hl">no empata</span></h1><p>La plataforma cruza perfiles, candados, entregables, academias y equivalencias. Las primeras seis revisiones cuentan como alerta; las demás son pendientes de captura.</p></div></div>';
   if(!keys(D.materias).length) return h+vacio();
   GRUPOS.forEach(function(g){
-    var it=A[g[0]], blando=['sinPerfil','sinEntregable','sinEquiv','nueva'].indexOf(g[0])!==-1;
+    var it=A[g[0]], blando=['sinPerfil','sinEntregable','sinEquiv','nueva','sinProfesor','sinSyllabus'].indexOf(g[0])!==-1;
     h+='<section class="alert-g"><h2 class="disp">'+g[1]+' <span class="tag '+(it.length?(blando?'y':'v'):'ok')+'">'+it.length+'</span></h2><p class="d">'+g[2]+'</p>';
     if(it.length){
       var li=it.map(function(x){
@@ -405,16 +488,16 @@ function vAlertas(){
 function vDatos(){
   var n=function(o){return keys(o).length;};
   var conPerfil=keys(D.perfiles).filter(function(k){var p=perfil(k);return p.entrada.length&&p.salida.length;}).length;
-  var h='<div class="head"><div><span class="mono soft">Lámina 06 · Base de datos</span><h1 class="disp">Datos de la <span class="hl">plataforma</span></h1></div></div>'
-   +'<div class="caj"><div><span class="k mono">Materias</span><span class="v">'+n(D.materias)+'</span></div><div><span class="k mono">Academias</span><span class="v">'+n(D.academias)+'</span></div><div><span class="k mono">Equivalencias</span><span class="v">'+n(D.equivalencias)+'</span></div><div><span class="k mono">Candados</span><span class="v">'+n(D.candados)+'</span></div><div><span class="k mono">Habilidades</span><span class="v">'+n(D.habilidades)+'</span></div><div><span class="k mono">Perfiles completos</span><span class="v">'+conPerfil+' de '+n(D.materias)+'</span></div><div><span class="k mono">Versión</span><span class="v">'+esc(D.meta?D.meta.generado:'Sin carga')+'</span></div><div><span class="k mono">Tu rol</span><span class="v">'+(S.esAdmin?'Dirección':'Academia')+'</span></div></div>';
+  var h='<div class="head"><div><span class="mono soft">Lámina 07 · Base de datos</span><h1 class="disp">Datos de la <span class="hl">plataforma</span></h1></div></div>'
+   +'<div class="caj"><div><span class="k mono">Materias</span><span class="v">'+n(D.materias)+'</span></div><div><span class="k mono">Academias</span><span class="v">'+n(D.academias)+'</span></div><div><span class="k mono">Equivalencias</span><span class="v">'+n(D.equivalencias)+'</span></div><div><span class="k mono">Candados</span><span class="v">'+n(D.candados)+'</span></div><div><span class="k mono">Personas</span><span class="v">'+n(D.personas)+'</span></div><div><span class="k mono">Archivos</span><span class="v">'+keys(D.archivos).reduce(function(t,k){return t+n(D.archivos[k]);},0)+'</span></div><div><span class="k mono">Habilidades</span><span class="v">'+n(D.habilidades)+'</span></div><div><span class="k mono">Perfiles completos</span><span class="v">'+conPerfil+' de '+n(D.materias)+'</span></div><div><span class="k mono">Versión</span><span class="v">'+esc(D.meta?D.meta.generado:'Sin carga')+'</span></div><div><span class="k mono">Tu rol</span><span class="v">'+(S.esAdmin?'Dirección':'Academia')+'</span></div></div>';
   if(S.esAdmin){
-    h+='<div class="adm"><div><strong>Cargar datos iniciales</strong><p class="soft">Sube plataforma-semilla.json. Reemplaza materias, academias, equivalencias y candados. Los perfiles capturados no se tocan.</p></div><input type="file" id="semilla" accept="application/json,.json" class="in"><div><button class="btn" id="cargar">Cargar archivo</button></div></div>';
+    h+='<div class="adm"><div><strong>Cargar datos iniciales</strong><p class="soft">Sube plataforma-semilla.json. Reemplaza materias, academias, equivalencias y candados. No toca perfiles, archivos, fotos, profesores asignados ni las personas que ya existen.</p></div><input type="file" id="semilla" accept="application/json,.json" class="in"><div><button class="btn" id="cargar">Cargar archivo</button></div></div>';
     h+='<div class="adm"><div><strong>Respaldo</strong><p class="soft">Descarga todo lo que hay en la plataforma, perfiles incluidos.</p></div><div><button class="btn line" id="respaldo">Descargar respaldo JSON</button></div></div>';
-  } else h+='<p class="soft" style="max-width:60ch">Puedes capturar perfiles de entrada y salida en la ficha de cada materia. Academias, candados y entregables los edita dirección de programa.</p>';
+  } else h+='<p class="soft" style="max-width:60ch">Puedes capturar perfiles, asignar profesores, subir syllabus y entregables, y editar el directorio. Academias, candados y la malla los edita dirección de programa.</p>';
   return h;
 }
 
-var VISTAS={malla:vMalla,academias:vAcademias,equiv:vEquiv,alumno:vAlumno,alertas:vAlertas,datos:vDatos};
+var VISTAS={malla:vMalla,academias:vAcademias,personas:vPersonas,equiv:vEquiv,alumno:vAlumno,alertas:vAlertas,datos:vDatos};
 function pintar(){
   document.querySelectorAll('.tabs button').forEach(function(b){b.setAttribute('aria-selected',b.dataset.v===S.vista);});
   $('#vista').innerHTML=VISTAS[S.vista]();
@@ -437,19 +520,27 @@ function pintarFicha(k){
   var a=D.academias[m.academia], e=D.equivalencias[k], cs=candadosDe(k), puede=true;
   var h='<div class="fx"><span class="mono soft">Ficha · '+esc(k)+' · '+PLAN[m.plan]+'</span><button class="btn line sm" data-close>Cerrar</button></div><div class="fb"><h2 class="disp" id="fichaT">'+esc(m.nombre)+'</h2>'
     +'<div class="caj"><div><span class="k mono">Clave</span><span class="v">'+esc(k)+'</span></div><div><span class="k mono">Semestre</span><span class="v">'+(m.semestre?m.semestre+'°':'Por ubicar')+'</span></div><div><span class="k mono">Créditos</span><span class="v">'+(m.creditos||'Sin dato')+'</span></div><div><span class="k mono">Horas con académico</span><span class="v">'+(m.horas||'Sin dato')+'</span></div>'
-    +'<div><span class="k mono">Academia'+(m.plan==='LDVN'?' (propuesta)':'')+'</span><span class="v">'+esc(a?a.num+' '+a.nombre:'Sin academia')+'</span></div><div><span class="k mono">Líder</span><span class="v">'+esc(a?a.lider:'Por definir')+'</span></div><div><span class="k mono">Apoyo</span><span class="v">'+esc(a?a.apoyo:'Por definir')+'</span></div><div><span class="k mono">Fuente</span><span class="v">'+(/^https:\/\//.test(m.fuente||'')?'<a href="'+esc(m.fuente)+'" target="_blank" rel="noopener">Plan analítico</a>':'Sin liga')+'</span></div></div>';
+    +'<div><span class="k mono">Academia'+(m.plan==='LDVN'?' (propuesta)':'')+'</span><span class="v">'+esc(a?a.num+' '+a.nombre:'Sin academia')+'</span></div><div><span class="k mono">Líder</span><span class="v">'+esc(liderNombre(a)||'Por definir')+'</span></div><div><span class="k mono">Apoyo</span><span class="v">'+esc(apoyoNombre(a)||'Por definir')+'</span></div><div><span class="k mono">Fuente</span><span class="v">'+(/^https:\/\//.test(m.fuente||'')?'<a href="'+esc(m.fuente)+'" target="_blank" rel="noopener">Plan analítico</a>':'Sin liga')+'</span></div></div>';
   h+='<div class="sec"><h3 class="mono"><span class="no">01</span> Perfil del alumno</h3><div class="two"><div><p class="mono soft" style="margin-bottom:6px">Al llegar ya debe saber</p>'+chipList(k,'entrada',puede)+'</div><div><p class="mono soft" style="margin-bottom:6px">Al terminar logra</p>'+chipList(k,'salida',puede)+'</div></div><datalist id="habs">'+keys(D.habilidades).map(function(s){return '<option value="'+esc(D.habilidades[s])+'">';}).join('')+'</datalist></div>';
-  h+='<div class="sec"><h3 class="mono"><span class="no">02</span> Candados</h3>'+(cs.length?'<ul style="list-style:none;padding:0;display:grid;gap:6px">'+cs.map(function(c){return '<li style="display:flex;flex-wrap:wrap;gap:8px;align-items:center"><span class="tag '+(c.origen==='sugerido'?'y':'k')+'">'+(c.tipo==='simultanea'?'Simultánea':'Candado')+' · '+esc(c.origen)+'</span>'+lk(c.requiere)+(S.esAdmin?'<button class="btn line sm" data-del-c="'+esc(c._id)+'">Quitar</button>':'')+'</li>';}).join('')+'</ul>':'<p class="soft">Sin candados registrados.'+(m.plan==='LDVN'?' La malla oficial LDVN solo declara seriación en PEF II.':'')+'</p>')+'</div>';
+  var pr=profes(k), fs=archivos(k);
+  h+='<div class="sec"><h3 class="mono"><span class="no">02</span> Profesores que la imparten</h3>'+(pr.length?'<div class="cels">'+pr.map(function(x){return cel(x,(a&&a.liderId===x)?'Líder de academia':'Profesor',{extra:'<div><button class="btn line sm" data-rm-prof="'+esc(x)+'">Quitar de la materia</button></div>'});}).join('')+'</div>':'<p class="soft" style="margin-bottom:8px">Sin profesores asignados.</p>')
+    +'<div class="addrow"><select class="in" id="pSel" aria-label="Agregar profesor"><option value="">Elige a quien la imparte</option>'+keys(D.personas).filter(function(x){return pr.indexOf(x)===-1;}).sort(function(x,y){return P(x).nombre.localeCompare(P(y).nombre);}).map(function(x){return '<option value="'+esc(x)+'">'+esc(P(x).nombre)+'</option>';}).join('')+'</select><button class="btn sm" id="pAdd">Asignar</button></div></div>';
+  h+='<div class="sec"><h3 class="mono"><span class="no">03</span> Archivos · syllabus y entregables</h3>'+(fs.length?'<ul class="files">'+fs.map(function(f){
+      var abre=f.url?'<a class="lk" href="'+esc(f.url)+'" target="_blank" rel="noopener">'+esc(f.titulo)+'</a>':'<button class="lk" data-file="'+esc(f._id)+'">'+esc(f.titulo)+'</button>';
+      return '<li><span><span class="tag '+(f.categoria==='Syllabus'?'k':'')+'">'+esc(f.categoria)+'</span> '+abre+'<span class="meta">'+(f.url?'Liga':esc(f.nombre||'')+(f.tamano?' · '+Math.max(1,Math.round(f.tamano/1024))+' KB':''))+' · '+esc(f.por||'')+' · '+esc(f.fecha||'')+'</span></span><button class="btn line sm" data-del-file="'+esc(f._id)+'">Quitar</button></li>';
+    }).join('')+'</ul>':'<p class="soft" style="margin-bottom:8px">Sin archivos. Sube el syllabus, rúbricas o entregables de la materia.</p>')
+    +'<div class="up"><select class="in" id="uCat" aria-label="Tipo de archivo">'+CATS.map(function(c){return '<option>'+c+'</option>';}).join('')+'</select><input class="in" id="uTit" placeholder="Título, por ejemplo Syllabus OT26" aria-label="Título"><input class="in full" id="uFile" type="file" accept=".pdf,.doc,.docx,.ppt,.pptx,.xls,.xlsx,.png,.jpg,.jpeg" aria-label="Archivo"><input class="in full" id="uUrl" type="url" placeholder="o pega una liga de Drive (https://…)" aria-label="Liga"><div class="full"><button class="btn" id="uSubir">Subir</button> <span class="mono soft">PDF, Office o imagen · máx. 4 MB</span></div></div></div>';
+  h+='<div class="sec"><h3 class="mono"><span class="no">04</span> Candados</h3>'+(cs.length?'<ul style="list-style:none;padding:0;display:grid;gap:6px">'+cs.map(function(c){return '<li style="display:flex;flex-wrap:wrap;gap:8px;align-items:center"><span class="tag '+(c.origen==='sugerido'?'y':'k')+'">'+(c.tipo==='simultanea'?'Simultánea':'Candado')+' · '+esc(c.origen)+'</span>'+lk(c.requiere)+(S.esAdmin?'<button class="btn line sm" data-del-c="'+esc(c._id)+'">Quitar</button>':'')+'</li>';}).join('')+'</ul>':'<p class="soft">Sin candados registrados.'+(m.plan==='LDVN'?' La malla oficial LDVN solo declara seriación en PEF II.':'')+'</p>')+'</div>';
   if(e||m.plan==='LDVN'){
-    h+='<div class="sec"><h3 class="mono"><span class="no">03</span> Equivalencia</h3>';
+    h+='<div class="sec"><h3 class="mono"><span class="no">05</span> Equivalencia</h3>';
     if(e) h+='<p>'+tipoTag(e.tipo)+' <span class="mono">'+e.cubiertas+' de '+e.total+' unidades</span> '+(e.destino?'→ '+lk(e.destino):'')+'</p><p style="margin-top:6px">'+esc(e.evidencia)+'</p>'+(e.pendiente?'<p class="soft">'+esc(e.pendiente)+'</p>':'');
     else{var or=keys(D.equivalencias).filter(function(x){return D.equivalencias[x].destino===k;});
       h+=or.length?'<ul style="list-style:none;padding:0;display:grid;gap:8px">'+or.map(function(x){var q=D.equivalencias[x];return '<li>'+tipoTag(q.tipo)+' '+lk(x)+'<br><span class="soft">'+esc(q.evidencia)+'</span></li>';}).join('')+'</ul>':'<p class="soft">Ninguna materia 2021 la acredita: es materia nueva.</p>';}
     h+='</div>';
   }
-  h+='<div class="sec"><h3 class="mono"><span class="no">04</span> Entregables</h3>'+((m.entregables||[]).length?'<ul>'+m.entregables.map(function(x){return '<li>'+esc(x)+'</li>';}).join('')+'</ul>':'<p class="soft">Sin entregables registrados.</p>')+'</div>';
-  h+='<div class="sec"><h3 class="mono"><span class="no">05</span> Objetivo</h3><p>'+esc(m.objetivo)+'</p></div>';
-  h+='<div class="sec"><h3 class="mono"><span class="no">06</span> Unidades temáticas</h3><ol>'+(m.unidades||[]).map(function(u){return '<li>'+esc(u)+'</li>';}).join('')+'</ol>'+(m.nota?'<p class="soft" style="margin-top:8px">Nota: '+esc(m.nota)+'</p>':'')+'</div>';
+  h+='<div class="sec"><h3 class="mono"><span class="no">06</span> Entregables esperados</h3>'+((m.entregables||[]).length?'<ul>'+m.entregables.map(function(x){return '<li>'+esc(x)+'</li>';}).join('')+'</ul>':'<p class="soft">Sin entregables registrados.</p>')+'</div>';
+  h+='<div class="sec"><h3 class="mono"><span class="no">07</span> Objetivo</h3><p>'+esc(m.objetivo)+'</p></div>';
+  h+='<div class="sec"><h3 class="mono"><span class="no">08</span> Unidades temáticas</h3><ol>'+(m.unidades||[]).map(function(u){return '<li>'+esc(u)+'</li>';}).join('')+'</ol>'+(m.nota?'<p class="soft" style="margin-top:8px">Nota: '+esc(m.nota)+'</p>':'')+'</div>';
   if(S.esAdmin){
     var ops=mats(m.plan).filter(function(x){return x.clave!==k;}).map(function(x){return '<option value="'+esc(x.clave)+'">'+esc(x.clave+' · '+x.nombre)+'</option>';}).join('');
     h+='<div class="adm"><strong>Edición · dirección de programa</strong>'
@@ -465,6 +556,72 @@ function pintarFicha(k){
 }
 function abrir(k){S.abierta=k;pintarFicha(k);var d=$('#ficha');if(!d.open)d.showModal();d.scrollTop=0;}
 
+function abrirForm(html){var f=$('#form');f.innerHTML=html;if(!f.open)f.showModal();f.scrollTop=0;}
+function formPersona(pid){
+  var p=P(pid)||{};
+  abrirForm('<div class="fx"><span class="mono soft" id="formT">'+(pid?'Editar persona':'Nueva persona')+'</span><button class="btn line sm" data-close-form>Cerrar</button></div><div class="fb">'
+    +'<div style="display:flex;gap:14px;align-items:center">'+(pid?av(pid,'big'):'<span class="av big" aria-hidden="true">?</span>')+'<label style="flex:1"><span class="mono soft">Foto · se recorta cuadrada</span><input class="in" id="fFoto" type="file" accept="image/*"></label></div>'
+    +'<label><span class="mono soft">Nombre completo</span><input class="in" id="fNom" maxlength="150" value="'+esc(p.nombre||'')+'"></label>'
+    +'<label><span class="mono soft">Puesto o grado</span><input class="in" id="fPue" maxlength="200" value="'+esc(p.puesto||'')+'" placeholder="Profesora de planta, Mtra. en Diseño"></label>'
+    +'<label><span class="mono soft">Correo</span><input class="in" id="fCor" type="email" maxlength="200" value="'+esc(p.correo||'')+'"></label>'
+    +'<label><span class="mono soft">Teléfono o extensión</span><input class="in" id="fTel" maxlength="60" value="'+esc(p.telefono||'')+'"></label>'
+    +'<label><span class="mono soft">Cubículo y horario de atención</span><input class="in" id="fUbi" maxlength="200" value="'+esc(p.ubicacion||'')+'"></label>'
+    +'<div style="display:flex;gap:10px;flex-wrap:wrap"><button class="btn" id="fGuardarP" data-pid="'+esc(pid||'')+'">Guardar</button>'+(pid&&S.esAdmin?'<button class="btn line" id="fBorrarP" data-pid="'+esc(pid)+'">Eliminar persona</button>':'')+'</div></div>');
+}
+function fotoCuadrada(file){
+  return new Promise(function(ok,no){
+    var img=new Image(), u=URL.createObjectURL(file);
+    img.onload=function(){
+      var n=Math.min(img.width,img.height), c=document.createElement('canvas'); c.width=c.height=480;
+      c.getContext('2d').drawImage(img,(img.width-n)/2,(img.height-n)/2,n,n,0,0,480,480);
+      URL.revokeObjectURL(u); ok(c.toDataURL('image/jpeg',.82));
+    };
+    img.onerror=function(){URL.revokeObjectURL(u);no(new Error('imagen'));};
+    img.src=u;
+  });
+}
+function guardarPersona(pid){
+  var nom=$('#fNom').value.trim().replace(/\s+/g,' '); if(nom.length<3){toast('Escribe el nombre');return;}
+  if(!pid){pid=slug(nom);var b=pid,i=2;while(D.personas[pid]){pid=b+'-'+(i++);}}
+  var datos={nombre:nom,puesto:$('#fPue').value.trim(),correo:$('#fCor').value.trim(),telefono:$('#fTel').value.trim(),ubicacion:$('#fUbi').value.trim()};
+  var file=$('#fFoto').files[0];
+  var pr=db.ref('plataforma/personas/'+pid).update(datos);
+  if(file) pr=pr.then(function(){return fotoCuadrada(file);}).then(function(url){return db.ref('plataformaFotos/'+pid).set(url);});
+  pr.then(function(){toast('Guardado');$('#form').close();}).catch(function(e){if(e&&e.message==='imagen')toast('No se pudo leer la imagen');else fail(e);});
+}
+function formAcademia(id){
+  var a=D.academias[id], ids=keys(D.personas).sort(function(x,y){return P(x).nombre.localeCompare(P(y).nombre);});
+  abrirForm('<div class="fx"><span class="mono soft" id="formT">Academia '+a.num+' · '+esc(a.nombre)+'</span><button class="btn line sm" data-close-form>Cerrar</button></div><div class="fb">'
+    +'<label><span class="mono soft">Líder</span><select class="in" id="aLid"><option value="">Por definir</option>'+ids.map(function(x){return '<option value="'+esc(x)+'"'+(a.liderId===x?' selected':'')+'>'+esc(P(x).nombre)+'</option>';}).join('')+'</select></label>'
+    +'<div><span class="mono soft">Apoyo</span><div class="checks" style="margin-top:4px">'+ids.map(function(x){return '<label><input type="checkbox" name="aApo" value="'+esc(x)+'"'+((a.apoyoIds||{})[x]?' checked':'')+'> '+esc(P(x).nombre)+'</label>';}).join('')+'</div></div>'
+    +'<p class="soft">¿Falta alguien? Agrégalo primero en Directorio.</p><div><button class="btn" id="aGuardar" data-id="'+esc(id)+'">Guardar</button></div></div>');
+}
+function subirArchivo(){
+  var k=S.abierta, f=$('#uFile').files[0], url=$('#uUrl').value.trim(), cat=$('#uCat').value, tit=$('#uTit').value.trim();
+  if(!f&&!url){toast('Elige un archivo o pega una liga');return;}
+  if(!f&&!/^https:\/\//.test(url)){toast('La liga debe empezar con https://');return;}
+  if(f&&!EXT.test(f.name)){toast('Tipo de archivo no permitido');return;}
+  if(f&&f.size>MAXB){toast('El archivo pesa más de 4 MB: usa una liga de Drive');return;}
+  var user=firebase.auth().currentUser, id=db.ref('plataforma/archivos/'+k).push().key;
+  var meta={categoria:cat,titulo:(tit||(f?f.name:cat)).slice(0,200),por:(user&&user.email)||'',fecha:(function(d){return d.getFullYear()+'-'+('0'+(d.getMonth()+1)).slice(-2)+'-'+('0'+d.getDate()).slice(-2);})(new Date())};
+  var btn=$('#uSubir'); btn.disabled=true;
+  var listo=function(){toast('Archivo guardado');};
+  var mal=function(e){btn.disabled=false;fail(e);};
+  if(!f){meta.url=url.slice(0,1000);db.ref('plataforma/archivos/'+k+'/'+id).set(meta).then(listo).catch(mal);return;}
+  meta.nombre=f.name.slice(0,200);meta.tamano=f.size;
+  var r=new FileReader();
+  r.onload=function(){db.ref('plataformaArchivos/'+id).set(r.result).then(function(){return db.ref('plataforma/archivos/'+k+'/'+id).set(meta);}).then(listo).catch(mal);};
+  r.onerror=function(){mal({code:'lectura'});};
+  r.readAsDataURL(f);
+}
+function bajarArchivo(id){
+  var f=(D.archivos[S.abierta]||{})[id]; if(!f) return;
+  toast('Descargando…');
+  db.ref('plataformaArchivos/'+id).once('value').then(function(s){
+    var u=s.val(); if(typeof u!=='string'||u.indexOf('data:')!==0){toast('El archivo ya no está');return;}
+    var a=document.createElement('a');a.href=u;a.download=f.nombre||f.titulo||'archivo';document.body.appendChild(a);a.click();a.remove();
+  }).catch(fail);
+}
 function addHab(lado){
   var inp=$('[data-in="'+lado+'"]',$('#ficha')), name=(inp.value||'').trim().replace(/\s+/g,' ');
   if(name.length<3){toast('Escribe la habilidad');return;}
@@ -489,11 +646,31 @@ document.addEventListener('click',function(ev){
   if((b=t.closest('[data-rm]'))){var p=b.dataset.rm.split('|');db.ref('plataforma/perfiles/'+S.abierta+'/'+p[0]+'/'+p[1]).remove().catch(fail);return;}
   if((b=t.closest('[data-del-c]'))){if(confirm('¿Quitar este candado?'))db.ref('plataforma/candados/'+b.dataset.delC).remove().catch(fail);return;}
   if((b=t.closest('[data-add-c]'))){var q=b.dataset.addC.split('|');nuevoCandado(q[0],q[1],'candado','sugerido');return;}
-  if((b=t.closest('[data-edit-ac]'))){
-    var id=b.dataset.editAc,a=D.academias[id];
-    var l=prompt('Líder de '+a.nombre,a.lider||''); if(l===null) return;
-    var ap=prompt('Apoyo de '+a.nombre,a.apoyo||''); if(ap===null) return;
-    db.ref('plataforma/academias/'+id).update({lider:l.trim().slice(0,200),apoyo:ap.trim().slice(0,200)}).then(function(){toast('Guardado');}).catch(fail);return;
+  if(t.closest('[data-close-form]')){$('#form').close();return;}
+  if((b=t.closest('[data-edit-ac]'))){formAcademia(b.dataset.editAc);return;}
+  if((b=t.closest('[data-edit-p]'))){formPersona(b.dataset.editP);return;}
+  if(t.id==='fGuardarP'){guardarPersona(t.dataset.pid);return;}
+  if(t.id==='fBorrarP'){
+    var pid=t.dataset.pid; if(!confirm('¿Eliminar a '+P(pid).nombre+' del directorio? Se quita también de sus materias.')) return;
+    var up={}; up['plataforma/personas/'+pid]=null; up['plataformaFotos/'+pid]=null;
+    materiasDe(pid).forEach(function(m){up['plataforma/materias/'+m.clave+'/profesores/'+pid]=null;});
+    keys(D.academias).forEach(function(id){var a=D.academias[id];if(a.liderId===pid)up['plataforma/academias/'+id+'/liderId']=null;if((a.apoyoIds||{})[pid])up['plataforma/academias/'+id+'/apoyoIds/'+pid]=null;});
+    db.ref().update(up).then(function(){toast('Eliminado');$('#form').close();}).catch(fail);return;
+  }
+  if(t.id==='aGuardar'){
+    var id=t.dataset.id, ap={}, nombres=[];
+    document.querySelectorAll('#form input[name="aApo"]:checked').forEach(function(c){ap[c.value]=true;nombres.push(P(c.value).nombre);});
+    var lid=$('#aLid').value;
+    db.ref('plataforma/academias/'+id).update({liderId:lid||null,apoyoIds:keys(ap).length?ap:null,lider:lid?P(lid).nombre:'',apoyo:nombres.join(', ')}).then(function(){toast('Guardado');$('#form').close();}).catch(fail);return;
+  }
+  if(t.id==='pAdd'){var v=$('#pSel').value;if(!v){toast('Elige a la persona');return;}db.ref('plataforma/materias/'+S.abierta+'/profesores/'+v).set(true).then(function(){toast('Asignado');}).catch(fail);return;}
+  if((b=t.closest('[data-rm-prof]'))){db.ref('plataforma/materias/'+S.abierta+'/profesores/'+b.dataset.rmProf).remove().catch(fail);return;}
+  if(t.id==='uSubir'){subirArchivo();return;}
+  if((b=t.closest('[data-file]'))){bajarArchivo(b.dataset.file);return;}
+  if((b=t.closest('[data-del-file]'))){
+    if(!confirm('¿Quitar este archivo?')) return;
+    var fid=b.dataset.delFile, u2={}; u2['plataforma/archivos/'+S.abierta+'/'+fid]=null; u2['plataformaArchivos/'+fid]=null;
+    db.ref().update(u2).catch(fail);return;
   }
   if(t.id==='eGuardar'){
     var ent=$('#eEnt').value.split('\n').map(function(x){return x.trim();}).filter(Boolean).slice(0,40);
@@ -513,6 +690,7 @@ document.addEventListener('keydown',function(ev){
 });
 $('#ficha').addEventListener('close',function(){S.abierta=null;});
 $('#ficha').addEventListener('click',function(ev){if(ev.target===this)this.close();});
+$('#form').addEventListener('click',function(ev){if(ev.target===this)this.close();});
 
 function descargar(nombre,texto,tipo){
   var a=document.createElement('a');a.href=URL.createObjectURL(new Blob([texto],{type:tipo}));a.download=nombre;document.body.appendChild(a);a.click();a.remove();
@@ -531,7 +709,10 @@ function cargarSemilla(){
     var j; try{j=JSON.parse(r.result);}catch(e){toast('El archivo no es JSON válido');return;}
     if(!j||!j.materias||!j.academias||!j.equivalencias){toast('El archivo no tiene el formato esperado');return;}
     if(!confirm('Se van a reemplazar '+keys(j.materias).length+' materias, '+keys(j.academias).length+' academias y '+keys(j.equivalencias).length+' equivalencias. ¿Continuar?')) return;
-    db.ref('plataforma').update({materias:j.materias,academias:j.academias,equivalencias:j.equivalencias,candados:j.candados||{},meta:j.meta||{generado:new Date().toISOString().slice(0,10)}})
+    keys(j.materias).forEach(function(k){var act=D.materias[k];if(act&&act.profesores)j.materias[k].profesores=act.profesores;});
+    keys(j.academias).forEach(function(k){var act=D.academias[k];if(act&&(act.liderId||act.apoyoIds)){j.academias[k].liderId=act.liderId||null;j.academias[k].apoyoIds=act.apoyoIds||null;j.academias[k].lider=act.lider||'';j.academias[k].apoyo=act.apoyo||'';}});
+    var pers={};keys(j.personas).forEach(function(k){pers[k]=D.personas[k]||j.personas[k];});keys(D.personas).forEach(function(k){pers[k]=D.personas[k];});
+    db.ref('plataforma').update({materias:j.materias,academias:j.academias,equivalencias:j.equivalencias,candados:j.candados||{},personas:pers,meta:j.meta||{generado:new Date().toISOString().slice(0,10)}})
       .then(function(){toast('Datos cargados');}).catch(fail);
   };
   r.readAsText(f);
@@ -544,16 +725,18 @@ function mostrar(user){
   $('#sesion').innerHTML=esc(user.email||'')+' · <button class="btn line sm" id="salirBtn">Salir</button>';
   $('#salirBtn').addEventListener('click',function(){salir('Sesión cerrada.');});
   db.ref('admins/'+user.uid).once('value').then(function(s){S.esAdmin=s.val()===true;pintar();}).catch(function(){S.esAdmin=false;});
+  db.ref('plataformaFotos').on('value',function(s){F=s.val()||{};pintar();},function(){});
   db.ref('plataforma').on('value',function(snap){
     var v=snap.val()||{};
-    ['materias','academias','equivalencias','candados','perfiles','habilidades'].forEach(function(k){D[k]=v[k]||{};});
+    ['materias','academias','equivalencias','candados','perfiles','habilidades','personas','archivos'].forEach(function(k){D[k]=v[k]||{};});
     D.meta=v.meta||null; pintar();
   },function(err){salir('Tu cuenta no tiene acceso a la plataforma ('+((err&&err.code)||'error')+'). Pide a dirección de programa que te agregue.');});
 }
 function salir(msg){
-  db.ref('plataforma').off();firebase.auth().signOut();
+  db.ref('plataforma').off();db.ref('plataformaFotos').off();F={};firebase.auth().signOut();
   $('#app').style.display='none';$('#login').style.display='block';$('#sesion').textContent='';$('#loginMsg').textContent=msg||'';
   if($('#ficha').open)$('#ficha').close();
+  if($('#form').open)$('#form').close();
 }
 $('#admEntrar').addEventListener('click',function(){
   var btn=this;btn.disabled=true;$('#loginMsg').textContent='Entrando…';
