@@ -268,7 +268,8 @@ function P(id){return D.personas[id];}
 function ini(n){return String(n||'?').trim().split(/\s+/).slice(0,2).map(function(x){return x.charAt(0);}).join('').toUpperCase();}
 function av(pid,cls){
   var p=P(pid)||{}, f=F[pid];
-  return (typeof f==='string'&&f.indexOf('data:image/')===0)?'<img class="av '+(cls||'')+'" src="'+esc(f)+'" alt="Foto de '+esc(p.nombre)+'">':'<span class="av '+(cls||'')+'" aria-hidden="true">'+esc(ini(p.nombre))+'</span>';
+  if(!(typeof f==='string'&&f.indexOf('data:image/')===0)) f=/^https:\/\//.test(p.fotoUrl||'')?p.fotoUrl:null;
+  return f?'<img class="av '+(cls||'')+'" src="'+esc(f)+'" alt="Foto de '+esc(p.nombre)+'" loading="lazy" referrerpolicy="no-referrer">':'<span class="av '+(cls||'')+'" aria-hidden="true">'+esc(ini(p.nombre))+'</span>';
 }
 function liderNombre(a){return a?((P(a.liderId)||{}).nombre||a.lider||''):'';}
 function apoyoIds(a){return keys(a&&a.apoyoIds).filter(P);}
@@ -288,7 +289,7 @@ function cel(pid,rol,o){
   if(p.telefono) ct+='<a href="tel:'+esc(String(p.telefono).replace(/[^0-9+]/g,''))+'">'+esc(p.telefono)+'</a>';
   if(p.ubicacion) ct+='<span class="soft">'+esc(p.ubicacion)+'</span>';
   return '<article class="cel'+(o.lead?' lead':'')+'">'+av(pid,o.lead?'big':'')+'<div style="display:grid;gap:6px;min-width:0"><span class="mono soft">'+esc(rol)+'</span><div class="nm">'+esc(p.nombre)+'</div>'
-    +(p.puesto?'<div class="soft" style="font-size:.9rem">'+esc(p.puesto)+'</div>':'')+(ct?'<div class="ct">'+ct+'</div>':(o.lead?'<div class="soft" style="font-size:.9rem">Sin datos de contacto</div>':''))
+    +(p.puesto?'<div class="soft" style="font-size:.9rem">'+esc(p.puesto)+'</div>':'')+(p.especialidad?'<div style="font-size:.9rem"><span class="mono soft">Especialidad</span><br>'+esc(p.especialidad)+'</div>':'')+((o.lead||o.full)&&p.formacion?'<div style="font-size:.9rem"><span class="mono soft">Formación</span><br>'+esc(p.formacion)+'</div>':'')+(ct?'<div class="ct">'+ct+'</div>':(o.lead?'<div class="soft" style="font-size:.9rem">Sin datos de contacto</div>':''))+(/^https:\/\//.test(p.perfil||'')?'<div class="ct"><a href="'+esc(p.perfil)+'" target="_blank" rel="noopener">Ver perfil CRGS</a></div>':'')
     +(o.extra||'')+'<div><button class="btn line sm" data-edit-p="'+esc(pid)+'">Editar</button></div></div></article>';
 }
 function esEstudio(m){return (m.creditos===12)||/^estudio\b/i.test(m.nombre);}
@@ -425,7 +426,7 @@ function vPersonas(){
   h+='<div class="cels" style="grid-template-columns:repeat(auto-fill,minmax(230px,1fr))">'+ids.map(function(x){
     var r=rolesDe(x), ms=materiasDe(x);
     var extra=(r.length?'<div style="font-size:.9rem">'+r.map(esc).join('<br>')+'</div>':'')+(ms.length?'<div class="ft" style="display:flex;flex-wrap:wrap;gap:4px">'+ms.map(function(m){return '<button class="tag" style="cursor:pointer;background:none" data-open="'+esc(m.clave)+'" title="'+esc(m.nombre)+'">'+esc(m.clave)+'</button>';}).join('')+'</div>':'<div class="mono soft">Sin materias asignadas</div>');
-    return cel(x,r.length?'Academia':'Profesor',{extra:extra});
+    return cel(x,r.length?'Academia':'Profesor',{extra:extra,full:true});
   }).join('')+'</div>';
   return h;
 }
@@ -563,9 +564,13 @@ function formPersona(pid){
     +'<div style="display:flex;gap:14px;align-items:center">'+(pid?av(pid,'big'):'<span class="av big" aria-hidden="true">?</span>')+'<label style="flex:1"><span class="mono soft">Foto · se recorta cuadrada</span><input class="in" id="fFoto" type="file" accept="image/*"></label></div>'
     +'<label><span class="mono soft">Nombre completo</span><input class="in" id="fNom" maxlength="150" value="'+esc(p.nombre||'')+'"></label>'
     +'<label><span class="mono soft">Puesto o grado</span><input class="in" id="fPue" maxlength="200" value="'+esc(p.puesto||'')+'" placeholder="Profesora de planta, Mtra. en Diseño"></label>'
+    +'<label><span class="mono soft">Especialidad</span><input class="in" id="fEsp" maxlength="300" value="'+esc(p.especialidad||'')+'"></label>'
+    +'<label><span class="mono soft">Formación</span><textarea class="in" id="fFor" maxlength="600">'+esc(p.formacion||'')+'</textarea></label>'
     +'<label><span class="mono soft">Correo</span><input class="in" id="fCor" type="email" maxlength="200" value="'+esc(p.correo||'')+'"></label>'
     +'<label><span class="mono soft">Teléfono o extensión</span><input class="in" id="fTel" maxlength="60" value="'+esc(p.telefono||'')+'"></label>'
     +'<label><span class="mono soft">Cubículo y horario de atención</span><input class="in" id="fUbi" maxlength="200" value="'+esc(p.ubicacion||'')+'"></label>'
+    +'<label><span class="mono soft">Liga a su perfil en CRGS</span><input class="in" id="fPer" type="url" maxlength="500" value="'+esc(p.perfil||'')+'" placeholder="https://crgs.udem.edu.mx/…"></label>'
+    +'<label><span class="mono soft">Liga de la foto · opcional, si no subes archivo</span><input class="in" id="fFurl" type="url" maxlength="500" value="'+esc(p.fotoUrl||'')+'" placeholder="https://…/foto.jpg"></label>'
     +'<div style="display:flex;gap:10px;flex-wrap:wrap"><button class="btn" id="fGuardarP" data-pid="'+esc(pid||'')+'">Guardar</button>'+(pid&&S.esAdmin?'<button class="btn line" id="fBorrarP" data-pid="'+esc(pid)+'">Eliminar persona</button>':'')+'</div></div>');
 }
 function fotoCuadrada(file){
@@ -583,7 +588,8 @@ function fotoCuadrada(file){
 function guardarPersona(pid){
   var nom=$('#fNom').value.trim().replace(/\s+/g,' '); if(nom.length<3){toast('Escribe el nombre');return;}
   if(!pid){pid=slug(nom);var b=pid,i=2;while(D.personas[pid]){pid=b+'-'+(i++);}}
-  var datos={nombre:nom,puesto:$('#fPue').value.trim(),correo:$('#fCor').value.trim(),telefono:$('#fTel').value.trim(),ubicacion:$('#fUbi').value.trim()};
+  var datos={nombre:nom,puesto:$('#fPue').value.trim(),correo:$('#fCor').value.trim(),telefono:$('#fTel').value.trim(),ubicacion:$('#fUbi').value.trim(),especialidad:$('#fEsp').value.trim(),formacion:$('#fFor').value.trim(),perfil:$('#fPer').value.trim(),fotoUrl:$('#fFurl').value.trim()};
+  if((datos.perfil&&!/^https:\/\//.test(datos.perfil))||(datos.fotoUrl&&!/^https:\/\//.test(datos.fotoUrl))){toast('Las ligas deben empezar con https://');return;}
   var file=$('#fFoto').files[0];
   var pr=db.ref('plataforma/personas/'+pid).update(datos);
   if(file) pr=pr.then(function(){return fotoCuadrada(file);}).then(function(url){return db.ref('plataformaFotos/'+pid).set(url);});

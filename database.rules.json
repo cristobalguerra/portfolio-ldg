@@ -258,6 +258,18 @@
           "ubicacion": {
             ".validate": "newData.isString() && newData.val().length <= 200"
           },
+          "especialidad": {
+            ".validate": "newData.isString() && newData.val().length <= 300"
+          },
+          "formacion": {
+            ".validate": "newData.isString() && newData.val().length <= 600"
+          },
+          "perfil": {
+            ".validate": "newData.isString() && newData.val().length <= 500 && (newData.val().length === 0 || newData.val().beginsWith('https://'))"
+          },
+          "fotoUrl": {
+            ".validate": "newData.isString() && newData.val().length <= 500 && (newData.val().length === 0 || newData.val().beginsWith('https://'))"
+          },
           "$other": {
             ".validate": false
           }
