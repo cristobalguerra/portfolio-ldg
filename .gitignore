@@ -21,3 +21,7 @@ propuesta-scroll.html
 propuesta-limpia.html
 _hero-ref.html
 limpia-*.html
+
+# --- datos internos de la Mesa de Academias (NO publicar) ---
+plataforma-semilla.json
+plataforma-respaldo.json

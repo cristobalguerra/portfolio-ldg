@@ -206,6 +206,40 @@
           }
         }
       }
+    },
+    "plataformaMiembros": {
+      "$uid": {
+        ".read": "auth != null && auth.uid === $uid",
+        ".write": false
+      }
+    },
+    "plataforma": {
+      ".read": "auth != null && (root.child('admins').child(auth.uid).val() === true || root.child('plataformaMiembros').child(auth.uid).val() === true)",
+      ".write": "auth != null && root.child('admins').child(auth.uid).val() === true",
+      "perfiles": {
+        "$clave": {
+          ".write": "auth != null && (root.child('admins').child(auth.uid).val() === true || root.child('plataformaMiembros').child(auth.uid).val() === true)",
+          "entrada": {
+            "$h": {
+              ".validate": "newData.isBoolean()"
+            }
+          },
+          "salida": {
+            "$h": {
+              ".validate": "newData.isBoolean()"
+            }
+          },
+          "$other": {
+            ".validate": false
+          }
+        }
+      },
+      "habilidades": {
+        "$h": {
+          ".write": "auth != null && (root.child('admins').child(auth.uid).val() === true || root.child('plataformaMiembros').child(auth.uid).val() === true)",
+          ".validate": "newData.isString() && newData.val().length > 0 && newData.val().length <= 160"
+        }
+      }
     }
   }
 }
