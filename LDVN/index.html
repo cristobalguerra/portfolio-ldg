@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta name="theme-color" content="#232323">
+<meta name="theme-color" content="#0C0C0C">
 <title>LDVN · Diseño Visual y Negocios Creativos · UDEM</title>
 <meta name="description" content="Licenciatura en Diseño Visual y Negocios Creativos de la UDEM: 46 asignaturas en 9 semestres, certificado en Diseño Estratégico y Dirección Creativa y perfil de egreso.">
 <meta property="og:type" content="website">
@@ -14,13 +14,16 @@
 <link rel="icon" href="../assets/favicon.svg?v=5" type="image/svg+xml">
 <link rel="icon" href="../assets/favicon-32.png?v=5" sizes="32x32" type="image/png">
 <link rel="apple-touch-icon" href="../assets/favicon-180.png?v=5">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,100..900&family=Martian+Mono:wdth,wght@75..112.5,400..600&display=swap" rel="stylesheet">
 <link rel="preload" href="fonts/NewJune-Bold.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="preload" href="fonts/NewJune-Regular.woff2" as="font" type="font/woff2" crossorigin>
 <style>
 /* ============ LDVN · Open House ============
    Look & feel del desplegable LDVN Open House (Figma):
-   New June (tipografía UDEM), negro #232323, amarillo #FFF500,
-   papel #F2F2F0, gris #A8A8A3, hairlines #5C5C5C,
+   New June (tipografía UDEM), negro #0C0C0C, amarillo #FFF500,
+   papel #F2F0EA, gris #A8A8A3, hairlines #5C5C5C,
    cejas amarillas en diagonal, foto de portada en blanco y negro.
    La malla vive en papel como documento del plan. */
 
@@ -34,15 +37,15 @@
 }
 
 :root{
-  --bg:#232323;
-  --ink:#F2F2F0;
+  --bg:#0C0C0C;
+  --ink:#F2F0EA;
   --ink-soft:#A8A8A3;
   --ink-dim:#7A7A76;
   --line:#5C5C5C;
   --line-2:#8A8A86;
   --accent:#FFF500;      /* amarillo UDEM: cejas, rótulos, llamadas */
   --eyebrow:#FFF500;     /* color de los rótulos pequeños en este fondo */
-  --on-accent:#232323;
+  --on-accent:#0C0C0C;
   --max:1200px;
   --pad:clamp(20px,4vw,56px);
   --ease:cubic-bezier(.22,1,.36,1);
@@ -57,7 +60,7 @@ body{
   font-synthesis:none;
   -webkit-font-smoothing:antialiased;
 }
-::selection{background:var(--accent);color:#232323}
+::selection{background:var(--accent);color:#0C0C0C}
 :focus-visible{outline:2px solid var(--accent);outline-offset:3px}
 img{max-width:100%;display:block}
 a{color:inherit;text-decoration:none}
@@ -84,8 +87,8 @@ em{font-style:normal;font-weight:700} /* New June se autohospeda en Regular y Bo
 
 /* ---------- banda papel (documento) ---------- */
 .band-light{
-  --bg:#F2F2F0;
-  --ink:#232323;
+  --bg:#F2F0EA;
+  --ink:#0C0C0C;
   --ink-soft:#5C5C5C;
   --ink-dim:#7A7A76;
   --line:#C9C9C5;
@@ -94,21 +97,21 @@ em{font-style:normal;font-weight:700} /* New June se autohospeda en Regular y Bo
   --eyebrow:#7A7A76;
   background:var(--bg);color:var(--ink);
 }
-.band-light ::selection{background:#232323;color:#FFF500}
+.band-light ::selection{background:#0C0C0C;color:#FFF500}
 
 /* ---------- banda amarilla (contraportada) ---------- */
 .band-yellow{
   --bg:#FFF500;
-  --ink:#232323;
+  --ink:#0C0C0C;
   --ink-soft:#4A4A3C;
   --ink-dim:#5C5C50;
   --line:rgba(35,35,35,.35);
   --line-2:rgba(35,35,35,.6);
-  --accent:#232323;
-  --eyebrow:#232323;
+  --accent:#0C0C0C;
+  --eyebrow:#0C0C0C;
   background:var(--bg);color:var(--ink);
 }
-.band-yellow ::selection{background:#232323;color:#FFF500}
+.band-yellow ::selection{background:#0C0C0C;color:#FFF500}
 
 /* ---------- nav (in-page) ---------- */
 .nav{
@@ -166,7 +169,7 @@ em{font-style:normal;font-weight:700} /* New June se autohospeda en Regular y Bo
 .udem-tag img{height:100%;width:auto}
 .nav{padding-right:calc(clamp(104px,12vw,144px) + 28px)} /* la nav termina antes de la pleca */
 @media(max-width:760px){.nav{padding-right:calc(104px + 24px)}}
-.hero-fx{position:absolute;inset:0;z-index:-1;background:#232323}
+.hero-fx{position:absolute;inset:0;z-index:-1;background:#0C0C0C}
 .hero-fx img{
   position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:50% 40%;
   filter:grayscale(1) contrast(1.05);
@@ -284,13 +287,13 @@ section{padding-block:clamp(64px,10vh,120px)}
 .chip .sw{width:10px;height:10px;border-radius:2px;flex:none}
 .chip .cr{font-weight:400;opacity:.7}
 .chip.biz{border-style:dashed}
-.chip.biz[aria-pressed="true"]{background:#FFF500;border-color:#FFF500;border-style:solid;color:#232323}
+.chip.biz[aria-pressed="true"]{background:#FFF500;border-color:#FFF500;border-style:solid;color:#0C0C0C}
 .sw{display:inline-block;width:10px;height:10px;border-radius:2px;flex:none}
-.sw-prof{background:#232323}
+.sw-prof{background:#0C0C0C}
 .sw-udem{background:#C9C9C5}
 .sw-cg{background:transparent;box-shadow:inset 0 0 0 1.4px #5C5C5C;border-radius:2px}
 .sw-int{background:#FFF500;box-shadow:inset 0 0 0 1px rgba(35,35,35,.25)}
-.chip[aria-pressed="true"] .sw-prof{box-shadow:0 0 0 1px #F2F2F0}
+.chip[aria-pressed="true"] .sw-prof{box-shadow:0 0 0 1px #F2F0EA}
 .malla-note{font-size:14px;color:var(--ink-soft);min-height:1.55em;margin-bottom:28px;max-width:70ch}
 .malla-note strong{color:var(--ink)}
 
@@ -314,11 +317,11 @@ section{padding-block:clamp(64px,10vh,120px)}
 .c .k{font-size:9.5px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;opacity:.72}
 .c:hover{transform:translateY(-2px)}
 .c--12{min-height:138px}
-.c--prof{background:#232323;color:#F2F2F0}
+.c--prof{background:#0C0C0C;color:#F2F0EA}
 .c--udem{background:#DCDCD8;color:#2A2A26}
 .c--cg{background:transparent;color:#3C3B36;box-shadow:inset 0 0 0 1.4px #8A8A86}
-.c--cg:hover{box-shadow:inset 0 0 0 1.4px #232323}
-.c--int{background:#FFF500;color:#232323}
+.c--cg:hover{box-shadow:inset 0 0 0 1.4px #0C0C0C}
+.c--int{background:#FFF500;color:#0C0C0C}
 .c[data-b] .biz-dot{display:none}
 .malla-wrap[data-f="biz"] .c[data-b] .biz-dot{display:inline-block}
 .biz-dot{width:7px;height:7px;border-radius:50%;background:currentColor;margin-left:6px;vertical-align:1px}
@@ -369,7 +372,7 @@ section{padding-block:clamp(64px,10vh,120px)}
 dialog.ficha{
   margin:auto;border:1px solid #5C5C5C;padding:0;
   width:min(560px,calc(100vw - 32px));max-height:min(86vh,720px);
-  background:#232323;color:#F2F2F0;border-radius:6px;
+  background:#0C0C0C;color:#F2F0EA;border-radius:6px;
   box-shadow:0 30px 80px rgba(0,0,0,.5);
 }
 dialog.ficha::backdrop{background:rgba(20,20,20,.7)}
@@ -380,7 +383,7 @@ dialog.ficha::backdrop{background:rgba(20,20,20,.7)}
   flex:none;width:36px;height:36px;border-radius:50%;border:1px solid #5C5C5C;
   background:none;cursor:pointer;display:grid;place-items:center;margin:-6px -6px 0 0;
 }
-.ficha .x:hover{border-color:#F2F2F0}
+.ficha .x:hover{border-color:#F2F0EA}
 .ficha .x svg{width:12px;height:12px}
 .ficha h2{font-size:clamp(24px,4vw,32px);line-height:1.05;margin-bottom:16px;font-weight:700;letter-spacing:-.02em;text-wrap:balance}
 .ficha p{color:#C9C9C5;font-size:16px;line-height:1.55}
@@ -477,7 +480,7 @@ dialog.ficha::backdrop{background:rgba(20,20,20,.7)}
 /* ceja negra en diagonal, espejo de la del hero */
 .cta .ceja-dark{
   position:absolute;top:0;right:0;bottom:0;width:clamp(72px,9vw,140px);
-  background:#232323;clip-path:polygon(0 0,100% 0,100% 100%,58% 100%);
+  background:#0C0C0C;clip-path:polygon(0 0,100% 0,100% 100%,58% 100%);
 }
 @media(max-width:760px){.cta .ceja-dark{display:none}}
 
@@ -494,7 +497,7 @@ footer nav a:hover{color:var(--ink)}
 /* ---------- impresión: la malla como hoja ---------- */
 @media print{
   @page{size:landscape;margin:12mm}
-  body{background:#fff;color:#232323;font-size:11pt}
+  body{background:#fff;color:#0C0C0C;font-size:11pt}
   .nav,.hero,.spec-wrap,#plan,#recorrido,#certificado,#aprendes,#egreso,#para-ti,.cta,footer,.malla-tools,.malla-note,.malla-foot button,dialog{display:none !important}
   #malla{padding:0}
   .rv{opacity:1 !important;transform:none !important}
@@ -505,6 +508,36 @@ footer nav a:hover{color:var(--ink)}
   .c--12{min-height:100px;grid-column:auto}
   .malla-sum dt .sw{-webkit-print-color-adjust:exact;print-color-adjust:exact}
 }
+
+/* ============ Capa de tablero (Ticket to Fly) ============
+   Misma dirección que assets/ldvn.css: tablero #0C0C0C, papel #F2F0EA, amarillo #FFF500.
+   Archivo en su ancho mínimo para títulos; Martian Mono para códigos y estados. Sin radios. */
+:root{
+  --bg:#0C0C0C;--ink:#FFFFFF;--ink-soft:rgba(255,255,255,.7);--ink-dim:rgba(255,255,255,.5);
+  --line:rgba(255,255,255,.2);--line-2:rgba(255,255,255,.45);--on-accent:#000;
+  --ease:cubic-bezier(.23,1,.32,1);
+}
+body{font-family:'Archivo',system-ui,-apple-system,sans-serif;text-rendering:optimizeLegibility}
+.band-light{--ink:#111;--ink-soft:rgba(17,17,17,.66);--ink-dim:rgba(17,17,17,.5);--line:rgba(17,17,17,.2);--line-2:rgba(17,17,17,.5)}
+h1,h2,.h2,.display,.route .focus,.spec dd,.defs h3,.cta .manif{
+  font-family:'Archivo',system-ui,sans-serif;font-stretch:62%;font-weight:900;
+  text-transform:uppercase;letter-spacing:-.01em;line-height:.86;text-wrap:balance;
+}
+.cta .manif .lt{font-style:normal;font-weight:100;font-stretch:125%;letter-spacing:-.02em}
+h3{font-weight:800;font-stretch:88%}
+.label,.eyebrow,.sec-no,.nav .brand,.nav ul a,.menu-btn,.btn,.chip,.pill,.route .sem,.c .k,.ficha dt,.ficha .more,
+.ficha .tags span,.cert-meta,.ways .when,.malla h3 small,.roles li,.spec dt,footer nav a,.more a{
+  font-family:'Martian Mono',ui-monospace,monospace;font-stretch:87.5%;font-weight:400;
+  text-transform:uppercase;letter-spacing:.02em;
+}
+.btn,.chip,.pill,.sec-no,.menu-btn,.roles li,.ficha .tags span,.tag{border-radius:0}
+.nav{background:#0C0C0C}
+.nav::before{content:none}
+.nav ul a{color:rgba(255,255,255,.7);border-bottom-color:transparent}
+.nav ul a:hover,.nav ul a[aria-current]{color:var(--accent);border-color:transparent}
+.ceja{display:none}
+.btn:hover{background:#FFF500;color:#000;border-color:#FFF500}
+h2,.h2{line-height:.92}
 </style>
 </head>
 <body>
