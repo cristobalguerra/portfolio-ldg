@@ -32,3 +32,9 @@ PRODUCT.md
 database.rules.json
 firebase.json
 .firebaserc
+
+# --- material del curso EGEL (NO publicar; vive en la base, detrás del código de acceso) ---
+assets/egel-banco.js
+assets/egel-biblioteca.js
+assets/egel-glosario.js
+database.rules.json.respaldo-*

@@ -124,6 +124,7 @@
 <!-- scripts al final del body -->
 <script src="assets/egel-common.js?v=20260726b"></script>
 <script src="assets/egel-core.js?v=20260726e"></script>
+<script src="assets/egel-gate.js?v=20261127a"></script>
 <script>
 (function(){
   'use strict';
@@ -315,7 +316,8 @@
       bibLoaded = true;
       var l = $('#bib-loading');
       if(l){ l.hidden = false; }
-      loadScript('assets/egel-biblioteca.js?v=20260726b').then(function(){
+      window.EGEL_ACCESS.cargar('biblioteca').then(function(d){
+        window.EGEL_BIBLIOTECA = d;
         if(l){ l.hidden = true; }
         renderBiblioteca();
       }).catch(function(){
@@ -327,7 +329,8 @@
       glosLoaded = true;
       var g = $('#glos-loading');
       if(g){ g.hidden = false; }
-      loadScript('assets/egel-glosario.js?v=20260726b').then(function(){
+      window.EGEL_ACCESS.cargar('glosario').then(function(d){
+        window.EGEL_GLOSARIO = d;
         if(g){ g.hidden = true; }
         renderGlosarios();
       }).catch(function(){
@@ -385,7 +388,6 @@
   }
 })();
 </script>
-<script src="assets/egel-gate.js?v=20260726b"></script>
 <script src="assets/egel-ui.js?v=20260726b"></script>
 </body>
 </html>

@@ -1,25 +1,31 @@
-/* ===== EGEL · gate de acceso compartido =====
-   Un solo código para todo el espacio EGEL. No es seguridad fuerte
-   (es un sitio estático); mantiene fuera a visitantes casuales y se
-   recuerda en el navegador por un semestre. Para cambiar el código,
-   reemplaza CODE_HASH por el SHA-256 hex del nuevo código
-   (node -e "console.log(require('crypto').createHash('sha256').update('TU-CODIGO').digest('hex'))").
-   Código actual por defecto: EGEL-LDG-2026 */
+/* ===== EGEL · acceso compartido =====
+   Un solo código para todo el espacio EGEL, sin cuenta por alumno.
+   El código NO se guarda aquí, ni en claro ni como huella: de él se deriva
+   la ruta de la base donde vive el material (banco, biblioteca, glosario).
+   Quien no conoce el código no puede leer esa ruta ni listarla.
+   Para cambiar el código: volver a subir el material con el código nuevo
+   (herramientas egel_preparar.js y egel_subir.sh) y borrar la ruta anterior. */
 (function(){
   'use strict';
-  var LS_KEY = 'egel_access_v1';
-  var CODE_HASH = '00cddf00e01403db4c6e9ff3dd7cd36185943a77e02f3ec54db063581643c2b7';
+  var LS_KEY = 'egel_access_v2';
+  var DB = 'https://portfolioldg-3ca20-default-rtdb.firebaseio.com/egelPriv/';
   var TTL_MS = 150 * 864e5; /* ~5 meses */
   var root = document.documentElement;
+  var cache = {};
+  var abrir;
+  var listo = new Promise(function(resolve){ abrir = resolve; });
 
-  function unlocked(){
+  function guardado(){
     try{
       var o = JSON.parse(localStorage.getItem(LS_KEY) || 'null');
-      return !!(o && o.h === CODE_HASH && o.exp > Date.now());
-    }catch(e){ return false; }
+      return o && /^[a-f0-9]{64}$/.test(o.t) && o.exp > Date.now() ? o.t : null;
+    }catch(e){ return null; }
   }
-  function remember(){
-    try{ localStorage.setItem(LS_KEY, JSON.stringify({ h: CODE_HASH, exp: Date.now() + TTL_MS })); }catch(e){}
+  function recordar(t){
+    try{ localStorage.setItem(LS_KEY, JSON.stringify({ t: t, exp: Date.now() + TTL_MS })); }catch(e){}
+  }
+  function olvidar(){
+    try{ localStorage.removeItem(LS_KEY); localStorage.removeItem('egel_access_v1'); }catch(e){}
   }
   function sha256Hex(str){
     if(!(window.crypto && crypto.subtle)) return Promise.resolve(null);
@@ -29,9 +35,38 @@
       }).join('');
     });
   }
-  function reveal(){ root.classList.remove('egel-locked'); var g = document.getElementById('egel-gate'); if(g) g.remove(); }
+  function leer(t, nombre){
+    return fetch(DB + t + '/' + nombre + '.json').then(function(r){
+      if(!r.ok) throw new Error('No se pudo leer ' + nombre);
+      return r.json();
+    });
+  }
+  /* Material del curso: 'banco', 'biblioteca' o 'glosario'. Espera a que el acceso esté abierto. */
+  function cargar(nombre){
+    if(cache[nombre]) return cache[nombre];
+    cache[nombre] = listo.then(function(t){ return leer(t, nombre); }).then(function(v){
+      if(v === null){ olvidar(); location.reload(); throw new Error('El acceso venció'); }
+      return typeof v === 'string' ? JSON.parse(v) : v;
+    });
+    cache[nombre].catch(function(){ cache[nombre] = null; });
+    return cache[nombre];
+  }
+  window.EGEL_ACCESS = { listo: listo, cargar: cargar };
 
-  if(unlocked()){ reveal(); return; }
+  function reveal(t){
+    root.classList.remove('egel-locked');
+    var g = document.getElementById('egel-gate');
+    if(g) g.remove();
+    abrir(t);
+  }
+
+  var t0 = guardado();
+  if(t0){
+    reveal(t0);
+    /* si el código cambió desde la última visita, se vuelve a pedir */
+    leer(t0, 'ok').then(function(ok){ if(ok !== true){ olvidar(); location.reload(); } }).catch(function(){});
+    return;
+  }
 
   function build(){
     var gate = document.createElement('div');
@@ -63,13 +98,17 @@
       var val = (input.value || '').trim();
       if(!val){ return; }
       status.textContent = 'Verificando…';
-      sha256Hex(val).then(function(h){
-        if(h === null){
+      sha256Hex('egel-material-v1:' + val).then(function(t){
+        if(t === null){
           status.textContent = 'Tu navegador no permite verificar el código de forma segura. Prueba con Chrome, Edge, Safari o Firefox actualizados.';
           return;
         }
-        if(h === CODE_HASH){ remember(); reveal(); }
-        else{ status.textContent = 'Código incorrecto. Revísalo con la coordinación.'; input.select(); }
+        return leer(t, 'ok').then(function(ok){
+          if(ok === true){ recordar(t); reveal(t); }
+          else{ status.textContent = 'Código incorrecto. Revísalo con la coordinación.'; input.select(); }
+        });
+      }).catch(function(){
+        status.textContent = 'No se pudo verificar el código. Revisa tu conexión e inténtalo de nuevo.';
       });
     });
   }
