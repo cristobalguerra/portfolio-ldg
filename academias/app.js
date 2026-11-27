@@ -310,7 +310,7 @@ function pintarFicha() {
     ${area("setCurso('plan',this.value)", edCurso, 'Cómo se trabaja cada tema este periodo')}${esc(cu.plan)}</textarea>
     <div class="campo"><span>Cliente o colaboración</span><input type="text" ${no(edCurso)} placeholder="${edCurso ? 'Con quién se trabaja este periodo' : 'Ninguno'}" value="${esc(cu.cliente)}" onchange="setCurso('cliente',this.value)"></div>
     <h3>Ejemplos</h3>
-    ${ejemplos(sel).length ? `<ul class="simple">${ejemplos(sel).map(e => `<li><a href="${esc(e.url)}" target="_blank" rel="noopener">${esc(e.titulo)}</a>${edCurso ? ` <button class="suave mini" onclick="quitarEjemplo(${e.id})">Quitar</button>` : ''}</li>`).join('')}</ul>` : '<p class="gris">Ninguno</p>'}
+    ${ejemplos(sel).length ? `<ul class="simple">${ejemplos(sel).filter(e => /^https?:\/\//i.test(e.url)).map(e => `<li><a href="${esc(e.url)}" target="_blank" rel="noopener">${esc(e.titulo)}</a>${edCurso ? ` <button class="suave mini" onclick="quitarEjemplo(${e.id})">Quitar</button>` : ''}</li>`).join('')}</ul>` : '<p class="gris">Ninguno</p>'}
     ${edCurso ? `<form class="alta" style="margin:8px 0 0" onsubmit="addEjemplo(event)"><input type="text" name="titulo" required placeholder="Título" style="flex:1;min-width:120px"><input type="text" name="url" required placeholder="Liga" style="flex:1;min-width:120px"><button class="suave">Agregar</button></form>` : ''}
     <h3>Entregables</h3>
     ${area('capEntregables(this.value)', puedeEntregables(m), 'Entregable | competencia que evidencia')}${esc(entregables(sel).map(e => e.nombre + (e.competencia ? ' | ' + e.competencia : '')).join('\n'))}</textarea>
@@ -331,7 +331,7 @@ function pintarFicha() {
       ${o ? `<p>${o} ${enlaceMat(o)}</p>` : ''}<p class="chico">${esc(e.evidencia)}</p>${e.pendiente ? `<p class="chico gris">${esc(e.pendiente)}</p>` : ''}</div>`; }).join('')
       : `<p><span class="tipo ${claseTipo(t)}">${t === 'Pendiente' ? 'Sin medir' : t}</span></p><p class="chico gris">${esc(D.sinMedir[sel] || 'Sin antecedente en el plan 2021')}</p>`}
     ${doble ? `<div class="campo"><span>Acredita</span><select ${no(esDireccion())} onchange="setAcredita('${sel}',this.value)"><option value="">Por decidir</option>${doble[1].map(c => `<option ${S.acredita[sel] === c ? 'selected' : ''}>${c}</option>`).join('')}<option ${S.acredita[sel] === 'Ambas' ? 'selected' : ''}>Ambas</option></select></div>` : ''}
-    ${m.fuente || notas('fuente') ? `<h3>Fuente</h3>${m.fuente ? `<p><a href="${esc(m.fuente)}" target="_blank" rel="noopener">${m.plan === LDG ? 'Plan analítico 2021' : 'Programa LDVN'} en Drive</a></p>` : ''}${notas('fuente')}` : ''}</details>`;
+    ${m.fuente || notas('fuente') ? `<h3>Fuente</h3>${/^https?:\/\//i.test(m.fuente) ? `<p><a href="${esc(m.fuente)}" target="_blank" rel="noopener">${m.plan === LDG ? 'Plan analítico 2021' : 'Programa LDVN'} en Drive</a></p>` : ''}${notas('fuente')}` : ''}</details>`;
 }
 
 /* ---------- capturas ---------- */
@@ -465,6 +465,7 @@ async function convocar(ev) {
   pintar();
 }
 function setJunta(campo, v) {
+  if (campo === 'archivo_url' && v && !/^https?:\/\//i.test(v)) { aviso('La liga debe empezar con https://'); return pintar(); }
   const j = juntaSel(), cambio = { [campo]: v };
   if (campo === 'minuta') cambio.minuta_por = YO.correo || null;
   if (campo === 'cerrada' && !v) j.firmas = [];
@@ -531,7 +532,7 @@ function vJunta(j) {
   <div class="dos" style="margin-top:28px">
   <section class="bloque"><h2>Minuta ${j.minuta_por ? `<span class="gris">${esc(j.minuta_por)}</span>` : ''}</h2>
     <textarea class="minuta" ${no(abre)} placeholder="${abre ? 'Lo que se trató' : 'Sin minuta'}" onchange="setJunta('minuta',this.value)">${esc(j.minuta)}</textarea>
-    <div class="campo"><span>Archivo o acta</span>${abre ? `<input type="text" placeholder="Liga a Drive" value="${esc(j.archivo_url)}" onchange="setJunta('archivo_url',this.value.trim())">` : j.archivo_url ? `<a href="${esc(j.archivo_url)}" target="_blank" rel="noopener">Abrir</a>` : '<span class="gris">—</span>'}</div>
+    <div class="campo"><span>Archivo o acta</span>${abre ? `<input type="text" placeholder="Liga a Drive" value="${esc(j.archivo_url)}" onchange="setJunta('archivo_url',this.value.trim())">` : /^https?:\/\//i.test(j.archivo_url) ? `<a href="${esc(j.archivo_url)}" target="_blank" rel="noopener">Abrir</a>` : '<span class="gris">—</span>'}</div>
     <div class="controles" style="margin-top:18px">
       ${abre ? `<button onclick="setJunta('cerrada',true)">Cerrar minuta para firma</button>` : ''}
       ${j.cerrada && puedeReabrir(j) ? `<button class="suave" onclick="setJunta('cerrada',false)">Reabrir</button>` : ''}
@@ -721,7 +722,9 @@ function arrancar() {
     cargarLocal(); return pintar();
   }
   const s = document.createElement('script');
-  s.src = 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2';
+  s.src = 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.119.2';   // versión fija, con integridad
+  s.integrity = 'sha384-7i/4BYWz4Mn+lJfg2HWfEPfZQ7tmFKF3CTSKlXBpxWjNlLjcg+T6smpHG4gLmU1u';
+  s.crossOrigin = 'anonymous';
   s.onload = () => {
     sb = supabase.createClient(CFG.url, CFG.key);
     let actual;
