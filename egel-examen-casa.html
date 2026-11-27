@@ -12,6 +12,24 @@
 <meta name="theme-color" content="#232323">
 <link rel="stylesheet" href="assets/egel.css?v=20261009">
 <script>document.documentElement.classList.add('js','egel-locked');</script>
+<!-- Firebase: acceso con correo UDEM y material del curso. -->
+<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js" integrity="sha384-sEVIly94UBRLKWdkYoPpSG7GD/e79YHMrxVyZaOk712Ga7+EAw6w1EFi+xBzBdd+" crossorigin="anonymous"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-database-compat.js" integrity="sha384-1/m+A1jVWbD3yiK3/vtFvm1+LjK1WLpSoDY+Kaxppwn/yP9BVSgdHTNQVOjrzUO5" crossorigin="anonymous"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-auth-compat.js" integrity="sha384-EkqK+ezBWJuvO3hfrSx2iVqr3YQbhmnzn8kPhOpBZ+0GMVU5oGSgptwIu8D84HjE" crossorigin="anonymous"></script>
+<script>
+  if (typeof firebase !== 'undefined') {
+    firebase.initializeApp({
+      apiKey: "AIzaSyBfWefsqHW90aqHP9Mz6s8w91eIar_x6j8",
+      authDomain: "portfolioldg-3ca20.firebaseapp.com",
+      databaseURL: "https://portfolioldg-3ca20-default-rtdb.firebaseio.com",
+      projectId: "portfolioldg-3ca20",
+      storageBucket: "portfolioldg-3ca20.firebasestorage.app",
+      messagingSenderId: "563272567632",
+      appId: "1:563272567632:web:85e36244c8f00d5cdf7a55"
+    });
+    window.db = firebase.database();
+  }
+</script>
 <link rel="preload" href="assets/fonts/NewJune-Bold.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="preload" href="assets/fonts/NewJune-Regular.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="stylesheet" href="assets/ldvn.css?v=20261126a">
@@ -170,7 +188,7 @@
   })();
 })();
 </script>
-<script src="assets/egel-gate.js?v=20261127a"></script>
+<script src="assets/egel-gate.js?v=20261127b"></script>
 <script src="assets/egel-ui.js?v=20260726b"></script>
 </body>
 </html>

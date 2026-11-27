@@ -1,51 +1,27 @@
-/* ===== EGEL · acceso compartido =====
-   Un solo código para todo el espacio EGEL, sin cuenta por alumno.
-   El código NO se guarda aquí, ni en claro ni como huella: de él se deriva
-   la ruta de la base donde vive el material (banco, biblioteca, glosario).
-   Quien no conoce el código no puede leer esa ruta ni listarla.
-   Para cambiar el código: volver a subir el material con el código nuevo
-   (herramientas egel_preparar.js y egel_subir.sh) y borrar la ruta anterior. */
+/* ===== EGEL · acceso con correo UDEM =====
+   Se entra con la cuenta de Google institucional (@udem.edu). No hay código compartido.
+   El material del curso (banco, biblioteca, glosario) vive en la base y la regla solo
+   lo entrega a sesiones con correo @udem.edu verificado; aquí no hay nada que proteger.
+   Requiere Firebase ya inicializado en la página (app, auth y database). */
 (function(){
   'use strict';
-  var LS_KEY = 'egel_access_v2';
-  var DB = 'https://portfolioldg-3ca20-default-rtdb.firebaseio.com/egelPriv/';
-  var TTL_MS = 150 * 864e5; /* ~5 meses */
   var root = document.documentElement;
+  var DOMINIO = /@udem\.edu(\.mx)?$/i;
   var cache = {};
-  var abrir;
+  var abrir, abierto = false;
   var listo = new Promise(function(resolve){ abrir = resolve; });
+  var hayFirebase = typeof firebase !== 'undefined' && firebase.auth && firebase.database;
 
-  function guardado(){
-    try{
-      var o = JSON.parse(localStorage.getItem(LS_KEY) || 'null');
-      return o && /^[a-f0-9]{64}$/.test(o.t) && o.exp > Date.now() ? o.t : null;
-    }catch(e){ return null; }
-  }
-  function recordar(t){
-    try{ localStorage.setItem(LS_KEY, JSON.stringify({ t: t, exp: Date.now() + TTL_MS })); }catch(e){}
-  }
-  function olvidar(){
-    try{ localStorage.removeItem(LS_KEY); localStorage.removeItem('egel_access_v1'); }catch(e){}
-  }
-  function sha256Hex(str){
-    if(!(window.crypto && crypto.subtle)) return Promise.resolve(null);
-    return crypto.subtle.digest('SHA-256', new TextEncoder().encode(str)).then(function(buf){
-      return Array.prototype.map.call(new Uint8Array(buf), function(b){
-        return ('0' + b.toString(16)).slice(-2);
-      }).join('');
-    });
-  }
-  function leer(t, nombre){
-    return fetch(DB + t + '/' + nombre + '.json').then(function(r){
-      if(!r.ok) throw new Error('No se pudo leer ' + nombre);
-      return r.json();
-    });
-  }
-  /* Material del curso: 'banco', 'biblioteca' o 'glosario'. Espera a que el acceso esté abierto. */
+  function permitido(u){ return !!(u && !u.isAnonymous && u.email && DOMINIO.test(u.email)); }
+
+  /* Material del curso: 'banco', 'biblioteca' o 'glosario'. Espera a que haya sesión. */
   function cargar(nombre){
     if(cache[nombre]) return cache[nombre];
-    cache[nombre] = listo.then(function(t){ return leer(t, nombre); }).then(function(v){
-      if(v === null){ olvidar(); location.reload(); throw new Error('El acceso venció'); }
+    cache[nombre] = listo.then(function(){
+      return firebase.database().ref('egelMaterial/' + nombre).once('value');
+    }).then(function(snap){
+      var v = snap.val();
+      if(v === null) throw new Error('No hay material: ' + nombre);
       return typeof v === 'string' ? JSON.parse(v) : v;
     });
     cache[nombre].catch(function(){ cache[nombre] = null; });
@@ -53,22 +29,16 @@
   }
   window.EGEL_ACCESS = { listo: listo, cargar: cargar };
 
-  function reveal(t){
+  function reveal(u){
+    abierto = true;
     root.classList.remove('egel-locked');
     var g = document.getElementById('egel-gate');
     if(g) g.remove();
-    abrir(t);
+    abrir(u);
   }
 
-  var t0 = guardado();
-  if(t0){
-    reveal(t0);
-    /* si el código cambió desde la última visita, se vuelve a pedir */
-    leer(t0, 'ok').then(function(ok){ if(ok !== true){ olvidar(); location.reload(); } }).catch(function(){});
-    return;
-  }
-
-  function build(){
+  function build(aviso){
+    if(document.getElementById('egel-gate')) return;
     var gate = document.createElement('div');
     gate.id = 'egel-gate';
     gate.innerHTML =
@@ -77,45 +47,55 @@
           '<svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="square" focusable="false"><path d="M2 2l8 8"/><path d="M10 4.6V10H4.6"/></svg>' +
         '</span></a>' +
         '<p class="eyebrow">Espacio EGEL · acceso del programa</p>' +
-        '<h1>Ingresa el código</h1>' +
-        '<p>Este espacio de preparación para el EGEL Plus es del alumnado de Diseño Gráfico. Escribe el código que te compartió la coordinación; el navegador lo recordará.</p>' +
+        '<h1>Entra con tu correo UDEM</h1>' +
+        '<p>Este espacio de preparación para el EGEL Plus es del alumnado de Diseño Gráfico. Entra con tu cuenta institucional; el navegador la recordará.</p>' +
         '<form id="gate-form" novalidate>' +
-          '<label for="gate-code">Código de acceso' +
-            '<input type="text" id="gate-code" autocomplete="off" autocapitalize="characters" spellcheck="false" inputmode="text" required>' +
-          '</label>' +
           '<p class="gate-status" id="gate-status" role="status" aria-live="polite"></p>' +
-          '<button class="btn solid" type="submit">Entrar</button>' +
+          '<button class="btn solid" type="submit">Entrar con correo UDEM</button>' +
         '</form>' +
-        '<p class="gate-help">¿No tienes el código? Escríbele a la coordinación: <a href="mailto:ldg.crgs@udem.edu" style="color:inherit;text-decoration:underline">ldg.crgs@udem.edu</a></p>' +
+        '<p class="gate-help">¿No puedes entrar? Escríbele a la coordinación: <a href="mailto:ldg.crgs@udem.edu" style="color:inherit;text-decoration:underline">ldg.crgs@udem.edu</a></p>' +
       '</div>';
     document.body.appendChild(gate);
     var form = gate.querySelector('#gate-form');
-    var input = gate.querySelector('#gate-code');
     var status = gate.querySelector('#gate-status');
-    input.focus();
+    if(aviso) status.textContent = aviso;
+    if(!hayFirebase){
+      status.textContent = 'No se pudo conectar con el servicio de acceso. Revisa tu conexión y recarga la página.';
+      return;
+    }
     form.addEventListener('submit', function(ev){
       ev.preventDefault();
-      var val = (input.value || '').trim();
-      if(!val){ return; }
-      status.textContent = 'Verificando…';
-      sha256Hex('egel-material-v1:' + val).then(function(t){
-        if(t === null){
-          status.textContent = 'Tu navegador no permite verificar el código de forma segura. Prueba con Chrome, Edge, Safari o Firefox actualizados.';
-          return;
-        }
-        return leer(t, 'ok').then(function(ok){
-          if(ok === true){ recordar(t); reveal(t); }
-          else{ status.textContent = 'Código incorrecto. Revísalo con la coordinación.'; input.select(); }
+      status.textContent = 'Abriendo el acceso de Google…';
+      var prov = new firebase.auth.GoogleAuthProvider();
+      prov.setCustomParameters({ hd: 'udem.edu', prompt: 'select_account' });
+      firebase.auth().signInWithPopup(prov).then(function(res){
+        if(permitido(res.user)){ reveal(res.user); return; }
+        return firebase.auth().signOut().then(function(){
+          status.textContent = 'Ese correo no es de UDEM. Entra con tu cuenta @udem.edu.';
         });
-      }).catch(function(){
-        status.textContent = 'No se pudo verificar el código. Revisa tu conexión e inténtalo de nuevo.';
+      }).catch(function(err){
+        var c = err && err.code;
+        status.textContent =
+          c === 'auth/popup-blocked' ? 'El navegador bloqueó la ventana de acceso. Permite ventanas emergentes para este sitio e inténtalo de nuevo.' :
+          c === 'auth/popup-closed-by-user' || c === 'auth/cancelled-popup-request' ? '' :
+          c === 'auth/network-request-failed' ? 'No hay conexión. Inténtalo de nuevo.' :
+          'No se pudo iniciar sesión. Inténtalo de nuevo.';
       });
     });
   }
-
-  if(document.readyState === 'loading'){
-    document.addEventListener('DOMContentLoaded', build);
-  }else{
-    build();
+  function alCargar(fn){
+    if(document.readyState === 'loading') document.addEventListener('DOMContentLoaded', fn); else fn();
   }
+
+  if(!hayFirebase){ alCargar(function(){ build(); }); return; }
+
+  /* Solo la primera respuesta decide: si después la coordinación inicia o cierra su sesión
+     en esta misma página, lo ya abierto no se vuelve a bloquear. */
+  var decidido = false;
+  firebase.auth().onAuthStateChanged(function(u){
+    if(decidido) return;
+    decidido = true;
+    if(permitido(u)) reveal(u);
+    else alCargar(function(){ if(!abierto) build(); });
+  });
 })();
