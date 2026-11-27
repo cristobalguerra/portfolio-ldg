@@ -24,3 +24,11 @@ limpia-*.html
 
 # --- Ideario: página en preparación (NO publicar todavía) ---
 ideario/
+
+# --- notas internas y configuración de Firebase (NO publicar; se usan solo en local) ---
+SEGURIDAD-FIREBASE.md
+DESIGN.md
+PRODUCT.md
+database.rules.json
+firebase.json
+.firebaserc
