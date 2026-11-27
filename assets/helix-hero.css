@@ -9,9 +9,10 @@
 .hrh-screw,.hrh-group{position:absolute;left:0;top:0;width:0;height:0;transform-style:preserve-3d}
 .hrh-slice{position:absolute;left:0;top:0;transform-origin:0 0;background-repeat:no-repeat;backface-visibility:hidden}
 .hrh-root .hrh-line{position:absolute;left:0;top:0;white-space:nowrap;font-family:'Archivo',system-ui,sans-serif;font-stretch:62%;font-weight:900;line-height:1;letter-spacing:-.01em;text-transform:uppercase;text-wrap:nowrap}
+.hrh-root .hrh-over{font-stretch:75%;font-weight:800;letter-spacing:0}
 .hrh-ch{display:inline-block}
-.hrh-port{position:absolute;left:0;top:0;overflow:hidden;background:#fff500}
-.hrh-port img{width:100%;height:100%;object-fit:cover}
+.hrh-port{position:absolute;left:0;top:0;overflow:hidden;background:#FFF500}
+.hrh-port img{position:absolute;left:0;top:0;width:100%;height:100%;object-fit:cover}
 .hrh-root:not([data-ready=true]) .hrh-view,.hrh-root:not([data-ready=true]) .hrh-count,.hrh-root:not([data-ready=true]) .hrh-fade{visibility:hidden}
 .hrh-root[data-ready=true] .hrh-ch{animation:hrh-rise .7s cubic-bezier(.2,.75,.2,1) both}
 .hrh-root[data-ready=true] .hrh-port{animation:hrh-port .8s cubic-bezier(.2,.75,.2,1) .32s both}

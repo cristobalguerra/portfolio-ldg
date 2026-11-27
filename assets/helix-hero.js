@@ -45,9 +45,27 @@
     /* ---------- estructura ---------- */
     var linea1 = el('h1', 'hrh-line', letras(cfg.linea1, .08));
     linea1.style.margin = '0';
-    linea1.setAttribute('aria-label', cfg.linea1 + ' ' + cfg.linea2);
+    linea1.setAttribute('aria-label', (cfg.sobre ? cfg.sobre + ' ' : '') + cfg.linea1 + ' ' + cfg.linea2);
     var retrato = el('div', 'hrh-port');
-    var img = new Image(); img.src = cfg.imagen; img.alt = ''; img.draggable = false; retrato.appendChild(img);
+    var formas = (cfg.imagenes && cfg.imagenes.length) ? cfg.imagenes : [cfg.imagen];
+    var caras = formas.map(function (src, i) {
+      var im = new Image(); im.src = src; im.alt = ''; im.draggable = false;
+      if (i) im.style.visibility = 'hidden';
+      retrato.appendChild(im); return im;
+    });
+    /* el recuadro cambia de forma a intervalos irregulares (corte seco, sin repetir la anterior) */
+    if (caras.length > 1 && !(window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches)) {
+      var cara = 0;
+      (function cambia() {
+        setTimeout(function () {
+          var n; do { n = Math.floor(Math.random() * caras.length); } while (n === cara);
+          caras[cara].style.visibility = 'hidden'; caras[n].style.visibility = 'visible'; cara = n;
+          cambia();
+        }, 350 + Math.pow(Math.random(), 2) * 2900);
+      })();
+    }
+    var sobre = el('div', 'hrh-line hrh-over', cfg.sobre ? letras(cfg.sobre, 0) : []);
+    sobre.setAttribute('aria-hidden', 'true');
     var linea2 = el('div', 'hrh-line', letras(cfg.linea2, .3));
     linea2.setAttribute('aria-hidden', 'true');
     var tornillo = el('div', 'hrh-screw');
@@ -61,7 +79,7 @@
     var grupo = el('div', 'hrh-group', [tornillo]);
     grupo.setAttribute('aria-hidden', 'true');
     grupo.style.visibility = 'hidden';
-    var vista = el('div', 'hrh-view', [el('div', 'hrh-scene', [linea1, retrato, linea2, grupo])]);
+    var vista = el('div', 'hrh-view', [el('div', 'hrh-scene', [sobre, linea1, retrato, linea2, grupo])]);
 
     var cuentaTxt = el('span', 'hrh-fade'); cuentaTxt.style.display = 'block'; cuentaTxt.textContent = cfg.cuenta || '';
     var cuenta = el('div', 'hrh-count', [cuentaTxt]);
@@ -134,17 +152,22 @@
       var sangria = a1 * (cfg.sangria == null ? .3 : cfg.sangria);
       var anchoImg = CAP * .8, aire = .06, entre = CAP * .3;   /* aire para los acentos de las mayúsculas */
       var anchoTot = Math.max(a1 + aire + anchoImg, sangria + a2);
-      var altoTot = CAP * 2 + entre;
+      var chica = .2, aireChica = .11;                      /* línea chica: tamaño y separación, en cuerpos del titular */
+      var altoSobre = cfg.sobre ? CAP * chica + aireChica : 0;
+      var altoTot = CAP * 2 + entre + altoSobre;
       var cuerpo = Math.min((movil ? .9 : .8) * W / anchoTot, (movil ? .36 : .47) * H / altoTot);
       var altoLinea = CAP * cuerpo;
       var x0 = -(anchoTot * cuerpo) / 2 + (movil ? 0 : W * .015);
-      var y0 = H * (movil ? -.08 : -.06) - altoTot * cuerpo / 2;
+      var y0 = H * (movil ? -.08 : -.06) - altoTot * cuerpo / 2 + altoSobre * cuerpo;
       var poner = function(n, x, y){
         n.style.fontSize = px(cuerpo / esc);
         n.dataset.x = String(x / esc);
         n.dataset.y = String((y - BASE * cuerpo + altoLinea) / esc);
       };
       poner(linea1, x0, y0);
+      sobre.style.fontSize = px(chica * cuerpo / esc);
+      sobre.dataset.x = String((x0 + .012 * cuerpo) / esc);
+      sobre.dataset.y = String((y0 - altoSobre * cuerpo - (BASE - CAP) * chica * cuerpo) / esc);
       poner(linea2, x0 + sangria * cuerpo, y0 + altoLinea + entre * cuerpo);
       retrato.style.width = px(anchoImg * cuerpo / esc);
       retrato.style.height = px(altoLinea / esc);
@@ -185,6 +208,7 @@
         n.style.opacity = reducido ? String(calma) : (u >= 1 ? '0' : '1');
       };
       titular(linea1, reducido ? 0 : u * viaje);
+      titular(sobre, reducido ? 0 : u * viaje);
       titular(retrato, reducido ? 0 : u * viaje);
       titular(linea2, reducido ? 0 : -u * viaje);
 
