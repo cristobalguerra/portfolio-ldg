@@ -3,12 +3,12 @@
    Sin él, usa data.js y guarda las capturas en este navegador. */
 const CFG = new URLSearchParams(location.search).has('local') ? null : window.SUPABASE || null;
 const LS = 'ldvn-capturas-v1';
-const VACIO = { perfil: {}, entregables: {}, candados: [], academia: {}, acredita: {}, dictamen: {}, liderPropuesto: {}, responsable: {} };
+const VACIO = { perfil: {}, entregables: {}, candados: [], academia: {}, acredita: {}, dictamen: {}, liderPropuesto: {}, responsable: {}, imparte: {}, curso: {}, ejemplos: {}, juntas: [] };
 const LDG = 'LDG 2021', LDVN = 'LDVN 2027';
 const ROLES = { direccion: 'Dirección', lider: 'Líder de academia', profesor: 'Profesor', escolares: 'Servicios Escolares', pendiente: 'Sin rol' };
 
 let D = null, S = structuredClone(VACIO), M = {}, A = {};
-let sb = null, YO = { rol: 'direccion', academia: null, correo: '' };
+let sb = null, YO = { rol: 'direccion', academia: null, correo: '', nombre: '' };
 let USUARIOS = [], INVITACIONES = [];
 
 const $ = id => document.getElementById(id);
@@ -62,6 +62,13 @@ async function cargarRemoto() {
   for (const e of en.data) (S.entregables[e.materia] = S.entregables[e.materia] || []).push({ id: e.id, nombre: e.nombre, competencia: e.competencia });
   S.candados = ca.data;
   for (const r of re.data) S.responsable[r.alerta] = r.responsable;
+  const [im, cu, ej, ju, acu, fi] = await Promise.all([t('imparte'), t('cursos'), t('ejemplos').order('id'), t('juntas').order('fecha'), t('acuerdos').order('id'), t('firmas').order('firmado_en')]);
+  const err2 = [im, cu, ej, ju, acu, fi].find(x => x.error);
+  if (err2) throw err2.error;
+  for (const r of im.data) (S.imparte[r.materia] = S.imparte[r.materia] || []).push({ nombre: r.nombre, correo: r.correo });
+  for (const r of cu.data) S.curso[r.materia] = { cliente: r.cliente, plan: r.plan };
+  for (const r of ej.data) (S.ejemplos[r.materia] = S.ejemplos[r.materia] || []).push(r);
+  S.juntas = ju.data.map(j => ({ ...j, acuerdos: acu.data.filter(a => a.junta === j.id), firmas: fi.data.filter(f => f.junta === j.id) }));
   indexar();
   if (esDireccion()) {
     const [u, i] = await Promise.all([sb.from('usuarios').select('*').order('correo'), sb.from('invitaciones').select('*').order('correo')]);
@@ -175,25 +182,28 @@ function alertas() {
   const veces = {};
   for (const a of D.academias) for (const p of [...a.lider.split(' y '), ...a.apoyo]) (veces[p] = veces[p] || []).push(a.nombre);
   for (const [p, as] of Object.entries(veces)) if (as.length >= 3) add('Academias', `${p} aparece en ${as.length} academias: ${as.join(', ')}`, { id: p });
-  add('Academias', 'Sin carga académica no se puede verificar que cada líder imparta una materia de su academia', { id: 'carga', g: 'fuente' });
+  for (const m of mats(LDG)) if (!(S.imparte[m.clave] || []).length) add('Sin profesor asignado', 'Falta capturar quién la imparte', { clave: m.clave, g: 'capturar' });
   add('Entregables contra perfil de egreso', 'Falta cargar las competencias del perfil de egreso LDVN', { id: 'egreso' });
   add('Candado sin justificar', 'Faltan por cargar los candados del plan 2021', { id: 'c2021', g: 'fuente' });
   return r;
 }
 
 /* ---------- navegación ---------- */
-const VISTAS = { resumen: 'Resumen', equivalencias: 'Equivalencias', malla: 'Malla', academias: 'Academias', alumno: 'Alumno por semestre', alertas: 'Alertas', exportes: 'Exportar', usuarios: 'Usuarios' };
+const VISTAS = { academias: 'Academias', malla: 'Materias', juntas: 'Juntas', resumen: 'Transición', usuarios: 'Usuarios' };
+const SUB = { resumen: 'Resumen', dictamen: 'Continuidad y dictamen', equivalencias: 'Equivalencias', alumno: 'Alumno por semestre', alertas: 'Alertas', exportes: 'Exportar' };
+const SOLO_GESTION = ['resumen'];
 let sel = null, filtroAcad = '', filtroRegla = '', planAlumno = LDVN, planMalla = LDVN;
-const visibles = () => Object.keys(VISTAS).filter(k => k !== 'usuarios' || (sb && esDireccion()));
-const vista = () => (visibles().includes(location.hash.slice(1)) ? location.hash.slice(1) : 'resumen');
+const visibles = () => Object.keys(VISTAS).filter(k => (k !== 'usuarios' || (sb && esDireccion())) && (YO.rol !== 'profesor' || !SOLO_GESTION.includes(k)));
+const vista = () => { const h = location.hash.slice(1); return visibles().includes(h) || (h in SUB && YO.rol !== 'profesor') ? h : 'academias'; };
 
 function pintar() {
   if (!D) return;
   const v = vista(), n = alertas().filter(a => a.grupo === 'decidir').length;
   $('nav').innerHTML = visibles().map(k =>
-    `<a href="#${k}" class="${k === v ? 'activa' : ''}">${VISTAS[k]}${k === 'alertas' && n ? `<span class="cuenta">${n}</span>` : ''}</a>`).join('');
+    `<a href="#${k}" class="${k === v || (k === 'resumen' && v in SUB) ? 'activa' : ''}">${VISTAS[k]}${k === 'resumen' && n ? `<span class="cuenta">${n}</span>` : ''}</a>`).join('');
   $('sesion').innerHTML = sb ? `<span>${esc(YO.correo)} · ${ROLES[YO.rol]}${YO.rol === 'lider' && A[YO.academia] ? ' · ' + esc(A[YO.academia].nombre) : ''}</span><button class="suave mini" onclick="salir()">Salir</button>` : '';
-  $('vista').innerHTML = ({ resumen: vResumen, malla: vMalla, alumno: vAlumno, academias: vAcademias, equivalencias: vEquivalencias, alertas: vAlertas, exportes: vExportes, usuarios: vUsuarios })[v]();
+  const sub = v in SUB ? `<div class="sub">${Object.entries(SUB).map(([k, t]) => `<a href="#${k}" class="${k === v ? 'activa' : ''}">${t}${k === 'alertas' && n ? `<span class="cuenta">${n}</span>` : ''}</a>`).join('')}</div>` : '';
+  $('vista').innerHTML = sub + ({ juntas: vJuntas, resumen: vResumen, malla: vMalla, alumno: vAlumno, academias: vAcademias, dictamen: vDictamen, equivalencias: vEquivalencias, alertas: vAlertas, exportes: vExportes, usuarios: vUsuarios })[v]();
   pintarFicha();
 }
 window.addEventListener('hashchange', pintar);
@@ -225,14 +235,14 @@ function vResumen() {
       ${frac(ms.filter(m => perfil(m.clave).salida.length).length, ms.length)}${frac(ms.filter(m => entregables(m.clave).length).length, ms.length)}<td>${dict}</td></tr>`;
   };
   const sinAcad = vn.filter(m => academiaDe(m) == null);
-  return `<div class="encabezado"><h1>Resumen</h1></div>
+  return `<div class="encabezado"><h1>Transición</h1></div>
   <section class="bloque"><h2>Equivalencias</h2>
     ${conteo(LDG, D.equivalencias.length, [['Directa', n21('Directa')], ['Parcial', n21('Parcial')], ['Sin equivalencia', n21('Sin equivalencia')]])}
     ${conteo(LDVN, vn.length, [['Directa', nvn('Directa'), 'Con antecedente directo'], ['Parcial', nvn('Parcial'), 'Con antecedente parcial'], ['Nueva', nvn('Nueva'), 'Nueva'], ['Pendiente', nvn('Pendiente'), 'Sin medir']])}
   </section>
   <section class="bloque"><h2>Continuidad por academia</h2>
     <table class="compacta"><thead><tr><th>Academia</th><th>Líder</th><th class="num">Materias 2021</th><th>Con espejo en LDVN<span class="escala"><i>0</i><i style="left:60%">60</i><i style="left:100%">100 %</i></span></th><th>Dictamen</th></tr></thead><tbody>
-    ${D.academias.map(a => { const c = continuidad(a.id); return `<tr><td><a href="#academias">${a.id} ${esc(a.nombre)}</a></td><td>${esc(a.lider)}</td><td class="num">${c ? c.n : '—'}</td><td>${barraCont(c)}</td><td class="${S.dictamen[a.id] ? '' : 'gris'}">${S.dictamen[a.id] || 'Por definir'}</td></tr>`; }).join('')}
+    ${D.academias.map(a => { const c = continuidad(a.id); return `<tr><td><a href="#dictamen">${a.id} ${esc(a.nombre)}</a></td><td>${esc(a.lider)}</td><td class="num">${c ? c.n : '—'}</td><td>${barraCont(c)}</td><td class="${S.dictamen[a.id] ? '' : 'gris'}">${S.dictamen[a.id] || 'Por definir'}</td></tr>`; }).join('')}
     </tbody></table></section>
   <div class="dos">
   <section class="bloque"><h2>Por decidir <span class="gris">${decidir.length}</span></h2>
@@ -269,7 +279,7 @@ function vMalla() {
 }
 
 /* ---------- ficha ---------- */
-/* Orden: de dónde viene, qué debe saber al llegar, qué candados lo garantizan, qué logra y qué lo demuestra. */
+/* Orden pensado para quien llega a impartirla: con quién, para qué, qué temas, con qué ejemplos; después lo curricular. */
 function pintarFicha() {
   const f = $('ficha');
   document.body.classList.toggle('con-ficha', !!sel);
@@ -278,10 +288,11 @@ function pintarFicha() {
   const m = M[sel], ac = A[academiaDe(m)], p = perfil(sel), als = alertas().filter(a => a.clave === sel);
   const eqs = m.plan === LDG ? [eqDe(sel)].filter(Boolean) : eqHacia(sel);
   const cs = candados().filter(c => c.a === sel || c.de === sel), sug = sugeridos(m);
-  const edita = puedeMateria(m), prev = edita ? [...new Set(salidasPrevias(m).map(x => x.h))].filter(h => !p.entrada.some(x => norm(x) === norm(h))) : [];
+  const edita = puedeMateria(m), edCurso = puedeCurso(m), cu = curso(sel);
+  const prev = edita ? [...new Set(salidasPrevias(m).map(x => x.h))].filter(h => !p.entrada.some(x => norm(x) === norm(h))) : [];
   const doble = dobles().find(([a]) => a === sel), t = tipoDe(m);
   const notas = k => als.filter(a => a.grupo === k).map(a => `<p class="nota ${k}"><b>${esc(a.regla)}.</b> ${esc(a.texto)}</p>`).join('');
-  const area = (lado, ok, ph) => `<textarea ${no(ok)} placeholder="${ok ? ph : 'Sin capturar'}" onchange="${lado}">`;
+  const area = (accion, ok, ph) => `<textarea ${no(ok)} placeholder="${ok ? ph : 'Sin capturar'}" onchange="${accion}">`;
   f.innerHTML = `<button class="cerrar" onclick="cerrar()" aria-label="Cerrar">×</button>
     <p class="sobre">${m.clave} · ${m.plan}</p><h2>${esc(m.nombre)}</h2>
     <dl class="datos"><div><dt>Semestre</dt><dd>${m.semestre ?? '—'}</dd></div><div><dt>Créditos</dt><dd>${m.creditos ?? '—'}</dd></div><div><dt>Horas</dt><dd>${m.horas ?? '—'}</dd></div></dl>
@@ -289,28 +300,38 @@ function pintarFicha() {
     <h3>Academia</h3>
     ${m.plan === LDVN && esDireccion() ? `<select onchange="setAcademia('${sel}',this.value)">${opcionesAcad(academiaDe(m) ?? '', 'Sin academia')}</select>` : `<p>${ac ? ac.id + ' ' + esc(ac.nombre) : '—'}</p>`}
     ${m.academiaOrigen ? `<p class="chico gris">Propuesta: ${esc(m.academiaOrigen[0].toLowerCase() + m.academiaOrigen.slice(1))}</p>` : ''}
-    ${ac ? `<p class="chico gris">Líder: ${esc(ac.lider)} · Apoyo: ${esc(ac.apoyo.join(', '))}</p>` : ''}
-    <h3>${m.plan === LDG ? 'Equivale en LDVN' : 'Antecedente en LDG 2021'}</h3>
-    ${eqs.length ? eqs.map(e => { const o = m.plan === LDG ? e.a : e.de; return `<div class="eq"><p><span class="tipo ${claseTipo(e.tipo)}">${e.tipo}</span>${e.total ? ` ${tira(e.cubiertas, e.total)} <span class="gris">${e.cubiertas} de ${e.total} unidades</span>` : ''}</p>
-      ${o ? `<p>${o} ${enlaceMat(o)}</p>` : ''}<p class="chico">${esc(e.evidencia)}</p>${e.pendiente ? `<p class="chico gris">${esc(e.pendiente)}</p>` : ''}</div>`; }).join('')
-      : `<p><span class="tipo ${claseTipo(t)}">${t === 'Pendiente' ? 'Sin medir' : t}</span></p><p class="chico gris">${esc(D.sinMedir[sel] || 'Sin antecedente en el plan 2021')}</p>`}
-    ${doble ? `<div class="campo"><span>Acredita</span><select ${no(esDireccion())} onchange="setAcredita('${sel}',this.value)"><option value="">Por decidir</option>${doble[1].map(c => `<option ${S.acredita[sel] === c ? 'selected' : ''}>${c}</option>`).join('')}<option ${S.acredita[sel] === 'Ambas' ? 'selected' : ''}>Ambas</option></select></div>` : ''}
+    ${ac ? `${ac.lider.split(' y ').map(l => `<div class="persona">${retrato(l, 'mini')}<span><b>${esc(l)}</b><span class="clave">Líder de academia</span></span></div>`).join('')}<p class="chico gris">Apoyo: ${esc(ac.apoyo.join(', '))}</p>` : ''}
+    <h3>Quién la imparte</h3>
+    ${edita ? `${area('setImparte(this.value)', true, 'Nombre | correo, una persona por línea')}${esc(imparten(sel).map(x => (x.nombre ? x.nombre + ' | ' : '') + x.correo).join('\n'))}</textarea>`
+      : imparten(sel).length ? `<ul class="simple">${imparten(sel).map(x => `<li>${esc(x.nombre || x.correo)}${x.nombre ? ` <span class="gris">${esc(x.correo)}</span>` : ''}</li>`).join('')}</ul>` : '<p class="gris">Sin asignar</p>'}
+    <h3>Objetivo</h3><p>${esc(m.objetivo)}</p>
+    <h3>Temas</h3><ol>${m.unidades.map(u => `<li>${esc(u)}</li>`).join('')}</ol>
+    <h3>Plan de clase</h3>
+    ${area("setCurso('plan',this.value)", edCurso, 'Cómo se trabaja cada tema este periodo')}${esc(cu.plan)}</textarea>
+    <div class="campo"><span>Cliente o colaboración</span><input type="text" ${no(edCurso)} placeholder="${edCurso ? 'Con quién se trabaja este periodo' : 'Ninguno'}" value="${esc(cu.cliente)}" onchange="setCurso('cliente',this.value)"></div>
+    <h3>Ejemplos</h3>
+    ${ejemplos(sel).length ? `<ul class="simple">${ejemplos(sel).map(e => `<li><a href="${esc(e.url)}" target="_blank" rel="noopener">${esc(e.titulo)}</a>${edCurso ? ` <button class="suave mini" onclick="quitarEjemplo(${e.id})">Quitar</button>` : ''}</li>`).join('')}</ul>` : '<p class="gris">Ninguno</p>'}
+    ${edCurso ? `<form class="alta" style="margin:8px 0 0" onsubmit="addEjemplo(event)"><input type="text" name="titulo" required placeholder="Título" style="flex:1;min-width:120px"><input type="text" name="url" required placeholder="Liga" style="flex:1;min-width:120px"><button class="suave">Agregar</button></form>` : ''}
+    <h3>Entregables</h3>
+    ${area('capEntregables(this.value)', puedeEntregables(m), 'Entregable | competencia que evidencia')}${esc(entregables(sel).map(e => e.nombre + (e.competencia ? ' | ' + e.competencia : '')).join('\n'))}</textarea>
+    <details class="mas" ${fichaMas ? 'open' : ''} ontoggle="fichaMas=this.open"><summary>Plan de estudios</summary>
     <h3>Perfil de entrada</h3>
     ${area("capPerfil('entrada',this.value)", edita, 'Una habilidad por línea')}${esc(p.entrada.join('\n'))}</textarea>
     ${prev.length ? `<p class="chico gris" style="margin-top:8px">Lo entregan materias previas:</p><div class="fichas-hab">${prev.map(h => `<button class="suave mini" onclick="capPerfil('entrada',perfil(sel).entrada.concat(this.textContent).join('\\n'))">${esc(h)}</button>`).join('')}</div>` : ''}
+    <h3>Perfil de salida</h3>
+    ${area("capPerfil('salida',this.value)", edita, 'Una habilidad por línea')}${esc(p.salida.join('\n'))}</textarea>
     <h3>Candados</h3>
     ${cs.length || sug.length ? '' : '<p class="gris">Ninguno</p>'}
     ${cs.map(c => `<div class="eq"><p><b>${c.de} → ${c.a}</b> <span class="gris">${c.tipo} · ${c.origen}${c.fuente ? ' · ' + esc(c.fuente) : ''}</span></p>
       <div class="campo"><span>Habilidad que lo justifica</span><input type="text" ${no(puedeMateria(M[c.a]))} value="${esc(c.habilidad)}" onchange="capHabilidad('${c.de}','${c.a}',this.value)"></div>
       ${c.origen === 'Sugerido' && puedeMateria(M[c.a]) ? `<button class="suave mini" onclick="quitarCandado('${c.de}','${c.a}')">Quitar</button>` : ''}</div>`).join('')}
     ${sug.map(s => `<div class="eq"><p><b>${s.de} → ${s.a}</b> <span class="gris">Sugerido: pide «${esc(s.habilidad)}»</span></p>${edita ? `<button class="mini" onclick="aceptarCandado('${s.de}','${s.a}',this.dataset.h)" data-h="${esc(s.habilidad)}">Aceptar como recomendación</button>` : ''}</div>`).join('')}
-    <h3>Perfil de salida</h3>
-    ${area("capPerfil('salida',this.value)", edita, 'Una habilidad por línea')}${esc(p.salida.join('\n'))}</textarea>
-    <h3>Entregables</h3>
-    ${area('capEntregables(this.value)', puedeEntregables(m), 'Entregable | competencia que evidencia')}${esc(entregables(sel).map(e => e.nombre + (e.competencia ? ' | ' + e.competencia : '')).join('\n'))}</textarea>
-    <h3>Objetivo</h3><p class="chico">${esc(m.objetivo)}</p>
-    <h3>Unidades temáticas</h3><ol class="chico">${m.unidades.map(u => `<li>${esc(u)}</li>`).join('')}</ol>
-    ${m.fuente || notas('fuente') ? `<h3>Fuente</h3>${m.fuente ? `<p><a href="${esc(m.fuente)}" target="_blank" rel="noopener">${m.plan === LDG ? 'Plan analítico 2021' : 'Programa LDVN'} en Drive</a></p>` : ''}${notas('fuente')}` : ''}`;
+    <h3>${m.plan === LDG ? 'Equivale en LDVN' : 'Antecedente en LDG 2021'}</h3>
+    ${eqs.length ? eqs.map(e => { const o = m.plan === LDG ? e.a : e.de; return `<div class="eq"><p><span class="tipo ${claseTipo(e.tipo)}">${e.tipo}</span>${e.total ? ` ${tira(e.cubiertas, e.total)} <span class="gris">${e.cubiertas} de ${e.total} unidades</span>` : ''}</p>
+      ${o ? `<p>${o} ${enlaceMat(o)}</p>` : ''}<p class="chico">${esc(e.evidencia)}</p>${e.pendiente ? `<p class="chico gris">${esc(e.pendiente)}</p>` : ''}</div>`; }).join('')
+      : `<p><span class="tipo ${claseTipo(t)}">${t === 'Pendiente' ? 'Sin medir' : t}</span></p><p class="chico gris">${esc(D.sinMedir[sel] || 'Sin antecedente en el plan 2021')}</p>`}
+    ${doble ? `<div class="campo"><span>Acredita</span><select ${no(esDireccion())} onchange="setAcredita('${sel}',this.value)"><option value="">Por decidir</option>${doble[1].map(c => `<option ${S.acredita[sel] === c ? 'selected' : ''}>${c}</option>`).join('')}<option ${S.acredita[sel] === 'Ambas' ? 'selected' : ''}>Ambas</option></select></div>` : ''}
+    ${m.fuente || notas('fuente') ? `<h3>Fuente</h3>${m.fuente ? `<p><a href="${esc(m.fuente)}" target="_blank" rel="noopener">${m.plan === LDG ? 'Plan analítico 2021' : 'Programa LDVN'} en Drive</a></p>` : ''}${notas('fuente')}` : ''}</details>`;
 }
 
 /* ---------- capturas ---------- */
@@ -360,6 +381,174 @@ function quitarCandado(de, a) {
   guardar(sb && sb.from('candados').delete().eq('de', de).eq('a', a)); pintar();
 }
 
+/* ---------- equipo: quién imparte, curso y ejemplos ---------- */
+const imparten = c => S.imparte[c] || [];
+const imparto = c => !!YO.correo && imparten(c).some(p => p.correo === YO.correo);
+const puedeCurso = m => puedeMateria(m) || (YO.rol === 'profesor' && imparto(m.clave));
+const curso = c => S.curso[c] || { cliente: '', plan: '' };
+const ejemplos = c => S.ejemplos[c] || [];
+const fecha = (f, hora = true) => new Date(f).toLocaleString('es-MX', hora ? { dateStyle: 'medium', timeStyle: 'short' } : { dateStyle: 'medium' });
+
+/* crea una fila y devuelve la que quedó guardada (con su id) */
+async function crear(tabla, fila) {
+  if (!sb) { const r = { ...fila, id: Date.now() }; return r; }
+  const { data, error } = await sb.from(tabla).insert(fila).select().single();
+  if (error) { aviso('No se guardó: ' + error.message); return null; }
+  return data;
+}
+async function setImparte(texto) {
+  const c = sel, filas = lineas(texto), lista = [];
+  for (const l of filas) {
+    const partes = l.split('|').map(x => x.trim()), correo = partes.find(x => x.includes('@'));
+    if (!correo) { aviso('Cada persona necesita correo: Nombre | correo'); return pintar(); }
+    lista.push({ nombre: partes.find(x => !x.includes('@')) || '', correo: correo.toLowerCase() });
+  }
+  S.imparte[c] = lista;
+  if (sb) {
+    await guardar(sb.from('imparte').delete().eq('materia', c));
+    if (lista.length) await guardar(sb.from('imparte').insert(lista.map(p => ({ materia: c, ...p }))));
+  } else guardar();
+  pintar();
+}
+function setCurso(campo, v) {
+  S.curso[sel] = { ...curso(sel), [campo]: v.trim() };
+  guardar(sb && sb.from('cursos').upsert({ materia: sel, ...S.curso[sel] })); pintar();
+}
+async function addEjemplo(ev) {
+  ev.preventDefault();
+  const f = ev.target, url = f.url.value.trim();
+  if (!/^https?:\/\//i.test(url)) return aviso('La liga debe empezar con https://');
+  const fila = await crear('ejemplos', { materia: sel, titulo: f.titulo.value.trim(), url });
+  if (fila) { (S.ejemplos[sel] = ejemplos(sel)).push(fila); guardar(); }
+  pintar();
+}
+function quitarEjemplo(id) {
+  S.ejemplos[sel] = ejemplos(sel).filter(e => e.id !== id);
+  guardar(sb && sb.from('ejemplos').delete().eq('id', id)); pintar();
+}
+
+/* ---------- matriz de academias ---------- */
+/* Fotos: las mismas del directorio del CRGS que ya usa el sitio (assets/profes). */
+const FOTOS = (/^(localhost|127\.)/.test(location.hostname) ? 'https://portfolioldg.com' : '') + '/assets/profes/';
+const FOTO = [['ceballos', 'natalia-ceballos'], ['trujillo', 'sergio-trujillo'], ['garrido', 'marco-garrido'], ['angulo', 'rolando-angulo'], ['delgado de robles', 'carlos-delgado'],
+  ['mateos', 'fernando-mateos'], ['moreno guzm', 'iliana-moreno'], ['guerra tamez', 'cristobal-guerra'], ['garcia hern', 'mariel-garcia'], ['guizar', 'eduardo-guizar']];
+const retrato = (nombre, cls = '') => {
+  const n = norm(nombre), f = FOTO.find(([k]) => n.includes(k));
+  return f ? `<img class="retrato ${cls}" src="${FOTOS}${f[1]}.jpg" alt="" loading="lazy">` : `<span class="retrato sin ${cls}">${esc(nombre.split(/\s+/).slice(0, 2).map(x => x[0]).join(''))}</span>`;
+};
+let planMatriz = LDG;
+function vAcademias() {
+  const op = (v, t) => `<button class="${planMatriz === v ? 'on' : ''}" onclick="planMatriz='${v}';pintar()">${t}</button>`;
+  return `<div class="encabezado"><h1>Academias</h1><div class="segmento">${op(LDG, 'Plan 2021')}${op(LDVN, 'LDVN 2027')}</div></div>
+  <div class="matriz">${D.academias.map(a => {
+    const ms = mats(planMatriz).filter(m => academiaDe(m) === a.id), ls = a.lider.split(' y ');
+    return `<article class="celda"><div class="fotos">${ls.map(l => retrato(l)).join('')}</div>
+      <h2>${esc(a.nombre)}</h2><p class="lider">${ls.map(esc).join('<br>')}</p>
+      ${a.apoyo.length ? `<p class="chico gris">Apoyo: ${esc(a.apoyo.join(', '))}</p>` : ''}
+      ${ms.length ? `<ul class="simple chico">${ms.map(m => `<li>${enlaceMat(m.clave)}</li>`).join('')}</ul>` : ''}</article>`;
+  }).join('')}</div>`;
+}
+
+/* ---------- juntas, minutas y firmas ---------- */
+let selJunta = null, fichaMas = false;
+const estadoJunta = j => (j.cerrada ? `Cerrada · ${j.firmas.length} ${j.firmas.length === 1 ? 'firma' : 'firmas'}` : j.minuta || j.acuerdos.length ? 'Minuta en borrador' : 'Convocada');
+const puedeConvocar = () => esDireccion() || YO.rol === 'lider';
+const puedeMinuta = j => !j.cerrada && ['direccion', 'lider', 'profesor'].includes(YO.rol);
+const puedeReabrir = j => esDireccion() || (YO.rol === 'lider' && j.academia_id === YO.academia);
+const juntaSel = () => S.juntas.find(j => j.id === selJunta);
+
+async function convocar(ev) {
+  ev.preventDefault();
+  const f = ev.target, fila = { titulo: f.titulo.value.trim(), fecha: new Date(f.fecha.value).toISOString(), lugar: f.lugar.value.trim(), academia_id: f.academia.value === '' ? null : +f.academia.value };
+  const j = await crear('juntas', fila);
+  if (j) { S.juntas.push({ minuta: '', minuta_por: null, archivo_url: '', cerrada: false, convocada_por: YO.correo, ...j, acuerdos: [], firmas: [] }); guardar(); selJunta = j.id; }
+  pintar();
+}
+function setJunta(campo, v) {
+  const j = juntaSel(), cambio = { [campo]: v };
+  if (campo === 'minuta') cambio.minuta_por = YO.correo || null;
+  if (campo === 'cerrada' && !v) j.firmas = [];
+  Object.assign(j, cambio);
+  guardar(sb && sb.from('juntas').update(cambio).eq('id', j.id)); pintar();
+}
+function cancelarJunta() {
+  const id = selJunta; S.juntas = S.juntas.filter(j => j.id !== id); selJunta = null;
+  guardar(sb && sb.from('juntas').delete().eq('id', id)); pintar();
+}
+async function addAcuerdo(ev) {
+  ev.preventDefault();
+  const f = ev.target, j = juntaSel();
+  const a = await crear('acuerdos', { junta: j.id, texto: f.texto.value.trim(), responsable: f.responsable.value.trim(), fecha_limite: f.limite.value || null });
+  if (a) { j.acuerdos.push({ hecho: false, ...a }); guardar(); }
+  pintar();
+}
+function setAcuerdo(id, hecho) {
+  juntaSel().acuerdos.find(a => a.id === id).hecho = hecho;
+  guardar(sb && sb.from('acuerdos').update({ hecho }).eq('id', id)); pintar();
+}
+function quitarAcuerdo(id) {
+  const j = juntaSel(); j.acuerdos = j.acuerdos.filter(a => a.id !== id);
+  guardar(sb && sb.from('acuerdos').delete().eq('id', id)); pintar();
+}
+async function firmar() {
+  const j = juntaSel(), f = { junta: j.id, nombre: YO.nombre || '' };
+  if (sb) {
+    const { data, error } = await sb.from('firmas').insert(f).select().single();
+    if (error) return aviso('No se guardó: ' + error.message);
+    j.firmas.push(data);
+  } else { j.firmas.push({ ...f, correo: YO.correo, firmado_en: new Date().toISOString() }); guardar(); }
+  pintar();
+}
+
+function vJuntas() {
+  const j = juntaSel();
+  if (j) return vJunta(j);
+  const acad = x => (x.academia_id == null ? 'General' : `${x.academia_id} ${esc(A[x.academia_id].nombre)}`);
+  const orden = [...S.juntas].sort((a, b) => b.fecha.localeCompare(a.fecha));
+  const soloMia = YO.rol === 'lider';
+  return `<div class="encabezado"><h1>Juntas</h1></div>
+  ${puedeConvocar() ? `<form class="alta" onsubmit="convocar(event)"><input type="text" name="titulo" required placeholder="Asunto de la junta">
+    <input type="datetime-local" name="fecha" required><input type="text" name="lugar" placeholder="Lugar o liga">
+    <select name="academia">${soloMia ? `<option value="${YO.academia}">${YO.academia} ${esc(A[YO.academia]?.nombre || '')}</option>` : opcionesAcad('', 'General')}</select><button>Convocar</button></form>` : ''}
+  ${orden.length ? `<table><thead><tr><th>Fecha</th><th>Junta</th><th>Academia</th><th>Estado</th><th class="num">Acuerdos</th></tr></thead><tbody>
+    ${orden.map(x => `<tr class="fila" onclick="selJunta=${x.id};pintar()"><td class="num" style="text-align:left">${fecha(x.fecha)}</td><td><b>${esc(x.titulo)}</b>${x.lugar ? `<span class="clave">${esc(x.lugar)}</span>` : ''}</td><td>${acad(x)}</td><td>${estadoJunta(x)}</td><td class="num">${x.acuerdos.length}</td></tr>`).join('')}
+    </tbody></table>` : '<p class="gris">Ninguna junta registrada</p>'}
+  ${(() => {
+    const firma = YO.rol !== 'escolares' ? S.juntas.filter(x => x.cerrada && !x.firmas.some(f => f.correo === YO.correo)) : [];
+    const abiertos = S.juntas.filter(x => x.cerrada).flatMap(x => x.acuerdos.filter(a => !a.hecho).map(a => ({ ...a, x })));
+    const liga = x => `<a href="javascript:void 0" onclick="selJunta=${x.id};pintar()">${esc(x.titulo)}</a>`;
+    return `<div class="dos" style="margin-top:36px">
+      ${firma.length ? `<section class="bloque"><h2>Por firmar <span class="gris">${firma.length}</span></h2><ul class="lista">${firma.map(x => `<li>${liga(x)}<span class="clave">${fecha(x.fecha, false)}</span></li>`).join('')}</ul></section>` : ''}
+      ${abiertos.length ? `<section class="bloque"><h2>Acuerdos abiertos <span class="gris">${abiertos.length}</span></h2><ul class="lista">${abiertos.map(a => `<li>${esc(a.texto)}<span class="clave">${a.responsable ? esc(a.responsable) + ' · ' : ''}${a.fecha_limite ? 'para el ' + fecha(a.fecha_limite + 'T12:00', false) + ' · ' : ''}${liga(a.x)}</span></li>`).join('')}</ul></section>` : ''}</div>`;
+  })()}`;
+}
+function vJunta(j) {
+  const abre = puedeMinuta(j), firme = j.firmas.some(f => f.correo === YO.correo);
+  return `<p class="volver"><a href="javascript:void 0" onclick="selJunta=null;pintar()">← Juntas</a></p>
+  <div class="encabezado"><h1>${esc(j.titulo)}</h1><span class="gris">${estadoJunta(j)}</span></div>
+  <dl class="datos"><div><dt>Fecha</dt><dd>${fecha(j.fecha)}</dd></div><div><dt>Academia</dt><dd>${j.academia_id == null ? 'General' : esc(A[j.academia_id].nombre)}</dd></div>
+    ${j.lugar ? `<div><dt>Lugar</dt><dd>${esc(j.lugar)}</dd></div>` : ''}${j.convocada_por ? `<div><dt>Convoca</dt><dd>${esc(j.convocada_por)}</dd></div>` : ''}</dl>
+  <div class="dos" style="margin-top:28px">
+  <section class="bloque"><h2>Minuta ${j.minuta_por ? `<span class="gris">${esc(j.minuta_por)}</span>` : ''}</h2>
+    <textarea class="minuta" ${no(abre)} placeholder="${abre ? 'Lo que se trató' : 'Sin minuta'}" onchange="setJunta('minuta',this.value)">${esc(j.minuta)}</textarea>
+    <div class="campo"><span>Archivo o acta</span>${abre ? `<input type="text" placeholder="Liga a Drive" value="${esc(j.archivo_url)}" onchange="setJunta('archivo_url',this.value.trim())">` : j.archivo_url ? `<a href="${esc(j.archivo_url)}" target="_blank" rel="noopener">Abrir</a>` : '<span class="gris">—</span>'}</div>
+    <div class="controles" style="margin-top:18px">
+      ${abre ? `<button onclick="setJunta('cerrada',true)">Cerrar minuta para firma</button>` : ''}
+      ${j.cerrada && puedeReabrir(j) ? `<button class="suave" onclick="setJunta('cerrada',false)">Reabrir</button>` : ''}
+      ${!j.cerrada && puedeReabrir(j) ? `<button class="suave" onclick="cancelarJunta()">Cancelar junta</button>` : ''}
+    </div>
+  </section>
+  <section class="bloque"><h2>Acuerdos <span class="gris">${j.acuerdos.length}</span></h2>
+    ${j.acuerdos.length ? `<table class="compacta"><tbody>${j.acuerdos.map(a => `<tr><td style="width:28px"><input type="checkbox" ${a.hecho ? 'checked' : ''} ${no(abre || puedeReabrir(j) || YO.rol === 'lider')} onchange="setAcuerdo(${a.id},this.checked)" aria-label="Cumplido"></td>
+      <td class="${a.hecho ? 'hecho' : ''}">${esc(a.texto)}<span class="clave">${a.responsable ? esc(a.responsable) : 'Sin responsable'}${a.fecha_limite ? ' · para el ' + fecha(a.fecha_limite + 'T12:00', false) : ''}</span></td>
+      <td class="num">${abre ? `<button class="suave mini" onclick="quitarAcuerdo(${a.id})">Quitar</button>` : ''}</td></tr>`).join('')}</tbody></table>` : '<p class="gris">Ninguno</p>'}
+    ${abre ? `<form class="alta" style="margin-top:14px" onsubmit="addAcuerdo(event)"><input type="text" name="texto" required placeholder="Acuerdo" style="flex:1"><input type="text" name="responsable" placeholder="Responsable"><input type="date" name="limite" aria-label="Fecha límite"><button>Agregar</button></form>` : ''}
+    ${j.cerrada ? `<h2 style="margin-top:28px">Firmas <span class="gris">${j.firmas.length}</span></h2>
+      ${j.firmas.length ? `<ul class="lista">${j.firmas.map(f => `<li>${esc(f.nombre || f.correo || '')}<span class="clave">${f.nombre ? esc(f.correo || '') + ' · ' : ''}${fecha(f.firmado_en)}</span></li>`).join('')}</ul>` : '<p class="gris">Nadie ha firmado</p>'}
+      ${!firme && YO.rol !== 'escolares' ? `<button style="margin-top:14px" onclick="firmar()">Firmar minuta</button>` : ''}` : ''}
+  </section></div>`;
+}
+
 /* ---------- alumno por semestre ---------- */
 function vAlumno() {
   const ms = mats(planAlumno).filter(m => m.semestre != null), sems = [...new Set(ms.map(m => m.semestre))].sort((a, b) => a - b);
@@ -379,9 +568,9 @@ function vAlumno() {
 /* ---------- academias ---------- */
 const DICTAMENES = ['Se mantiene', 'Se fusiona', 'Se redefine', 'Nueva'];
 const abiertas = new Set();
-function vAcademias() {
+function vDictamen() {
   const dec = alertas().filter(a => a.grupo === 'decidir');
-  return `<div class="encabezado"><h1>Academias</h1></div>
+  return `<div class="encabezado"><h1>Continuidad y dictamen</h1></div>
   <div class="acads"><div class="acad-cab"><span>Academia</span><span>Líder</span><span>Materias 2021</span><span>Con espejo en LDVN<span class="escala"><i>0</i><i style="left:60%">60</i><i style="left:100%">100 %</i></span></span><span>Dictamen</span></div>` + D.academias.map(a => {
     const c = continuidad(a.id), m21 = mats(LDG).filter(m => m.academia === a.id), mvn = mats(LDVN).filter(m => academiaDe(m) === a.id);
     const conEq = new Set(m21.map(m => eqDe(m.clave)?.a).filter(Boolean)), suma = mvn.filter(m => !conEq.has(m.clave)), n = dec.filter(x => x.academia === a.id).length;
@@ -394,7 +583,7 @@ function vAcademias() {
           ${m21.map(m => { const e = eqDe(m.clave); return `<tr><td>${m.clave} ${enlaceMat(m.clave)}</td><td><span class="tipo ${claseTipo(e.tipo)}">${e.tipo}</span> ${tira(e.cubiertas, e.total)}</td><td>${e.a ? `${e.a} ${enlaceMat(e.a)}` : '<span class="gris">—</span>'}</td></tr>`; }).join('')}
           ${suma.map(m => `<tr><td><span class="gris">—</span></td><td><span class="tipo ${claseTipo(tipoDe(m))}">${tipoDe(m) === 'Pendiente' ? 'Sin medir' : tipoDe(m)}</span></td><td>${m.clave} ${enlaceMat(m.clave)}</td></tr>`).join('')}
           </tbody></table>` : '<p class="gris">Sin materias cargadas</p>'}</div>
-        <div><p class="chico gris">Apoyo: ${esc(a.apoyo.join(', '))}</p><p class="chico" style="margin-top:8px">${esc(a.lectura)}</p>
+        <div><p class="chico gris">Apoyo: ${esc(a.apoyo.join(', '))}</p>${(eq => eq.length ? `<p class="chico gris">Imparten: ${esc(eq.join(', '))}</p>` : '')([...new Set([...m21, ...mvn].flatMap(m => (S.imparte[m.clave] || []).map(x => x.nombre || x.correo)))])}<p class="chico" style="margin-top:8px">${esc(a.lectura)}</p>
           <div class="campo"><span>Dictamen</span><select ${no(esDireccion())} onchange="setDictamen(${a.id},this.value)"><option value="">Por definir</option>${DICTAMENES.map(d => `<option ${S.dictamen[a.id] === d ? 'selected' : ''}>${d}</option>`).join('')}</select></div>
           <div class="campo"><span>Líder propuesto</span><input type="text" ${no(esDireccion())} placeholder="Por definir" value="${esc(S.liderPropuesto[a.id] || '')}" onchange="setLiderPropuesto(${a.id},this.value)"></div>
           ${n ? `<p class="chico" style="margin-top:12px"><a href="#alertas" onclick="filtroGrupo='decidir';filtroRegla=''" class="pend">${n} por decidir</a></p>` : ''}</div>
@@ -518,7 +707,7 @@ async function salir() { await sb.auth.signOut(); }
 async function entrar(sesion) {
   if (!sesion) { D = null; sel = null; $('ficha').hidden = true; document.body.classList.remove('con-ficha'); return pedirAcceso(RECHAZO); }
   const { data } = await sb.from('usuarios').select('rol, academia_id').eq('id', sesion.user.id).maybeSingle();
-  YO = { rol: data?.rol || 'pendiente', academia: data?.academia_id ?? null, correo: sesion.user.email };
+  YO = { rol: data?.rol || 'pendiente', academia: data?.academia_id ?? null, correo: sesion.user.email, nombre: sesion.user.user_metadata?.full_name || '' };
   if (YO.rol === 'pendiente') return puerta(`<h1>Acceso</h1><p>${esc(YO.correo)} no está en la lista de acceso. Pídelo a la Dirección de programa.</p><button class="suave" onclick="salir()">Salir</button>`);
   try { await cargarRemoto(); pintar(); } catch (e) { puerta(`<h1>Sin conexión con la base</h1><p class="gris">${esc(e.message)}</p>`); }
 }
