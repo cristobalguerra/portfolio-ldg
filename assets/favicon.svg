@@ -1,6 +1,6 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-label="LDG UDEM">
-  <circle cx="32" cy="32" r="32" fill="#1B1612"/>
-  <text x="32" y="47.5" text-anchor="middle"
-        font-family="'Arial Black','Helvetica Neue',Impact,sans-serif"
-        font-weight="900" font-size="46" fill="#FFE000">G</text>
+  <circle cx="32" cy="32" r="32" fill="#0C0C0C"/>
+  <path d="M6 32C14 19 23 14 32 14s18 5 26 18c-8 13-17 18-26 18S14 45 6 32Z" fill="#FFF500"/>
+  <circle cx="32" cy="32" r="11" fill="#0C0C0C"/>
+  <circle cx="36" cy="28" r="3.4" fill="#FFF500"/>
 </svg>
