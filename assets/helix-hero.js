@@ -176,7 +176,7 @@
 
       var yFin = y0 + altoLinea * 2 + entre * cuerpo;
       cuenta.style.left = px(W / 2 + x0);
-      cuenta.style.top = movil ? px(H / 2 + yFin + 22) : px(H / 2 + yFin - cuenta.offsetHeight);
+      cuenta.style.top = px(H / 2 + yFin + Math.max(18, altoLinea * .16));   /* siempre debajo del titular, nunca a su lado */
 
       /* retícula final */
       var cols = movil ? 2 : 3, gx = movil ? 12 : Math.round(g * .9), gy = movil ? 22 : Math.round(g * 1.2), altoPie = 22;
