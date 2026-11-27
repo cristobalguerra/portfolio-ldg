@@ -167,3 +167,10 @@ h1{font-family:var(--disp);font-stretch:62%;font-weight:900;text-transform:upper
 .tr-role,.tr-kicker,.cta-status,.hint{line-height:1.45}
 
 h2{line-height:.92}
+
+/* ---------- marca: logotipo LDG UDEM ---------- */
+.nav{padding-block:12px}
+.nav.scrolled{padding-block:12px}
+.nav .brand{display:block;line-height:0}
+.nav .brand img,.gate-mark img{display:block;height:36px;width:auto}
+@media(max-width:760px){.nav .brand img{height:32px}}

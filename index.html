@@ -303,14 +303,16 @@ footer nav{display:flex;flex-wrap:wrap;gap:20px}
 footer nav a{letter-spacing:.1em;text-transform:uppercase;font-size:11px;font-weight:700}
 footer nav a:hover{color:var(--ink)}
 </style>
+<link rel="preload" href="LDVN/img/portada.jpg" as="image">
 <link rel="preload" href="assets/fonts/NewJune-Bold.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="preload" href="assets/fonts/NewJune-Regular.woff2" as="font" type="font/woff2" crossorigin>
-<link rel="stylesheet" href="assets/ldvn.css?v=20261126a">
+<link rel="stylesheet" href="assets/helix-hero.css?v=20261127a">
+<link rel="stylesheet" href="assets/ldvn.css?v=20261127a">
 </head>
 <body>
 
 <header class="nav">
-  <a class="brand" href="index.html">LDG·UDEM<span class="b-arrow" aria-hidden="true"><svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="square" focusable="false"><path d="M2 2l8 8"/><path d="M10 4.6V10H4.6"/></svg></span></a>
+  <a class="brand" href="index.html"><img src="assets/ldg-udem.png" alt="LDG UDEM" width="61" height="36"></a>
   <button class="menu-btn" type="button" aria-expanded="false" aria-controls="site-menu">Menú<span class="tick" aria-hidden="true"></span></button>
   <nav id="site-menu" aria-label="Principal">
     <ul>
@@ -323,32 +325,20 @@ footer nav a:hover{color:var(--ink)}
   </nav>
 </header>
 
-<!-- HERO -->
-<section class="hero">
-  <div class="hero-fx" aria-hidden="true"><img src="assets/inicio-hero-bg.jpg" alt="" fetchpriority="high"></div>
-  <div class="udem-tag"><img src="assets/udem-tag.png" alt="UDEM"></div>
-  <p class="label">Licenciatura en Diseño Gráfico</p>
-  <svg class="gooey-defs" aria-hidden="true" focusable="false">
-    <defs>
-      <filter id="threshold">
-        <feColorMatrix in="SourceGraphic" type="matrix"
-          values="1 0 0 0 0
-                  0 1 0 0 0
-                  0 0 1 0 0
-                  0 0 0 255 -140"/>
-      </filter>
-    </defs>
-  </svg>
-  <h1 class="display" aria-label="Diseñamos marcas, interfaces, experiencias, contenido, historias, sistemas, futuros y comunidades">
-    <span aria-hidden="true">Diseñamos</span>
-    <span class="rot" id="gooey" aria-hidden="true">
-      <span class="gt gt1">comunidades</span>
-      <span class="gt gt2">marcas</span>
-    </span>
-  </h1>
-  <p class="label inst">Universidad de Monterrey</p>
-  <p class="hint" aria-hidden="true">Desplázate</p>
-</section>
+<!-- HERO · hélice -->
+<section id="helice" aria-label="Diseño Gráfico"></section>
+<script src="assets/helix-hero.js?v=20261127a"></script>
+<script>
+  HelixHero(document.getElementById('helice'), {
+    linea1: 'Diseño', linea2: 'Gráfico', sangria: .34,
+    imagen: 'assets/inicio-hero-bg.jpg',
+    proyectos: [{"src": "proyectos/thumbnails/biodiseo.jpg", "titulo": "Biodiseño Gráfico"}, {"src": "proyectos/thumbnails/ellaz.jpg", "titulo": "Estándares de la Belleza Femenina"}, {"src": "proyectos/thumbnails/alteria.jpg", "titulo": "Alteria: Diseño Multisensorial"}, {"src": "proyectos/thumbnails/tefaltabarrio_9.jpg", "titulo": "Te Falta Barrio"}, {"src": "proyectos/thumbnails/antera.jpg", "titulo": "Antera: Floriografía Mexicana"}, {"src": "proyectos/thumbnails/verdad-en-juego.jpg", "titulo": "Verdad en Juego"}, {"src": "proyectos/thumbnails/mediante.jpg", "titulo": ""}, {"src": "proyectos/thumbnails/nodus.jpg", "titulo": ""}, {"src": "proyectos/thumbnails/rave.jpg", "titulo": ""}, {"src": "proyectos/thumbnails/tulan.jpg", "titulo": ""}, {"src": "proyectos/thumbnails/turnout.jpg", "titulo": ""}, {"src": "proyectos/thumbnails/kinua11.jpg", "titulo": ""}],
+    cuenta: '( 18 proyectos )',
+    pie: 'Licenciatura en Diseño Gráfico · Universidad de Monterrey',
+    pista: 'Desplázate',
+    navAlto: 60
+  });
+</script>
 
 <!-- STATEMENT -->
 <div class="statement wrap">
@@ -358,33 +348,6 @@ footer nav a:hover{color:var(--ink)}
 
 <!-- PROYECTOS -->
 <section class="wrap" id="proyectos">
-  <div class="sec-head rv"><span class="label">Proyectos</span></div>
-  <div class="works">
-    <a class="work rv" href="showcase.html#p-16">
-      <figure><div class="ph"><img src="proyectos/thumbnails/biodiseo.jpg" alt="Biodiseño Gráfico — gráfica regenerativa co-creada con raíces vivas" loading="lazy"></div>
-      <figcaption><div><h3>Biodiseño Gráfico</h3><span class="who">Sofía Porto Iannuzzi · Packaging</span></div></figcaption></figure>
-    </a>
-    <a class="work rv" href="showcase.html#p-1">
-      <figure><div class="ph"><img src="proyectos/thumbnails/ellaz.jpg" alt="Deconstrucción de los estándares de la belleza femenina" loading="lazy"></div>
-      <figcaption><div><h3>Estándares de la Belleza Femenina</h3><span class="who">Emilia Bermúdez, Angelina Avalos, Sofía Peralta · Editorial</span></div></figcaption></figure>
-    </a>
-    <a class="work rv" href="showcase.html#p-8">
-      <figure><div class="ph"><img src="proyectos/thumbnails/alteria.jpg" alt="Alteria — interacción multisensorial y sinestesia" loading="lazy"></div>
-      <figcaption><div><h3>Alteria: Diseño Multisensorial</h3><span class="who">Mariángela Garza, Patricio Treviño, Marian Treviño · Motion</span></div></figcaption></figure>
-    </a>
-    <a class="work rv" href="showcase.html#p-4">
-      <figure><div class="ph"><img src="proyectos/thumbnails/tefaltabarrio_9.jpg" alt="Te Falta Barrio — estrategias de información para el Barrio Antiguo" loading="lazy"></div>
-      <figcaption><div><h3>Te Falta Barrio</h3><span class="who">Ana Lucía Maraboto, Frida de la Garza · UI·UX</span></div></figcaption></figure>
-    </a>
-    <a class="work rv" href="showcase.html#p-10">
-      <figure><div class="ph"><img src="proyectos/thumbnails/antera.jpg" alt="Antera — el lenguaje de las flores como comunicación" loading="lazy"></div>
-      <figcaption><div><h3>Antera: Floriografía Mexicana</h3><span class="who">Natalia Alcalá, Danna Chávez, Victoria Lizárraga, Sarai Marines · Editorial</span></div></figcaption></figure>
-    </a>
-    <a class="work rv" href="showcase.html#p-15">
-      <figure><div class="ph"><img src="proyectos/thumbnails/verdad-en-juego.jpg" alt="Verdad en Juego — cámaras de eco y desinformación" loading="lazy"></div>
-      <figcaption><div><h3>Verdad en Juego</h3><span class="who">Fernanda Díaz, Miranda Siller, Eugenio Nocedal, Karina Del Prado · Editorial</span></div></figcaption></figure>
-    </a>
-  </div>
   <div class="more rv"><a href="showcase.html">Ver todo el showcase</a></div>
 </section>
 

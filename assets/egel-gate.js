@@ -43,9 +43,7 @@
     gate.id = 'egel-gate';
     gate.innerHTML =
       '<div class="gate-card">' +
-        '<a class="gate-mark" href="index.html">LDG·UDEM<span class="b-arrow" aria-hidden="true">' +
-          '<svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="square" focusable="false"><path d="M2 2l8 8"/><path d="M10 4.6V10H4.6"/></svg>' +
-        '</span></a>' +
+        '<a class="gate-mark" href="index.html"><img src="assets/ldg-udem.png" alt="LDG UDEM" width="61" height="36"></a>' +
         '<p class="eyebrow">Espacio EGEL · acceso del programa</p>' +
         '<h1>Entra con tu correo UDEM</h1>' +
         '<p>Este espacio de preparación para el EGEL Plus es del alumnado de Diseño Gráfico. Entra con tu cuenta institucional; el navegador la recordará.</p>' +
